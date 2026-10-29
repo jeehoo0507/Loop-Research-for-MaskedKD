@@ -34,4 +34,13 @@ class Random(SelectorBase):
         return topk_mask(scores, int(ctx.budget))
 
 
+@torch.no_grad()
+def oracle_keep(teacher, x, k):
+    """ANALYSIS ONLY (upper-bound reference, never a claim): the teacher's own last-block CLS attention
+    on the full image picks the tokens. Its full teacher forward is billed to the selector segment."""
+    from .models import student_forward   # works for any timm ViT
+    attn = student_forward(teacher, x, attn_layers=[-1]).attn[-1]
+    return topk_mask(attn.float().mean(dim=1)[:, 0, 1:], int(k))
+
+
 BUILTIN = {"full": Full, "maskedkd": MaskedKD, "random": Random}

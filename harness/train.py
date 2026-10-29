@@ -24,6 +24,7 @@ from .data import GpuAugment, GpuLoader, load_split, normalize_resize
 from .lock import harness_digest
 from .models import make_student, make_teacher, student_forward, teacher_forward_keepmask
 from .selector_api import Context
+from .baselines import oracle_keep
 from .validate import load_selector
 
 
@@ -115,7 +116,7 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
             ctx = Context(images=x, student=student, out=out, budget=float(budget),
                           num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress)
             with segs.seg("selector"):
-                keep = selector.select(ctx)
+                keep = oracle_keep(teacher, x, budget) if method == "oracle" else selector.select(ctx)
             if any(p.grad is not None for p in student.parameters()):
                 raise HarnessViolation("selector left parameter gradients (called .backward())")
             keep = to_keep_mask(keep, x.shape[0])
@@ -164,7 +165,7 @@ def run(job_path):
     budget = job["keep"]
 
     selector, meta, sel_sha = (None, None, None)
-    if method != "ce":
+    if method not in ("ce", "oracle"):
         src = job.get("selector_src")
         selector, meta, sel_sha = load_selector(method, src=src, kwargs=job.get("sel_args", {}))
         if sel_sha != job.get("selector_sha", "builtin"):
@@ -251,6 +252,9 @@ def run(job_path):
             torch.save({"student": student.state_dict(), "opt": opt.state_dict(), "state": state,
                         "loader_rng": loader.g.get_state(), "cpu_rng": torch.get_rng_state(),
                         "cuda_rng": torch.cuda.get_rng_state() if device.type == "cuda" else None}, ckpt_path)
+        for frac in C.SNAPSHOT_FRACS:   # snapshots for analysis jobs (e.g. how attention changes during training)
+            if epoch + 1 == max(1, int(round(frac * epochs))) and epoch + 1 < epochs:
+                torch.save(student.state_dict(), rdir / f"student_e{epoch + 1}.pt")
         if state["train_time_s"] > t_limit and epoch + 1 < epochs:
             say(f"time limit {t_limit/3600:.1f} h exceeded at epoch {epoch+1}; stopping")
             write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status="timeout")
@@ -274,7 +278,7 @@ def write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status):
         "history": state["history"], "selector_meta": meta, "selector_sha": sel_sha,
         "sel_args": job.get("sel_args", {}), "teacher_sha": teacher_sha,
         "harness_digest": harness_digest(), "git": git_hash(), "submitted_by": job.get("by"),
-        "note": job.get("note", ""),
+        "note": job.get("note", ""), "analysis_only": job["method"] in C.ANALYSIS_ONLY,
     }
     (rdir / "metrics.json").write_text(json.dumps(m, indent=1))
 

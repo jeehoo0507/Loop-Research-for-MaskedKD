@@ -3,6 +3,8 @@
     python -m harness.submit --method maskedkd --keep 49 --seed 0 --tier screen
     python -m harness.submit --method my_rollout --keep 25 --seed 0 --tier screen --sel-args '{"layers": 4}'
     python -m harness.submit --gate          # reproduction gate: ce, full@196, maskedkd@98 (seed 0, screen)
+    python -m harness.submit --baselines     # human, once after the gate: noise seeds + maskedkd/random grid
+    python -m harness.submit --analysis layer_agreement   # run analysis/layer_agreement.py on the GPU queue
     python -m harness.submit --status        # queue and run summary
 
 --method: "ce", a builtin ("full", "maskedkd", "random"), or a file selectors/<name>.py.
@@ -16,7 +18,7 @@ import time
 
 from . import config as C
 from .baselines import BUILTIN
-from .validate import SelectorRejected, check_source, selector_source
+from .validate import SelectorRejected, analysis_source, check_source, selector_source
 
 
 def queue_dirs():
@@ -40,6 +42,10 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     epochs = C.TIER_EPOCHS.get(tier)
     if epochs is None:
         raise SystemExit(f"tier '{tier}' has no epoch budget yet (a human sets it after harness.bench)")
+    if tier == "final" and seed not in C.FINAL_SEEDS:
+        raise SystemExit(f"final runs use fresh seeds {C.FINAL_SEEDS} only (screen seed {C.SCREEN_SEED} never enters a claim)")
+    if method in C.ANALYSIS_ONLY and tier not in ("screen", "smoke"):
+        raise SystemExit(f"'{method}' is an analysis-only reference; screen tier only")
     if method == "ce":
         keep = 0
     elif not (0 <= keep <= C.NUM_PATCHES):
@@ -47,7 +53,7 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     if method == "full":
         keep = C.NUM_PATCHES
     src, sha = None, "builtin"
-    if method not in BUILTIN and method != "ce":
+    if method not in BUILTIN and method not in ("ce",) + C.ANALYSIS_ONLY:
         try:
             src = selector_source(method)
             check_source(src, method)
@@ -64,12 +70,39 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     ts = time.strftime("%m%d_%H%M%S")
     tag = hashlib.sha1(json.dumps(key).encode()).hexdigest()[:4]
     keep_s = f"{keep:g}"
-    job = {"id": f"{tier}_{method}_k{keep_s}_s{seed}_{ts}_{tag}", "method": method, "keep": keep, "seed": seed,
+    job = {"id": f"{tier}_{method}_k{keep_s}_s{seed}_{ts}_{tag}", "kind": "train", "method": method, "keep": keep, "seed": seed,
            "tier": tier, "epochs": epochs, "sel_args": sel_args, "selector_src": src, "selector_sha": sha,
            "note": note, "by": by, "priority": priority, "submitted": time.strftime("%Y-%m-%d %H:%M:%S")}
     path = queue_dirs()["pending"] / f"{job['id']}.json"
     path.write_text(json.dumps(job, indent=1))
     return job
+
+
+def make_analysis(name, note="", by="agent", priority=0):
+    try:
+        src = analysis_source(name)
+        check_source(src, name, kind="analysis")
+    except SelectorRejected as e:
+        raise SystemExit(f"REJECTED: {e}")
+    sha = hashlib.sha256(src.encode()).hexdigest()
+    ts = time.strftime("%m%d_%H%M%S")
+    job = {"id": f"analysis_{name}_{ts}_{sha[:4]}", "kind": "analysis", "method": name, "keep": 0, "seed": 0,
+           "tier": "analysis", "epochs": 0, "selector_src": src, "selector_sha": sha, "note": note, "by": by,
+           "priority": priority, "submitted": time.strftime("%Y-%m-%d %H:%M:%S")}
+    (queue_dirs()["pending"] / f"{job['id']}.json").write_text(json.dumps(job, indent=1))
+    return job
+
+
+def baselines(force=False):
+    """Seed-noise runs (maskedkd@98, full; NOISE_SEEDS) and the maskedkd/random grid at BASELINE_KEEPS."""
+    ids = []
+    for s in C.NOISE_SEEDS:
+        for m, k in (("maskedkd", 98), ("full", 196)):
+            ids.append(make_job(m, k, s, "screen", by="baselines", priority=5, force=force)["id"])
+    for k in C.BASELINE_KEEPS:
+        for m in ("maskedkd", "random"):
+            ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
+    return ids
 
 
 def status():
@@ -101,9 +134,15 @@ if __name__ == "__main__":
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--gate", action="store_true")
     ap.add_argument("--status", action="store_true")
+    ap.add_argument("--baselines", action="store_true")
+    ap.add_argument("--analysis")
     a = ap.parse_args()
     if a.status:
         status()
+    elif a.baselines:
+        print("\n".join(baselines(a.force)))
+    elif a.analysis:
+        print(make_analysis(a.analysis, a.note, a.by, a.priority)["id"])
     elif a.gate:
         for m, k in (("ce", 0), ("full", 196), ("maskedkd", 98)):
             print(make_job(m, k, 0, a.tier, by="gate", priority=10, force=a.force)["id"])

@@ -13,7 +13,8 @@
 |---|---|---|
 | `harness/` | 사람 (잠금) | 데이터(GPU 상주·GPU 증강), 학습, 손실, FLOPs, 평가, 작업 큐, 스케줄러, 보고서 |
 | `tests/` | 사람 (잠금) | MaskedKD 공식 코드와의 동치성, 사기 방지 검사 |
-| `selectors/` | 에이전트 | 선택기. 여기만 바꿀 수 있다 |
+| `selectors/` | 에이전트 | 토큰 선택 방법. 학습에 들어가는 코드는 여기만 바꿀 수 있다 |
+| `analysis/` | 에이전트 | 분석 스크립트 (층·head·attribution 비교 등). 결과는 `analysis_out/`, 결과 표에는 안 들어감 |
 | `agent/` | 사람 | 루프, 지침, 감사 프롬프트, QUEUE(사람 지시) |
 | `runs/<id>/` | harness | `metrics.json`(유일한 숫자 출처), `log.txt` |
 | `RESULTS_TABLE.md` | harness | 결과 표와 주 지표 (자동 생성) |
@@ -25,7 +26,9 @@
 3. **FLOPs 실측:** `torch.utils.flop_counter`로 실제 스텝을 잰다. 선택기 안에서 몰래 돌린 연산도 잡힌다(테스트로 확인).
 4. **선택기 검사:** 정적 검사(허용 import만, 파일·teacher·라벨·`.backward()` 금지, META 필수)와 실행 중 검사(예산 초과, 남은 gradient).
 5. **test 격리:** 에이전트는 val만 쓴다. `harness.test_eval`은 사람이 마지막에 한 번만 쓴다.
-6. **감사:** 주장은 `agent/AUDIT_REQUEST.md`에 올리고, 별도 세션이 읽기 전용으로 검토한다. 기본은 Claude 세션이고, `AUDITOR=codex`면 GPT(Codex CLI)가 맡는다. GPT는 **선택 사항**이다.
+6. **새 시드와 잡음 기준:** final은 시드 1·2·3만(screen 시드 0 제외). 승격 기준은 max(0.5%p, 2×시드 σ). 시도 횟수를 표에 기록.
+7. **비상 연구자:** Claude가 멈추면 GPT(Codex, `gpt-6-astra` high)가 같은 지침·잠금 아래에서 이어받고, 그 주장은 Claude가 감사해야 확정된다.
+8. **감사:** 주장은 `agent/AUDIT_REQUEST.md`에 올리고, 별도 세션이 읽기 전용으로 검토한다. 기본은 Claude 세션이고, `AUDITOR=codex`면 GPT(Codex CLI)가 맡는다. GPT는 **선택 사항**이다.
 
 ## 서버에서 처음부터 (A5000 1장)
 
@@ -88,4 +91,5 @@ bash agent/start.sh                                # 스케줄러 + 에이전트
 | 최종 test | `.venv/bin/python -m harness.test_eval --runs <id> ...` (사람만) |
 
 - 루프 종료: `END_DATE`(기본 2026-11-05) 또는 `agent/STOP`.
-- 라운드 간격 15분, 기본 모델 Opus. 하루의 첫 라운드와 `STUCK` 이후 라운드는 `MODEL_HARD`를 쓴다.
+- 라운드는 변화(끝난 작업, QUEUE 변경, 빈 큐)가 있을 때만 돈다. 최소 60분에 한 번, GPU가 30분 놀면 강제로 돈다. 기본 모델 Opus.
+- 관문 통과 직후 사람이 한 번: `.venv/bin/python -m harness.submit --baselines` (잡음 측정 + 기준선 격자).

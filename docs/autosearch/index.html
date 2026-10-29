@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MaskedKD 오토 서치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1:wght@400;600;800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: instrument panel. Hero = 15-minute round dial (signature). Then the lockout boundary map,
+   then four Mermaid "readouts" in a 2-col grid, then the guard sheet. Hazard stripe marks only locked things. */
+:root {
+  --paper: #E6EBEE;
+  --panel: #F4F6F7;
+  --ink: #0F1D2B;
+  --steel: #64788A;
+  --rule: #C6D0D7;
+  --tag: #FFC21A;      /* lockout tag: locked / human-only */
+  --pass: #188F5E;
+  --fail: #CF3F38;
+  --display: "Do Hyeon", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --body: "Gothic A1", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --paper: #0B131B; --panel: #111C26; --ink: #DCE5EC; --steel: #8698A8; --rule: #22313E; --tag: #FFC933; --pass: #3CC28A; --fail: #F06A62; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --paper: #0B131B; --panel: #111C26; --ink: #DCE5EC; --steel: #8698A8; --rule: #22313E; --tag: #FFC933; --pass: #3CC28A; --fail: #F06A62; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 15px/1.65 var(--body);
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 32px 32px; background-attachment: fixed;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* readout bar */
+.bar { position: sticky; top: 0; z-index: 5; background: var(--ink); color: var(--paper); font: 400 12px/1 var(--mono); letter-spacing: .04em; }
+.bar .wrap { display: flex; flex-wrap: wrap; gap: 6px 22px; padding-block: 10px; }
+.bar b { color: var(--tag); font-weight: 600; }
+
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: .01em; }
+h1 { font-size: clamp(40px, 7.4vw, 84px); line-height: .98; }
+h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.05; }
+h3 { font-size: 22px; line-height: 1.1; }
+p { margin: 0; max-width: 62ch; }
+.label { font: 600 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--steel); }
+code { font: 400 .9em var(--mono); background: color-mix(in srgb, var(--ink) 8%, transparent); padding: 1px 5px; border-radius: 3px; }
+
+section { padding-block: 56px; display: grid; gap: 22px; }
+section + section { border-top: 2px solid var(--ink); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 40px; align-items: center; padding-block: 48px 56px; }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+.thesis { display: grid; gap: 20px; }
+.thesis .lede { font-size: 17px; }
+.dialbox { background: var(--panel); border: 2px solid var(--ink); border-radius: 6px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+#dial { width: 100%; max-width: 520px; margin: 0 auto; display: block; height: auto; }
+#dial text { font-family: var(--mono); fill: var(--ink); }
+#dial .tick { cursor: pointer; }
+#dial .tick circle { fill: var(--panel); stroke: var(--ink); stroke-width: 2; transition: fill .2s, r .2s; }
+#dial .tick.on circle { fill: var(--tag); }
+#dial .tick:focus-visible circle { stroke-width: 4; }
+#dial .tick:focus { outline: none; }
+.readout { border-top: 1px dashed var(--rule); padding-top: 12px; display: grid; gap: 4px; min-height: 92px; }
+.readout .who { font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--steel); }
+.readout h3 { font-size: 24px; }
+.dialctl { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+button { font: 600 12px var(--mono); letter-spacing: .06em; border: 2px solid var(--ink); background: transparent; color: var(--ink); padding: 7px 12px; border-radius: 4px; cursor: pointer; }
+button:hover { background: var(--ink); color: var(--paper); }
+button:focus-visible { outline: 3px solid var(--tag); outline-offset: 2px; }
+.note { font-size: 13px; color: var(--steel); }
+
+/* boundary map */
+.zones { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; }
+@media (max-width: 760px) { .zones { grid-template-columns: 1fr; } }
+.zone { background: var(--panel); border: 2px solid var(--ink); border-radius: 6px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.zone.locked { border: none; padding: 0; background: repeating-linear-gradient(-45deg, var(--tag) 0 14px, var(--ink) 14px 28px); }
+.zone.locked > .inner { background: var(--panel); margin: 10px; border-radius: 3px; padding: 16px; display: grid; gap: 12px; }
+.files { display: grid; gap: 6px; font: 400 13px var(--mono); }
+.files div { display: grid; grid-template-columns: minmax(0, 15ch) minmax(0, 1fr); gap: 10px; }
+.files span:first-child { font-weight: 600; overflow-wrap: anywhere; }
+.files span:last-child { color: var(--steel); font-family: var(--body); }
+.door { display: flex; gap: 10px; align-items: center; font: 600 13px var(--mono); }
+.door i { width: 14px; height: 14px; border-radius: 50%; background: var(--pass); display: inline-block; }
+
+/* readouts grid */
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } }
+.card { background: var(--panel); border: 2px solid var(--ink); border-radius: 6px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card.wide { grid-column: 1 / -1; }
+.fig { overflow-x: auto; }
+pre.mermaid { margin: 0; background: transparent; text-align: center; font-size: 13px; }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+
+/* guard sheet */
+.sheet { overflow-x: auto; border: 2px solid var(--ink); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--steel); }
+tr:last-child td { border-bottom: none; }
+.st { font: 600 11px var(--mono); letter-spacing: .06em; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+.st.hard { background: color-mix(in srgb, var(--pass) 18%, transparent); color: var(--pass); }
+.st.soft { background: color-mix(in srgb, var(--fail) 15%, transparent); color: var(--fail); }
+
+footer { padding-block: 28px 48px; font: 400 12px var(--mono); color: var(--steel); border-top: 2px solid var(--ink); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar" role="status">
+  <div class="wrap">
+    <span>LOOP <b>15 min/round</b></span>
+    <span>MODEL <b>opus</b></span>
+    <span>AUDITOR <b>claude · codex · none</b></span>
+    <span>GPU <b>A5000 ×1</b></span>
+    <span>END <b>2026-11-05 00:00</b></span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section class="hero" aria-labelledby="h1">
+    <div class="thesis">
+      <div class="label">Loop-Research-for-MaskedKD</div>
+      <h1 id="h1">teacher가 보는 토큰을 줄이는 법을, 밤새 혼자 찾는다</h1>
+      <p class="lede">Claude는 <code>selectors/</code>에 토큰 선택기만 쓴다. 학습, 채점, FLOPs 측정은 잠긴 harness가 맡는다. 이긴다는 주장은 다른 세션이 읽기 전용으로 검사한다.</p>
+      <p class="note">목표: Full KD 대비 val 하락 1%p 이내를 지키면서, MaskedKD(98/196)보다 적은 평균 teacher 토큰으로 학습한다.</p>
+    </div>
+
+    <div class="dialbox">
+      <div class="label">한 라운드 · 15분</div>
+      <svg id="dial" viewBox="0 0 520 520" role="img" aria-label="한 라운드의 9단계를 시계 방향으로 배치한 다이얼. 실제 작업은 앞쪽 절반, 나머지 절반은 900초 대기."></svg>
+      <div class="readout" aria-live="polite">
+        <div class="who" id="who">loop.sh</div>
+        <h3 id="what">git pull</h3>
+        <p id="why" class="note"></p>
+      </div>
+      <div class="dialctl">
+        <button id="play" type="button" aria-pressed="true">일시정지</button>
+        <span class="note">눈금을 누르면 그 단계에서 멈춘다.</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h2a">
+    <div class="label">경계</div>
+    <h2 id="h2a">에이전트가 손댈 수 있는 곳은 한 군데</h2>
+    <div class="zones">
+      <div class="zone locked">
+        <div class="inner">
+          <h3>잠김 · sha256 <span class="note">(~/.maskedkd_lock, 저장소 밖)</span></h3>
+          <div class="files">
+            <div><span>harness/data</span><span>CIFAR-100을 GPU에 올리고 GPU에서 증강</span></div>
+            <div><span>harness/models</span><span>student attention 노출, masked teacher 순전파</span></div>
+            <div><span>harness/train</span><span>스텝, 예산 검사, FLOPs 실측, metrics.json</span></div>
+            <div><span>harness/validate</span><span>선택기 정적 검사 (import, open, .backward 등)</span></div>
+            <div><span>harness/scheduler</span><span>큐 실행, VRAM 확인, 잠금 불일치 시 정지</span></div>
+            <div><span>harness/report</span><span>RESULTS_TABLE, 관문, 주 지표</span></div>
+            <div><span>agent/loop.sh</span><span>라운드, 되돌림, 감사 호출</span></div>
+            <div><span>AGENT/AUDIT 프롬프트</span><span>규칙과 감사 기준</span></div>
+          </div>
+          <p class="note">바뀌면 라운드가 끝난 뒤 <code>LOCK_REF</code>로 되돌리고 <code>agent/INVALID.md</code>에 남긴다.</p>
+        </div>
+      </div>
+      <div class="zone">
+        <h3>에이전트 영역</h3>
+        <div class="door"><i></i>selectors/&lt;이름&gt;.py</div>
+        <p>허용 import는 torch, math, numpy 정도다. <code>META</code>에 해석가능성 기법, 논문, 이유, MaskedKD와의 차이, 가장 가까운 선행 기법을 적어야 제출된다.</p>
+        <div class="files">
+          <div><span>쓸 수 있음</span><span>PROGRESS, RESULTS, PROPOSALS, DAILY, AUDIT_REQUEST</span></div>
+          <div><span>실행 가능</span><span>harness.submit · report · compare · trysel · lock</span></div>
+          <div><span>못 함</span><span>직접 학습, test 평가, 임의 python</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h2b">
+    <div class="label">흐름</div>
+    <h2 id="h2b">작업 하나가 숫자가 되기까지</h2>
+    <div class="grid2">
+      <div class="card wide">
+        <h3>전체 구성</h3>
+        <div class="fig"><pre class="mermaid">
+flowchart LR
+  H([사람]) -- "QUEUE · STOP · MODEL" --> L[loop.sh]
+  L -- "claude -p" --> R[Claude 연구자]
+  R -- "작성" --> S[selectors/*.py]
+  R -- "submit (소스 스냅샷)" --> Q[(queue)]
+  Q --> SC[scheduler]
+  SC -- "spawn" --> TR[train · GPU]
+  TR -- "유일한 숫자" --> M[(metrics.json)]
+  M --> RP[report] --> RT[RESULTS_TABLE]
+  RT -- "다음 라운드" --> R
+  R -- "주장" --> AR[AUDIT_REQUEST]
+  AR --> AU{{감사관}}
+  AU -- "PASS / FAIL" --> AD[AUDIT.md]
+        </pre></div>
+      </div>
+
+      <div class="card">
+        <h3>학습 1스텝</h3>
+        <div class="fig"><pre class="mermaid">
+flowchart TB
+  X[배치 · GPU 증강] --> SF[student 순전파]
+  SF --> SEL["selector.select(ctx)<br/>라벨·teacher 없음"]
+  SEL --> V{검사}
+  V -- "keep 평균 > 예산<br/>또는 grad 남음" --> BAD[중단]
+  V -- OK --> TF["teacher 순전파<br/>남긴 토큰만"]
+  TF --> KD["0.5·CE + 0.5·KL"]
+  SF --> KD
+  KD --> BW[역전파 · AdamW]
+        </pre></div>
+        <ul>
+          <li>FLOPs는 2~4번째 스텝 전체를 실측한다. 선택기 안의 연산도 포함된다.</li>
+          <li>teacher 경로는 공식 MaskedKD와 동치 테스트를 통과했다.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>작업 상태</h3>
+        <div class="fig"><pre class="mermaid">
+stateDiagram-v2
+  [*] --> Rejected: 정적 검사 실패
+  [*] --> Pending: submit
+  Pending --> Running: 잠금 OK · VRAM 여유
+  Running --> Done
+  Running --> Timeout: 시간 한도
+  Running --> Failed: 규칙 위반
+  Running --> Pending: 파드 재시작
+        </pre></div>
+        <ul>
+          <li>같은 설정은 다시 제출할 수 없다 (<code>--force</code> 제외).</li>
+          <li>실패 이유는 <code>runs/&lt;id&gt;/error.txt</code>에 남는다.</li>
+        </ul>
+      </div>
+
+      <div class="card wide">
+        <h3>screen에서 확정까지</h3>
+        <div class="fig"><pre class="mermaid">
+flowchart LR
+  I[가설] --> W[선택기 + META] --> TS[trysel] --> SC["screen · seed 0<br/>maskedkd · random 동반"]
+  SC --> P{승격?}
+  P -- "같은 K +0.5%p<br/>또는 더 작은 K로 Full−1%p" --> F["final · seed 0,1,2"]
+  P -- 아님 --> NEG[실패한 방향 기록] --> I
+  F --> CMP["compare<br/>95% 구간 · GFLOPs 비"] --> AU{감사}
+  AU -- PASS --> OK[확정]
+  AU -- "FAIL / NEEDS-MORE" --> I
+        </pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h2c">
+    <div class="label">시작 조건</div>
+    <h2 id="h2c">루프는 관문을 통과해야 돈다</h2>
+    <div class="card">
+      <div class="fig"><pre class="mermaid">
+flowchart LR
+  A[setup.sh] --> B[relock] --> C[teacher fine-tune] --> D[bench] --> E[에폭 설정 · relock]
+  E --> F["gate 제출<br/>ce · full · maskedkd@98"] --> G{관문}
+  G -- "Full ≥ CE+1%p<br/>|MK98−Full| ≤ 0.5%p" --> H[start.sh]
+  G -- 실패 --> Z["DeiT-B teacher<br/>+ 사전학습 student"] --> C
+      </pre></div>
+      <p class="note">loop.sh는 시작할 때 잠금과 관문을 직접 다시 확인한다. 하나라도 실패하면 시작하지 않는다.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h2d">
+    <div class="label">반칙 방지</div>
+    <h2 id="h2d">막는 것, 덜 막는 것</h2>
+    <div class="sheet">
+      <table>
+        <thead><tr><th>위험</th><th>장치</th><th>강도</th></tr></thead>
+        <tbody>
+          <tr><td>평가·학습 코드 수정</td><td>저장소 밖 sha256, 라운드 후 되돌림, 스케줄러 정지</td><td><span class="st hard">코드로 차단</span></td></tr>
+          <tr><td>손으로 쓴 숫자</td><td>metrics.json만 인정, run id 필수</td><td><span class="st hard">감사로 차단</span></td></tr>
+          <tr><td>teacher 몰래 호출</td><td>import·속성 차단 + FLOPs 실측</td><td><span class="st hard">코드로 차단</span></td></tr>
+          <tr><td>토큰 예산 속이기</td><td>배치마다 평균 keep ≤ 예산</td><td><span class="st hard">코드로 차단</span></td></tr>
+          <tr><td>test 사용</td><td>val만 사용, test_eval은 사람 전용</td><td><span class="st soft">규칙 + 감사</span></td></tr>
+          <tr><td>정적 검사 우회</td><td>감사관이 선택기 소스를 직접 읽음</td><td><span class="st soft">감사만</span></td></tr>
+          <tr><td>시드·K 골라내기</td><td>같은 tier의 모든 run 대조</td><td><span class="st soft">감사만</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">github.com/jeehoo0507/Loop-Research-for-MaskedKD · docs/autosearch</div></footer>
+
+<script>
+(function () {
+  // [start fraction of the 15-min round, who, title, detail]. Work fills the first half; the sleep is the rest.
+  const STEPS = [
+    [0.00, "loop.sh", "git pull", "사람이 push한 QUEUE.md 지시가 이때 들어온다."],
+    [0.05, "harness.lock", "잠금 확인", "~/.maskedkd_lock과 다르면 이 라운드는 건너뛴다."],
+    [0.09, "loop.sh", "모델·감사관 결정", "agent/MODEL, ~/.maskedkd_auditor를 읽는다. 하루 첫 라운드는 MODEL_HARD."],
+    [0.13, "Claude 연구자", "읽고 만들고 제출", "QUEUE → RESULTS_TABLE → 선택기 작성 → trysel → submit → PROGRESS 갱신."],
+    [0.34, "harness.lock", "잠금 재확인", "에이전트가 잠긴 파일을 건드렸으면 LOCK_REF로 되돌리고 INVALID.md에 남긴다."],
+    [0.39, "harness.report", "표 갱신", "runs/*/metrics.json으로 RESULTS_TABLE.md를 다시 만든다."],
+    [0.43, "감사관", "주장 검사", "AUDIT_REQUEST.md가 비어 있지 않을 때만. 읽기 전용, 결과는 AUDIT.md로."],
+    [0.48, "loop.sh", "commit · push", "라운드에서 바뀐 모든 것을 GitHub main에 올린다."],
+    [0.52, "loop.sh", "대기 900초", "학습은 스케줄러가 계속 돌린다. 이 동안 GPU 작업이 끝난다."]
+  ];
+  const svg = document.getElementById("dial");
+  const NS = "http://www.w3.org/2000/svg";
+  const C = 260, R = 180;
+  const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
+  const pt = (f, r) => { const a = f * 2 * Math.PI - Math.PI / 2; return [C + r * Math.cos(a), C + r * Math.sin(a)]; };
+  const arc = (f0, f1, r) => { const [x0, y0] = pt(f0, r), [x1, y1] = pt(f1, r); return `M${x0} ${y0} A${r} ${r} 0 ${f1 - f0 > .5 ? 1 : 0} 1 ${x1} ${y1}`; };
+
+  el("circle", { cx: C, cy: C, r: R, fill: "none", stroke: "var(--rule)", "stroke-width": 22 });
+  el("path", { d: arc(0, 0.52, R), fill: "none", stroke: "var(--ink)", "stroke-width": 22 });
+  el("path", { d: arc(0.52, 0.999, R), fill: "none", stroke: "var(--steel)", "stroke-width": 22, "stroke-dasharray": "2 6", opacity: .6 });
+  for (let m = 0; m < 15; m++) {
+    const [x0, y0] = pt(m / 15, R - 20), [x1, y1] = pt(m / 15, R - 32);
+    el("line", { x1: x0, y1: y0, x2: x1, y2: y1, stroke: "var(--steel)", "stroke-width": m % 5 ? 1.5 : 3 });
+    if (m % 5 === 0) { const [tx, ty] = pt(m / 15, R - 48); el("text", { x: tx, y: ty + 4, "text-anchor": "middle", "font-size": 12, fill: "var(--steel)" }).textContent = m + "′"; }
+  }
+  const [lx, ly] = pt(0.76, R - 2);
+  el("text", { x: lx, y: ly + 5, "text-anchor": "middle", "font-size": 12, fill: "var(--paper)", style: "fill:var(--panel)" }).textContent = "";
+  el("text", { x: C, y: C - 8, "text-anchor": "middle", "font-size": 13, fill: "var(--steel)" }).textContent = "1 round";
+  const big = el("text", { x: C, y: C + 26, "text-anchor": "middle", "font-size": 30, style: "font-family:var(--display)" });
+  big.textContent = "00:00";
+
+  const ticks = STEPS.map((s, i) => {
+    const g = el("g", { class: "tick", tabindex: 0, role: "button", "aria-label": s[2] });
+    const [x, y] = pt(s[0], R);
+    el("circle", { cx: x, cy: y, r: 9 }, g);
+    const [tx, ty] = pt(s[0], R + 34);
+    const anchor = Math.abs(tx - C) < 20 ? "middle" : (tx > C ? "start" : "end");
+    el("text", { x: tx, y: ty + 4, "text-anchor": anchor, "font-size": 12, "font-weight": 600 }, g).textContent = s[2];
+    g.addEventListener("click", () => jump(i));
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(i); } });
+    return g;
+  });
+  const hand = el("line", { x1: C, y1: C, x2: C, y2: C - R + 30, stroke: "var(--tag)", "stroke-width": 5, "stroke-linecap": "round" });
+  el("circle", { cx: C, cy: C, r: 7, fill: "var(--ink)" });
+
+  const who = document.getElementById("who"), what = document.getElementById("what"), why = document.getElementById("why");
+  const btn = document.getElementById("play");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let f = 0, playing = !reduce, last = performance.now(), cur = -1;
+  const PERIOD = 30000; // one round shown in 30 s
+
+  function stepAt(x) { let i = 0; STEPS.forEach((s, k) => { if (x >= s[0]) i = k; }); return i; }
+  function render() {
+    const [x, y] = pt(f, R - 30);
+    hand.setAttribute("x2", x); hand.setAttribute("y2", y);
+    const sec = Math.floor(f * 900); big.textContent = String(Math.floor(sec / 60)).padStart(2, "0") + ":" + String(sec % 60).padStart(2, "0");
+    const i = stepAt(f);
+    if (i !== cur) {
+      cur = i; ticks.forEach((t, k) => t.classList.toggle("on", k === i));
+      who.textContent = STEPS[i][1]; what.textContent = STEPS[i][2]; why.textContent = STEPS[i][3];
+    }
+  }
+  function frame(now) { if (playing) { f = (f + (now - last) / PERIOD) % 1; render(); } last = now; requestAnimationFrame(frame); }
+  function setPlay(p) { playing = p; btn.textContent = p ? "일시정지" : "재생"; btn.setAttribute("aria-pressed", String(p)); }
+  function jump(i) { f = STEPS[i][0] + 0.001; setPlay(false); render(); }
+  btn.addEventListener("click", () => setPlay(!playing));
+  if (reduce) setPlay(false);
+  render(); requestAnimationFrame(frame);
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  const css = getComputedStyle(document.documentElement);
+  const v = n => css.getPropertyValue(n).trim();
+  mermaid.initialize({
+    startOnLoad: true, theme: "base", securityLevel: "strict",
+    fontFamily: '"Gothic A1", "Apple SD Gothic Neo", sans-serif',
+    themeVariables: {
+      background: v("--panel"), primaryColor: v("--panel"), primaryTextColor: v("--ink"), primaryBorderColor: v("--ink"),
+      secondaryColor: v("--paper"), tertiaryColor: v("--paper"), lineColor: v("--steel"), textColor: v("--ink"),
+      edgeLabelBackground: v("--panel"), clusterBkg: v("--paper"), fontSize: "13px"
+    },
+    flowchart: { htmlLabels: true, curve: "basis" }
+  });
+})();
+</script>
+</body>
+</html>

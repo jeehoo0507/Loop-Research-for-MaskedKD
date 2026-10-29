@@ -15,7 +15,8 @@ from pathlib import Path
 from . import config as C
 
 LOCKED_GLOBS = ["harness/**/*.py", "tests/**/*.py", "agent/loop.sh", "agent/relock.sh",
-                "agent/AGENT_PROMPT.md", "agent/AUDIT_PROMPT.md", "requirements.txt"]
+                "agent/AGENT_PROMPT.md", "agent/AUDIT_PROMPT.md", "agent/IDEAS_PROMPT.md",
+                "requirements.txt"]
 LOCK_FILE = Path(os.environ.get("MASKEDKD_LOCK", Path.home() / ".maskedkd_lock"))
 
 

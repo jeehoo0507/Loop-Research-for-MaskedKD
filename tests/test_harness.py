@@ -199,3 +199,78 @@ def test_to_keep_mask():
     assert m.sum() == 3 and m[0, 5]
     with pytest.raises(HarnessViolation):
         to_keep_mask(torch.tensor([[0, 300]]), 1)
+
+
+# ---- analysis channel, oracle, seeds ----
+
+GOOD_ANALYSIS = '''
+import torch
+from harness.analysis_api import AnalysisAPI
+META = {"question": "does last-layer attention match teacher attention?", "method": "attention agreement",
+        "paper": "Abnar & Zuidema 2020"}
+def run(api):
+    agree = []
+    for x, y in api.val_batches(batch=4, limit=8):
+        s = api.student_forward(api.teacher, x, attn_layers=[-1]).attn[-1]
+        agree.append(float(s.mean()))
+    api.write_json("summary", {"n": len(agree), "mean": sum(agree) / len(agree)})
+'''
+
+
+def test_analysis_validator():
+    check_source(GOOD_ANALYSIS, "ga", kind="analysis")
+    bad = [
+        GOOD_ANALYSIS.replace("api.write_json", "api._out.parent.joinpath('x').write_text"),
+        GOOD_ANALYSIS.replace("import torch\n", "import torch\nimport os\n"),
+        GOOD_ANALYSIS.replace('"question"', '"q"'),
+        GOOD_ANALYSIS.replace("def run(api):", "def go(api):"),
+        GOOD_ANALYSIS.replace("agree = []", "agree = []; fig.savefig('/tmp/x.png')"),
+    ]
+    for i, src in enumerate(bad):
+        with pytest.raises(SelectorRejected):
+            check_source(src, f"bad{i}", kind="analysis")
+    # a selector may still not touch the teacher even though analyses can
+    with pytest.raises(SelectorRejected):
+        check_source(GOOD.replace("r = None", "r = ctx.teacher"), "sel")
+
+
+def test_analysis_runs(tmp_path, monkeypatch):
+    from harness.analysis_api import AnalysisAPI
+    from harness.validate import load_analysis
+    run, meta = load_analysis("ga", GOOD_ANALYSIS)
+    api = AnalysisAPI(tmp_path, torch.device("cpu"), make_teacher(pretrained=False).eval())
+    with torch.no_grad():
+        run(api)
+    assert json.loads((tmp_path / "summary.json").read_text())["n"] == 2
+
+
+def test_oracle_step_bills_teacher_to_selector(models):
+    _, _, fl = _step("oracle", None, 25, models)
+    _, _, fl_full = _step("full", Full(), 196, models)
+    assert fl["selector"] >= 0.9 * fl_full["teacher"]
+
+
+def test_submit_seed_and_oracle_rules(tmp_path, monkeypatch):
+    from harness import submit
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setitem(C.TIER_EPOCHS, "final", 2)
+    monkeypatch.setitem(C.TIER_EPOCHS, "screen", 1)
+    with pytest.raises(SystemExit):
+        submit.make_job("maskedkd", 49, 0, "final")          # screen seed never in final
+    submit.make_job("maskedkd", 49, 1, "final")
+    with pytest.raises(SystemExit):
+        submit.make_job("oracle", 25, 0, "final")            # analysis-only
+    submit.make_job("oracle", 25, 0, "screen")
+    ids = submit.baselines()
+    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 2 * len(C.BASELINE_KEEPS)
+
+
+def test_report_noise_and_discriminative():
+    from harness.report import noise, discriminative, tries
+    runs = [{"tier": "screen", "method": m, "keep": k, "seed": s, "val_acc_last": v, "selector_sha": "b", "sel_args": {}}
+            for m, k, s, v in [("maskedkd", 98, 0, 70.0), ("maskedkd", 98, 1, 70.6), ("full", 196, 0, 71.0),
+                               ("full", 196, 1, 70.4), ("random", 25, 0, 60.0), ("maskedkd", 25, 0, 64.0)]]
+    sigma, thr, _ = noise(runs)
+    assert sigma is not None and thr >= C.PROMOTE_MIN
+    assert any("+4.00" in line for line in discriminative(runs))
+    assert tries(runs)[0].startswith("Total agent screen configs: 0")

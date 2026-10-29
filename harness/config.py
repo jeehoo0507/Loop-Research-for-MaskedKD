@@ -49,8 +49,13 @@ TIER_EPOCHS = {
     "screen": None,
     "final": None,
 }
-TIER_TIME_LIMIT_H = {"smoke": 0.5, "screen": 1.5, "final": 6.0}
-FINAL_SEEDS = (0, 1, 2)
+TIER_TIME_LIMIT_H = {"smoke": 0.5, "screen": 1.5, "final": 6.0, "analysis": 1.0}
+SCREEN_SEED = 0
+FINAL_SEEDS = (1, 2, 3)      # fresh seeds only: the screen seed never enters a final claim
+NOISE_SEEDS = (1, 2)         # extra screen seeds of maskedkd@98 and full, to measure seed noise
+BASELINE_KEEPS = (49, 25, 12)  # maskedkd and random at these budgets, submitted once by a human
+PROMOTE_MIN = 0.5            # promotion threshold = max(PROMOTE_MIN, 2 * seed sigma) %p
+SNAPSHOT_FRACS = (0.25, 0.5) # extra student snapshots (fraction of epochs) for analysis jobs
 
 # Scheduler
 MAX_JOBS = 4                 # hard cap; real concurrency also limited by measured VRAM
@@ -66,3 +71,4 @@ GATE_MASKEDKD98_GAP = 0.5    # |MaskedKD@98 - Full KD| <= 0.5 %p
 # Primary metric: smallest mean teacher-token budget whose val acc >= FullKD - 1.0 %p
 TOLERANCE = 1.0
 KEEP_GRID = (196, 98, 49, 25, 12)
+ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric

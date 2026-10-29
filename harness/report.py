@@ -64,6 +64,44 @@ def table(runs):
     return lines, rows
 
 
+def noise(runs, tier="screen"):
+    """Seed sigma from maskedkd@98 and full@196 screen runs over several seeds (pooled sd), and the
+    promotion threshold max(PROMOTE_MIN, 2*sigma)."""
+    groups = defaultdict(list)
+    for r in runs:
+        if r["tier"] == tier and (r["method"], float(r["keep"])) in (("maskedkd", 98.0), ("full", 196.0)):
+            groups[r["method"]].append(r["val_acc_last"])
+    num = sum((len(v) - 1) * statistics.variance(v) for v in groups.values() if len(v) > 1)
+    dof = sum(len(v) - 1 for v in groups.values() if len(v) > 1)
+    if dof == 0:
+        return None, C.PROMOTE_MIN, "seed sigma: not measured yet (run harness.submit --baselines)"
+    sigma = (num / dof) ** 0.5
+    thr = max(C.PROMOTE_MIN, 2 * sigma)
+    return sigma, thr, f"seed sigma {sigma:.2f} %p (pooled, dof {dof}) -> promotion threshold {thr:.2f} %p"
+
+
+def discriminative(runs, tier="screen"):
+    """maskedkd - random at each budget (seed 0): where token choice matters on this dataset."""
+    out = []
+    for k in sorted({float(r["keep"]) for r in runs if r["method"] == "random" and r["tier"] == tier}, reverse=True):
+        a = [r["val_acc_last"] for r in runs if r["tier"] == tier and r["method"] == "maskedkd" and float(r["keep"]) == k and r["seed"] == C.SCREEN_SEED]
+        b = [r["val_acc_last"] for r in runs if r["tier"] == tier and r["method"] == "random" and float(r["keep"]) == k and r["seed"] == C.SCREEN_SEED]
+        if a and b:
+            out.append(f"- K={k:g}: maskedkd {a[-1]:.2f} vs random {b[-1]:.2f} (diff {a[-1] - b[-1]:+.2f})")
+    return out
+
+
+def tries(runs, tier="screen"):
+    """Distinct screen configurations per selector name (more tries = more chance a win is luck)."""
+    cfg = defaultdict(set)
+    for r in runs:
+        if r["tier"] == tier and r["method"] not in ("ce", "full", "maskedkd", "random") + C.ANALYSIS_ONLY:
+            cfg[r["method"]].add((r.get("selector_sha"), json.dumps(r.get("sel_args", {}), sort_keys=True), float(r["keep"])))
+    total = sum(len(v) for v in cfg.values())
+    lines = [f"- {m}: {len(v)} configs" for m, v in sorted(cfg.items(), key=lambda t: -len(t[1]))]
+    return [f"Total agent screen configs: {total}", *lines]
+
+
 def primary(rows):
     out = []
     for tier in sorted({r["tier"] for r in rows}):
@@ -73,7 +111,7 @@ def primary(rows):
         ref = full[0]["acc"]
         best = defaultdict(lambda: None)
         for r in rows:
-            if r["tier"] != tier or r["method"] in ("ce", "full") or r["kept"] is None:
+            if r["tier"] != tier or r["method"] in ("ce", "full") + C.ANALYSIS_ONLY or r["kept"] is None:
                 continue
             if r["acc"] >= ref - C.TOLERANCE:
                 k = (r["method"], r["sha"], r["args"])
@@ -96,8 +134,13 @@ def main():
         print(msg)
         sys.exit(0 if ok else 1)
     lines, rows = table(runs)
+    sigma, thr, nmsg = noise(runs, a.tier)
     body = ["# RESULTS_TABLE (written by harness/report.py; do not edit by hand)", "",
-            f"Gate ({a.tier}, seed 0): {msg}", "", "## Primary metric", *primary(rows), "", "## All finished runs", *lines]
+            f"Gate ({a.tier}, seed 0): {msg}", "", f"Noise: {nmsg}", "",
+            "## Primary metric (analysis-only methods excluded: " + ", ".join(C.ANALYSIS_ONLY) + ")", *primary(rows), "",
+            "## Where token choice matters (maskedkd - random, screen seed 0)", *(discriminative(runs, a.tier) or ["- not measured yet"]), "",
+            "## Search effort (screen)", *tries(runs, a.tier), "",
+            "## All finished runs", *lines]
     (C.ROOT / "RESULTS_TABLE.md").write_text("\n".join(body) + "\n")
     print("\n".join(body))
 

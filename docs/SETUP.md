@@ -119,6 +119,18 @@ bash agent/start.sh sched                      # GPU 스케줄러만 tmux(sched)
 .venv/bin/python -m harness.report && git add -A && git commit -m "gate passed" && git push
 ```
 
+### 5-1. 기준선과 잡음 측정 (관문 직후, 한 번)
+
+```bash
+.venv/bin/python -m harness.submit --baselines
+```
+
+작업 10개를 큐에 넣는다.
+- `maskedkd@98`, `full`을 시드 1·2로: 시드 간 편차(σ)를 재서 승격 기준 max(0.5, 2σ)를 정한다.
+- `maskedkd`, `random`을 K = 49, 25, 12에서: 토큰 선택이 성적을 가르는 K를 찾는다.
+
+결과는 `RESULTS_TABLE.md`의 "Noise", "Where token choice matters" 줄에 자동으로 나온다. 루프는 이 작업들이 도는 동안 시작해도 된다.
+
 ## 6. 루프 시작
 
 ```bash
@@ -155,12 +167,22 @@ bash agent/start.sh                 # 스케줄러 + 에이전트 루프 (tmux: 
 
 ---
 
-## (선택) GPT 감사관 붙이기
+## (선택) GPT 붙이기: 비상 연구자 + 감사관
 
-GPT는 필수가 아니다. 붙이지 않으면 감사는 별도의 Claude 세션이 읽기 전용으로 한다.
-붙이면 GPT(Codex CLI)가 두 가지를 한다.
-1. 에이전트가 `agent/AUDIT_REQUEST.md`에 올린 주장을 읽기 전용으로 검토하고, `AUDIT.md`에 PASS/FAIL을 남긴다.
-2. 하루 1번, Claude의 기록을 보지 않고 독립 아이디어 2개를 `PROPOSALS.md`에 올린다.
+GPT는 필수가 아니다. Codex CLI가 설치되어 로그인돼 있으면 다음 두 역할에 쓰인다.
+
+**1) 비상 연구자 (자동).** Claude 라운드가 실패하면(종료 코드 ≠ 0, 또는 출력에 usage/rate limit) 같은 라운드를 GPT가 이어받는다.
+- 명령: `codex exec -m gpt-6-astra -c model_reasoning_effort="high" -s workspace-write`
+- 지침(`AGENT_PROMPT.md`)이 같고, 잠금 검사·되돌림도 똑같이 적용된다.
+- 실패 후 60분(`CLAUDE_RETRY`)이 지나면 Claude를 다시 시도하고, 성공하면 Claude로 돌아온다.
+- 커밋과 PROGRESS에 `[claude]` / `[codex]`가 붙는다.
+- GPT가 낸 주장은 **Claude가 감사할 때까지 확정되지 않는다.** Claude가 멈춰 있으면 감사 요청은 그대로 대기한다.
+- 모델 바꾸기: `CODEX_MODEL=<모델> CODEX_EFFORT=<low|medium|high|xhigh> bash agent/start.sh`
+  (모델 이름은 외부 자료 기준이다. 계정에서 안 보이면 `codex exec -m gpt-6-astra "OK"`로 먼저 확인)
+
+Codex가 없거나 로그인이 끊겨 있으면, Claude가 멈춘 동안 연구 라운드도 멈춘다. GPU 큐는 스케줄러가 계속 돌린다.
+
+**2) 감사관 (선택).** `AUDITOR=codex`이면 Claude가 낸 주장을 GPT가 읽기 전용으로 감사하고, 하루 1번 독립 아이디어 2개를 `PROPOSALS.md`에 올린다. 기본값(`claude`)은 별도 Claude 세션이 감사한다.
 
 ### 1) 설치
 
@@ -200,10 +222,10 @@ printenv OPENAI_API_KEY | codex login --with-api-key
 ### 3) 동작 확인
 
 ```bash
-codex exec -s read-only "Reply with the single word OK"
+codex exec -m gpt-6-astra -c model_reasoning_effort="high" -s read-only "Reply with the single word OK"
 ```
 
-`OK`가 나오면 된다. `-s read-only`는 파일을 고치지 못하는 샌드박스로, 감사관은 항상 이 모드로 돈다.
+`OK`가 나오면 된다. 감사관은 `-s read-only`(파일 수정 불가)로, 비상 연구자는 `-s workspace-write`(저장소 안만 쓰기)로 돈다.
 
 ### 4) 켜기 / 끄기
 

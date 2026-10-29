@@ -45,6 +45,7 @@ def alive(pid):
 def main():
     q = queue_dirs()
     procs = {}
+    started = {}
     # recover after restart
     for f in q["running"].glob("*.json"):
         pidf = f.with_suffix(".pid")
@@ -60,6 +61,10 @@ def main():
         for jid, (p, pid) in list(procs.items()):
             rc = p.poll() if p is not None else (None if alive(pid) else -1)
             if rc is None:
+                tier = json.loads((q["running"] / f"{jid}.json").read_text()).get("tier", "screen")
+                if p is not None and time.time() - started.get(jid, time.time()) > C.TIER_TIME_LIMIT_H[tier] * 3600 * 1.3:
+                    p.kill()   # hard stop (train jobs normally stop themselves at the tier limit)
+                    print(f"[sched] killed {jid}: wall-clock limit", flush=True)
                 continue
             f = q["running"] / f"{jid}.json"
             j = json.loads(f.read_text())
@@ -85,13 +90,16 @@ def main():
                 f = pending[0]
                 dst = q["running"] / f.name
                 f.rename(dst)
-                rdir = C.RUNS / f.stem
+                kind = json.loads(dst.read_text()).get("kind", "train")
+                rdir = (C.ROOT / "analysis_out" if kind == "analysis" else C.RUNS) / f.stem
                 rdir.mkdir(parents=True, exist_ok=True)
                 out = open(rdir / "stdout.txt", "a")
-                p = subprocess.Popen([sys.executable, "-m", "harness.train", "--job", str(dst)], cwd=C.ROOT,
+                mod = "harness.analyze" if kind == "analysis" else "harness.train"
+                p = subprocess.Popen([sys.executable, "-m", mod, "--job", str(dst)], cwd=C.ROOT,
                                      stdout=out, stderr=subprocess.STDOUT, env={**os.environ, "OMP_NUM_THREADS": "2"})
                 (q["running"] / f"{f.stem}.pid").write_text(str(p.pid))
                 procs[f.stem] = (p, p.pid)
+                started[f.stem] = time.time()
                 print(f"[sched] started {f.stem} pid={p.pid} free={free} need={need:.1f}", flush=True)
                 time.sleep(60)   # let it allocate before measuring free VRAM again
                 continue
