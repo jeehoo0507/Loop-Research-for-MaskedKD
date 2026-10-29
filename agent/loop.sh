@@ -120,7 +120,9 @@ daily_ideas() {  # only when GPT is the configured auditor: 2 independent ideas 
   [ "$AUDITOR" = "codex" ] || return 0
   [ "$(cat "$S/ideas_day" 2>/dev/null)" = "$(date +%F)" ] && return 0
   local out="agent/logs/ideas_$(date +%Y%m%d).log"
-  $CODEX_BASE -s read-only "$(cat agent/IDEAS_PROMPT.md)" > "$out" 2>&1
+  # IDEA 2 retrieves inspiring papers, so this call gets live web search
+  codex --search exec -m "$CODEX_MODEL" -c model_reasoning_effort="\"$CODEX_EFFORT\"" -s read-only \
+    "$(cat agent/IDEAS_PROMPT.md)" > "$out" 2>&1
   { echo; echo "## $(date +%F) ideas from Codex (independent)"; sed -n '/^IDEA/,$p' "$out" | head -30; } >> PROPOSALS.md
   date +%F > "$S/ideas_day"
 }

@@ -320,7 +320,7 @@ rm ~/.maskedkd_auditor                # 시작할 때 설정으로 복귀
 **확인:**
 - 감사 요청이 생긴 라운드가 끝나면 `AUDIT.md`에 `audit by codex` 블록이 추가된다.
 - 원본 출력은 `agent/logs/audit_*.log`에 있다.
-- 아이디어는 `PROPOSALS.md`의 `ideas from Codex` 절과 `agent/logs/ideas_*.log`에 있다.
+- 아이디어는 하루 2개 (1: 해석가능성 기법 근거, 2: 웹에서 영감 논문을 찾아 그 논문에서 출발 — ScholarCatalyst 방식). `PROPOSALS.md`의 `ideas from Codex` 절과 `agent/logs/ideas_*.log`에 있다.
 
 ### 참고
 - Codex 명령을 바꾸려면(모델 지정 등) `CODEX_CMD`를 쓴다. 예: `CODEX_CMD="codex exec -s read-only -m <모델>" AUDITOR=codex bash agent/start.sh`
