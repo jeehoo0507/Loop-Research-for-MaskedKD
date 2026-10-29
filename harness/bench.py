@@ -19,14 +19,30 @@ from .data import GpuAugment
 from .models import make_student, make_teacher
 from .train import train_step, Segments
 
-CASES = (("ce", 0), ("full", 196), ("maskedkd", 98), ("maskedkd", 25))
+CASES = (("ce", 0), ("full", 196), ("maskedkd", 98), ("maskedkd", 25), ("tome", 49))
+
+
+def flop_check(device):
+    """The cost axis of every result rests on FlopCounterMode. Check it on this GPU against the published
+    DeiT-S cost (4.6 GMACs at 197 tokens = 9.2 GFLOPs per image, forward)."""
+    from torch.utils.flop_counter import FlopCounterMode
+    from .models import teacher_forward_keepmask
+    t = make_teacher(pretrained=False).to(device).eval()
+    x = torch.randn(4, 3, C.IMG_SIZE, C.IMG_SIZE, device=device)
+    keep = torch.ones(4, C.NUM_PATCHES, dtype=torch.bool, device=device)
+    with torch.no_grad(), torch.autocast(device.type, dtype=torch.bfloat16), FlopCounterMode(display=False) as fc:
+        teacher_forward_keepmask(t, x, keep)
+    got = fc.get_total_flops() / 4 / 1e9
+    err = abs(got - C.TEACHER_REF_GFLOPS) / C.TEACHER_REF_GFLOPS
+    return {"teacher_gflops_measured": round(got, 3), "reference": C.TEACHER_REF_GFLOPS, "rel_err": round(err, 4),
+            "ok": err <= C.FLOP_CHECK_TOL}
 
 
 def worker(method, keep, steps):
     device = torch.device("cuda")
     student = make_student().to(device)
     teacher = None if method == "ce" else make_teacher(pretrained=False).to(device).eval()
-    selector = None if method == "ce" else BUILTIN[method]()
+    selector = BUILTIN[method]() if method in BUILTIN else None
     opt = torch.optim.AdamW(student.parameters(), lr=1e-4)
     aug = GpuAugment(device)
     crit = SoftTargetCrossEntropy()
@@ -56,6 +72,8 @@ def main():
     if not torch.cuda.is_available():
         sys.exit("bench needs a GPU")
     res = {"gpu": torch.cuda.get_device_name(0), "batch": C.BATCH, "single": {}, "parallel": {}}
+    res["flop_check"] = flop_check(torch.device("cuda"))
+    print(f"flop check: {res['flop_check']}", flush=True)
     for m, k in CASES:
         r = worker(m, k, a.steps)
         res["single"][f"{m}@{k}"] = r
@@ -83,6 +101,10 @@ def main():
     C.STATE.mkdir(exist_ok=True)
     (C.STATE / "bench.json").write_text(json.dumps(res, indent=1))
     print(json.dumps(res["recommend"], indent=1))
+    if not res["flop_check"]["ok"]:
+        print(f"FLOP CHECK FAILED: measured {res['flop_check']['teacher_gflops_measured']} GFLOPs vs "
+              f"{C.TEACHER_REF_GFLOPS} (tolerance {C.FLOP_CHECK_TOL:.0%}). Do not relock; fix the counter first.")
+        sys.exit(2)
 
 
 if __name__ == "__main__":

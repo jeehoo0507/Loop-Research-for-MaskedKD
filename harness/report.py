@@ -15,19 +15,24 @@ from collections import defaultdict
 from . import config as C
 
 
-def load_runs():
+def load_runs(dataset=None):
+    """Finished runs (smoke runs excluded). dataset=None: all datasets."""
     rs = []
     for m in C.RUNS.glob("*/metrics.json"):
         r = json.loads(m.read_text())
-        if r.get("status") == "done":
+        r.setdefault("dataset", "cifar100")
+        if r.get("status") == "done" and r["tier"] != "smoke" and dataset in (None, r["dataset"]):
             rs.append(r)
     return rs
 
 
-def gate(runs, tier="screen"):
+def gate(runs, tier="screen", dataset="cifar100", seed=None):
+    """CIFAR gate: screen seed 0. ImageNet-100 gate: final seed 1."""
+    seed = (C.SCREEN_SEED if dataset == "cifar100" else C.FINAL_SEEDS[0]) if seed is None else seed
+
     def acc(method, keep):
         v = [r["val_acc_last"] for r in runs if r["tier"] == tier and r["method"] == method
-             and float(r["keep"]) == keep and r["seed"] == 0]
+             and r.get("dataset", "cifar100") == dataset and float(r["keep"]) == keep and r["seed"] == seed]
         return v[-1] if v else None
     ce, full, mk = acc("ce", 0), acc("full", 196), acc("maskedkd", 98)
     if None in (ce, full, mk):
@@ -45,8 +50,8 @@ def table(runs):
         key = (r["tier"], r["method"], r.get("selector_sha") or "", json.dumps(r.get("sel_args", {}), sort_keys=True),
                float(r["keep"]))
         groups[key].append(r)
-    lines = ["| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | total GFLOPs/img | teacher | selector | run ids |",
-             "|---|---|---|---|---|---|---|---|---|---|---|"]
+    lines = ["| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | total GFLOPs/img | teacher | selector | img/s* | run ids |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     rows = []
     for (tier, method, sha, args, keep), rs in sorted(groups.items()):
         accs = [r["val_acc_last"] for r in rs]
@@ -55,12 +60,14 @@ def table(runs):
         fl = [r["flops"] for r in rs if r.get("flops")]
         f = lambda k: f"{statistics.mean(x[k] for x in fl):.2f}" if fl else "-"
         kept = [r["mean_kept"] for r in rs if r.get("mean_kept") is not None]
+        ips = [r["img_per_s_mean"] for r in rs if r.get("img_per_s_mean")]
         rows.append({"tier": tier, "method": method, "sha": sha, "args": args, "keep": keep, "acc": mean,
                      "kept": statistics.mean(kept) if kept else None, "seeds": sorted(r["seed"] for r in rs)})
         lines.append(f"| {tier} | {method}{'@' + sha[:6] if sha and sha != 'builtin' else ''} | {args if args != '{}' else ''} "
                      f"| {keep:g} | {rows[-1]['kept'] if rows[-1]['kept'] is None else round(rows[-1]['kept'], 1)} "
                      f"| {','.join(map(str, rows[-1]['seeds']))} | {mean:.2f} ± {sd:.2f} | {f('total_gflops_per_img')} "
-                     f"| {f('teacher_gflops_per_img')} | {f('selector_gflops_per_img')} | {' '.join(r['id'] for r in rs)} |")
+                     f"| {f('teacher_gflops_per_img')} | {f('selector_gflops_per_img')} "
+                     f"| {f'{statistics.mean(ips):.0f}' if ips else '-'} | {' '.join(r['id'] for r in rs)} |")
     return lines, rows
 
 
@@ -128,19 +135,30 @@ def main():
     ap.add_argument("--gate", action="store_true")
     ap.add_argument("--tier", default="screen")
     a = ap.parse_args()
-    runs = load_runs()
-    ok, msg = gate(runs, a.tier)
+    ap.add_argument("--dataset", default="cifar100", choices=list(C.DATASETS))
+    a = ap.parse_args()
     if a.gate:
+        tier = a.tier if a.dataset == "cifar100" else "final"
+        ok, msg = gate(load_runs(a.dataset), tier, a.dataset)
         print(msg)
         sys.exit(0 if ok else 1)
-    lines, rows = table(runs)
-    sigma, thr, nmsg = noise(runs, a.tier)
     body = ["# RESULTS_TABLE (written by harness/report.py; do not edit by hand)", "",
-            f"Gate ({a.tier}, seed 0): {msg}", "", f"Noise: {nmsg}", "",
-            "## Primary metric (analysis-only methods excluded: " + ", ".join(C.ANALYSIS_ONLY) + ")", *primary(rows), "",
-            "## Where token choice matters (maskedkd - random, screen seed 0)", *(discriminative(runs, a.tier) or ["- not measured yet"]), "",
-            "## Search effort (screen)", *tries(runs, a.tier), "",
-            "## All finished runs", *lines]
+            "*img/s: training throughput averaged over epochs; depends on how many jobs shared the GPU.", ""]
+    runs = load_runs("cifar100")
+    lines, rows = table(runs)
+    ok, msg = gate(runs, "screen", "cifar100")
+    sigma, thr, nmsg = noise(runs, "screen")
+    body += ["# Stage 1: CIFAR-100", "", f"Gate (screen, seed 0): {msg}", "", f"Noise: {nmsg}", "",
+             "## Primary metric (analysis-only methods excluded: " + ", ".join(C.ANALYSIS_ONLY) + ")", *primary(rows), "",
+             "## Where token choice matters (maskedkd - random, screen seed 0)", *(discriminative(runs, "screen") or ["- not measured yet"]), "",
+             "## Search effort (screen)", *tries(runs, "screen"), "",
+             "## All finished runs", *lines, ""]
+    runs2 = load_runs(C.STAGE2)
+    lines2, rows2 = table(runs2)
+    ok2, msg2 = gate(runs2, "final", C.STAGE2)
+    body += ["# Stage 2: ImageNet-100 (fixed methods from stage 1; 'stage2' column in metrics.json says untouched/tuned)", "",
+             f"Gate (final, seed {C.FINAL_SEEDS[0]}): {msg2}", "",
+             "## Primary metric", *primary(rows2), "", "## All finished runs", *(lines2 if rows2 else ["- none yet"])]
     (C.ROOT / "RESULTS_TABLE.md").write_text("\n".join(body) + "\n")
     print("\n".join(body))
 

@@ -38,14 +38,49 @@ def all_jobs():
     return out
 
 
-def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", priority=0, force=False):
-    epochs = C.TIER_EPOCHS.get(tier)
+def audit_passed(method):
+    """True if AUDIT.md has a PASS verdict in an audit block whose request names this method."""
+    audit = C.ROOT / "AUDIT.md"
+    if not audit.exists():
+        return False
+    for block in audit.read_text().split("\n## ")[1:]:
+        if method in block and "VERDICT: PASS" in block:
+            return True
+    return False
+
+
+def stage2_rule(method, sha):
+    """Stage 2 (ImageNet-100) admits harness baselines, and agent methods that finished CIFAR final on
+    all fresh seeds and passed audit, only after the ImageNet-100 gate passed. Returns a label."""
+    if method in C.BASELINES:
+        return "baseline"
+    from .report import gate, load_runs
+    runs = load_runs()
+    ok, msg = gate(runs, "final", C.STAGE2, seed=C.FINAL_SEEDS[0])
+    if not ok:
+        raise SystemExit(f"stage 2 is closed until the ImageNet-100 gate passes: {msg}")
+    cifar = [r for r in runs if r.get("dataset", "cifar100") == "cifar100" and r["tier"] == "final" and r["method"] == method]
+    passed_shas = {r["selector_sha"] for r in cifar
+                   if set(C.FINAL_SEEDS) <= {x["seed"] for x in cifar if x["selector_sha"] == r["selector_sha"]}}
+    if not passed_shas or not audit_passed(method):
+        raise SystemExit(f"'{method}' needs CIFAR final on seeds {C.FINAL_SEEDS} and an audit PASS before stage 2")
+    if sha in passed_shas:
+        return "stage2_untouched"
+    if not any(r["method"] == method and r.get("stage2") == "stage2_untouched" for r in runs):
+        raise SystemExit(f"run the unchanged '{method}' on stage 2 first; tuned variants come after")
+    return "stage2_tuned"
+
+
+def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", priority=0, force=False, dataset="cifar100"):
+    if dataset not in C.DATASETS:
+        raise SystemExit(f"dataset must be one of {C.DATASETS}")
+    epochs = C.TIER_EPOCHS[dataset].get(tier)
     if epochs is None:
-        raise SystemExit(f"tier '{tier}' has no epoch budget yet (a human sets it after harness.bench)")
+        raise SystemExit(f"{dataset} tier '{tier}' has no epoch budget (a human sets it after harness.bench)")
     if tier == "final" and seed not in C.FINAL_SEEDS:
         raise SystemExit(f"final runs use fresh seeds {C.FINAL_SEEDS} only (screen seed {C.SCREEN_SEED} never enters a claim)")
-    if method in C.ANALYSIS_ONLY and tier not in ("screen", "smoke"):
-        raise SystemExit(f"'{method}' is an analysis-only reference; screen tier only")
+    if method in C.ANALYSIS_ONLY and tier == "final" and dataset == "cifar100":
+        raise SystemExit(f"'{method}' is an analysis-only reference; screen tier only on cifar100")
     if method == "ce":
         keep = 0
     elif not (0 <= keep <= C.NUM_PATCHES):
@@ -53,24 +88,30 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     if method == "full":
         keep = C.NUM_PATCHES
     src, sha = None, "builtin"
-    if method not in BUILTIN and method not in ("ce",) + C.ANALYSIS_ONLY:
+    if method not in C.BASELINES:
         try:
             src = selector_source(method)
             check_source(src, method)
         except SelectorRejected as e:
             raise SystemExit(f"REJECTED: {e}")
         sha = hashlib.sha256(src.encode()).hexdigest()
+    stage2 = None
+    if dataset == C.STAGE2 and tier != "smoke":
+        stage2 = stage2_rule(method, sha)
+        priority = min(priority, C.STAGE2_PRIORITY)
     sel_args = sel_args or {}
-    key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True))
+    key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True), dataset)
     for j in all_jobs():
         jk = (j["method"], j.get("selector_sha"), float(j["keep"]), j["seed"], j["tier"],
-              json.dumps(j.get("sel_args", {}), sort_keys=True))
+              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", "cifar100"))
         if jk == key and not force and j.get("returncode", 0) == 0:
             raise SystemExit(f"duplicate of {j['id']} ({j['_state']}); use --force to rerun")
     ts = time.strftime("%m%d_%H%M%S")
     tag = hashlib.sha1(json.dumps(key).encode()).hexdigest()[:4]
     keep_s = f"{keep:g}"
-    job = {"id": f"{tier}_{method}_k{keep_s}_s{seed}_{ts}_{tag}", "kind": "train", "method": method, "keep": keep, "seed": seed,
+    ds = "" if dataset == "cifar100" else f"{dataset}_"
+    job = {"id": f"{ds}{tier}_{method}_k{keep_s}_s{seed}_{ts}_{tag}", "kind": "train", "dataset": dataset,
+           "stage2": stage2, "method": method, "keep": keep, "seed": seed,
            "tier": tier, "epochs": epochs, "sel_args": sel_args, "selector_src": src, "selector_sha": sha,
            "note": note, "by": by, "priority": priority, "submitted": time.strftime("%Y-%m-%d %H:%M:%S")}
     path = queue_dirs()["pending"] / f"{job['id']}.json"
@@ -78,7 +119,7 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     return job
 
 
-def make_analysis(name, note="", by="agent", priority=0):
+def make_analysis(name, note="", by="agent", priority=0, dataset="cifar100"):
     try:
         src = analysis_source(name)
         check_source(src, name, kind="analysis")
@@ -86,22 +127,43 @@ def make_analysis(name, note="", by="agent", priority=0):
         raise SystemExit(f"REJECTED: {e}")
     sha = hashlib.sha256(src.encode()).hexdigest()
     ts = time.strftime("%m%d_%H%M%S")
-    job = {"id": f"analysis_{name}_{ts}_{sha[:4]}", "kind": "analysis", "method": name, "keep": 0, "seed": 0,
+    job = {"id": f"analysis_{name}_{ts}_{sha[:4]}", "kind": "analysis", "dataset": dataset, "method": name, "keep": 0, "seed": 0,
            "tier": "analysis", "epochs": 0, "selector_src": src, "selector_sha": sha, "note": note, "by": by,
            "priority": priority, "submitted": time.strftime("%Y-%m-%d %H:%M:%S")}
     (queue_dirs()["pending"] / f"{job['id']}.json").write_text(json.dumps(job, indent=1))
     return job
 
 
-def baselines(force=False):
-    """Seed-noise runs (maskedkd@98, full; NOISE_SEEDS) and the maskedkd/random grid at BASELINE_KEEPS."""
+GATE = (("ce", 0), ("full", 196), ("maskedkd", 98))
+
+
+def gate_jobs(dataset="cifar100", force=False):
+    """CIFAR: screen seed 0. ImageNet-100: final seed 1 (stage 2 has no screen tier)."""
+    tier, seed = ("screen", C.SCREEN_SEED) if dataset == "cifar100" else ("final", C.FINAL_SEEDS[0])
+    return [make_job(m, k, seed, tier, by="gate", priority=10, force=force, dataset=dataset)["id"] for m, k in GATE]
+
+
+def baselines(dataset="cifar100", force=False, keeps=None):
+    """CIFAR: seed-noise runs (maskedkd@98, full on NOISE_SEEDS) + maskedkd/random/tome grid at BASELINE_KEEPS.
+    ImageNet-100: gate trio on the remaining final seeds + maskedkd/random/tome at `keeps` (seed 1) + oracle."""
+    keeps = tuple(keeps or C.BASELINE_KEEPS)
     ids = []
-    for s in C.NOISE_SEEDS:
-        for m, k in (("maskedkd", 98), ("full", 196)):
-            ids.append(make_job(m, k, s, "screen", by="baselines", priority=5, force=force)["id"])
-    for k in C.BASELINE_KEEPS:
-        for m in ("maskedkd", "random"):
-            ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
+    if dataset == "cifar100":
+        for s in C.NOISE_SEEDS:
+            for m, k in (("maskedkd", 98), ("full", 196)):
+                ids.append(make_job(m, k, s, "screen", by="baselines", priority=5, force=force)["id"])
+        for k in keeps:
+            for m in ("maskedkd", "random", "tome"):
+                ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
+        ids.append(make_job("oracle", keeps[-1], C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
+        return ids
+    for s in C.FINAL_SEEDS[1:]:
+        for m, k in GATE:
+            ids.append(make_job(m, k, s, "final", by="baselines", force=force, dataset=dataset)["id"])
+    for k in keeps:
+        for m in ("maskedkd", "random", "tome"):
+            ids.append(make_job(m, k, C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset)["id"])
+    ids.append(make_job("oracle", keeps[-1], C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset)["id"])
     return ids
 
 
@@ -126,7 +188,10 @@ if __name__ == "__main__":
     ap.add_argument("--method")
     ap.add_argument("--keep", type=float, default=98)
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--tier", default="screen", choices=list(C.TIER_EPOCHS))
+    ap.add_argument("--tier", default="screen", choices=["smoke", "screen", "final"])
+    ap.add_argument("--dataset", default="cifar100", choices=list(C.DATASETS))
+    ap.add_argument("--keeps", default="", help="comma list of budgets for --baselines on in100")
+    ap.add_argument("--smoke", action="store_true", help="human: a few-minute GPU check of every path")
     ap.add_argument("--sel-args", default="{}")
     ap.add_argument("--note", default="")
     ap.add_argument("--by", default="agent")
@@ -139,15 +204,18 @@ if __name__ == "__main__":
     a = ap.parse_args()
     if a.status:
         status()
+    elif a.smoke:
+        for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("tome", 49), ("oracle", 49)):
+            print(make_job(m, k, 0, "smoke", by="smoke", priority=20, force=True, dataset=a.dataset)["id"])
     elif a.baselines:
-        print("\n".join(baselines(a.force)))
+        keeps = [float(k) for k in a.keeps.split(",") if k] or None
+        print("\n".join(baselines(a.dataset, a.force, keeps)))
     elif a.analysis:
-        print(make_analysis(a.analysis, a.note, a.by, a.priority)["id"])
+        print(make_analysis(a.analysis, a.note, a.by, a.priority, a.dataset)["id"])
     elif a.gate:
-        for m, k in (("ce", 0), ("full", 196), ("maskedkd", 98)):
-            print(make_job(m, k, 0, a.tier, by="gate", priority=10, force=a.force)["id"])
+        print("\n".join(gate_jobs(a.dataset, a.force)))
     else:
         if not a.method:
             ap.error("--method required")
         print(make_job(a.method, a.keep, a.seed, a.tier, json.loads(a.sel_args), a.note, a.by, a.priority,
-                       a.force)["id"])
+                       a.force, a.dataset)["id"])

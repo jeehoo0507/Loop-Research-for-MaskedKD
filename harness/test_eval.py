@@ -20,9 +20,10 @@ from .train import evaluate
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", nargs="+", required=True)
+    ap.add_argument("--dataset", default="cifar100", choices=list(C.DATASETS))
     a = ap.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    x, y = load_split("test")
+    x, y = load_split("test", a.dataset)
     res = {}
     for rid in a.runs:
         m = make_student().to(device)

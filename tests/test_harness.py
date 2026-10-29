@@ -253,8 +253,8 @@ def test_oracle_step_bills_teacher_to_selector(models):
 def test_submit_seed_and_oracle_rules(tmp_path, monkeypatch):
     from harness import submit
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
-    monkeypatch.setitem(C.TIER_EPOCHS, "final", 2)
-    monkeypatch.setitem(C.TIER_EPOCHS, "screen", 1)
+    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "final", 2)
+    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "screen", 1)
     with pytest.raises(SystemExit):
         submit.make_job("maskedkd", 49, 0, "final")          # screen seed never in final
     submit.make_job("maskedkd", 49, 1, "final")
@@ -262,7 +262,7 @@ def test_submit_seed_and_oracle_rules(tmp_path, monkeypatch):
         submit.make_job("oracle", 25, 0, "final")            # analysis-only
     submit.make_job("oracle", 25, 0, "screen")
     ids = submit.baselines()
-    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 2 * len(C.BASELINE_KEEPS)
+    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 3 * len(C.BASELINE_KEEPS) + 1   # + tome grid + oracle
 
 
 def test_report_noise_and_discriminative():
@@ -274,3 +274,91 @@ def test_report_noise_and_discriminative():
     assert sigma is not None and thr >= C.PROMOTE_MIN
     assert any("+4.00" in line for line in discriminative(runs))
     assert tries(runs)[0].startswith("Total agent screen configs: 0")
+
+
+# ---- ToMe baseline, stage 2, smoke, figures ----
+
+def test_tome_r0_equals_plain_teacher_and_merging_cuts_cost(models):
+    from harness.tome import teacher_forward_tome, r_for_budget, token_schedule
+    from torch.utils.flop_counter import FlopCounterMode
+    _, t = models
+    x = torch.randn(2, 3, 224, 224)
+    with torch.no_grad():
+        assert torch.allclose(t(x), teacher_forward_tome(t, x, 0), atol=1e-4)
+        with FlopCounterMode(display=False) as f0:
+            teacher_forward_tome(t, x, 0)
+        with FlopCounterMode(display=False) as f1:
+            teacher_forward_tome(t, x, r_for_budget(49))
+    assert f1.get_total_flops() < 0.6 * f0.get_total_flops()
+    assert r_for_budget(98) <= r_for_budget(49) <= r_for_budget(25)
+    assert min(token_schedule(r_for_budget(25))) >= 2
+
+
+def test_tome_train_step(models):
+    loss, kept, fl = _step("tome", None, 49, models)
+    assert kept == 49.0 and fl["teacher"] > 0
+
+
+def _fake_runs(tmp_path, monkeypatch, recs):
+    runs = tmp_path / "runs"
+    monkeypatch.setattr(C, "RUNS", runs)
+    monkeypatch.setattr(C, "ROOT", tmp_path)
+    for i, r in enumerate(recs):
+        d = runs / f"r{i}"
+        d.mkdir(parents=True)
+        base = {"id": f"r{i}", "status": "done", "selector_sha": "builtin", "sel_args": {}, "flops": {"total_gflops_per_img": 10.0},
+                "img_per_s_mean": 500.0, "dataset": "cifar100"}
+        (d / "metrics.json").write_text(json.dumps({**base, **r}))
+
+
+def test_stage2_rules(tmp_path, monkeypatch):
+    from harness import submit
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setitem(C.TIER_EPOCHS["in100"], "final", 2)
+    (tmp_path / "selectors").mkdir()
+    monkeypatch.setattr("harness.validate.SELECTORS_DIR", tmp_path / "selectors")
+    (tmp_path / "selectors" / "good.py").write_text(GOOD)
+    import hashlib
+    sha = hashlib.sha256(GOOD.encode()).hexdigest()
+    _fake_runs(tmp_path, monkeypatch, [])
+    submit.make_job("ce", 0, 1, "final", dataset="in100")                 # baselines always allowed
+    with pytest.raises(SystemExit, match="gate"):
+        submit.make_job("good", 25, 1, "final", dataset="in100")         # stage 2 closed before its gate
+    gate = [{"method": m, "keep": k, "seed": 1, "tier": "final", "val_acc_last": v, "dataset": "in100"}
+            for m, k, v in (("ce", 0, 70.0), ("full", 196, 75.0), ("maskedkd", 98, 74.8))]
+    cifar = [{"method": "good", "keep": 25, "seed": s, "tier": "final", "val_acc_last": 70.0, "selector_sha": sha}
+             for s in (1, 2, 3)]
+    import shutil
+    shutil.rmtree(tmp_path / "runs", ignore_errors=True)
+    _fake_runs(tmp_path, monkeypatch, gate + cifar)
+    with pytest.raises(SystemExit, match="audit"):
+        submit.make_job("good", 25, 1, "final", dataset="in100")         # no audit PASS yet
+    (tmp_path / "AUDIT.md").write_text("# AUDIT\n\n## x audit by claude\nclaim good K=25\nVERDICT: PASS\n")
+    job = submit.make_job("good", 25, 1, "final", dataset="in100")
+    assert job["stage2"] == "stage2_untouched" and job["priority"] <= C.STAGE2_PRIORITY
+
+
+def test_in100_smoke_run(tmp_path, monkeypatch):
+    from harness import submit, train
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    job = submit.make_job("maskedkd", 49, 0, "smoke", dataset="in100", force=True)
+    jp = tmp_path / "job.json"
+    jp.write_text(json.dumps(job))
+    assert train.run(str(jp)) == 0
+    m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
+    assert m["dataset"] == "in100" and m["mean_kept"] == 49.0 and m["img_per_s_mean"] > 0
+
+
+def test_figures(tmp_path, monkeypatch):
+    recs = [{"method": m, "keep": k, "seed": s, "tier": "screen", "val_acc_last": v}
+            for m, k, s, v in (("ce", 0, 0, 60.0), ("full", 196, 0, 70.0), ("maskedkd", 98, 0, 69.8),
+                               ("maskedkd", 49, 0, 68.5), ("random", 49, 0, 66.0), ("tome", 49, 0, 67.0))]
+    _fake_runs(tmp_path, monkeypatch, recs)
+    from harness import figures
+    monkeypatch.setattr("sys.argv", ["figures"])
+    figures.main()
+    assert (tmp_path / "figures" / "cifar100_screen_tokens.png").exists()
+    assert "maskedkd" in (tmp_path / "figures" / "cifar100_screen.csv").read_text()

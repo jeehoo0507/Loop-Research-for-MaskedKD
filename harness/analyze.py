@@ -33,10 +33,10 @@ def main():
     try:
         run, script_meta = load_analysis(job["method"], job["selector_src"])
         meta["meta"] = script_meta
-        teacher = make_teacher(pretrained=False).to(device).eval() if os.environ.get("MASKEDKD_FAKE_DATA") \
-            else load_teacher(device)[0]
+        dataset = job.get("dataset", "cifar100")
+        teacher = load_teacher(device, dataset)[0]
         with torch.autocast(device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
-            run(AnalysisAPI(out, device, teacher))
+            run(AnalysisAPI(out, device, teacher, dataset))
         meta["status"] = "done"
         rc = 0
     except Exception as e:

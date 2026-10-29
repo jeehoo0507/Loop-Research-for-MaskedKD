@@ -43,13 +43,24 @@ TEACHER_EPOCHS = 10
 TEACHER_LR = 1e-4
 TEACHER_WARMUP_EPOCHS = 1
 
-# Epoch budgets per tier. None until a human sets them from `python -m harness.bench`.
+# Datasets. Stage 1 = cifar100 (search). Stage 2 = in100 (ImageNet-100, CMC 100-class subset from the
+# public Hugging Face dataset clane9/imagenet-100; prepared by `python -m harness.prepare_stage2`).
+DATASETS = ("cifar100", "in100")
+STAGE2 = "in100"
+IN100_HF_REPO = "clane9/imagenet-100"
+IN100_TRAIN_RES = 256      # stored train images (RandomResizedCrop to 224 happens on the GPU)
+STAGE2_MAX_RUNNING = 1     # stage-2 jobs share the GPU with the search: at most this many at once
+STAGE2_PRIORITY = -10      # and they start only when nothing else is waiting
+
+# Epoch budgets per dataset and tier. None until a human sets them from `python -m harness.bench`.
 TIER_EPOCHS = {
-    "smoke": 1,
-    "screen": None,
-    "final": None,
+    "cifar100": {"smoke": 1, "screen": None, "final": None},
+    "in100": {"smoke": 1, "final": None},      # stage 2 has no screen tier: fixed methods, fresh seeds
 }
+TIER_MAX_STEPS = {"smoke": 30}   # smoke = a few minutes: catches CUDA/shape errors, nothing else
+SMOKE_VAL_LIMIT = 500
 TIER_TIME_LIMIT_H = {"smoke": 0.5, "screen": 1.5, "final": 6.0, "analysis": 1.0}
+STAGE2_TIME_LIMIT_H = 24.0
 SCREEN_SEED = 0
 FINAL_SEEDS = (1, 2, 3)      # fresh seeds only: the screen seed never enters a final claim
 NOISE_SEEDS = (1, 2)         # extra screen seeds of maskedkd@98 and full, to measure seed noise
@@ -72,3 +83,12 @@ GATE_MASKEDKD98_GAP = 0.5    # |MaskedKD@98 - Full KD| <= 0.5 %p
 TOLERANCE = 1.0
 KEEP_GRID = (196, 98, 49, 25, 12)
 ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric
+BASELINES = ("ce", "full", "maskedkd", "random", "tome", "oracle")   # harness-owned reference methods
+
+# FLOP counter self-check (bench): DeiT-S forward at 197 tokens is 4.6 GMACs (DeiT paper) = 9.2 GFLOPs
+TEACHER_REF_GFLOPS = 9.2
+FLOP_CHECK_TOL = 0.10
+
+
+def time_limit_h(dataset, tier):
+    return STAGE2_TIME_LIMIT_H if dataset == STAGE2 and tier != "smoke" else TIER_TIME_LIMIT_H[tier]

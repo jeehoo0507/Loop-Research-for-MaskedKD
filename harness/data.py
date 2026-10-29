@@ -4,8 +4,11 @@ Earlier repos were data-loading bound (~152 img/s on an A5000), so nothing here 
 Splits: train 45k / val 5k (stratified, from the official train set) / test 10k (official test set).
 The test split is only read by harness/test_eval.py, which a human runs once at the end.
 """
+import json
 import math
 import os
+import queue
+import threading
 
 import numpy as np
 import torch
@@ -19,9 +22,9 @@ MEAN = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
 STD = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
 
 
-def _fake(n, seed):
+def _fake(n, seed, res=32):
     g = torch.Generator().manual_seed(seed)
-    x = torch.randint(0, 256, (n, 3, 32, 32), dtype=torch.uint8, generator=g)
+    x = torch.randint(0, 256, (n, 3, res, res), dtype=torch.uint8, generator=g)
     y = torch.arange(n) % C.NUM_CLASSES
     return x, y
 
@@ -42,8 +45,23 @@ def _load_raw(train: bool):
     return x, y
 
 
-def load_split(split: str):
-    """split in {'train', 'val', 'test'}."""
+def _in100(split):
+    """ImageNet-100 arrays written by harness/prepare_stage2.py: uint8 memmap [N,3,H,W] + int64 labels."""
+    if os.environ.get("MASKEDKD_FAKE_DATA"):
+        n = {"train": 400, "val": 200, "test": 200}[split]
+        return _fake(n, {"train": 11, "val": 12, "test": 13}[split], res=64 if split == "train" else 56)
+    d = C.DATA_ROOT / "in100"
+    meta = json.loads((d / "meta.json").read_text())
+    shape = tuple(meta["shapes"][split])
+    x = np.memmap(d / f"{split}_x.u8", dtype=np.uint8, mode="r", shape=shape)
+    y = torch.from_numpy(np.load(d / f"{split}_y.npy")).long()
+    return x, y
+
+
+def load_split(split: str, dataset: str = "cifar100"):
+    """split in {'train', 'val', 'test'}. For in100 the images are a numpy memmap (not loaded into memory)."""
+    if dataset == "in100":
+        return _in100(split)
     if split == "test":
         return _load_raw(train=False)
     x, y = _load_raw(train=True)
@@ -61,9 +79,14 @@ def load_split(split: str):
     return x[~mask], y[~mask]
 
 
+def as_tensor(x):
+    """uint8 images as a torch tensor (memmap slices are copied)."""
+    return torch.from_numpy(np.ascontiguousarray(x)) if isinstance(x, np.ndarray) else x
+
+
 def normalize_resize(x_uint8):
-    """Eval transform: [0,255] uint8 32px -> normalized float 224px."""
-    x = x_uint8.float() / 255.0
+    """Eval transform: [0,255] uint8 (32px CIFAR or 224px ImageNet-100) -> normalized float 224px."""
+    x = as_tensor(x_uint8).float() / 255.0
     x = F.interpolate(x, size=C.IMG_SIZE, mode="bilinear", align_corners=False)
     return (x - MEAN.to(x.device)) / STD.to(x.device)
 
@@ -208,3 +231,42 @@ class GpuLoader:
         for i in range(len(self)):
             idx = perm[i * self.batch:(i + 1) * self.batch]
             yield self.x[idx], self.y[idx]
+
+
+class DiskLoader:
+    """Shuffled minibatches read from a uint8 memmap by a background thread, pinned and copied to `device`.
+    Used for ImageNet-100 (too large to keep on the GPU). Same interface as GpuLoader."""
+
+    def __init__(self, x, y, batch, device, shuffle=True, drop_last=True, seed=0, prefetch=4):
+        self.x, self.y = x, y
+        self.batch, self.device, self.shuffle, self.drop_last, self.prefetch = batch, device, shuffle, drop_last, prefetch
+        self.g = torch.Generator(device="cpu").manual_seed(seed)
+
+    def __len__(self):
+        n = len(self.y)
+        return n // self.batch if self.drop_last else math.ceil(n / self.batch)
+
+    def __iter__(self):
+        n = len(self.y)
+        perm = torch.randperm(n, generator=self.g) if self.shuffle else torch.arange(n)
+        q = queue.Queue(maxsize=self.prefetch)
+
+        def work():
+            for i in range(len(self)):
+                idx = perm[i * self.batch:(i + 1) * self.batch].sort().values.numpy()   # sorted: disk locality
+                xb = torch.from_numpy(np.ascontiguousarray(self.x[idx]))
+                if self.device.type == "cuda":
+                    xb = xb.pin_memory()
+                q.put((xb, self.y[idx]))
+            q.put(None)
+
+        threading.Thread(target=work, daemon=True).start()
+        while (item := q.get()) is not None:
+            xb, yb = item
+            yield xb.to(self.device, non_blocking=True), yb.to(self.device, non_blocking=True)
+
+
+def make_loader(x, y, batch, device, seed, dataset):
+    if isinstance(x, np.ndarray):
+        return DiskLoader(x, y, batch, device, seed=seed)
+    return GpuLoader(x, y, batch, device, seed=seed)

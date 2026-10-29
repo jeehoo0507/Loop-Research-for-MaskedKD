@@ -21,7 +21,7 @@ import json
 import torch
 
 from . import config as C
-from .data import load_split, normalize_resize
+from .data import as_tensor, load_split, normalize_resize
 from .models import (make_student, student_forward, teacher_forward_keepmask, teacher_forward_masked,
                      _attn_with_weights)
 
@@ -34,18 +34,19 @@ class AnalysisAPI:
     attn_with_weights = staticmethod(_attn_with_weights)
     num_patches = C.NUM_PATCHES
 
-    def __init__(self, out_dir, device, teacher):
+    def __init__(self, out_dir, device, teacher, dataset="cifar100"):
         self._out = out_dir
         self.device = device
         self.teacher = teacher
-        self._x, self._y = load_split("val")
+        self.dataset = dataset
+        self._x, self._y = load_split("val", dataset)
 
     def val_batches(self, batch=100, limit=None):
         """Normalized 224px val images and labels, fixed order."""
         n = len(self._y) if limit is None else min(limit, len(self._y))
         for i in range(0, n, batch):
             j = min(i + batch, n)
-            yield normalize_resize(self._x[i:j].to(self.device)), self._y[i:j].to(self.device)
+            yield normalize_resize(as_tensor(self._x[i:j]).to(self.device)), self._y[i:j].to(self.device)
 
     def runs(self):
         """Finished runs: id -> {method, keep, seed, tier, val_acc_last, snapshots}."""

@@ -61,8 +61,9 @@ def main():
         for jid, (p, pid) in list(procs.items()):
             rc = p.poll() if p is not None else (None if alive(pid) else -1)
             if rc is None:
-                tier = json.loads((q["running"] / f"{jid}.json").read_text()).get("tier", "screen")
-                if p is not None and time.time() - started.get(jid, time.time()) > C.TIER_TIME_LIMIT_H[tier] * 3600 * 1.3:
+                jj = json.loads((q["running"] / f"{jid}.json").read_text())
+                limit = C.time_limit_h(jj.get("dataset", "cifar100"), jj.get("tier", "screen"))
+                if p is not None and time.time() - started.get(jid, time.time()) > limit * 3600 * 1.3:
                     p.kill()   # hard stop (train jobs normally stop themselves at the tier limit)
                     print(f"[sched] killed {jid}: wall-clock limit", flush=True)
                 continue
@@ -86,8 +87,11 @@ def main():
         elif pending and len(procs) < C.MAX_JOBS:
             free = free_vram_gib()
             need = need_vram_gib() + C.VRAM_MARGIN_GIB
-            if free is None or free >= need:
-                f = pending[0]
+            n2 = sum(json.loads((q["running"] / f"{j}.json").read_text()).get("dataset") == C.STAGE2 for j in procs)
+            eligible = [f for f in pending
+                        if json.loads(f.read_text()).get("dataset") != C.STAGE2 or n2 < C.STAGE2_MAX_RUNNING]
+            if eligible and (free is None or free >= need):
+                f = eligible[0]
                 dst = q["running"] / f.name
                 f.rename(dst)
                 kind = json.loads(dst.read_text()).get("kind", "train")

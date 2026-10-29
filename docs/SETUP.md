@@ -73,14 +73,19 @@ tmux new -s teacher '.venv/bin/python -m harness.finetune_teacher 2>&1 | tee age
 .venv/bin/python -m harness.bench
 ```
 
-단독 실행과 동시 2~4개 실행의 처리량, VRAM을 재서 `state/bench.json`에 쓰고 권장값을 출력한다.
+먼저 **FLOPs 계량기 자체를 검사**한다: teacher DeiT-S(196토큰)의 측정값이 공식값 9.2 GFLOPs(4.6 GMACs)와 10% 넘게 다르면 `FLOP CHECK FAILED`를 출력하고 종료 코드 2로 끝난다. 이 경우 relock하지 말고 원인을 먼저 본다(모든 결과의 비용 축이 이 계량기에 달려 있다).
+
+그다음 단독 실행과 동시 2~4개 실행의 처리량, VRAM을 재서 `state/bench.json`에 쓰고 권장값을 출력한다.
 - `screen_epochs_for_1h_at_that_parallelism`: 거르기 1회를 1시간 안에 끝내는 에폭 수
 - `parallel_jobs`: 동시에 돌릴 작업 수
 
 [harness/config.py](../harness/config.py)를 고친다.
 
 ```python
-TIER_EPOCHS = {"smoke": 1, "screen": <권장값>, "final": <screen의 1.5~2배, 남은 날짜에 맞게>}
+TIER_EPOCHS = {
+    "cifar100": {"smoke": 1, "screen": <권장값>, "final": <screen의 1.5~2배, 남은 날짜에 맞게>},
+    "in100": {"smoke": 1, "final": <4-2단계에서 정함>},
+}
 MAX_JOBS = <parallel_jobs>
 ```
 
@@ -91,10 +96,31 @@ git add -A && git commit -m "tier epochs from bench" && git push
 bash agent/relock.sh
 ```
 
+### 4-1. GPU 스모크 (몇 분)
+
+CPU에서만 검증된 코드라, 오래 걸리는 관문 전에 CUDA 쪽 오류를 먼저 잡는다. 작업마다 30스텝, val 500장만 쓴다.
+
+```bash
+bash agent/start.sh sched                       # GPU 스케줄러만 tmux(sched)로 시작
+.venv/bin/python -m harness.submit --smoke      # ce, full, maskedkd, random, tome, oracle
+.venv/bin/python -m harness.submit --status     # 모두 rc=0이어야 한다. 실패하면 runs/<id>/error.txt
+```
+
+### 4-2. ImageNet-100 준비 (2단계용, CIFAR가 도는 동안 해도 된다)
+
+```bash
+tmux new -d -s prep '.venv/bin/python -m harness.prepare_stage2 2>&1 | tee agent/logs/prep.log'   # 받기 약 8.4GB, 변환 결과 약 25GB
+.venv/bin/python -m harness.prepare_stage2 --teacher      # teacher: ImageNet-1k DeiT-S의 100클래스 행. val 정확도 출력
+.venv/bin/python -m harness.submit --smoke --dataset in100
+```
+
+- 데이터: Hugging Face 공개 데이터셋 `clane9/imagenet-100` (로그인 불필요). ImageNet 이미지라 연구용 이용 조건이 적용된다.
+- 디스크 여유를 먼저 확인한다(`df -h`). 위치를 바꾸려면 모든 명령 앞에 `export DATA_ROOT=/경로`.
+- in100 스모크 로그의 `img_per_s`로 1에폭 시간(약 121,689장 ÷ img/s)을 계산해 `TIER_EPOCHS["in100"]["final"]`을 정한다. 1회가 `STAGE2_TIME_LIMIT_H`(24시간) 안에 들어와야 한다.
+
 ## 5. 재현 관문
 
 ```bash
-bash agent/start.sh sched                      # GPU 스케줄러만 tmux(sched)로 시작
 .venv/bin/python -m harness.submit --gate      # ce / full@196 / maskedkd@98, seed 0, screen
 .venv/bin/python -m harness.submit --status    # 진행 상황
 ```
@@ -125,11 +151,24 @@ bash agent/start.sh sched                      # GPU 스케줄러만 tmux(sched)
 .venv/bin/python -m harness.submit --baselines
 ```
 
-작업 10개를 큐에 넣는다.
+작업 14개를 큐에 넣는다.
 - `maskedkd@98`, `full`을 시드 1·2로: 시드 간 편차(σ)를 재서 승격 기준 max(0.5, 2σ)를 정한다.
-- `maskedkd`, `random`을 K = 49, 25, 12에서: 토큰 선택이 성적을 가르는 K를 찾는다.
+- `maskedkd`, `random`, `tome`을 K = 49, 25, 12에서: 토큰 선택이 성적을 가르는 K를 찾고, teacher 경량화 기법(ToMe)과 비교할 기준을 만든다.
+- `oracle` K=12: 상한(분석용).
 
 결과는 `RESULTS_TABLE.md`의 "Noise", "Where token choice matters" 줄에 자동으로 나온다. 루프는 이 작업들이 도는 동안 시작해도 된다.
+
+### 5-2. ImageNet-100 관문과 기준선 (GPU 한 칸에서 천천히)
+
+```bash
+.venv/bin/python -m harness.submit --gate --dataset in100              # ce/full/maskedkd@98, final seed 1
+# 관문 통과 후 (report의 Stage 2 Gate가 PASS):
+.venv/bin/python -m harness.submit --baselines --dataset in100 --keeps 49,25   # 시드 2·3 + 격자 + oracle
+```
+
+- 2단계 작업은 동시에 1개, 가장 낮은 우선순위로만 돈다. CIFAR 탐색을 막지 않는다.
+- `--keeps`는 CIFAR의 "Where token choice matters"에서 차이가 뚜렷했던 K로 정한다.
+- 관문이 통과하기 전에는 에이전트의 방법이 2단계에 제출되지 않는다(harness가 거부).
 
 ## 6. 루프 시작
 

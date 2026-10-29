@@ -15,7 +15,8 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 ## 고정된 것 (harness/, 잠금. 바꾸면 라운드 전체가 되돌려지고 무효 처리된다)
 - CIFAR-100 224px, train 45k / val 5k. teacher DeiT-S(fine-tune, 고정), student DeiT-Ti scratch.
 - DeiT 증강, AdamW, α=0.5, τ=1, tier별 에폭, FLOPs 측정, 평가.
-- 기준 방법: `ce`, `full`, `maskedkd`, `random`, 그리고 분석 전용 상한 `oracle`(teacher 자신의 attention으로 고름, 주장에 사용 금지).
+- 기준 방법: `ce`, `full`, `maskedkd`, `random`, `tome`(teacher 안에서 비슷한 토큰을 합치는 ToMe, 같은 teacher 비용에 맞춤), 그리고 분석 전용 상한 `oracle`(teacher 자신의 attention으로 고름, 주장에 사용 금지).
+- **우리 방법은 MaskedKD뿐 아니라 `tome`보다도 나아야 의미가 크다.** "student 관점으로 고르는 것"이 "teacher를 그냥 가볍게 하는 것"보다 나은지가 핵심 질문 중 하나다.
 
 ## 네가 할 수 있는 것
 1. **분석:** `analysis/<이름>.py`를 쓰고 `.venv/bin/python -m harness.submit --analysis <이름>`. 규칙은 `harness/analysis_api.py` 맨 위.
@@ -41,6 +42,13 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 8. `python -m harness.compare --a <이름>:<K> --b maskedkd:<K'> --tier final`로 비교한다.
 9. 주장할 결과가 생기면 `agent/AUDIT_REQUEST.md`에 적는다: 주장 1줄, run id 목록, compare 출력, 근거 분석 id, 노벨티 1~2줄(선행 연구 대비). 감사관이 PASS를 준 것만 RESULTS.md의 "확정" 절에 올린다.
 
+## 2단계: ImageNet-100 (`--dataset in100`)
+- CIFAR 결과가 CIFAR에서만 통하는지 진짜 224px 이미지에서 확인하는 단계다. screen이 없고 final(시드 1·2·3)만 있다.
+- **제출 조건 (harness가 검사):** ImageNet-100 관문 통과 + 그 방법이 CIFAR final 시드 1·2·3을 마침 + AUDIT.md에 그 방법의 PASS.
+- 첫 제출은 CIFAR에서 PASS 받은 소스 그대로다(`stage2_untouched`). 그 뒤 ImageNet에 맞춘 변형은 `stage2_tuned`로 따로 기록된다. 둘을 섞어 주장하지 마라.
+- 기준선(관문, maskedkd·random·tome 격자, oracle)은 사람이 미리 넣어 둔다. 같은 시드의 기준선과 `harness.compare --dataset in100`으로 비교한다.
+- 2단계 작업은 GPU 한 칸에서만 돈다. 오래 걸리니 꼭 필요한 것만 넣어라.
+
 ## 승격 기준 (screen → final)
 - 기준값은 RESULTS_TABLE의 "Noise" 줄에 있는 promotion threshold다 (= max(0.5%p, 2×시드 σ)).
 - 같은 K에서 MaskedKD보다 val이 threshold 이상 높거나, MaskedKD가 Full KD 1%p 이내를 유지하는 최소 K보다 더 작은 K에서 1%p 이내를 만족할 때.
@@ -62,3 +70,4 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 - `PROPOSALS.md`: 가설, 근거, 선행 기법 메모.
 - `DAILY.md`: 하루 1번, 그날 배운 것 5줄과 다음 날 계획.
 - `agent/AUDIT_REQUEST.md`: 감사 요청. 결과는 `AUDIT.md`(loop가 씀).
+- `python -m harness.figures --methods <이름>`: 논문용 그림과 CSV를 `figures/`에 만든다. 숫자를 손으로 그리지 마라.

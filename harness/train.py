@@ -20,11 +20,12 @@ from timm.loss import SoftTargetCrossEntropy
 from torch.utils.flop_counter import FlopCounterMode
 
 from . import config as C
-from .data import GpuAugment, GpuLoader, load_split, normalize_resize
+from .data import GpuAugment, as_tensor, load_split, make_loader, normalize_resize
 from .lock import harness_digest
 from .models import make_student, make_teacher, student_forward, teacher_forward_keepmask
 from .selector_api import Context
 from .baselines import oracle_keep
+from .tome import r_for_budget, teacher_forward_tome
 from .validate import load_selector
 
 
@@ -48,13 +49,17 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def load_teacher(device):
-    meta_path = C.STATE / "teacher.json"
+def teacher_paths(dataset="cifar100"):
+    tag = "" if dataset == "cifar100" else f"_{dataset}"
+    return C.STATE / f"teacher{tag}.pt", C.STATE / f"teacher{tag}.json"
+
+
+def load_teacher(device, dataset="cifar100"):
     if os.environ.get("MASKEDKD_FAKE_DATA"):
         t = make_teacher(pretrained=False)
         return t.to(device).eval(), "fake"
+    ckpt, meta_path = teacher_paths(dataset)
     meta = json.loads(meta_path.read_text())
-    ckpt = C.STATE / "teacher.pt"
     sha = sha256_file(ckpt)
     if sha != meta["sha256"]:
         raise HarnessViolation(f"teacher checkpoint sha256 {sha} != recorded {meta['sha256']}")
@@ -77,7 +82,7 @@ def evaluate(model, x, y, device, batch=500):
     model.eval()
     correct = 0
     for i in range(0, len(y), batch):
-        xb = normalize_resize(x[i:i + batch].to(device))
+        xb = normalize_resize(as_tensor(x[i:i + batch]).to(device))
         with torch.autocast(device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
             logits = model(xb)
         correct += (logits.argmax(1) == y[i:i + batch].to(device)).sum().item()
@@ -116,15 +121,23 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
             ctx = Context(images=x, student=student, out=out, budget=float(budget),
                           num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress)
             with segs.seg("selector"):
-                keep = oracle_keep(teacher, x, budget) if method == "oracle" else selector.select(ctx)
+                if method == "oracle":
+                    keep = oracle_keep(teacher, x, budget)
+                elif method == "tome":
+                    keep = torch.ones(x.shape[0], C.NUM_PATCHES, dtype=torch.bool, device=x.device)
+                else:
+                    keep = selector.select(ctx)
             if any(p.grad is not None for p in student.parameters()):
                 raise HarnessViolation("selector left parameter gradients (called .backward())")
             keep = to_keep_mask(keep, x.shape[0])
-            kept = keep.sum(1).float().mean().item()
+            kept = float(budget) if method == "tome" else keep.sum(1).float().mean().item()
             if kept > budget + 1e-6:
                 raise HarnessViolation(f"selector kept {kept:.2f} tokens/img > budget {budget}")
             with torch.no_grad(), segs.seg("teacher"):
-                t_logits = teacher_forward_keepmask(teacher, x, keep)
+                if method == "tome":   # teacher sees every token and merges inside; keep = budget it is matched to
+                    t_logits = teacher_forward_tome(teacher, x, r_for_budget(budget))
+                else:
+                    t_logits = teacher_forward_keepmask(teacher, x, keep)
             kd = F.kl_div(F.log_softmax(out.logits.float() / C.TAU, dim=1),
                           F.softmax(t_logits.float() / C.TAU, dim=1), reduction="batchmean") * C.TAU * C.TAU
             loss = (1 - C.ALPHA) * base + C.ALPHA * kd
@@ -165,18 +178,21 @@ def run(job_path):
     budget = job["keep"]
 
     selector, meta, sel_sha = (None, None, None)
-    if method not in ("ce", "oracle"):
+    if method not in ("ce", "oracle", "tome"):
         src = job.get("selector_src")
         selector, meta, sel_sha = load_selector(method, src=src, kwargs=job.get("sel_args", {}))
         if sel_sha != job.get("selector_sha", "builtin"):
             raise HarnessViolation("selector source changed after submit")
 
-    xtr, ytr = load_split("train")
-    xva, yva = load_split("val")
-    loader = GpuLoader(xtr, ytr, C.BATCH, device, seed=job["seed"])
+    dataset = job.get("dataset", "cifar100")
+    xtr, ytr = load_split("train", dataset)
+    xva, yva = load_split("val", dataset)
+    if job["tier"] == "smoke":
+        xva, yva = xva[:C.SMOKE_VAL_LIMIT], yva[:C.SMOKE_VAL_LIMIT]
+    loader = make_loader(xtr, ytr, C.BATCH, device, job["seed"], dataset)
     aug = GpuAugment(device)
     student = make_student().to(device)
-    teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device)
+    teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset)
     criterion = SoftTargetCrossEntropy()
     decay, no_decay = [], []
     for n, p in student.named_parameters():
@@ -201,11 +217,14 @@ def run(job_path):
     steps_per_epoch = len(loader)
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats()
-    t_limit = C.TIER_TIME_LIMIT_H[job["tier"]] * 3600
+    t_limit = C.time_limit_h(dataset, job["tier"]) * 3600
+    max_steps = C.TIER_MAX_STEPS.get(job["tier"])
     for epoch in range(state["epoch"], epochs):
         t0 = time.time()
-        kept_sum, kept_n, loss_sum = 0.0, 0, 0.0
+        kept_sum, kept_n, loss_sum, n_steps = 0.0, 0, 0.0, 0
         for step, (xb, yb) in enumerate(loader):
+            if max_steps is not None and step >= max_steps:
+                break
             g = epoch * steps_per_epoch + step
             for pg in opt.param_groups:
                 pg["lr"] = lr_at(g / steps_per_epoch, epochs)
@@ -233,13 +252,14 @@ def run(job_path):
             if not math.isfinite(loss):
                 raise HarnessViolation(f"non-finite loss at epoch {epoch} step {step}")
             loss_sum += loss
+            n_steps += 1
             if kept is not None:
                 kept_sum += kept
                 kept_n += 1
         dt = time.time() - t0
         state["train_time_s"] += dt
-        rec = {"epoch": epoch + 1, "loss": loss_sum / steps_per_epoch, "epoch_s": round(dt, 1),
-               "img_per_s": round(steps_per_epoch * C.BATCH / dt, 1)}
+        rec = {"epoch": epoch + 1, "loss": loss_sum / max(1, n_steps), "epoch_s": round(dt, 1),
+               "img_per_s": round(n_steps * C.BATCH / dt, 1)}
         if kept_n:
             rec["mean_kept"] = kept_sum / kept_n
             state["kept"].append(rec["mean_kept"])
@@ -273,6 +293,11 @@ def write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status):
         "tier": job["tier"], "epochs": job["epochs"], "epochs_done": state["epoch"],
         "val_acc_last": last_val,
         "mean_kept": (sum(state["kept"]) / len(state["kept"])) if state["kept"] else None,
+        "dataset": job.get("dataset", "cifar100"),
+        "tome_r": r_for_budget(job["keep"]) if job["method"] == "tome" else None,
+        # wall-clock throughput depends on how many jobs shared the GPU; compare within the same concurrency
+        "img_per_s_mean": round(sum(h["img_per_s"] for h in state["history"]) / len(state["history"]), 1)
+        if state["history"] else None,
         "flops": state["flops"], "train_time_s": round(state["train_time_s"], 1),
         "peak_vram_gib": round(torch.cuda.max_memory_allocated() / 2**30, 2) if device.type == "cuda" else None,
         "history": state["history"], "selector_meta": meta, "selector_sha": sel_sha,
