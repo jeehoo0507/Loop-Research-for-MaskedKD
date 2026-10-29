@@ -106,7 +106,8 @@ GOOD = '''
 import torch
 from harness.selector_api import SelectorBase, topk_mask
 META = {"method": "Attention Rollout", "paper": "Abnar & Zuidema 2020", "why": "uses all layers",
-        "vs_maskedkd": "multi-layer instead of last block", "prior_art": "none identical known"}
+        "vs_maskedkd": "multi-layer instead of last block", "prior_art": "none identical known",
+        "parent": "none"}
 class Selector(SelectorBase):
     NEEDS = {"attn": list(range(12)), "tokens": []}
     def select(self, ctx):
@@ -262,7 +263,7 @@ def test_submit_seed_and_oracle_rules(tmp_path, monkeypatch):
         submit.make_job("oracle", 25, 0, "final")            # analysis-only
     submit.make_job("oracle", 25, 0, "screen")
     ids = submit.baselines()
-    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 3 * len(C.BASELINE_KEEPS) + 1   # + tome grid + oracle
+    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 5 * len(C.BASELINE_KEEPS) + 1   # maskedkd/random/grid/center/tome + oracle
 
 
 def test_report_noise_and_discriminative():
@@ -379,3 +380,82 @@ def test_boot_rules(tmp_path, monkeypatch):
     d = json.loads((tmp_path / "epochs.json").read_text())
     assert d["epochs"]["in100"]["final"] == int(12 * 3600 / (boot.IN100_TRAIN / 400.0))
     assert d["epochs"]["cifar100"]["screen"] == 37
+
+
+# ---- lessons from R2E: spatial baselines, parent rule, final-first, significant-only table ----
+
+def _ctx(models, k):
+    s, _ = models
+    x = torch.randn(3, 3, 224, 224)
+    return Context(images=x, student=s, out=None, budget=k, num_patches=196, epoch=0, progress=0.0)
+
+
+def test_grid_and_center_baselines(models):
+    from harness.baselines import Grid, Center
+    for cls in (Grid, Center):
+        for k in (98, 49, 25, 12):
+            m = cls().select(_ctx(models, k))
+            assert m.shape == (3, 196) and (m.sum(1) == k).all() and (m[0] == m[1]).all()
+    c = Center().select(_ctx(models, 4))[0].nonzero().flatten().tolist()
+    assert sorted(c) == [90, 91, 104, 105]          # the 2x2 block at the centre of the 14x14 grid
+    g = Grid().select(_ctx(models, 49))[0].nonzero().flatten()
+    assert g[0] == 0 and g[-1] == 195
+
+
+def _write_sel(root, name, parent):
+    (root / "selectors").mkdir(exist_ok=True)
+    (root / "selectors" / f"{name}.py").write_text(GOOD.replace('"parent": "none"', f'"parent": "{parent}"'))
+
+
+def test_parent_rule_final_priority_and_refs(tmp_path, monkeypatch):
+    from harness import submit, validate
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "ROOT", tmp_path)
+    monkeypatch.setattr(validate, "SELECTORS_DIR", tmp_path / "selectors")
+    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "final", 2)
+    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "screen", 1)
+    with pytest.raises(SelectorRejected):
+        check_source(GOOD.replace(',\n        "parent": "none"', ""), "noparent")
+    _write_sel(tmp_path, "orphan", "missing_sel")
+    with pytest.raises(SystemExit):
+        submit.make_job("orphan", 25, 0, "screen")
+    _write_sel(tmp_path, "base_sel", "none")
+    _write_sel(tmp_path, "child_sel", "base_sel")
+    assert submit.make_job("child_sel", 25, 0, "screen")["priority"] == 0
+    assert submit.make_job("child_sel", 25, 1, "final")["priority"] == C.FINAL_PRIORITY
+    ids = submit.final_refs("child_sel", 25, 1)
+    queued = [i for i in ids if not i.startswith("skip")]
+    for m in list(C.CLAIM_REFS) + ["full", "base_sel"]:
+        assert any(f"_{m}_k" in i for i in queued), (m, ids)
+    assert all(i.startswith("skip") for i in submit.final_refs("child_sel", 25, 1))   # second call: all duplicates
+
+
+def _run(m, k, s, v, tier="final", parent=None, gf=10.0):
+    return {"id": f"{tier}_{m}_k{k}_s{s}", "tier": tier, "method": m, "keep": k, "seed": s, "val_acc_last": v,
+            "flops": {"total_gflops_per_img": gf}, "selector_sha": "x", "sel_args": {},
+            "selector_meta": {"parent": parent} if parent else {"method": f"builtin:{m}"}}
+
+
+def test_core_significant_and_parent_check():
+    from harness.report import core, parent_check
+    runs = []
+    for s, (a, mk, tm) in zip((1, 2, 3), ((71.0, 69.0, 70.9), (71.2, 69.1, 71.1), (70.9, 68.8, 71.0))):
+        runs += [_run("mysel", 25, s, a, parent="maskedkd", gf=9.0), _run("maskedkd", 25, s, mk), _run("tome", 25, s, tm),
+                 _run("full", 196, s, 71.5, gf=20.0)]
+    lines, sig = core(runs)
+    assert any("vs maskedkd@25" in l and "WIN" in l for l in sig)          # +2 every seed
+    assert not any("vs tome@25" in l for l in sig)                          # within noise: not significant
+    assert any("vs grid@25: missing" in l for l in lines)                   # missing references are shown, not hidden
+    assert any("vs full@196" in l and "LOSS" in l for l in sig)
+    scr = [_run("child", 25, 0, 60.2, "screen", parent="mysel"), _run("mysel", 25, 0, 60.0, "screen", parent="maskedkd"),
+           _run("maskedkd", 25, 0, 59.0, "screen")]
+    pc = parent_check(scr, 0.5)
+    assert any(l.startswith("- child@25") and "UNPROVEN" in l for l in pc)
+    assert any(l.startswith("- mysel@25") and "helps" in l for l in pc)
+
+
+def test_report_cli_accepts_dataset(tmp_path, monkeypatch):
+    import subprocess, sys
+    r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "in100"],
+                       capture_output=True, text=True, cwd=C.ROOT)
+    assert "unrecognized arguments" not in r.stderr and "gate incomplete" in r.stdout

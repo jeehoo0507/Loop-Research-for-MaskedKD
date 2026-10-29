@@ -94,6 +94,6 @@ bash agent/start.sh                                # 스케줄러 + 에이전트
 
 - 루프 종료: `END_DATE`(기본 2026-11-05) 또는 `agent/STOP`.
 - 라운드는 변화(끝난 작업, QUEUE 변경, 빈 큐)가 있을 때만 돈다. 최소 60분에 한 번, GPU가 30분 놀면 강제로 돈다. 기본 모델 Opus.
-- 관문 통과 직후 사람이 한 번: `.venv/bin/python -m harness.submit --baselines` (잡음 측정 + maskedkd·random·ToMe 격자 + 오라클).
+- 관문 통과 직후 사람이 한 번: `.venv/bin/python -m harness.submit --baselines` (잡음 측정 + maskedkd·random·grid·center·ToMe 격자 + 오라클).
 - 2단계 ImageNet-100: 공개 HF 데이터를 자동으로 받고(`harness.prepare_stage2`), CIFAR에서 final 3시드 + 감사 PASS를 받은 방법만 승급한다. 첫 실행은 소스 그대로, 조정 변형은 따로 표시.
 - 논문용 그림: `.venv/bin/python -m harness.figures` → `figures/`.

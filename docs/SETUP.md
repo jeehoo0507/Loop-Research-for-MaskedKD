@@ -24,7 +24,7 @@ bootstrap은 tmux 세션 `boot` 안에서 아래를 순서대로 하고, 실패�
 | teacher | CIFAR-100 fine-tune | 측정 전 |
 | bench | FLOPs 계량기 검사 + 속도 → 에폭 자동 결정(screen = 1시간, final = 2배) → 잠금 | 15분 |
 | CIFAR 관문 | CE, Full KD, MaskedKD@98 | screen 1회 시간 |
-| 시작 | 기준선 14개 제출, ImageNet-100 준비(백그라운드), 루프 시작 | — |
+| 시작 | 기준선 20개 제출, ImageNet-100 준비(백그라운드), 루프 시작 | — |
 
 - **관문이 실패하면** 루프를 시작하지 않고 멈춘다. 대안 설정(아래 5단계)은 네가 정한다.
 - 중간에 멈췄으면 원인을 고치고 `bash agent/bootstrap.sh`를 다시 실행한다. 끝난 단계는 건너뛴다.
@@ -134,7 +134,7 @@ CPU에서만 검증된 코드라, 오래 걸리는 관문 전에 CUDA 쪽 오류
 
 ```bash
 bash agent/start.sh sched                       # GPU 스케줄러만 tmux(sched)로 시작
-.venv/bin/python -m harness.submit --smoke      # ce, full, maskedkd, random, tome, oracle
+.venv/bin/python -m harness.submit --smoke      # ce, full, maskedkd, random, grid, center, tome, oracle
 .venv/bin/python -m harness.submit --status     # 모두 rc=0이어야 한다. 실패하면 runs/<id>/error.txt
 ```
 
@@ -183,12 +183,12 @@ tmux new -d -s prep '.venv/bin/python -m harness.prepare_stage2 2>&1 | tee agent
 .venv/bin/python -m harness.submit --baselines
 ```
 
-작업 14개를 큐에 넣는다.
+작업 20개를 큐에 넣는다.
 - `maskedkd@98`, `full`을 시드 1·2로: 시드 간 편차(σ)를 재서 승격 기준 max(0.5, 2σ)를 정한다.
-- `maskedkd`, `random`, `tome`을 K = 49, 25, 12에서: 토큰 선택이 성적을 가르는 K를 찾고, teacher 경량화 기법(ToMe)과 비교할 기준을 만든다.
+- `maskedkd`, `random`, `grid`, `center`, `tome`을 K = 49, 25, 12에서: 토큰 선택이 성적을 가르는 K를 찾고, 공간 규칙(`grid` 고르게, `center` 가운데)과 teacher 경량화 기법(ToMe)이라는 비교 기준을 만든다. 주장은 같은 K에서 이 다섯을 모두 이겨야 한다.
 - `oracle` K=12: 상한(분석용).
 
-결과는 `RESULTS_TABLE.md`의 "Noise", "Where token choice matters" 줄에 자동으로 나온다. 루프는 이 작업들이 도는 동안 시작해도 된다.
+결과는 `RESULTS_TABLE.md`의 "Noise", "Where token choice matters" 줄에 자동으로 나온다. 에이전트의 final 결과가 생기면 맨 위 "Significant only"(CI가 0을 벗어난 비교만)와 "Core comparison"에 자동으로 정리된다. 루프는 이 작업들이 도는 동안 시작해도 된다.
 
 ### 5-2. ImageNet-100 관문과 기준선 (GPU 한 칸에서 천천히)
 

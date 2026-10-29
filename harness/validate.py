@@ -24,7 +24,7 @@ FORBIDDEN_ATTRS = {"load", "save", "hub", "backward", "teacher", "targets", "lab
                    "cpp_extension", "f2py", "socket", "urllib", "request",
                    "write_text", "write_bytes", "unlink", "rmdir", "rename", "mkdir", "touch", "chmod", "symlink_to",
                    "parent", "parents", "resolve", "_out", "_x", "_y", "__file__"}
-META_KEYS = ("method", "paper", "why", "vs_maskedkd", "prior_art")
+META_KEYS = ("method", "paper", "why", "vs_maskedkd", "prior_art", "parent")
 SELECTORS_DIR = C.ROOT / "selectors"
 ANALYSIS_DIR = C.ROOT / "analysis"
 

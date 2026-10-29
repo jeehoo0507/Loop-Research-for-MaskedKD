@@ -7,7 +7,9 @@
     python -m harness.submit --analysis layer_agreement   # run analysis/layer_agreement.py on the GPU queue
     python -m harness.submit --status        # queue and run summary
 
---method: "ce", a builtin ("full", "maskedkd", "random"), or a file selectors/<name>.py.
+--method: "ce", a builtin ("full", "maskedkd", "random", "grid", "center", "tome"), or a file selectors/<name>.py.
+An agent final run is queued ahead of screen runs and brings its comparisons with it on the same seed
+(maskedkd, tome, grid, center, random at the same K, full KD, and META['parent'] at the same K).
 The selector source is snapshotted into the job at submit time; editing the file later does not
 change a queued job.
 """
@@ -92,10 +94,15 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     if method not in C.BASELINES:
         try:
             src = selector_source(method)
-            check_source(src, method)
+            meta = check_source(src, method)
         except SelectorRejected as e:
             raise SystemExit(f"REJECTED: {e}")
+        parent = meta["parent"].strip()
+        if parent != "none" and parent not in BUILTIN and not (C.ROOT / "selectors" / f"{parent}.py").exists():
+            raise SystemExit(f"REJECTED: META['parent'] = '{parent}' is neither 'none', a builtin, nor selectors/{parent}.py")
         sha = hashlib.sha256(src.encode()).hexdigest()
+        if tier == "final" and by == "agent":
+            priority = max(priority, C.FINAL_PRIORITY)
     stage2 = None
     if dataset == C.STAGE2 and tier != "smoke":
         stage2 = stage2_rule(method, sha)
@@ -118,6 +125,24 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     path = queue_dirs()["pending"] / f"{job['id']}.json"
     path.write_text(json.dumps(job, indent=1))
     return job
+
+
+def final_refs(method, keep, seed, dataset="cifar100"):
+    """With an agent final run, queue the comparisons it needs on the same seed (skips ones that exist):
+    the claim references at the same budget, full KD, and the selector's parent at the same budget."""
+    # stage 2 has one long GPU slot: only maskedkd and tome there
+    refs = [(m, keep) for m in C.CLAIM_REFS if dataset != C.STAGE2 or m in ("maskedkd", "tome")] + [("full", 196)]
+    src = selector_source(method)
+    parent = check_source(src, method)["parent"].strip() if src else "none"
+    if parent != "none":
+        refs.append((parent, keep))
+    ids = []
+    for m, k in refs:
+        try:
+            ids.append(make_job(m, k, seed, "final", by="final_refs", priority=C.FINAL_PRIORITY, dataset=dataset)["id"])
+        except SystemExit as e:   # duplicate (already queued or done) or not admissible
+            ids.append(f"skip {m}@{k:g}: {e}")
+    return ids
 
 
 def make_analysis(name, note="", by="agent", priority=0, dataset="cifar100"):
@@ -145,7 +170,7 @@ def gate_jobs(dataset="cifar100", force=False):
 
 
 def baselines(dataset="cifar100", force=False, keeps=None):
-    """CIFAR: seed-noise runs (maskedkd@98, full on NOISE_SEEDS) + maskedkd/random/tome grid at BASELINE_KEEPS.
+    """CIFAR: seed-noise runs (maskedkd@98, full on NOISE_SEEDS) + maskedkd/random/grid/center/tome at BASELINE_KEEPS.
     ImageNet-100: gate trio on the remaining final seeds + maskedkd/random/tome at `keeps` (seed 1) + oracle."""
     keeps = tuple(keeps or C.BASELINE_KEEPS)
     ids = []
@@ -154,7 +179,7 @@ def baselines(dataset="cifar100", force=False, keeps=None):
             for m, k in (("maskedkd", 98), ("full", 196)):
                 ids.append(make_job(m, k, s, "screen", by="baselines", priority=5, force=force)["id"])
         for k in keeps:
-            for m in ("maskedkd", "random", "tome"):
+            for m in ("maskedkd", "random", "grid", "center", "tome"):
                 ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
         ids.append(make_job("oracle", keeps[-1], C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
         return ids
@@ -223,7 +248,8 @@ if __name__ == "__main__":
     elif a.status:
         status()
     elif a.smoke:
-        for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("tome", 49), ("oracle", 49)):
+        for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("grid", 49), ("center", 49),
+                     ("tome", 49), ("oracle", 49)):
             print(make_job(m, k, 0, "smoke", by="smoke", priority=20, force=True, dataset=a.dataset)["id"])
     elif a.baselines:
         keeps = [float(k) for k in a.keeps.split(",") if k] or None
@@ -235,5 +261,8 @@ if __name__ == "__main__":
     else:
         if not a.method:
             ap.error("--method required")
-        print(make_job(a.method, a.keep, a.seed, a.tier, json.loads(a.sel_args), a.note, a.by, a.priority,
-                       a.force, a.dataset)["id"])
+        job = make_job(a.method, a.keep, a.seed, a.tier, json.loads(a.sel_args), a.note, a.by, a.priority,
+                       a.force, a.dataset)
+        print(job["id"])
+        if a.tier == "final" and a.method not in C.BASELINES:
+            print("\n".join(final_refs(a.method, a.keep, a.seed, a.dataset)))

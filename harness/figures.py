@@ -15,9 +15,10 @@ from collections import defaultdict
 from . import config as C
 from .report import load_runs
 
-REF = ("full", "maskedkd", "random", "tome", "oracle")
+REF = ("full", "maskedkd", "random", "grid", "center", "tome", "oracle")
 STYLE = {"full": ("#111111", "--"), "maskedkd": ("#1f5fbf", "-"), "random": ("#8a8a8a", ":"),
-         "tome": ("#b8860b", "-."), "oracle": ("#7a3fbf", ":")}
+         "tome": ("#b8860b", "-."), "oracle": ("#7a3fbf", ":"),
+         "grid": ("#5a9e6f", "--"), "center": ("#c0504d", "--")}
 
 
 def rows_for(runs):

@@ -38,6 +38,15 @@ For every claim, check:
 12. Grounding: the method is an interpretability technique (as declared in META) and its design cites an
     analysis_out/ result or a paper; check that the cited analysis exists and says what is claimed.
 
+13. Spatial baselines: at the claimed budget the method must beat `grid` and `center` (and `random`, `tome`) on the same
+    final seeds. Read RESULTS_TABLE "Core comparison". If any of them is as good, the gain is not from the
+    interpretability signal: FAIL unless the claim says so plainly.
+14. Components: if META "parent" is not "none", the method must beat its parent at the same budget (RESULTS_TABLE
+    "Parent check" on screen, "Core comparison" on final). A part that adds nothing measurable must not be part of the
+    claimed method.
+15. Decomposition: the claim cites an analysis_out/ result that explains where the gain comes from (overlap with
+    maskedkd's tokens, a swap test of the non-overlapping tokens, spatial spread). No decomposition: NEEDS-MORE.
+
 Output, one block per claim, these exact line prefixes:
 CLAIM: <the claim, one line>
 VERDICT: PASS | FAIL | NEEDS-MORE

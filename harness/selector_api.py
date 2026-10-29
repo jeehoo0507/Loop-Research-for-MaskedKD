@@ -8,6 +8,8 @@ A selector file `selectors/<name>.py` must define:
         "why": "one line: why this should pick tokens the student can learn from",
         "vs_maskedkd": "one line: how it differs from MaskedKD (last-block CLS attention top-k)",
         "prior_art": "one line: closest known token-selection/pruning method and the difference",
+        "parent": "none",   # or the selector this one extends (a builtin or selectors/<name>.py); a child must
+                            # beat its parent at the same budget, or the added part is unproven (RESULTS_TABLE)
     }
 
     class Selector(SelectorBase):
