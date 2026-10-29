@@ -459,3 +459,10 @@ def test_report_cli_accepts_dataset(tmp_path, monkeypatch):
     r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "in100"],
                        capture_output=True, text=True, cwd=C.ROOT)
     assert "unrecognized arguments" not in r.stderr and "gate incomplete" in r.stdout
+
+
+def test_timm_can_reach_hf_hub():
+    """timm silently disables pretrained downloads when its huggingface_hub imports fail (version skew);
+    the teacher fine-tune then dies on the server. Catch that on CPU."""
+    from timm.models._hub import _has_hf_hub
+    assert _has_hf_hub, "pin huggingface_hub to a version timm can import (requirements.txt)"
