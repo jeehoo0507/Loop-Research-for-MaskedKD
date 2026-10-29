@@ -29,6 +29,8 @@
 
 ## 서버에서 처음부터 (A5000 1장)
 
+**자세한 단계별 가이드와 GPT 감사관 붙이는 법: [docs/SETUP.md](docs/SETUP.md)**
+
 ```bash
 git clone https://github.com/jeehoo0507/Loop-Research-for-MaskedKD.git && cd Loop-Research-for-MaskedKD
 bash setup.sh                      # venv + torch cu124 + CPU 테스트

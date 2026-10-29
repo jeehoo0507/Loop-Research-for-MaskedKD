@@ -87,6 +87,8 @@ while true; do
   MODEL="$(pick_model)"
   echo "[loop] round $round start $ts model=$MODEL auditor=$AUDITOR" | tee -a agent/logs/loop.log
   date +%F > agent/.last_day
+  # auditor switch without restarting: echo codex > ~/.maskedkd_auditor (outside the repo, so the agent can't flip it)
+  if [ -s "$HOME/.maskedkd_auditor" ]; then AUDITOR="$(tr -d '[:space:]' < "$HOME/.maskedkd_auditor")"; fi
   daily_ideas
   claude -p "$ROUND_PROMPT" \
     --model "$MODEL" \
