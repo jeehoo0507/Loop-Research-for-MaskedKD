@@ -3,8 +3,8 @@
 A selector file `selectors/<name>.py` must define:
 
     META = {
-        "method": "Attention Rollout",                      # interpretability method it is built on
-        "paper": "Abnar & Zuidema, ACL 2020",               # source of that method
+        "method": "<interpretability method it is built on>",
+        "paper": "<authors, venue, year of that method>",
         "why": "one line: why this should pick tokens the student can learn from",
         "vs_maskedkd": "one line: how it differs from MaskedKD (last-block CLS attention top-k)",
         "prior_art": "one line: closest known token-selection/pruning method and the difference",
