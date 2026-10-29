@@ -14,6 +14,7 @@ change a queued job.
 import argparse
 import hashlib
 import json
+import sys
 import time
 
 from . import config as C
@@ -167,6 +168,20 @@ def baselines(dataset="cifar100", force=False, keeps=None):
     return ids
 
 
+def wait(ids, poll=30):
+    """Block until every id is in queue/done. Returns 0 if all exited 0."""
+    d = queue_dirs()["done"]
+    while True:
+        done = {i: json.loads((d / f"{i}.json").read_text()) for i in ids if (d / f"{i}.json").exists()}
+        if len(done) == len(ids):
+            bad = [i for i, j in done.items() if j.get("returncode") != 0]
+            for i in bad:
+                err = C.RUNS / i / "error.txt"
+                print(f"FAILED {i}: {err.read_text().strip()[:300] if err.exists() else 'rc=' + str(done[i].get('returncode'))}")
+            return 1 if bad else 0
+        time.sleep(poll)
+
+
 def status():
     jobs = all_jobs()
     for state in ("running", "pending", "done"):
@@ -201,8 +216,11 @@ if __name__ == "__main__":
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--baselines", action="store_true")
     ap.add_argument("--analysis")
+    ap.add_argument("--wait", nargs="+", help="block until these job ids are done; exit 1 if any failed")
     a = ap.parse_args()
-    if a.status:
+    if a.wait:
+        sys.exit(wait(a.wait))
+    elif a.status:
         status()
     elif a.smoke:
         for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("tome", 49), ("oracle", 49)):

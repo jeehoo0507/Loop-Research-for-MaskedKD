@@ -25,7 +25,7 @@ CODEX_EFFORT="${CODEX_EFFORT:-high}"
 CODEX_BASE="${CODEX_BASE:-codex exec -m $CODEX_MODEL -c model_reasoning_effort=\"$CODEX_EFFORT\"}"
 REMOTE="${REMOTE:-origin}"
 PY=.venv/bin/python
-LOCKED=(harness tests agent/loop.sh agent/relock.sh agent/AGENT_PROMPT.md agent/AUDIT_PROMPT.md agent/IDEAS_PROMPT.md requirements.txt)
+LOCKED=(harness tests agent/loop.sh agent/relock.sh agent/AGENT_PROMPT.md agent/AUDIT_PROMPT.md agent/IDEAS_PROMPT.md requirements.txt state/epochs.json)
 S=agent/.state; mkdir -p "$S" agent/logs
 
 notify() { :; }   # phone alerts: decided later (see docs/SETUP.md)

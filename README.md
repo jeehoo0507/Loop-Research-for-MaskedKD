@@ -32,7 +32,9 @@
 
 ## 서버에서 처음부터 (A5000 1장)
 
-**자세한 단계별 가이드와 GPT 감사관 붙이는 법: [docs/SETUP.md](docs/SETUP.md)**
+로그인(GitHub, Claude, 선택: Codex) 후 명령 한 줄이면 루프 시작까지 자동으로 간다: `bash agent/bootstrap.sh`
+
+**자세한 단계와 GPT 붙이는 법: [docs/SETUP.md](docs/SETUP.md)**
 
 ```bash
 git clone https://github.com/jeehoo0507/Loop-Research-for-MaskedKD.git && cd Loop-Research-for-MaskedKD

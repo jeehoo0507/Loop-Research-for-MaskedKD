@@ -1,5 +1,37 @@
 # 세팅 가이드 (A5000 서버, 처음부터)
 
+## 빠른 시작: 명령 한 줄
+
+빈 서버에서 로그인 세 가지만 하고 bootstrap을 실행하면, 루프 시작까지 혼자 간다.
+
+```bash
+sudo apt-get update -qq && sudo apt-get install -y -qq tmux gh git
+gh auth login && gh auth setup-git                 # GitHub push 권한
+claude                                              # 한 번 로그인하고 /exit (Claude Code가 없으면 먼저 설치)
+# (선택) GPT: Node.js + sudo npm i -g @openai/codex && codex login --device-auth
+git clone https://github.com/jeehoo0507/Loop-Research-for-MaskedKD.git && cd Loop-Research-for-MaskedKD
+bash agent/bootstrap.sh
+```
+
+bootstrap은 tmux 세션 `boot` 안에서 아래를 순서대로 하고, 실패하면 그 자리에서 멈춘다.
+진행 상황은 `agent/BOOT_STATUS.md`(GitHub에도 push됨)와 `tail -f agent/logs/boot.log`로 본다.
+
+| 단계 | 내용 | 시간 (대략) |
+|---|---|---|
+| 확인 | GPU, claude, git push 권한, Codex(있으면 GPT 감사·비상 연구자), 디스크 40GB | 1분 |
+| 환경 | `setup.sh` + 잠금 | 10분 |
+| 스모크 | 모든 방법을 30스텝씩 | 몇 분 |
+| teacher | CIFAR-100 fine-tune | 측정 전 |
+| bench | FLOPs 계량기 검사 + 속도 → 에폭 자동 결정(screen = 1시간, final = 2배) → 잠금 | 15분 |
+| CIFAR 관문 | CE, Full KD, MaskedKD@98 | screen 1회 시간 |
+| 시작 | 기준선 14개 제출, ImageNet-100 준비(백그라운드), 루프 시작 | — |
+
+- **관문이 실패하면** 루프를 시작하지 않고 멈춘다. 대안 설정(아래 5단계)은 네가 정한다.
+- 중간에 멈췄으면 원인을 고치고 `bash agent/bootstrap.sh`를 다시 실행한다. 끝난 단계는 건너뛴다.
+- ImageNet-100 쪽(`agent/stage2_boot.sh`, tmux `stage2`)은 받기·변환 → teacher → 스모크로 에폭 결정(1회 12시간 이내) → 잠금(루프 잠깐 멈춤) → 관문 → 기준선 순서로 혼자 진행한다.
+
+아래는 bootstrap이 하는 일을 손으로 할 때의 단계별 설명이다.
+
 순서대로 따라 하면 된다. 각 단계 끝의 **확인**이 통과해야 다음으로 간다.
 모든 명령은 저장소 폴더(`~/Loop-Research-for-MaskedKD`) 안에서 실행한다.
 

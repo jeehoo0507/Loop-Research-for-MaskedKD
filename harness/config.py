@@ -92,3 +92,13 @@ FLOP_CHECK_TOL = 0.10
 
 def time_limit_h(dataset, tier):
     return STAGE2_TIME_LIMIT_H if dataset == STAGE2 and tier != "smoke" else TIER_TIME_LIMIT_H[tier]
+
+
+# Epoch budgets and concurrency decided by agent/bootstrap.sh from the bench (locked with the harness).
+EPOCHS_FILE = STATE / "epochs.json"
+if EPOCHS_FILE.exists():
+    import json as _json
+    _d = _json.loads(EPOCHS_FILE.read_text())
+    for _ds, _tiers in _d.get("epochs", {}).items():
+        TIER_EPOCHS[_ds].update(_tiers)
+    MAX_JOBS = _d.get("max_jobs", MAX_JOBS)

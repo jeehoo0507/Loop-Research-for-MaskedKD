@@ -54,11 +54,12 @@ def teacher_paths(dataset="cifar100"):
     return C.STATE / f"teacher{tag}.pt", C.STATE / f"teacher{tag}.json"
 
 
-def load_teacher(device, dataset="cifar100"):
-    if os.environ.get("MASKEDKD_FAKE_DATA"):
+def load_teacher(device, dataset="cifar100", allow_random=False):
+    """allow_random: smoke runs before the teacher exists use a random-init teacher (same compute)."""
+    ckpt, meta_path = teacher_paths(dataset)
+    if os.environ.get("MASKEDKD_FAKE_DATA") or (allow_random and not meta_path.exists()):
         t = make_teacher(pretrained=False)
         return t.to(device).eval(), "fake"
-    ckpt, meta_path = teacher_paths(dataset)
     meta = json.loads(meta_path.read_text())
     sha = sha256_file(ckpt)
     if sha != meta["sha256"]:
@@ -192,7 +193,7 @@ def run(job_path):
     loader = make_loader(xtr, ytr, C.BATCH, device, job["seed"], dataset)
     aug = GpuAugment(device)
     student = make_student().to(device)
-    teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset)
+    teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset, job["tier"] == "smoke")
     criterion = SoftTargetCrossEntropy()
     decay, no_decay = [], []
     for n, p in student.named_parameters():

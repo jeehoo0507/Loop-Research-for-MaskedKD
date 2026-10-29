@@ -362,3 +362,20 @@ def test_figures(tmp_path, monkeypatch):
     figures.main()
     assert (tmp_path / "figures" / "cifar100_screen_tokens.png").exists()
     assert "maskedkd" in (tmp_path / "figures" / "cifar100_screen.csv").read_text()
+
+
+def test_boot_rules(tmp_path, monkeypatch):
+    from harness import boot
+    monkeypatch.setattr(C, "STATE", tmp_path)
+    monkeypatch.setattr(C, "EPOCHS_FILE", tmp_path / "epochs.json")
+    (tmp_path / "bench.json").write_text(json.dumps({"recommend": {"screen_epochs_for_1h_at_that_parallelism": 37,
+                                                                   "parallel_jobs": 3}}))
+    boot.epochs_from_bench()
+    d = json.loads((tmp_path / "epochs.json").read_text())
+    assert d["epochs"]["cifar100"] == {"screen": 37, "final": 74} and d["max_jobs"] == 3
+    _fake_runs(tmp_path, monkeypatch, [{"method": "maskedkd", "keep": 49, "seed": 0, "tier": "smoke", "val_acc_last": 1.0,
+                                        "img_per_s_mean": 400.0, "dataset": "in100"}])
+    boot.epochs_in100("r0")
+    d = json.loads((tmp_path / "epochs.json").read_text())
+    assert d["epochs"]["in100"]["final"] == int(12 * 3600 / (boot.IN100_TRAIN / 400.0))
+    assert d["epochs"]["cifar100"]["screen"] == 37
