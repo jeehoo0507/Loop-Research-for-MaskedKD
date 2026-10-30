@@ -1,0 +1,6 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+[2026-10-30 12:02:44] job smoke_ce_k0_s0_1030_120229_3554 method=ce keep=0 seed=0 epochs=1 device=cuda
+[2026-10-30 12:02:45] flops per image (train step): {'total_gflops_per_img': 7.642, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.642}
+[2026-10-30 12:02:47] {"epoch": 1, "loss": 0.6164439102013906, "epoch_s": 3.5, "img_per_s": 1090.2, "val_acc": 62.59999871253967, "val_wga": 1.04, "val_group_acc": {"0": 100.0, "1": 88.39, "2": 1.04, "3": 11.9}}
+[2026-10-30 12:02:48] done

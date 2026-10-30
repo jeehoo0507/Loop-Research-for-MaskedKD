@@ -285,3 +285,76 @@ NVIDIA RTX A5000, 24564 MiB
 [boot 10-30 05:10] checking tools
 NVIDIA RTX A5000, 24564 MiB
 [boot 10-30 05:10] STOPPED: git pull failed (local changes conflict with GitHub?): run git status
+[boot 10-30 11:57] checking tools
+NVIDIA RTX A5000, 24564 MiB
+[boot 10-30 11:57] Codex works without a shell here (container blocks its sandbox): GPT audits and adds ideas from files the harness attaches; no emergency researcher
+................................                                         [100%]
+32 passed in 20.68s
+locked: d737bf3b41c801a6b2ac0f182b6d3511d92682a9137e8e321997ff6379ec72eb
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+boot: 1 windows (created Fri Oct 30 11:57:04 2026)
+sched: 1 windows (created Fri Oct 30 11:57:35 2026)
+[boot 10-30 11:57] data: Waterbirds + CUB (aim-lab-test-5's extracted copies if present, else download)
+downloading https://downloads.cs.stanford.edu/nlp/data/dro/waterbird_complete95_forest2water2.tar.gz
+waterbirds: {'train': 4795, 'val': 1199, 'test': 5794} -> /home/coder/Loop-Research-for-MaskedKD/data/waterbirds
+downloading https://data.caltech.edu/records/65de6-vp158/files/CUB_200_2011.tgz?download=1
+cub: {'train': 5394, 'val': 600, 'test': 5794} -> /home/coder/Loop-Research-for-MaskedKD/data/cub
+[boot 10-30 12:02] GPU smoke
+[boot 10-30 12:12] GPU smoke passed
+[boot 10-30 12:12] teacher (Waterbirds, DeiT-B): import aim-lab-test-5's or fine-tune (about 1 h)
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-test-5 sweep found)"}
+{'epoch': 5, 'val_acc': 90.40867686271667, 'epoch_s': 14.5}
+{'epoch': 10, 'val_acc': 93.41117739677429, 'epoch_s': 14.6}
+{'epoch': 15, 'val_acc': 89.90825414657593, 'epoch_s': 14.6}
+{'epoch': 20, 'val_acc': 91.07589721679688, 'epoch_s': 14.6}
+{'epoch': 25, 'val_acc': 92.66055226325989, 'epoch_s': 14.6}
+{'epoch': 30, 'val_acc': 90.90909361839294, 'epoch_s': 14.6}
+{'epoch': 35, 'val_acc': 90.32527208328247, 'epoch_s': 14.6}
+{'epoch': 40, 'val_acc': 91.82652235031128, 'epoch_s': 14.6}
+{'epoch': 45, 'val_acc': 91.40951037406921, 'epoch_s': 14.6}
+{'epoch': 50, 'val_acc': 91.15930199623108, 'epoch_s': 14.7}
+{'epoch': 55, 'val_acc': 91.49290919303894, 'epoch_s': 14.6}
+{'epoch': 60, 'val_acc': 88.07339668273926, 'epoch_s': 14.6}
+{'epoch': 65, 'val_acc': 91.2427008152008, 'epoch_s': 14.7}
+{'epoch': 70, 'val_acc': 90.4920756816864, 'epoch_s': 14.6}
+{'epoch': 75, 'val_acc': 89.90825414657593, 'epoch_s': 14.7}
+{'epoch': 80, 'val_acc': 90.15846252441406, 'epoch_s': 14.6}
+{'epoch': 85, 'val_acc': 89.57464694976807, 'epoch_s': 14.6}
+{'epoch': 90, 'val_acc': 90.24186730384827, 'epoch_s': 14.7}
+{'epoch': 95, 'val_acc': 90.65888524055481, 'epoch_s': 14.7}
+{'epoch': 100, 'val_acc': 90.99249243736267, 'epoch_s': 14.7}
+/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py:80: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(out, map_location="cpu"))
+{"val_acc": 93.41, "source": "fine-tuned here", "sha256": "84f5d4edcfcb9e5dda9eb3cfa8c58ca71beec24b18b0150c24281579e48e65d5"}
+[boot 10-30 12:35] teacher: fine-tuned here val acc 93.41 WGA 64.66; recipe: {"waterbirds":{"student_lr":0.0001,"source":"config.STUDENT_LR_DEFAULT(noaim-lab-test-5sweepfound)"}}
+[boot 10-30 12:35] bench (FLOP counter check + speed)
+flop check: {'teacher_gflops_measured': 35.126, 'reference': 35.2, 'rel_err': 0.0021, 'ok': True}
+single ce@0: {'img_per_s': 1507.6, 'peak_vram_gib': 2.28}
+single full@196: {'img_per_s': 715.3, 'peak_vram_gib': 3.47}
+single maskedkd@98: {'img_per_s': 925.2, 'peak_vram_gib': 3.23}
+single maskedkd@25: {'img_per_s': 1195.7, 'peak_vram_gib': 2.99}
+single tome@49: {'img_per_s': 1121.3, 'peak_vram_gib': 2.9}
+parallel x2 maskedkd@98: aggregate 890 img/s
+parallel x3 maskedkd@98: aggregate 892 img/s
+parallel x4 maskedkd@98: aggregate 892 img/s
+{
+ "epoch_s_slowest_single": 6.7,
+ "screen_epochs_for_1h_single": 537,
+ "parallel_jobs": 4,
+ "epoch_s_per_job_at_that_parallelism": 21.5,
+ "screen_epochs_for_1h_at_that_parallelism": 167
+}
+{"epochs": {}, "max_jobs": 4, "rule": "epochs fixed at 100 (aim-lab-test-5 recipe); max_jobs = best bench parallelism"}
+[boot 10-30 12:37] parallel jobs: {"epochs":{},"max_jobs":4,"rule":"epochsfixedat100(aim-lab-test-5recipe);max_jobs=bestbenchparallelism"}
+................................                                         [100%]
+32 passed in 20.88s
+locked: 033df9786a4a53fe0265ef342cdb76f464c0ef033c6672e87ae61e8d49a5ff07
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+boot: 1 windows (created Fri Oct 30 11:57:04 2026)
+sched: 1 windows (created Fri Oct 30 12:38:02 2026)
+[boot 10-30 13:05] gate: [waterbirds screen, 100 epochs, mean of seeds [0]] Full KD 90.66 vs CE 89.24 (need +1.0), WGA 65.41 vs 66.17 (or need +2.0): PASS; MaskedKD@98 91.24 vs Full 90.66 (need within 0.5): FAIL
+[boot 10-30 13:59] gate: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs CE 89.32 (need +1.0), WGA 66.67 vs 66.42 (or need +2.0): PASS; MaskedKD@98 90.69 vs Full 90.83 (need within 0.5): PASS
+[boot 10-30 13:59] gate PASSED: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs CE 89.32 (need +1.0), WGA 66.67 vs 66.42 (or need +2.0): PASS; MaskedKD@98 90.69 vs Full 90.83 (need within 0.5): PASS
+[boot 10-30 13:59] Waterbirds baselines queued (23 jobs)

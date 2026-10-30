@@ -1,0 +1,56 @@
+{
+ "id": "smoke_ce_k0_s0_1030_120229_3554",
+ "status": "done",
+ "method": "ce",
+ "keep": 0,
+ "seed": 0,
+ "tier": "smoke",
+ "epochs": 1,
+ "epochs_done": 1,
+ "val_acc_last": 62.59999871253967,
+ "val_wga_last": 1.04,
+ "val_group_acc_last": {
+  "0": 100.0,
+  "1": 88.39,
+  "2": 1.04,
+  "3": 11.9
+ },
+ "student_lr": 0.0001,
+ "mean_kept": null,
+ "dataset": "waterbirds",
+ "tome_r": null,
+ "img_per_s_mean": 1090.2,
+ "flops": {
+  "total_gflops_per_img": 7.642,
+  "selector_gflops_per_img": 0.0,
+  "teacher_gflops_per_img": 0.0,
+  "student_gflops_per_img": 7.642
+ },
+ "train_time_s": 3.5,
+ "peak_vram_gib": 3.16,
+ "history": [
+  {
+   "epoch": 1,
+   "loss": 0.6164439102013906,
+   "epoch_s": 3.5,
+   "img_per_s": 1090.2,
+   "val_acc": 62.59999871253967,
+   "val_wga": 1.04,
+   "val_group_acc": {
+    "0": 100.0,
+    "1": 88.39,
+    "2": 1.04,
+    "3": 11.9
+   }
+  }
+ ],
+ "selector_meta": null,
+ "selector_sha": null,
+ "sel_args": {},
+ "teacher_sha": null,
+ "harness_digest": "d737bf3b41c801a6b2ac0f182b6d3511d92682a9137e8e321997ff6379ec72eb",
+ "git": "606c5a72441d7cb98eed93dcef12356e7365719f",
+ "submitted_by": "smoke",
+ "note": "",
+ "analysis_only": false
+}
