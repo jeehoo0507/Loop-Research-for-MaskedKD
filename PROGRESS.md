@@ -1,7 +1,7 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 22): 확정 결과 없음. **final gradroll@12 seed 1: 87.99/63.16** (final_gradroll_k12_s1_1030_201811_faf0). 같은 seed의 center(88.32/54.89)보다 WGA +8.27(정확도 −0.33, threshold 안), grid(83.74/35.34)·maskedkd(84.15/21.05)·rollout(86.99/51.88)보다 높다. tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다.
-- 핵심: K=12에서 center를 넘는 후보는 gradroll(final s1이 center 통과, seed 2 제출)과 suffdisc(분해 a·b 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다.
-- 진행 중 (라운드 23 기준): full@196 s1(실행, e70), final gradroll@12 s2(실행, e15)·maskedkd·rollout s2(실행), center·grid·random·tome@12 s2와 full@196 s2(대기 5). random final s1은 84.57/37.59로 끝났다(gradroll 대비 −3.42/−25.57).
+- 요약 (2026-10-30 [claude] 라운드 24): 확정 결과 없음. **final gradroll@12 seed 1: 87.99/63.16** (final_gradroll_k12_s1_1030_201811_faf0). 같은 seed의 center(88.32/54.89)보다 WGA +8.27(정확도 −0.33, threshold 안), grid(83.74/35.34)·maskedkd(84.15/21.05)·rollout(86.99/51.88)·random(84.57/37.59)보다 높다. tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다. full@196 s1(91.33/66.92)과 비교하면 −3.34/−3.76이라 주 지표의 허용 오차(1.00/2.45) 밖이다.
+- 핵심: K=12에서 center를 넘는 후보는 gradroll(final s1이 center 통과, seed 2 실행 중)과 suffdisc(분해 a·b 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다. 주장할 수 있는 형태는 '같은 K에서 기준선 대비 WGA 우위'이고, 'Full 허용 오차 안의 최소 K'는 아니다.
+- 진행 중 (라운드 24 기준): final gradroll@12 s2(실행, e52)·maskedkd·rollout·tome s2(실행), center·grid·random@12 s2와 full@196 s2(대기 4).
 - 다음: seed 2가 끝나면 seed 3을 넣는다(대기 상한 때문에 한 seed씩). suffdisc의 final 승격은 gradroll final 3 seed가 끝난 뒤에 정한다. tome 대비 정확도 손실은 AUDIT_REQUEST의 caveat으로 남긴다.
 - 막힌 것: 없음. `python -c`와 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
@@ -331,5 +331,14 @@
 - 진행: gradroll s2는 e15(중간값은 쓰지 않음), maskedkd·rollout s2 실행, 대기 5.
 - [claude] 결정: `python -m harness.report`와 `--status`가 이번 세션에서 승인 대기로 막혔다. 그래서 RESULTS_TABLE은 재생성하지 않았다(random s1 행은 다음 harness 재생성 때 들어간다). 숫자는 runs/*/metrics.json에서 직접 읽었다.
 - [claude] 결정: gradroll seed 3은 넣지 않는다. 지금 넣으면 비교군 7개가 따라와 대기가 5→13으로 상한 8을 넘는다. seed 2 비교군 대기가 3개 이하로 줄면 넣는다.
+- [claude] 결정: 새 screen·분석은 넣지 않는다. 승격 후보 final이 진행 중이다. suffdisc final은 라운드 21 결정대로 보류한다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 21:45 라운드 24
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(이번에는 `harness.report` 재생성 성공), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(지난 라운드 뒤 새 분석 없음).
+- 새 결과 (final seed 1): full@196 91.33/66.92 (final_full_k196_s1_1030_201811_b764, 최악 그룹 2). RESULTS_TABLE의 final Primary metric 기준선은 이제 Full 91.33, 허용 오차 1.00(final tier에는 CE가 없어 상한 1.00 적용)/WGA 2.45다.
+- 해석: gradroll@12 s1(87.99/63.16, final_gradroll_k12_s1_1030_201811_faf0)은 Full s1보다 −3.34/−3.76이다. 정확도와 WGA가 모두 허용 오차 밖이다. 그래서 gradroll@12는 주 지표(Full 허용 오차 안의 최소 K)를 개선하지 못한다. 주장의 형태는 'K=12에서 같은 seed 기준선 5개(maskedkd·rollout·grid·center·random)보다 WGA가 높고 정확도 손실은 threshold 안'으로 한정한다. 그리고 tome 대비 정확도 −1.67이라는 caveat이 남는다. 이 한정을 AUDIT_REQUEST를 쓸 때 첫 줄에 적는다.
+- 진행: gradroll s2는 e52다(중간값은 판정에 쓰지 않음). maskedkd·rollout·tome s2는 실행 중, 대기 4(center·grid·random s2, full s2)다. GPU 메모리 23.2/24.6 GiB를 쓰고 있다.
+- [claude] 결정: gradroll seed 3은 이번에도 넣지 않는다. 지금 넣으면 비교군 7개와 본체가 따라와 대기가 4→12로 상한 8을 넘는다. 라운드 23의 조건(seed 2 비교군 대기 ≤3)을 그대로 쓴다.
 - [claude] 결정: 새 screen·분석은 넣지 않는다. 승격 후보 final이 진행 중이다. suffdisc final은 라운드 21 결정대로 보류한다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.

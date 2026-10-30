@@ -26,6 +26,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - suffdisc@12 vs parent center: acc +0.58 %p (threshold 0.76), WGA +2.26 %p (threshold 2.45) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
+### final: Full KD val 91.33; CE not run: tolerance 1.00 %p; WGA 66.92, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 ### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 - maskedkd : 98.0
 
@@ -48,6 +49,7 @@ Total agent screen configs: 10
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | center |  | 12 | 12.0 | 1 | 88.32 ± 0.00 | 54.89 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_center_k12_s1_1030_201811_341b |
+| final | full |  | 196 | 196.0 | 1 | 91.33 ± 0.00 | 66.92 ± 0.00 | 42.77 | 35.13 | 0.00 | 195 | final_full_k196_s1_1030_201811_b764 |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1 | 87.99 ± 0.00 | 63.16 ± 0.00 | 12.81 | 2.45 | 2.90 | 202 | final_gradroll_k12_s1_1030_201811_faf0 |
 | final | grid |  | 12 | 12.0 | 1 | 83.74 ± 0.00 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1 | 84.15 ± 0.00 | 21.05 ± 0.00 | 10.07 | 2.45 | 0.00 | 285 | final_maskedkd_k12_s1_1030_201811_e49a |
