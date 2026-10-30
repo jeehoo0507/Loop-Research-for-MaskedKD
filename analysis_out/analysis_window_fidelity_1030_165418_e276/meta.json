@@ -1,0 +1,12 @@
+{
+ "id": "analysis_window_fidelity_1030_165418_e276",
+ "name": "window_fidelity",
+ "source_sha": "e2765d4423363e736a55dcf7b4ecb740df0aa80e8baf6636d59a32839bff70df",
+ "status": "done",
+ "meta": {
+  "question": "does a compact window placed at the student's attention centroid / peak keep the masked teacher accurate on the worst group better than the fixed centre window, on clean and off-centre crops?",
+  "method": "attention maps (CLS attention, attention rollout) used for weakly-supervised object localisation (centroid / blurred peak) instead of per-token ranking; group-sliced masked-teacher faithfulness",
+  "paper": "Abnar & Zuidema ACL 2020; Gao et al. TS-CAM ICCV 2021; Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 676.9
+}

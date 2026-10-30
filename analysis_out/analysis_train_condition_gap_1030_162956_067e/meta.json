@@ -1,0 +1,12 @@
+{
+ "id": "analysis_train_condition_gap_1030_162956_067e",
+ "name": "train_condition_gap",
+ "source_sha": "067e36e6d3fdedf9959da6a7cca6aea90ce4365f0ad73dddc8e4a499fbe323ce",
+ "status": "done",
+ "meta": {
+  "question": "does the clean-image, eval-mode masked-teacher proxy mis-rank block-9 CLS attention because the selector runs on mixup/cutmix inputs and a drop-path student during training?",
+  "method": "group-sliced faithfulness of the masked teacher (KL / agreement to the full teacher) under the training input distribution; selection stability under stochastic depth",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Yun et al. ICCV 2019 (CutMix); Zhang et al. ICLR 2018 (mixup); Huang et al. ECCV 2016 (stochastic depth); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 840.4
+}

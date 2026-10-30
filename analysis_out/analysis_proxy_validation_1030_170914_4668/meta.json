@@ -1,0 +1,12 @@
+{
+ "id": "analysis_proxy_validation_1030_170914_4668",
+ "name": "proxy_validation",
+ "source_sha": "466809bde016b591a401e715b48f295f46265fbe63936582c4e3e34835540d36",
+ "status": "done",
+ "meta": {
+  "question": "which masked-teacher statistic (accuracy, true-class probability, confident errors, entropy, KL to the full teacher; worst-group or minority mean; self vs common student) rank-predicts the student's worst-group accuracy across selectors and K?",
+  "method": "group-sliced faithfulness and calibration of the masked teacher under each selector's attention map (CLS attention, attention rollout), validated against trained students by rank correlation",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (ROAR-style keep-only evaluation); Sagawa et al. ICLR 2020 (Waterbirds groups); Guo et al. ICML 2017 (calibration)"
+ },
+ "seconds": 142.0
+}

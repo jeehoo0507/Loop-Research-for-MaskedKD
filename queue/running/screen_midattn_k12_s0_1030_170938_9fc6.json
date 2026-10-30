@@ -1,0 +1,18 @@
+{
+ "id": "screen_midattn_k12_s0_1030_170938_9fc6",
+ "kind": "train",
+ "dataset": "waterbirds",
+ "stage2": null,
+ "method": "midattn",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-W4: mid-depth CLS attention. The teacher gets the K patches with the highest head-mean CLS attention in\nstudent block `layer` (default 9 of 0..11) instead of the last block (MaskedKD).\n\nBasis: analysis_group_fidelity_1030_143842_1ea0 (full-KD student, K=49): masked-teacher val accuracy / worst\ngroup with block-11 CLS attention (= MaskedKD) 86.91 / 47.37, block-9 92.99 / 72.18, rollout 91.66 / 72.93,\nteacher's own last-block attention (oracle) 66.17 WGA. The last block's top-K over-weights high-norm tokens\n(toknorm overlap with MaskedKD 0.46 vs random 0.25) and the masked teacher then fails on waterbirds on land\n(group 2). Reading: the last block of a ViT moves global information into a few low-information \"register\"\ntokens (Darcet et al. ICLR 2024) that are not where the object evidence is; one block earlier the CLS query\nstill attends to object patches, which a masked teacher can classify without the background shortcut.\n\nsel_args: layer = student block index (default 9).\n\"\"\"\nfrom harness.selector_api import SelectorBase, topk_mask\n\nMETA = {\n    \"method\": \"layer-wise CLS attention probing (where a ViT reads object evidence vs global/register tokens)\",\n    \"paper\": \"Darcet, Oquab, Mairal & Bojanowski, Vision Transformers Need Registers, ICLR 2024; \"\n             \"Abnar & Zuidema ACL 2020 (attention as explanation)\",\n    \"why\": \"mid-depth CLS attention still points at object patches; the last block's peaks include \"\n           \"register-like background tokens that leave the masked teacher on the background shortcut\",\n    \"vs_maskedkd\": \"same CLS-attention ranking, read from a mid-depth student block chosen by group-sliced \"\n                   \"masked-teacher fidelity, not from the last block\",\n    \"prior_art\": \"MaskedKD (last block); Attention Rollout mixes all blocks including the last; EViT/ToMe prune \"\n                 \"inside the model itself; none choose the layer for KD-teacher input by group fidelity\",\n    \"parent\": \"none\",\n}\n\n\nclass Selector(SelectorBase):\n    def __init__(self, **kwargs):\n        super().__init__(**kwargs)\n        self.layer = int(kwargs.get(\"layer\", 9))\n        self.NEEDS = {\"attn\": [self.layer], \"tokens\": []}\n\n    def select(self, ctx):\n        scores = ctx.out.attn[self.layer].detach().float().mean(dim=1)[:, 0, 1:]\n        return topk_mask(scores, int(ctx.budget))\n",
+ "selector_sha": "7283f15c1dd4732c255e0215e48f84aef0b1033e9dd733d6f5023e1a8dd13a49",
+ "note": "",
+ "by": "agent",
+ "priority": 6,
+ "submitted": "2026-10-30 17:09:38"
+}

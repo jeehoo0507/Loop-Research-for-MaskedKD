@@ -1,9 +1,9 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 6): 확정 결과 없음. K=12 기준선이 모였다. center@12는 88.74/56.39다. rollout@12(87.24/45.11)와 MaskedKD@12(85.15/23.31)를 크게 앞선다. 신호가 없는 center가 K=12·29·49 모두에서 MaskedKD보다 WGA가 높다. midattn@49(89.91/57.89)는 승격하지 못했다.
-- 핵심 분석: L11 top-K를 받은 teacher가 place 정보를 가장 많이 가진다(analysis_shortcut_probe_1030_160112_bfc0). clean 이미지 대리 지표는 L9를 과대평가했다. 원인을 확인하는 H-W8 분석이 실행 중이다.
-- 진행 중: analysis_train_condition_gap_1030_162956_067e (H-W8), analysis_window_fidelity_1030_165418_e276 (H-W9: student attention으로 위치를 정한 연속 창 vs center. K=12·29·49, clean과 off-centre crop 조건), tome@12, oracle@12, CUB 관문.
-- 다음: H-W9에서 win_* 선택이 crop 조건 WGA로 center를 이기면 selectors/attnwin(parent=center)을 K=12에서 screen한다. midattn 계열을 계속할지는 H-W8 결과로 정한다.
-- 막힌 것: 없음.
+- 요약 (2026-10-30 [claude] 라운드 7): 확정 결과 없음. 공략 K마다 기준이 다르다. K=12에서는 center(88.74/56.39), K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이 가장 높다. tome@12는 88.99/48.12다(예산의 2.69배, not matched).
+- 핵심 분석: H-W8의 원인은 학습 조건(mixup/cutmix, drop path)이 아니었다. midattn으로 학습한 student 자신의 L9 attention이 학습 중에 나빠진다(self proxy L9@49: 66.92→59.40→60.90). self proxy로 보면 K=49의 student 순위가 맞는다. H-W9(창 선택)는 center를 일관되게 이기지 못해 기각했다.
+- 진행 중: analysis_proxy_validation_1030_170914_4668 (H-W10: 어떤 masked-teacher 통계가 student WGA 순위를 맞히는지 16개 run으로 Spearman), screen_midattn_k12_s0_1030_170938_9fc6, oracle@12, CUB 관문.
+- 다음: H-W10에서 순위를 맞히는 대리 지표를 고르고, 그 지표로 K=12·29의 새 선택기 후보를 분석 단계에서 걸러낸 뒤 screen한다.
+- 막힌 것: 없음. (이번 라운드에는 임의 python 실행이 승인 대기로 막혀서, json을 Read/Grep으로 읽었다.)
 
 ## [claude] 2026-10-30 14:05 라운드 1
 - 읽은 것: QUEUE(지시 없음), git log, RESULTS_TABLE, AUDIT(비어 있음), PROPOSALS(Codex IDEA 1·2). analysis_out/은 아직 없다 (새 설정).
@@ -69,4 +69,28 @@
   - K는 12·29·49이고, student는 full@196·maskedkd@49·rollout@49·center@49의 final이다. 그룹별 masked teacher 정확도와 KL을 잰다.
   - [claude] 결정: GPU를 학습 작업과 함께 쓰고 있어 미리 돌려 보지 않고 제출했다. 오류가 나면 다음 라운드에 고친다.
 - [claude] 결정: 이번 라운드에는 screen을 넣지 않는다. midattn 계열은 H-W8 결과가 나올 때까지 보류한다(라운드 5 결정 유지). attnwin은 H-W9 근거가 나오기 전에는 제출하지 않는다. 대기 중인 작업(oracle@12, CUB 3개)과 실행 중인 작업이 있어 GPU는 놀지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 17:15 라운드 7
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE, RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(train_condition_gap, window_fidelity가 새로 나옴).
+- 새 결과: tome@12 88.99/48.12 (screen_tome_k12_s0_1030_135953_84af, teacher 비용이 예산의 2.69배라 not matched). K=12의 WGA 순위는 center 56.39 > tome 48.12 > rollout 45.11 > grid 35.34 > random 33.83 > maskedkd 23.31이다.
+- 분석 analysis_train_condition_gap_1030_162956_067e (H-W8). **학습 조건 가설은 기각한다.**
+  - 학습 조건은 L9를 불리하게 만들지 않는다. cutmix에서 L9@49의 kl_worst는 mkd49 student 0.2985, rollout 0.3427이고, roll49 student 0.2712, rollout 0.4045다. 오히려 L9가 rollout보다 작다. cutmix 상자 비율도 L9 0.67 대 rollout 0.63~0.66으로 비슷하다(상자 면적 0.52).
+  - drop path에서 선택 안정성은 L9 0.93, rollout 0.976, L11 0.89다. 차이는 작다.
+  - 진짜 차이는 student에 있다. midattn으로 학습한 student 자신의 L9@49 masked teacher WGA(clean eval)는 e25/e50/final에서 66.92/59.40/60.90으로 떨어진다. 같은 L9를 다른 student에서 읽으면 mkd49 student 69.17, rollout student e25/e50/final 76.69/74.44/75.19다. rollout student 자신의 rollout@49는 65.41/69.17/68.42로 떨어지지 않는다.
+  - 각 방법을 그 방법으로 학습한 student로 잰 self proxy의 K=49 순위는 L11 41.35 (mkd49) < L9 60.90 (mid49) < center 63.91 < rollout 68.42 (roll49)다. student WGA 순위 51.88 < 57.89 < 60.15 < 64.66과 같다.
+  - 해석: L9 선택이 student 자신의 L9 attention을 바꾸는 되먹임이 있다. 공통 student(full KD)로 잰 대리 지표에는 이것이 보이지 않는다.
+- 분석 analysis_window_fidelity_1030_165418_e276 (H-W9). **H-W9(attnwin)는 기각하고 제출하지 않는다.**
+  - K=12에서 center의 masked teacher WGA는 clean 41.35, crop 42.11이다. win_L9_cent@12는 clean에서 45.11/38.35/43.61/43.61(student: center49/full/mkd49/roll49)이고, crop에서 45.86/49.62/51.13/57.14다. 창이 center를 이기는 student도 있고 지는 student도 있다.
+  - 흩어진 top_L9@12가 창보다 높다(clean 60.15/51.88/58.65/53.38). 그리고 K=49에서 win_L9_cent는 top_L9와 비슷하다(clean 71.43/72.18/70.68/71.43).
+  - 더 중요한 사실은 따로 있다. K=12에서 이 대리 지표는 center(41.35)를 top_rollout(clean 48.12~53.38)보다 낮게 본다. 그런데 student는 center@12 56.39 > rollout@12 45.11로 반대다. 원판을 teacher KL 기준으로 가장 잘 옮긴 shift_best@12(분석 전용 상한)도 60.90이다.
+  - 결론: K=12에서는 clean masked-teacher WGA가 student 순위를 예측하지 못한다. 그래서 이 지표로 창 선택기를 고를 근거가 없다.
+- 새 분석: analysis/proxy_validation.py → analysis_proxy_validation_1030_170914_4668 (H-W10, priority 6).
+  - 대상: 끝난 screen seed 0 run 16개(maskedkd·rollout·center·grid·random × K 12·29·49, midattn@49).
+  - 방법: 각 run을 그 run의 student(self)와 full-KD student(common)로 잰다. masked teacher의 그룹별 정확도, 참 클래스 확률, 확신 오답 비율(max p > 0.8), 엔트로피, full teacher와의 KL을 구한다.
+  - 각 통계를 student val WGA와 Spearman 순위 상관으로 비교한다(전체, K별).
+  - 목적: 앞으로 선택기를 분석 단계에서 거를 대리 지표를 검증하는 것이다.
+- screen: screen_midattn_k12_s0_1030_170938_9fc6 (priority 6).
+  - [claude] 결정: midattn을 K=12에 넣는다. 승격을 기대해서가 아니다. 같은 계열이 다른 K에서 일관된지 보는 점검이고, H-W10의 검증 점(K=12에서 L9 self 대 common)을 하나 더 얻기 위해서다.
+  - 지난 라운드에 이 screen을 보류한 이유는 '대리 지표가 L9를 왜 과대평가했는지 모름'이었다. 이제는 그 원인(되먹임)을 알았다. 대기 작업은 3개(CUB 2 포함)다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
