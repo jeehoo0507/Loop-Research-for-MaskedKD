@@ -14,7 +14,8 @@ token norm, gradient-weighted attention) and three diagnostic mixes:
   anti      the K lowest last-block CLS attention tokens (mostly background): what does background alone teach?
   half_grid top K/2 by CLS attention, the rest filled in raster-grid order (does spread add to focus?)
   nms       CLS attention top-K with greedy 3x3 suppression of neighbours (focus without clumping)
-Students: screen seed-0 maskedkd@98 (final and 25%/50% snapshots) and screen seed-0 full KD (final).
+Students: screen seed-0 maskedkd@49 (final), maskedkd@98 (final and 25%/50% snapshots). Full KD (final) is in
+analysis_group_fidelity_1030_143842_1ea0.
 """
 import torch
 
@@ -97,9 +98,10 @@ def run(api):
     pick = []
     for rid, r in runs.items():
         if r["tier"] == "screen" and r["seed"] == 0 and r["method"] == "maskedkd" and r["keep"] == 98:
-            pick += [(f"mkd98_e{e}", rid, e) for e in r["snapshots"]] + [("mkd98_final", rid, None)]
-        if r["tier"] == "screen" and r["seed"] == 0 and r["method"] == "full":
-            pick.append(("full_final", rid, None))
+            pick += [("mkd98_final", rid, None)] + [(f"mkd98_e{e}", rid, e) for e in r["snapshots"]]
+        if r["tier"] == "screen" and r["seed"] == 0 and r["method"] == "maskedkd" and r["keep"] == 49:
+            pick.insert(0, ("mkd49_final", rid, None))   # K=49: student WGA fell to 51.88 (group 2)
+    # full_final was finished in analysis_group_fidelity_1030_143842_1ea0 before that job hit a CUDA OOM
     api.write_json("students", {n: [rid, e] for n, rid, e in pick})
     groups = api.val_groups()
     T = api.teacher.eval()
@@ -118,7 +120,7 @@ def run(api):
         acc = {}
         s_acc = [0.0] * 4
         off = 0
-        for x, y in api.val_batches(batch=100):
+        for x, y in api.val_batches(batch=50):   # 50 (not 100): shares the GPU with training jobs
             B = x.shape[0]
             dev = x.device
             gb = groups[off:off + B].to(dev)
