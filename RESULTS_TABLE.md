@@ -61,7 +61,7 @@ Total agent screen configs: 2
 
 # Stage 2: cub (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1], full seeds [1], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -75,6 +75,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - no child selectors yet
 
 ## Primary metric (analysis-only methods excluded: oracle)
+### final: Full KD val 82.83; KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -86,4 +87,5 @@ Total agent screen configs: 0
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
+| final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
 
