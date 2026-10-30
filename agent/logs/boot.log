@@ -227,3 +227,58 @@ boot: 1 windows (created Thu Oct 29 23:27:34 2026)
 sched: 1 windows (created Thu Oct 29 23:37:45 2026)
 stage2: 1 windows (created Fri Oct 30 00:25:01 2026)
 [boot 10-30 00:25] research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
+[boot 10-30 02:35] checking tools
+NVIDIA RTX A5000, 24564 MiB
+[boot 10-30 02:35] Codex works: GPT audits and is the emergency researcher
+............................                                             [100%]
+28 passed in 18.89s
+locked: b364c8543061b28948f26ea1075064efa6b3b82beeca1a07b6396f040e750b40
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+boot: 1 windows (created Fri Oct 30 02:35:43 2026)
+sched: 1 windows (created Fri Oct 30 02:36:13 2026)
+[boot 10-30 02:36] GPU smoke
+[boot 10-30 02:44] GPU smoke passed
+[boot 10-30 02:44] teacher fine-tune (CIFAR-100, DeiT-B, label smoothing 0)
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:38: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  d = torch.load(cache)
+{'epoch': 1, 'val_acc': 75.18, 'epoch_s': 127.3}
+{'epoch': 2, 'val_acc': 81.68, 'epoch_s': 128.3}
+{'epoch': 3, 'val_acc': 84.02, 'epoch_s': 128.4}
+{'epoch': 4, 'val_acc': 85.14, 'epoch_s': 128.4}
+{'epoch': 5, 'val_acc': 87.16, 'epoch_s': 128.2}
+{'epoch': 6, 'val_acc': 87.28, 'epoch_s': 128.4}
+{'epoch': 7, 'val_acc': 88.6, 'epoch_s': 128.5}
+{'epoch': 8, 'val_acc': 88.88, 'epoch_s': 128.3}
+{'epoch': 9, 'val_acc': 88.7, 'epoch_s': 128.2}
+{'epoch': 10, 'val_acc': 88.78, 'epoch_s': 128.2}
+{"val_acc": 88.78, "sha256": "5aecf7d0285826aa9e4ddc4948aaaebc2e6f4df7c85c58c3c5bbc38f728e2922"}
+[boot 10-30 03:06] teacher val acc: 88.78
+[boot 10-30 03:06] bench (FLOP counter check + speed)
+flop check: {'teacher_gflops_measured': 35.126, 'reference': 35.2, 'rel_err': 0.0021, 'ok': True}
+single ce@0: {'img_per_s': 1827.8, 'peak_vram_gib': 2.25}
+single full@196: {'img_per_s': 789.5, 'peak_vram_gib': 3.45}
+single maskedkd@98: {'img_per_s': 1051.5, 'peak_vram_gib': 3.21}
+single maskedkd@25: {'img_per_s': 1416.4, 'peak_vram_gib': 2.97}
+single tome@49: {'img_per_s': 1313.2, 'peak_vram_gib': 2.88}
+parallel x2 maskedkd@98: aggregate 1012 img/s
+parallel x3 maskedkd@98: aggregate 1028 img/s
+parallel x4 maskedkd@98: aggregate 1011 img/s
+{
+ "epoch_s_slowest_single": 57.0,
+ "screen_epochs_for_1h_single": 63,
+ "parallel_jobs": 3,
+ "epoch_s_per_job_at_that_parallelism": 131.4,
+ "screen_epochs_for_1h_at_that_parallelism": 27
+}
+{"epochs": {"cifar100": {"screen": 27, "final": 54}}, "base_screen": 27, "gate_scale": 1, "max_jobs": 3, "rule": "screen = 1 h at bench parallelism (>=10), final = 2x screen"}
+[boot 10-30 03:08] epochs: {"epochs":{"cifar100":{"screen":27,"final":54}},"base_screen":27,"gate_scale":1,"max_jobs":3,"rule":"screen=1hatbenchparallelism(>=10),final=2xscreen"}
+............................                                             [100%]
+28 passed in 19.14s
+locked: b8c744461c43b31e8a9f23b0ffbfb7d633fae4aaab17d5333160af7b6b96bb4d
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+boot: 1 windows (created Fri Oct 30 02:35:43 2026)
+sched: 1 windows (created Fri Oct 30 03:08:59 2026)
+[boot 10-30 04:09] CIFAR gate: [screen, 27 epochs, mean of seeds [0]] Full KD 83.50 vs CE 82.74 (need +1.0): FAIL; MaskedKD@98 83.12 vs Full 83.50 (need within 0.5): PASS
+[boot 10-30 04:57] checking tools
+NVIDIA RTX A5000, 24564 MiB
+[boot 10-30 04:57] STOPPED: git push not authorized. Run: gh auth login && gh auth setup-git

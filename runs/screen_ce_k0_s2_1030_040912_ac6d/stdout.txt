@@ -1,0 +1,19 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:38: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  d = torch.load(cache)
+[2026-10-30 04:46:50] job screen_ce_k0_s2_1030_040912_ac6d method=ce keep=0 seed=2 epochs=27 device=cuda
+[2026-10-30 04:46:53] flops per image (train step): {'total_gflops_per_img': 7.6421, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.6421}
+[2026-10-30 04:48:20] {"epoch": 1, "loss": 4.369986509665464, "epoch_s": 89.6, "img_per_s": 501.6}
+[2026-10-30 04:49:49] {"epoch": 2, "loss": 3.6905473134456535, "epoch_s": 88.5, "img_per_s": 507.7}
+[2026-10-30 04:51:17] {"epoch": 3, "loss": 3.436198435617648, "epoch_s": 88.5, "img_per_s": 507.6}
+[2026-10-30 04:52:47] {"epoch": 4, "loss": 3.315915527506771, "epoch_s": 88.9, "img_per_s": 505.3}
+[2026-10-30 04:54:17] {"epoch": 5, "loss": 3.2472623725901983, "epoch_s": 88.6, "img_per_s": 507.1, "val_acc": 72.1}
+[2026-10-30 04:55:46] {"epoch": 6, "loss": 3.224643428780754, "epoch_s": 88.8, "img_per_s": 506.1}
+[2026-10-30 04:57:15] {"epoch": 7, "loss": 3.1277041611848055, "epoch_s": 88.7, "img_per_s": 506.3}
+[2026-10-30 04:58:44] {"epoch": 8, "loss": 3.1361203825371895, "epoch_s": 88.5, "img_per_s": 507.9}
+[2026-10-30 05:00:13] {"epoch": 9, "loss": 3.1016839559261618, "epoch_s": 88.7, "img_per_s": 506.6}
+[2026-10-30 05:01:45] {"epoch": 10, "loss": 3.0806385777954364, "epoch_s": 89.4, "img_per_s": 502.6, "val_acc": 77.88}
+[2026-10-30 05:03:14] {"epoch": 11, "loss": 3.000022833163922, "epoch_s": 88.6, "img_per_s": 506.9}
+[2026-10-30 05:04:43] {"epoch": 12, "loss": 3.017654942990708, "epoch_s": 88.6, "img_per_s": 506.8}
+[2026-10-30 05:06:12] {"epoch": 13, "loss": 3.019945403449556, "epoch_s": 88.8, "img_per_s": 505.8}
+[2026-10-30 05:07:41] {"epoch": 14, "loss": 2.9599230567953865, "epoch_s": 88.6, "img_per_s": 507.3}
+[2026-10-30 05:09:12] {"epoch": 15, "loss": 2.9516606018414184, "epoch_s": 88.7, "img_per_s": 506.4, "val_acc": 80.9}

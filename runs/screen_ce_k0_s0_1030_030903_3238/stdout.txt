@@ -1,0 +1,32 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:38: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  d = torch.load(cache)
+[2026-10-30 03:09:28] job screen_ce_k0_s0_1030_030903_3238 method=ce keep=0 seed=0 epochs=27 device=cuda
+[2026-10-30 03:09:29] flops per image (train step): {'total_gflops_per_img': 7.6421, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.6421}
+[2026-10-30 03:09:54] {"epoch": 1, "loss": 4.3899364396717475, "epoch_s": 26.4, "img_per_s": 1700.0}
+[2026-10-30 03:10:20] {"epoch": 2, "loss": 3.698676003350152, "epoch_s": 25.5, "img_per_s": 1764.8}
+[2026-10-30 03:11:01] {"epoch": 3, "loss": 3.4714171696252634, "epoch_s": 40.8, "img_per_s": 1100.9}
+[2026-10-30 03:12:11] {"epoch": 4, "loss": 3.3341153883866097, "epoch_s": 70.5, "img_per_s": 637.7}
+[2026-10-30 03:13:42] {"epoch": 5, "loss": 3.238381020363919, "epoch_s": 88.8, "img_per_s": 505.9, "val_acc": 72.12}
+[2026-10-30 03:15:12] {"epoch": 6, "loss": 3.20107160266648, "epoch_s": 88.9, "img_per_s": 505.5}
+[2026-10-30 03:16:40] {"epoch": 7, "loss": 3.173731296150773, "epoch_s": 88.5, "img_per_s": 507.6}
+[2026-10-30 03:18:09] {"epoch": 8, "loss": 3.1439436093354836, "epoch_s": 88.6, "img_per_s": 507.0}
+[2026-10-30 03:19:38] {"epoch": 9, "loss": 3.1093814080936615, "epoch_s": 88.5, "img_per_s": 507.6}
+[2026-10-30 03:21:09] {"epoch": 10, "loss": 3.0877026893474437, "epoch_s": 88.2, "img_per_s": 509.1, "val_acc": 76.94}
+[2026-10-30 03:22:38] {"epoch": 11, "loss": 3.0664498625997125, "epoch_s": 88.9, "img_per_s": 505.5}
+[2026-10-30 03:24:07] {"epoch": 12, "loss": 3.0570839419324174, "epoch_s": 88.7, "img_per_s": 506.8}
+[2026-10-30 03:25:36] {"epoch": 13, "loss": 2.9883115424050226, "epoch_s": 88.7, "img_per_s": 506.6}
+[2026-10-30 03:27:04] {"epoch": 14, "loss": 2.9564792345731687, "epoch_s": 88.4, "img_per_s": 508.1}
+[2026-10-30 03:28:36] {"epoch": 15, "loss": 2.9723647150218997, "epoch_s": 89.1, "img_per_s": 504.5, "val_acc": 80.56}
+[2026-10-30 03:30:05] {"epoch": 16, "loss": 2.9407651978000957, "epoch_s": 88.4, "img_per_s": 508.1}
+[2026-10-30 03:31:34] {"epoch": 17, "loss": 2.9089608637356013, "epoch_s": 88.5, "img_per_s": 507.4}
+[2026-10-30 03:33:03] {"epoch": 18, "loss": 2.9017634429143704, "epoch_s": 88.8, "img_per_s": 505.9}
+[2026-10-30 03:34:32] {"epoch": 19, "loss": 2.8753899006422428, "epoch_s": 88.6, "img_per_s": 507.0}
+[2026-10-30 03:36:03] {"epoch": 20, "loss": 2.827803859004268, "epoch_s": 88.7, "img_per_s": 506.5, "val_acc": 82.04}
+[2026-10-30 03:37:32] {"epoch": 21, "loss": 2.845846315734407, "epoch_s": 88.8, "img_per_s": 506.1}
+[2026-10-30 03:39:01] {"epoch": 22, "loss": 2.816672514986109, "epoch_s": 88.7, "img_per_s": 506.3}
+[2026-10-30 03:40:29] {"epoch": 23, "loss": 2.8224514597161883, "epoch_s": 88.4, "img_per_s": 508.2}
+[2026-10-30 03:41:59] {"epoch": 24, "loss": 2.78151832720493, "epoch_s": 88.8, "img_per_s": 505.9}
+[2026-10-30 03:43:29] {"epoch": 25, "loss": 2.85460571481971, "epoch_s": 88.5, "img_per_s": 507.6, "val_acc": 82.42}
+[2026-10-30 03:44:58] {"epoch": 26, "loss": 2.7240711637371966, "epoch_s": 88.9, "img_per_s": 505.2}
+[2026-10-30 03:46:29] {"epoch": 27, "loss": 2.8009453427757633, "epoch_s": 88.6, "img_per_s": 507.0, "val_acc": 82.74}
+[2026-10-30 03:46:30] done
