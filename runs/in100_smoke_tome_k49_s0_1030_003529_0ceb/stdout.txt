@@ -2,3 +2,7 @@
   t.load_state_dict(torch.load(ckpt, map_location="cpu"))
 [2026-10-30 01:33:37] job in100_smoke_tome_k49_s0_1030_003529_0ceb method=tome keep=49 seed=0 epochs=1 device=cuda
 [2026-10-30 01:33:40] flops per image (train step): {'total_gflops_per_img': 9.4415, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 1.7994, 'student_gflops_per_img': 7.6421}
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:84: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)) if isinstance(x, np.ndarray) else x
+[2026-10-30 01:33:46] {"epoch": 1, "loss": 2.6688348690668744, "epoch_s": 8.0, "img_per_s": 481.7, "mean_kept": 49.0, "val_acc": 4.6}
+[2026-10-30 01:33:46] done

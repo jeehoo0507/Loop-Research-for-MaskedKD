@@ -12,3 +12,6 @@
 - 2026-10-30 00:25 ImageNet-100 preparation started in background (tmux: stage2)
 - 2026-10-30 00:25 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
 - 2026-10-30 00:35 [stage2] ImageNet-100 ready; teacher val acc 96.96
+- 2026-10-30 01:35 [stage2] ImageNet-100 epochs: {"epochs":{"cifar100":{"screen":28,"final":56},"in100":{"final":97}},"max_jobs":4,"rule":"screen=1hatbenchparallelism(>=10),final=2xscreen","in100_rule":"12hat276img/smeasuredbysmokerunin100_smoke_maskedkd_k49_s0_1030_003529_1113(>=10epochs)"}
+- 2026-10-30 01:39 [stage2] loop restarted after stage-2 relock
+- 2026-10-30 01:39 [stage2] ImageNet-100 gate submitted (one GPU slot; long)
