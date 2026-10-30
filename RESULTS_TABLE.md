@@ -25,7 +25,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 89.24 / WGA 51.9; rollout 89.66 / WGA 64.7; random 85.40 / WGA 36.1; grid 84.74 / WGA 35.3; center 90.16 / WGA 60.1; tome 89.66 / WGA 51.1 (Full KD 90.66 / WGA 65.4)
 - K=29: maskedkd 87.66 / WGA 43.6; rollout 89.82 / WGA 65.4; random 82.49 / WGA 27.8; grid 81.65 / WGA 36.8; center 88.99 / WGA 62.4; tome 89.66 / WGA 51.1 (Full KD 90.66 / WGA 65.4)
-- K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4 (Full KD 90.66 / WGA 65.4)
+- K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
 Total agent screen configs: 1
@@ -53,6 +53,7 @@ Total agent screen configs: 1
 | screen | rollout |  | 12 | 12.0 | 0 | 87.24 ± 0.00 | 45.11 ± 0.00 | 10.08 | 2.45 | 0.17 | 296 | screen_rollout_k12_s0_1030_135953_489a |
 | screen | rollout |  | 29 | 29.0 | 0 | 89.82 ± 0.00 | 65.41 ± 0.00 | 12.99 | 5.36 | 0.17 | 253 | screen_rollout_k29_s0_1030_135953_7320 |
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
+| screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 88.99 ± 0.00 | 48.12 ± 0.00 | 12.00 | 4.36 | 0.00 | 315 | screen_tome_k12_s0_1030_135953_84af |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
 
