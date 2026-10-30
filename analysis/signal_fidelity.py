@@ -43,13 +43,22 @@ def _signals(api, student, x):
     """All scores [B,196] from one student pass (with grad for the gradient-based ones)."""
     depth = len(student.blocks)
     with torch.enable_grad():
-        out = api.student_forward(student, x, attn_layers=list(range(depth)), token_layers=[depth - 2])
+        x = x.detach().requires_grad_(True)      # student params are frozen; this gives the graph a leaf
+        out = api.student_forward(student, x, attn_layers=list(range(depth)), token_layers=[0, depth - 2])
         logits = out.logits.float()
         target = logits.max(1).values.sum()      # student's own predicted class, no labels
-        grads = torch.autograd.grad(target, out.attn)
+        grads = torch.autograd.grad(target, out.attn, retain_graph=True)
+        # student uncertainty: entropy of its own prediction (no labels, no teacher)
+        logp = logits.log_softmax(-1)
+        ent = -(logp.exp() * logp).sum()
+        eg = torch.autograd.grad(ent, [out.attn[-1], out.tokens[0]])
     A = [a.detach().float() for a in out.attn]
     G = [g.detach().float() for g in grads]
     s = {}
+    # entropy attribution: which tokens drive the student's uncertainty (Grad x Input on block-0 tokens,
+    # Shrikumar et al. 2016 / Ancona et al. ICLR 2018; and grad x attention at the last block)
+    s["entgrad_attn_last"] = (eg[0].detach().float() * A[-1]).abs().mean(1)[:, 0, 1:]
+    s["entgrad_tok_L0"] = (eg[1].detach().float() * out.tokens[0].detach().float()).sum(-1).abs()[:, 1:]
     for l in range(depth):
         s[f"cls_attn_L{l}"] = A[l].mean(1)[:, 0, 1:]
     for h in range(A[-1].shape[1]):

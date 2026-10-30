@@ -39,3 +39,7 @@ web search: Token Pooling in Vision Transformers reconstruction error ICLR 2022 
 - H3 attention-norm(Kobayashi 2020): ‖α·f(x)‖. 선행 — ATS(ECCV 2022)가 attention×value norm을 이미 씀 → 노벨티 낮음. 분석에서 비교용으로만 측정.
 - 검증 계획: 분석의 fid_kl 순위가 기준선 screen(maskedkd/random/grid/center @12/25/49)의 val 순위와 맞는지 먼저 확인한다. 맞지 않으면 "teacher 충실도"는 teachability의 대리지표가 아니며(MaskedKD@98 24.74 > Full 24.38, run screen_maskedkd_k98_s0_1029_233749_7ad0 / screen_full_k196_s0_1029_233749_5549) 다른 지표(gap_kl 등)를 찾는다.
 - [라운드 2] H2 구현: selectors/gradattn.py, 비용 +0.146 GFLOPs/img(trysel K=25). 제출 조건: 분석에서 gradattn_last의 fid_kl 또는 gap_kl이 cls_attn_L11(MaskedKD)보다 나은 K가 있고, 그 K에서 maskedkd−random 차이가 승격 기준(0.62%p) 이상일 것.
+
+## 2026-10-30 [claude] 라운드 3
+- H4 엔트로피 기여도 선택(student uncertainty attribution): 근거 — 아직 분석 대기(analysis_signal_fidelity_1030_014040_eb3d의 `entgrad_attn_last`, `entgrad_tok_L0`). 아이디어 — student 자기 예측 엔트로피의 기울기×입력(Shrikumar 2016 / Ancona ICLR 2018)으로 "student를 헷갈리게 하는 토큰"을 teacher에 보낸다. teachability 가설: KD 신호는 student가 불확실한 곳에서 가장 정보가 많다(gap_kl로 확인). MaskedKD(student가 이미 보는 곳)와 방향이 반대일 수 있음. 선행 대비 — 웹 검색(2건)에서 ViT KD의 teacher 입력 패치를 student 엔트로피 기여도로 고르는 예는 못 찾음. 가장 가까운 것: AD-TP(NeurIPS 2025 슬라이드, Integrated Gradients로 추론 가지치기), Fast SAM2(arXiv 2512.21333, MC dropout 불확실성으로 가지치기 회피), SelecTKD(LLM, 토큰별 손실 선택). 모두 추론 가속 또는 LLM이고, teacher 입력 선택이 아님. 비용: 역전파 1회(H2와 같은 수준).
+- 판정 규칙: fid_kl만이 아니라 gap_kl도 본다. 엔트로피 신호는 fid_kl은 나쁘고 gap_kl은 클 수 있음 → 그 경우 기준선 screen 순위와 어느 지표가 맞는지로 결정.

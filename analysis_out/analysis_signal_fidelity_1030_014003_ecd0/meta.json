@@ -1,0 +1,13 @@
+{
+ "id": "analysis_signal_fidelity_1030_014003_ecd0",
+ "name": "signal_fidelity",
+ "source_sha": "ecd086363b49c21ee68aef7b89e9574ab98fe04657fded4591c63eb969b7fff8",
+ "status": "error",
+ "meta": {
+  "question": "which student-side interpretability signal (layer CLS attention, rollout, value-norm attention, gradient-weighted attention, GAE) selects tokens that best preserve the teacher's prediction?",
+  "method": "Attention Rollout; attention-norm (||alpha f(x)||); Grad-weighted attention / Generic Attention Explainability; per-layer CLS attention",
+  "paper": "Abnar & Zuidema ACL 2020; Kobayashi et al. EMNLP 2020; Chefer, Gur & Wolf ICCV 2021; Hao et al. AAAI 2021"
+ },
+ "error": "RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn",
+ "seconds": 2.8
+}
