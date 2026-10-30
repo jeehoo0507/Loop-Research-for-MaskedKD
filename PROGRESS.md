@@ -1,9 +1,9 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 20): 확정 결과 없음. jitdisc@12(무작위 원판 위치) 2-seed 결과는 88.53/53.01로 center 수준이다. **suffdisc(61.28)가 center를 앞선 몫은 위치 지터가 아니다(H-W19 기각).** gradroll@12 final seed 1은 진행 중이다.
-- 핵심: K=12에서 center를 넘는 후보는 gradroll(final 진행 중)과 suffdisc(대체 실험 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다.
-- 진행 중: final gradroll@12 s1과 비교군(실행 3, 대기 5), 분석 analysis_suffdisc_decomp_1030_202612_878c(suffdisc 겹침·공간 분포·drop-path 잡음).
-- 다음: final seed 1에서 gradroll이 같은 seed의 center·tome 등을 이기면 seed 2·3을 넣는다. suffdisc는 decomp 결과(PROPOSALS 라운드 20의 읽기 a·b)를 보고, gradroll final이 끝난 뒤 final seed 1 승격 여부를 정한다. final이 끝나기 전에는 새 screen 변형을 넣지 않는다.
-- 막힌 것: 없음. `python -c`와 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다(heredoc 추가(>>)는 이번 라운드에 통과했다).
+- 요약 (2026-10-30 [claude] 라운드 21): 확정 결과 없음. **final gradroll@12 seed 1: 87.99/63.16** (final_gradroll_k12_s1_1030_201811_faf0). 같은 seed의 maskedkd(84.15/21.05)·rollout(86.99/51.88)보다 높고, tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다. center·grid·random final s1은 아직 학습 중이다.
+- 핵심: K=12에서 center를 넘는 후보는 gradroll(final s1 진행 중)과 suffdisc(분해 a·b 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다.
+- 진행 중: final center·grid·random@12 s1(실행), full@196 s1(대기).
+- 다음: center final s1이 끝나서 gradroll이 같은 seed의 center보다 WGA threshold 이상 높으면 gradroll final seed 2를 넣고, 그 뒤 seed 3을 넣는다. suffdisc의 final 승격은 gradroll final 3 seed가 끝난 뒤에 정한다. tome 대비 정확도 손실은 AUDIT_REQUEST의 caveat으로 남긴다.
+- 막힌 것: 없음. `python -c`와 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
 - 읽은 것: QUEUE(지시 없음), git log, RESULTS_TABLE, AUDIT(비어 있음), PROPOSALS(Codex IDEA 1·2). analysis_out/은 아직 없다 (새 설정).
@@ -292,4 +292,22 @@
 - 작업: 분석 analysis/suffdisc_decomp.py → analysis_suffdisc_decomp_1030_202612_878c (priority 6). 승격 전 분해에서 남은 겹침·공간 분포를 잰다. 내용은 suffdisc s0 e25/e50/final, s1 final, jitdisc·center s0/s1 final student에서 고른 shift 분포와 중심 비율, maskedkd·rollout·center와의 겹침(그룹별), cdist, train mode(drop path) 픽과 eval 픽의 일치율, 그리고 masked teacher 그룹 정확도와 kl_worst다. 첫 제출은 `torch.manual_seed` 사용으로 validator에 거부됐다. 그 줄을 빼고 다시 냈다. 미리 정한 읽기는 PROPOSALS 라운드 20에 있다.
 - [claude] 결정: suffdisc는 이번 라운드에 final로 올리지 않는다. 이유: (1) 공식 Parent check(seed 0)가 UNPROVEN(+0.58/+2.26)이다. 2-seed 근거는 harness 규칙 밖의 보조 근거다. (2) 승격 전 분해 중 겹침·공간 분포가 아직 없다. (3) gradroll final seed 1이 진행 중이다. 이 상태에서 비교군 7개가 따라오는 final을 더 넣으면 대기가 13개로 상한 8을 넘는다. 분해가 끝나고 gradroll final이 판정되면 그때 정한다.
 - [claude] 결정: 새 screen은 넣지 않는다. 승격 후보의 final이 진행 중이다(실행 3, 대기 5, GPU 23.1/24.5GB 사용).
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 21:00 라운드 21
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(suffdisc_decomp가 새로 나옴).
+- 새 결과 (final seed 1, K=12, 정확도/WGA):
+  - **gradroll 87.99/63.16** (final_gradroll_k12_s1_1030_201811_faf0). val WGA e75~100은 64.66/60.15/60.90/62.41/63.91/63.16이라 마지막 값만 튄 것이 아니다. seed 0 screen(88.16/60.90)과 같은 수준이다.
+  - 비교군: maskedkd 84.15/21.05 (final_maskedkd_k12_s1_1030_201811_e49a), rollout 86.99/51.88 (final_rollout_k12_s1_1030_201811_6293), tome 89.66/48.87 (final_tome_k12_s1_1030_201811_9fb4, teacher 비용 2.69배 not matched, total 12.00 GFLOPs/img).
+  - gradroll과의 차이: maskedkd 대비 +3.84/+42.11, rollout 대비 +1.00/+11.28, tome 대비 −1.67/+14.29. tome 대비 정확도 손실은 threshold 0.76의 두 배가 넘는다. seed 0(−0.83)에 이어 두 번째다. 그래서 '정확도 또는 WGA에서 이기고 다른 쪽에서 지지 않을 것' 기준으로는 **tome에 대해 주장할 수 없다.** 지침상 K=12의 tome 비교는 tome에 유리하지만(teacher 비용 2.69배), total GFLOPs는 tome이 더 적다(12.00 대 12.81). 이것을 caveat으로 그대로 적는다.
+  - center·grid·random final s1은 학습 중, full@196 s1은 대기다. 참고로 같은 seed의 center screen(screen_center_k12_s1_1030_185949_1766)은 87.99/51.88이다. final center 결과가 나오기 전에는 판정에 쓰지 않는다.
+- 분석 analysis_suffdisc_decomp_1030_202612_878c (suffdisc 승격 전 분해의 남은 부분). 표는 masked teacher val 정확도/WGA/kl_worst/cdist, student는 eval mode, 입력은 clean val이다.
+  - suffdisc student s0 final: suffdisc 84.57/48.12/0.546/2.34, center 76.48/41.35/0.694/1.29, jitter 73.14/37.59/0.824/2.21, maskedkd 72.23/28.57/0.793/4.48. s1 final: suffdisc 83.32/48.12/0.462/2.35.
+  - 같은 suffdisc 규칙을 다른 student에서 읽으면 이점이 줄어든다. jitdisc s0/s1 final 42.11/39.10, center s0/s1 final 39.85/45.11로 center(41.35) 근처다. teacher 수준 이점은 suffdisc로 학습한 student에서만 뚜렷하다(되먹임/공적응). midattn(H-W8)과 반대 방향의 되먹임이다.
+  - 픽 통계: centre_frac 0.024~0.032(균등 1/25 = 0.04 이하), mean_shift 2.03~2.06, train mode(drop path) 픽과 eval 픽의 일치율 0.34~0.43이다. 다른 student에서도 일치율은 비슷하다(jitdisc 0.40~0.42, center 0.42).
+  - 겹침(K 대비): suffdisc∩maskedkd 0.11~0.14, suffdisc∩rollout 0.22~0.24, suffdisc∩center 0.37~0.38이다. 참고로 center∩maskedkd는 0.15~0.58이다(student마다 다름).
+- 미리 정한 읽기(PROPOSALS 라운드 20)에 따른 판정: (a) 일치율 0.34~0.43 > 0.15이므로 학습 중 선택은 무작위가 아니다(통과). (b) centre_frac 0.03 ≪ 0.8이므로 suffdisc는 center와 다르다(통과). suffdisc는 거의 항상 원판을 중앙에서 옮기고, MaskedKD 토큰과 거의 겹치지 않는다. 이득은 공간 규칙이나 MaskedKD 토큰에서 오지 않는다. 분해 3가지(겹침·공간·대체 실험 jitdisc)를 모두 마쳤다.
+- [claude] 결정: gradroll final seed 2는 **이번 라운드에 넣지 않는다.** 라운드 19에 정한 조건은 'seed 1에서 같은 seed의 center 등을 이기면'이다. center final s1이 아직 학습 중이다. 지금 넣으면 비교군 7개가 따라와 대기가 9개로 상한 8을 넘는다. 실행 4·대기 1이라 GPU는 약 25분 동안 놀지 않는다. 다음 라운드에 center final을 보고 넣는다.
+- [claude] 결정: suffdisc final도 넣지 않는다. 분해는 통과했지만 (1) 공식 Parent check(seed 0)가 UNPROVEN이고, (2) 승격한 후보(gradroll)의 final이 끝나기 전에 다른 후보의 final(비교군 7개 포함)을 쌓으면 gradroll 판정이 늦어진다. gradroll final 3 seed가 끝난 뒤 정한다.
+- [claude] 결정: 새 screen이나 분석은 넣지 않는다(승격 후보 final 진행 중).
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.

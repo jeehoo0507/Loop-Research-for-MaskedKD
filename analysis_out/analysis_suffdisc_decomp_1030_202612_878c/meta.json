@@ -1,0 +1,12 @@
+{
+ "id": "analysis_suffdisc_decomp_1030_202612_878c",
+ "name": "suffdisc_decomp",
+ "source_sha": "878cc8463b3ed095b1fbe83220fc167abda79bc36a2405a42b757c8ad8226fa3",
+ "status": "done",
+ "meta": {
+  "question": "where does the student-sufficiency disc move the teacher's window, how often is that the centre, how much of it overlaps MaskedKD / rollout tokens, and how much of the pick is drop-path noise?",
+  "method": "keep-only sufficiency faithfulness (ERASER sufficiency, RISE insertion) of disc-shaped token subsets on the student; selection overlap with last-block CLS attention and attention rollout",
+  "paper": "DeYoung et al. ACL 2020 (ERASER); Petsiuk, Das & Saenko BMVC 2018 (RISE); Abnar & Zuidema ACL 2020; Touvron et al. 2021 (MaskedKD baseline signal: CLS attention)"
+ },
+ "seconds": 258.5
+}

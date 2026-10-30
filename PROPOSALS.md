@@ -142,3 +142,10 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
 - 부수 결과: 무작위 위치 다양성 자체는 K=12에서 WGA를 올리지 않는다. 그래서 라운드 19에 적은 gradrep 잔여 이득(rollout 대비 +9.8)을 '위치 다양성'으로 설명하는 후보는 약해진다. gradrep는 MaskedKD 교집합 토큰(새 위)을 유지한다는 점이 jitdisc와 다르다. 따라서 남은 설명은 '객체 위 소수 토큰 + 문맥'이다(분석 미검증).
 - suffdisc 승격 전 분해의 남은 부분(겹침·공간 분포·drop-path 잡음)은 analysis/suffdisc_decomp.py → analysis_suffdisc_decomp_1030_202612_878c. 미리 정한 읽기: (a) 학습 시 픽(train mode)과 eval 픽의 일치율이 1/25 근처(≤ 0.15)면 학습 중 선택은 사실상 무작위다. 그렇다면 jitdisc와의 차이를 신호로 설명할 수 없으니 승격하지 않고 재검토한다. (b) centre_frac가 0.8 이상이면 suffdisc는 center와 거의 같다. 그렇다면 이득의 출처를 다시 본다.
 - 선행과의 차이(변화 없음): RISE/ERASER sufficiency는 설명 평가용이다. KD teacher 입력 위치 선택에 쓴 예는 찾지 못했다(검색은 승격 시 수행).
+
+## 2026-10-30 [claude] 라운드 21 메모
+- suffdisc 분해 판정 (analysis_suffdisc_decomp_1030_202612_878c): 읽기 (a) train/eval 픽 일치율 0.34~0.43 > 0.15 통과, (b) centre_frac 0.03 < 0.8 통과. 승격 전 분해 3가지가 끝났다. final은 gradroll final 3 seed 뒤에 정한다.
+- 새 관찰 H-W20 (가설, 미검증): suffdisc의 teacher 수준 이점(masked teacher WGA 48.12 대 center 41.35)은 suffdisc로 학습한 student에서만 나타난다. jitdisc·center student에서 같은 규칙을 읽으면 39.10~45.11이다. 선택기와 student가 함께 적응(공적응)하는 것이 이득의 일부라는 뜻이다. midattn은 이 되먹임이 해로웠고(H-W8), suffdisc는 이로운 쪽이다.
+  - 검증 아이디어: suffdisc student e25/e50/final의 이 값이 학습 중에 오르는지 본다(e25/e50은 이미 있다: 41.35/40.60 → final 48.12. 오른다). 다음 분석에서는 suffdisc student의 sufficiency 지도와 teacher-best 위치의 순위 상관이 학습 중 오르는지를 잰다(analysis_student_sufficiency_1030_173025_6f96의 0.25~0.30과 비교).
+  - 선행과의 차이: 자기 설명으로 학습 입력을 고르는 되먹임은 attention-guided 학습(예: 설명 기반 정규화)에서 다루지만, KD teacher 입력 선택에서 이 되먹임의 방향(해로움/이로움)을 비교한 예는 찾지 못했다(검색 미수행, 승격 시 수행).
+- gradroll final s1 caveat: tome@12 대비 정확도가 두 seed 모두 threshold 이상 낮다(−0.83, −1.67). CLAIM_REFS 기준으로 tome에 대해서는 WGA 승, 정확도 패다. 감사 요청 때 'tome은 not matched(teacher 비용 2.69배), total GFLOPs는 tome 12.00 < gradroll 12.81'을 그대로 적는다.

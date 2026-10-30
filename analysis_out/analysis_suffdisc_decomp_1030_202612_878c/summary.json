@@ -1,0 +1,331 @@
+{
+ "note": "eval-mode student on clean val; jitter = fixed pseudo-random shift per image (jitdisc stand-in); overlap = share of K; cdist = mean kept-patch distance from the centre (patch units); train_eval_agree = share of images where the drop-path (train-mode) pick equals the eval pick",
+ "table": {
+  "suffdisc_s0_e25": {
+   "suffdisc": [
+    81.65,
+    41.35,
+    0.6301,
+    2.335
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    67.31,
+    31.58,
+    0.7251,
+    4.632
+   ]
+  },
+  "suffdisc_s0_e50": {
+   "suffdisc": [
+    83.15,
+    40.6,
+    0.6414,
+    2.349
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    74.81,
+    36.09,
+    0.7171,
+    4.383
+   ]
+  },
+  "suffdisc_s0_final": {
+   "suffdisc": [
+    84.57,
+    48.12,
+    0.5455,
+    2.341
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    72.23,
+    28.57,
+    0.7929,
+    4.476
+   ]
+  },
+  "suffdisc_s1_final": {
+   "suffdisc": [
+    83.32,
+    48.12,
+    0.4619,
+    2.349
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    71.64,
+    37.59,
+    0.6961,
+    4.687
+   ]
+  },
+  "jitdisc_s0_final": {
+   "suffdisc": [
+    83.32,
+    42.11,
+    0.6075,
+    2.335
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    70.23,
+    30.83,
+    0.8352,
+    4.497
+   ]
+  },
+  "jitdisc_s1_final": {
+   "suffdisc": [
+    84.32,
+    39.1,
+    0.5798,
+    2.327
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    71.06,
+    24.81,
+    0.868,
+    4.366
+   ]
+  },
+  "center_s0_final": {
+   "suffdisc": [
+    82.07,
+    39.85,
+    0.5483,
+    2.307
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    70.48,
+    43.61,
+    0.6694,
+    3.273
+   ]
+  },
+  "center_s1_final": {
+   "suffdisc": [
+    82.9,
+    45.11,
+    0.5497,
+    2.315
+   ],
+   "center": [
+    76.48,
+    41.35,
+    0.694,
+    1.29
+   ],
+   "jitter": [
+    73.14,
+    37.59,
+    0.8236,
+    2.205
+   ],
+   "maskedkd": [
+    75.23,
+    47.37,
+    0.5969,
+    2.621
+   ]
+  }
+ },
+ "table_cols": [
+  "t_acc",
+  "t_wga",
+  "kl_worst",
+  "cdist"
+ ],
+ "pick": {
+  "suffdisc_s0_e25": [
+   0.0242,
+   2.043,
+   0.3411,
+   0.0317
+  ],
+  "suffdisc_s0_e50": [
+   0.0234,
+   2.063,
+   0.3987,
+   0.0284
+  ],
+  "suffdisc_s0_final": [
+   0.0317,
+   2.044,
+   0.3803,
+   0.03
+  ],
+  "suffdisc_s1_final": [
+   0.0242,
+   2.062,
+   0.4279,
+   0.03
+  ],
+  "jitdisc_s0_final": [
+   0.0309,
+   2.039,
+   0.402,
+   0.0367
+  ],
+  "jitdisc_s1_final": [
+   0.03,
+   2.031,
+   0.4162,
+   0.0284
+  ],
+  "center_s0_final": [
+   0.0275,
+   2.006,
+   0.4212,
+   0.0367
+  ],
+  "center_s1_final": [
+   0.0259,
+   2.02,
+   0.4204,
+   0.0409
+  ]
+ },
+ "pick_cols": [
+  "centre_frac",
+  "mean_shift",
+  "train_eval_agree",
+  "train_centre_frac"
+ ],
+ "overlap": {
+  "suffdisc_s0_e25": [
+   0.1065,
+   0.2235,
+   0.3786,
+   0.1365
+  ],
+  "suffdisc_s0_e50": [
+   0.1414,
+   0.2182,
+   0.3734,
+   0.1573
+  ],
+  "suffdisc_s0_final": [
+   0.1372,
+   0.2433,
+   0.38,
+   0.1501
+  ],
+  "suffdisc_s1_final": [
+   0.1326,
+   0.244,
+   0.3743,
+   0.1399
+  ],
+  "jitdisc_s0_final": [
+   0.1204,
+   0.2747,
+   0.3807,
+   0.1822
+  ],
+  "jitdisc_s1_final": [
+   0.1323,
+   0.2902,
+   0.3835,
+   0.1855
+  ],
+  "center_s0_final": [
+   0.2189,
+   0.3709,
+   0.391,
+   0.431
+  ],
+  "center_s1_final": [
+   0.2721,
+   0.3593,
+   0.3859,
+   0.5826
+  ]
+ },
+ "overlap_cols": [
+  "suff_mkd",
+  "suff_roll",
+  "suff_center",
+  "center_mkd"
+ ]
+}

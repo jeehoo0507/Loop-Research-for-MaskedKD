@@ -47,6 +47,10 @@ Total agent screen configs: 10
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | gradroll@4f3962 |  | 12 | 12.0 | 1 | 87.99 ± 0.00 | 63.16 ± 0.00 | 12.81 | 2.45 | 2.90 | 202 | final_gradroll_k12_s1_1030_201811_faf0 |
+| final | maskedkd |  | 12 | 12.0 | 1 | 84.15 ± 0.00 | 21.05 ± 0.00 | 10.07 | 2.45 | 0.00 | 285 | final_maskedkd_k12_s1_1030_201811_e49a |
+| final | rollout |  | 12 | 12.0 | 1 | 86.99 ± 0.00 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 244 | final_rollout_k12_s1_1030_201811_6293 |
+| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 89.66 ± 0.00 | 48.87 ± 0.00 | 12.00 | 4.36 | 0.00 | 288 | final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
 | screen | center |  | 12 | 12.0 | 0,1 | 88.37 ± 0.53 | 54.14 ± 3.19 | 10.09 | 2.45 | 0.00 | 296 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s1_1030_185949_1766 |
