@@ -149,3 +149,8 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 검증 아이디어: suffdisc student e25/e50/final의 이 값이 학습 중에 오르는지 본다(e25/e50은 이미 있다: 41.35/40.60 → final 48.12. 오른다). 다음 분석에서는 suffdisc student의 sufficiency 지도와 teacher-best 위치의 순위 상관이 학습 중 오르는지를 잰다(analysis_student_sufficiency_1030_173025_6f96의 0.25~0.30과 비교).
   - 선행과의 차이: 자기 설명으로 학습 입력을 고르는 되먹임은 attention-guided 학습(예: 설명 기반 정규화)에서 다루지만, KD teacher 입력 선택에서 이 되먹임의 방향(해로움/이로움)을 비교한 예는 찾지 못했다(검색 미수행, 승격 시 수행).
 - gradroll final s1 caveat: tome@12 대비 정확도가 두 seed 모두 threshold 이상 낮다(−0.83, −1.67). CLAIM_REFS 기준으로 tome에 대해서는 WGA 승, 정확도 패다. 감사 요청 때 'tome은 not matched(teacher 비용 2.69배), total GFLOPs는 tome 12.00 < gradroll 12.81'을 그대로 적는다.
+
+## 2026-10-30 [claude] 라운드 33 메모
+- **H-W21 (분석 가설): gradroll@12 seed 3의 WGA 하락(51.88, final_gradroll_k12_s3_1030_220958_176b; s1 63.16, s2 62.41)은 (a) 학습 중 선택이 무너진 것(masked teacher WGA 하락, MaskedKD 쪽으로 이동)이거나 (b) 선택은 같고 student 자체가 group 2에서 약해진 것이다.**
+  - 분석: analysis_gradroll_seeds_1030_232303_4bd3. 미리 정한 읽기: s3 student(e25/e50/final)의 gradroll masked teacher WGA가 s1·s2보다 5 이상 낮거나 grad∩maskedkd 겹침이 0.1 이상 높으면 (a). 그 차이가 없고 student 자신의 group 2 정확도만 낮으면 (b). (a)이면 선택 안정화(예: 학습 진행에 따른 rollout 혼합)가 다음 방법 후보이고, (b)이면 gradroll의 seed 분산은 방법 고유가 아니라 student 분산으로 보고 CI 해석만 바꾼다.
+  - 선행과의 차이: Chefer et al. 2021의 gradient-weighted relevance는 설명 평가용이다. 학습 중 seed별 설명 안정성이 KD 입력 선택의 결과를 좌우하는지 본 예는 찾지 못했다(검색 미수행).
