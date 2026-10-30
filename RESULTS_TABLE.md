@@ -16,6 +16,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - no agent method has >= 2 final seeds yet
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
+- gradroll@29 vs parent rollout: acc -0.33 %p (threshold 0.76), WGA -1.50 %p (threshold 2.45) -> added part UNPROVEN
 - priorroll@12 vs parent rollout: acc +1.83 %p (threshold 0.76), WGA +9.78 %p (threshold 2.45) -> added part helps
 - priorroll@29 vs parent rollout: acc +0.00 %p (threshold 0.76), WGA -5.26 %p (threshold 2.45) -> added part UNPROVEN
 - suffdisc@12 vs parent center: acc +0.58 %p (threshold 0.76), WGA +2.26 %p (threshold 2.45) -> added part UNPROVEN
@@ -30,9 +31,10 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
-Total agent screen configs: 5
+Total agent screen configs: 6
 - priorroll: 2 configs
 - midattn: 2 configs
+- gradroll: 1 configs
 - suffdisc: 1 configs
 
 ## All finished runs
@@ -43,6 +45,7 @@ Total agent screen configs: 5
 | screen | center |  | 29 | 29.0 | 0,1 | 89.03 ± 0.06 | 60.15 ± 3.20 | 13.00 | 5.36 | 0.00 | 302 | screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 |
 | screen | center |  | 49 | 49.0 | 0 | 90.16 ± 0.00 | 60.15 ± 0.00 | 16.46 | 8.82 | 0.00 | 332 | screen_center_k49_s0_1030_135953_4476 |
 | screen | full |  | 196 | 196.0 | 0,1,2 | 90.83 ± 0.17 | 66.67 ± 1.57 | 42.77 | 35.13 | 0.00 | 273 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |
+| screen | gradroll@4f3962 |  | 29 | 29.0 | 0 | 89.49 ± 0.00 | 63.91 ± 0.00 | 15.73 | 5.36 | 2.90 | 197 | screen_gradroll_k29_s0_1030_184255_9017 |
 | screen | grid |  | 12 | 12.0 | 0 | 83.90 ± 0.00 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 314 | screen_grid_k12_s0_1030_135953_1e84 |
 | screen | grid |  | 29 | 29.0 | 0 | 81.65 ± 0.00 | 36.84 ± 0.00 | 13.00 | 5.36 | 0.00 | 283 | screen_grid_k29_s0_1030_135953_a69e |
 | screen | grid |  | 49 | 49.0 | 0 | 84.74 ± 0.00 | 35.34 ± 0.00 | 16.46 | 8.82 | 0.00 | 337 | screen_grid_k49_s0_1030_135953_19b7 |

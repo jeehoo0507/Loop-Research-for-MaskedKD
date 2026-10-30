@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 14): 확정 결과 없음. K=12 최고는 suffdisc 89.32/58.65(parent center 대비 threshold 미만), K=29·49 최고는 rollout(K=29 2-seed 89.41/64.28, K=49 89.66/64.66). 승격 후보 없음.
-- 핵심: K=29 seed 1 재현에서 rollout이 다시 1위(63.16 > priorroll 60.90 > center 57.89). 'rollout > center·priorroll'은 2 seed 모두 성립하고, center와 priorroll의 순서만 뒤집힌다. teacher 쪽 대리 지표들이 rollout을 낮게 본 것은 잡음이 아니라 실제 실패다.
-- 진행 중: gradroll(Chefer 기울기 가중 rollout, parent rollout) screen K=29(e40)·12(e12). 대기: K=12 seed 1 재현 3개(center, suffdisc, priorroll).
-- 다음: gradroll 판정(parent rollout 대비 threshold). K=12 seed 1로 suffdisc·priorroll·center 순서가 신호인지 본다.
+- 요약 (2026-10-30 [claude] 라운드 15): 확정 결과 없음. K=12 최고는 suffdisc 89.32/58.65(parent center 대비 threshold 미만), K=29·49 최고는 rollout(K=29 2-seed 89.41/64.28, K=49 89.66/64.66). 승격 후보 없음. gradroll@29 89.49/63.91은 parent rollout 대비 UNPROVEN.
+- 핵심: 순위를 바꾼 시도(층, 사전, sufficiency, 기울기)는 어느 것도 rollout@29·49를 넘지 못했다. 이번 라운드부터는 순위 대신 이미지별 토큰 배분(adaroll, H-W17)을 본다. 표적은 K=49다. rollout은 정확도가 0.42%p 모자라고 center는 WGA가 모자란다.
+- 진행 중: gradroll@12, K=12 seed 1 재현 3개(center, suffdisc, priorroll). 대기: adaroll@49 (screen_adaroll_k49_s0_1030_192757_7edc, trysel 미실행).
+- 다음: gradroll@12 판정 뒤 gradroll 계열 닫기 여부. K=12 seed 1로 center 계열 닫기 여부. adaroll@49가 rollout을 넘는지.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -205,3 +205,14 @@
 - [claude] 결정: 새 계열 screen을 더 넣지 않고 K=12 재현을 넣었다. 이유: gradroll 2개가 아직 학습 중이라 새 계열을 쌓지 않는다는 규칙(결과 전에 같은 축을 쌓지 않음)을 지킨다. K=12는 center 계열(suffdisc 58.65, center 56.39, priorroll 54.89)이 threshold 안에서 엇갈리는 K라, seed 1이 있어야 이 계열을 닫을지 정할 수 있다. seed 재현이라 search effort는 늘지 않는다. 대기열이 비면 GPU가 놀게 된다. rollout@12(45.11)는 다른 셋과 차이가 커서 재현하지 않는다.
 - 새 분석: 없음. 대리 지표 설계는 라운드 13 결정대로 멈춘다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 19:30 라운드 15
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(새 판정 없음), analysis_out(지난 라운드 뒤 새 분석 없음).
+- 새 결과 (screen seed 0, 정확도/WGA): gradroll@29 89.49/63.91 (screen_gradroll_k29_s0_1030_184255_9017). 최악 그룹은 그룹 2다.
+  - parent rollout@29 seed 0 대비 −0.33/−1.50으로 Parent check UNPROVEN이다. selector 비용은 2.90 GFLOPs/img 더 든다(total 15.73 대 12.99). **승격하지 않는다.**
+  - 기울기 가중이 rollout의 K=29 WGA를 올리지 못했다. 'rollout이 배경을 담아서 진다'는 H-W16의 전제는 K=29에서 근거가 없다.
+- 학습 중: gradroll@12는 epoch 75이고 val WGA 61.65다. center@12 s1 e89, suffdisc@12 s1 e47, priorroll@12 s1 e2다. 모두 중간값이라 판정에 쓰지 않는다.
+- 새 계열 (H-W17): selectors/adaroll.py, parent rollout. 순위는 rollout 그대로 두고, 이미지별 k_i만 rollout 분포의 유효 패치 수 exp(H)에 비례하게 정한다([K/2, 2K], 배치 평균 ≤ K). 근거와 판정 기준은 PROPOSALS 라운드 15에 있다. screen: screen_adaroll_k49_s0_1030_192757_7edc (priority 6).
+- [claude] 결정: trysel을 돌리지 못한 채 제출했다. GPU 여유가 0.7GB라 trysel이 시작 단계에서 OOM으로 끝났다(2 MiB 할당 시도, 학습 중 job에는 영향 없음). 라운드 2 규칙(여유 8GB 미만이면 trysel 금지)상 다시 시도하지 않았다. 코드는 rollout(builtin)·priorroll과 같은 rollout 계산을 쓰고, 마스크 행마다 k_i를 다르게 둘 뿐이다. 오류가 나면 run이 rc≠0으로 끝나고 다음 라운드에 고친다. 비용은 rollout과 같은 수준(selector 약 0.17)으로 예상하지만 실측 전까지 쓰지 않는다.
+- [claude] 결정: K=49 하나만 넣었다. 이 방법의 표적은 주 지표의 빈칸이다. K=49는 rollout(WGA 안, 정확도 밖)과 center(정확도 안, WGA 밖)가 엇갈리는 곳이다. 결과 전에 K를 늘리지 않는다. gradroll@49는 K=29에서 UNPROVEN이라 넣지 않는다. 대기는 1개이고 학습 4개가 돌고 있어 GPU는 놀지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다. 적응 토큰 수 선행(A-ViT, AdaViT, DynamicViT)은 기억에 기댄 메모다. adaroll이 이기면 노벨티 주장 전에 'adaptive token budget × distillation teacher input'을 검색한다.

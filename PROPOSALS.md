@@ -104,3 +104,11 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
 ## 2026-10-30 [claude] 라운드 14 메모
 - K=29 seed 1 재현: rollout 63.16 > priorroll 60.90 > center 57.89 (screen_*_k29_s1_*). rollout 우위는 재현되고, 대리 지표(H-W13~15)가 rollout을 낮게 본 실패도 실제다. 새 가설은 세우지 않는다. 남은 미해결 질문: '왜 full teacher에 덜 충실한, 흩어진 rollout 선택이 K=29·49에서 student WGA가 더 높은가'. gradroll(H-W16) 결과가 나오면 rollout 계열 안에서 이 질문을 다시 본다.
 - K=12 seed 1 재현(center, suffdisc, priorroll)을 넣었다. suffdisc가 seed 1에서도 center보다 높지 않으면 center 계열(사전·sufficiency)을 K=12에서 닫는다.
+
+## 2026-10-30 [claude] 라운드 15 메모
+- H-W16 판정 (K=29): gradroll@29 89.49/63.91 (screen_gradroll_k29_s0_1030_184255_9017)는 parent rollout(65.41) 대비 −1.50으로 UNPROVEN이고 비용이 더 든다. K=12 결과(학습 중)를 보고 계열을 닫는다. K=49는 넣지 않는다.
+- **H-W17 entropy-adaptive per-image budget rollout (`adaroll`, parent rollout).**
+  - 근거: 주 지표의 빈칸. K=49에서 rollout은 WGA 허용 오차 안(64.66 ≥ 64.22)이지만 정확도가 0.42%p 모자라고(screen_rollout_k49_s0_1030_135953_a1a9), center는 정확도는 안(90.16)이지만 WGA가 밖이다(screen_center_k49_s0_1030_135953_4476). K=49에서 둘 다 통과하면 MaskedKD의 98보다 작은 K가 된다. 선택 '순위'를 바꾼 시도(prior, gradient, sufficiency, 층 선택)는 모두 rollout을 넘지 못했다. 그래서 순위는 그대로 두고 '이미지별 토큰 배분'만 바꾼다.
+  - 아이디어: student rollout 분포의 유효 패치 수 exp(H)에 비례해 이미지별 k_i를 정한다([K/2, 2K]로 자르고 배치 평균 ≤ K). top-k_i rollout 패치를 teacher에 준다.
+  - 선행과의 차이: A-ViT(Yin et al. 2022)·AdaViT(Meng et al. 2022)·DynamicViT는 추론 중인 모델 자신의 토큰 수를 바꾼다. 여기서는 student의 attention 퍼짐이 고정 KD teacher의 입력 수를 정한다. MaskedKD·rollout은 모든 이미지에 같은 K를 쓴다.
+  - 판정: K=49에서 rollout 대비 threshold 이상(정확도 +0.76 또는 WGA +2.45, 다른 쪽에서 지지 않음), 그리고 center·maskedkd·tome·grid·random보다 낮지 않을 것. 정확도 ≥ 90.08과 WGA ≥ 64.22를 동시에 만족하면 주 지표 후보다. 이기면 분해: (1) k_i를 무작위로 섞은 변형(배분 신호 제거), (2) 이미지별 k_i와 그룹의 관계(분석 전용), (3) maskedkd 겹침·중심 거리.

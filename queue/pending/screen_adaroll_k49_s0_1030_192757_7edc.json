@@ -1,0 +1,18 @@
+{
+ "id": "screen_adaroll_k49_s0_1030_192757_7edc",
+ "kind": "train",
+ "dataset": "waterbirds",
+ "stage2": null,
+ "method": "adaroll",
+ "keep": 49.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-W17: attention rollout with a per-image token budget set by how spread the student's rollout is.\n\nk_i = K * e_i / mean_batch(e),  e_i = exp(entropy of the normalised rollout row R_i[cls, 1:]) (effective number of\nattended patches), clipped to [K/2, 2K] and trimmed so the batch mean stays <= K; keep the top-k_i rollout patches.\nAn image whose student attention is concentrated (small object, confident) gives the teacher fewer tokens; an image\nwhere it is spread (large or ambiguous object, object split by cutmix) gives more. Same ranking as the parent\nrollout, so any change against rollout comes from the budget allocation alone.\n\nExploratory screen: the teacher-side proxies failed out of sample (H-W13/H-W15), so no proxy pre-filter. Target is\nK=49, where rollout is inside the WGA tolerance but 0.42 %p short on accuracy (screen_rollout_k49_s0_1030_135953_a1a9)\nand center is inside on accuracy but not on WGA (screen_center_k49_s0_1030_135953_4476).\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase\n\nMETA = {\n    \"method\": \"attention rollout (CLS row over all student blocks) with entropy-adaptive per-image budget\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Meng et al. CVPR 2022 AdaViT / Yin et al. CVPR 2022 A-ViT \"\n             \"(input-adaptive token counts)\",\n    \"why\": \"a fixed K cuts off the object on images where the student's evidence is spread and wastes tokens on \"\n           \"background where it is concentrated; spending the same mean budget by spread keeps the teacher whole \"\n           \"where it is most likely to lose the object\",\n    \"vs_maskedkd\": \"all-layer rollout instead of last-block CLS attention, and a per-image K instead of a fixed K\",\n    \"prior_art\": \"A-ViT/AdaViT/DynamicViT adapt token counts inside the model being run at inference; here the \"\n                 \"student's attention spread sets how many inputs the frozen KD teacher receives\",\n    \"parent\": \"rollout\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(12)), \"tokens\": []}\n\n    def select(self, ctx):\n        r = None\n        for a in ctx.out.attn:\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        R = r[:, 0, 1:]\n        b, n = R.shape\n        k = int(ctx.budget)\n        p = R.clamp_min(1e-12)\n        p = p / p.sum(dim=1, keepdim=True)\n        e = torch.exp(-(p * p.log()).sum(dim=1))\n        ki = torch.floor(k * e / e.mean()).long().clamp(max(1, k // 2), min(2 * k, n))\n        excess = int(ki.sum().item()) - k * b\n        while excess > 0:\n            idx = ki.argsort(descending=True)[:excess]\n            ki[idx] -= 1\n            excess = int(ki.sum().item()) - k * b\n        rank = R.argsort(dim=1, descending=True).argsort(dim=1)\n        return rank < ki.unsqueeze(1)\n",
+ "selector_sha": "069f5077fb97bd2b59cc47a5ab0bd5b11b5bf2bd1ee52181c09e58827e4bff12",
+ "note": "H-W17 entropy-adaptive per-image budget rollout, parent rollout; target K=49 primary-metric gap",
+ "by": "claude",
+ "priority": 6,
+ "submitted": "2026-10-30 19:27:57"
+}
