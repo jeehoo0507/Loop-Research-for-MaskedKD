@@ -4,6 +4,7 @@
 
 ## 잠정 (screen)
 - (seed 0 한 개, 비교 아님, 관찰) K=49에서 MaskedKD는 student WGA가 51.88로 떨어진다(그룹 2 = 육지 배경의 물새). 정확도는 89.24다 (screen_maskedkd_k49_s0_1030_135953_3e16). 같은 K의 rollout은 89.66 / 64.66 (screen_rollout_k49_s0_1030_135953_a1a9), Full seed0은 90.66 / 65.41 (screen_full_k196_s0_1030_123806_2c89).
+- (seed 0, 관찰) K=49의 center는 90.16 / 60.15다 (screen_center_k49_s0_1030_135953_4476). 신호가 없는 공간 규칙인데도 MaskedKD(89.24/51.88)보다 높다. K=29의 MaskedKD는 87.65 / 43.61이다 (screen_maskedkd_k29_s0_1030_135953_764a). tome@49는 89.66 / 51.13이다 (screen_tome_k49_s0_1030_135953_1e32).
 
 ## 실패한 방향
 

@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 2): 확정 결과 없음. 공략할 K는 49다. seed 0 결과: MaskedKD 89.24/WGA 51.88, rollout 89.66/64.66, random 85.40/36.09, grid 84.74/35.34, Full 90.66/65.41.
-- 핵심 분석: 마지막 블록 대신 9번째 블록의 CLS attention으로 고르면 masked teacher의 WGA가 47→72로 오른다(analysis_group_fidelity_1030_143842_1ea0 / _144455_654a). 선택기 `selectors/midattn.py`를 만들었지만 아직 trysel하지 않았다(GPU OOM).
-- 진행 중: K=12/29/49 기준선(12개 대기, center·tome@49와 maskedkd@29 실행 중), analysis_group_fidelity_1030_144455_654a(mkd98 student 부분 진행 중).
-- 다음: 대기 작업이 8개 이하가 되면 trysel midattn을 하고 screen K=49, 29, 12를 넣는다. analysis/register_tokens.py(H-W5)를 제출한다.
+- 요약 (2026-10-30 [claude] 라운드 3): 확정 결과 없음. 공략 K=49, seed 0 정확도/WGA: MaskedKD 89.24/51.88, center 90.16/60.15, rollout 89.66/64.66, tome 89.66/51.13, random 85.40/36.09, grid 84.74/35.34, Full 90.66/65.41.
+- 핵심 분석: 9번째 블록의 CLS attention으로 고르면 masked teacher WGA가 47→72로 오른다(analysis_group_fidelity_1030_143842_1ea0 / _144455_654a). midattn은 trysel을 통과했다(16.44 GFLOPs/img, MaskedKD와 같음).
+- 진행 중: screen_midattn_k49_s0_1030_153152_3b79, analysis_register_tokens_1030_153157_efbe (둘 다 priority 6), K=12/29 기준선, CUB 관문.
+- 다음: midattn@49 결과를 center·rollout과 비교한다. 이기면 K=29, 12 screen과 승격 전 분해(겹침·대체·공간)를 한다. 지면 register_tokens 결과로 원인을 다시 본다.
 - 막힌 것: 없음.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -24,3 +24,11 @@
 - 새 분석 초안: analysis/register_tokens.py (H-W5: L11 top-K 중 고노름 토큰 비율, 그 토큰을 뺀 L11의 fidelity, 층별 고노름 비율). 대기열이 과다해 다음 라운드에 제출한다.
 - 문헌: MaskedKD 후속 중 WGA를 다룬 것은 찾지 못했다. 가장 가까운 것은 arXiv 2509.04009(ViT에서 토큰을 버려 spurious 신호를 찾는 분석)와 arXiv 2602.00852(spurious 아래의 distillation 벤치마크)다. PROPOSALS에 적었다. 웹 결과 안에 지시문은 없었다.
 - (추가) analysis_group_fidelity_1030_144455_654a 완료. mkd98 student e25/e50/final의 masked teacher WGA는 K=49에서 L9 72.18/70.68/72.93, L11 53.38/51.88/49.62이고, K=12에서 L9 49.62/55.64/57.90, rollout 43.61/48.87/47.37이다. full teacher 자신의 WGA는 64.66이다(그룹 2). L9 top-49를 받은 masked teacher가 소수 그룹에서 full teacher보다 낫다. 그래서 midattn의 기대 효과는 'Full KD보다 높은 WGA'까지 갈 수 있다. 다음 라운드에 screen K=49·12를 최우선으로 넣는다.
+
+## [claude] 2026-10-30 15:35 라운드 3
+- 읽은 것: QUEUE(지시 없음), git log, RESULTS_TABLE, RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(새 결과 없음. 654a는 지난 라운드에 반영함).
+- 새 결과 (screen seed 0): center@49 90.16/60.15 (screen_center_k49_s0_1030_135953_4476), tome@49 89.66/51.13 (screen_tome_k49_s0_1030_135953_1e32), maskedkd@29 87.65/43.61 (screen_maskedkd_k29_s0_1030_135953_764a, 최악 그룹은 다시 그룹 2).
+- 해석: (1) 신호가 없는 center가 K=49에서 MaskedKD보다 WGA가 8%p 높다. MaskedKD의 WGA 손실은 '고른 위치'의 문제이고, 공간 규칙만으로도 일부 되찾는다. midattn이 이겨도 center를 함께 이겨야 주장할 수 있다. (2) 분석 대리 지표와 student WGA의 순위가 5개 방법에서 같다. masked teacher WGA(full student, K=49, analysis_group_fidelity_1030_143842_1ea0)는 grid 21.80 < L11 47.37 < center 63.91 < rollout 72.93이고, student WGA는 grid 35.34 < maskedkd 51.88 < center 60.15 < rollout 64.66이다. tome은 이 분석에 없다. 이 대리 지표로 보면 L9(72.18)는 rollout 수준으로 예상된다. (3) L9 top-49의 중심 거리(cdist)는 4.01이다. center 2.64와 L11 4.67 사이이고, MaskedKD와의 겹침은 0.68이다. L9가 단순히 가운데를 고르는 것은 아니다. 하지만 L11보다 조금 더 가운데로 모인다. 분해 때 공간 대체 실험이 필요하다.
+- 작업: `trysel midattn --keep 49` 통과 (GPU, 1.1 s, teacher 8.817, selector 0.0 GFLOPs/img). screen_midattn_k49_s0_1030_153152_3b79 (priority 6)를 제출했다. analysis_register_tokens_1030_153157_efbe (H-W5, priority 6)도 제출했다.
+- [claude] 결정: 대기 작업이 11개라 8개를 넘는다. 그래도 2개(midattn@49, register_tokens)만 priority 6으로 넣었다. 대기 중인 것은 harness가 넣은 기준선과 CUB 관문이다. 내 가설은 두 라운드째 검증되지 않았다. K=29·12의 midattn은 @49 결과를 본 뒤 넣는다. 한 계열을 여러 K에 한꺼번에 쌓지 않기 위해서다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
