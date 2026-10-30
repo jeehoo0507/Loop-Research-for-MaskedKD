@@ -58,7 +58,7 @@ Total agent screen configs: 7
 | screen | midattn@7283f1 |  | 12 | 12.0 | 0 | 87.66 ± 0.00 | 30.08 ± 0.00 | 10.07 | 2.45 | 0.00 | 422 | screen_midattn_k12_s0_1030_170938_9fc6 |
 | screen | midattn@7283f1 |  | 49 | 49.0 | 0 | 89.91 ± 0.00 | 57.89 ± 0.00 | 16.44 | 8.82 | 0.00 | 272 | screen_midattn_k49_s0_1030_153152_3b79 |
 | screen | oracle |  | 12 | 12.0 | 0 | 87.49 ± 0.00 | 50.38 ± 0.00 | 45.21 | 2.45 | 35.13 | 248 | screen_oracle_k12_s0_1030_135953_d16c |
-| screen | priorroll@6e20f5 |  | 12 | 12.0 | 0 | 89.07 ± 0.00 | 54.89 ± 0.00 | 10.08 | 2.45 | 0.17 | 290 | screen_priorroll_k12_s0_1030_175140_405f |
+| screen | priorroll@6e20f5 |  | 12 | 12.0 | 0,1 | 88.91 ± 0.24 | 54.14 ± 1.07 | 10.08 | 2.45 | 0.17 | 272 | screen_priorroll_k12_s0_1030_175140_405f screen_priorroll_k12_s1_1030_185957_7cf9 |
 | screen | priorroll@6e20f5 |  | 29 | 29.0 | 0,1 | 89.62 ± 0.29 | 60.52 ± 0.53 | 12.99 | 5.36 | 0.17 | 338 | screen_priorroll_k29_s0_1030_175144_018d screen_priorroll_k29_s1_1030_182720_dbfd |
 | screen | random |  | 12 | 12.0 | 0 | 83.49 ± 0.00 | 33.83 ± 0.00 | 10.09 | 2.45 | 0.00 | 331 | screen_random_k12_s0_1030_135953_bc03 |
 | screen | random |  | 29 | 29.0 | 0 | 82.49 ± 0.00 | 27.82 ± 0.00 | 13.00 | 5.36 | 0.00 | 285 | screen_random_k29_s0_1030_135953_8780 |
