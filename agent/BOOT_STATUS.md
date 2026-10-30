@@ -9,3 +9,5 @@
 - 2026-10-29 23:37 CIFAR gate submitted (ce / full / maskedkd@98); waiting, this takes hours
 - 2026-10-30 00:24 CIFAR gate PASSED: Full KD 24.38 vs CE 21.10 (need +1.0): PASS; MaskedKD@98 24.74 vs Full 24.38 (need within 0.5): PASS
 - 2026-10-30 00:24 CIFAR baselines queued (20 jobs)
+- 2026-10-30 00:25 ImageNet-100 preparation started in background (tmux: stage2)
+- 2026-10-30 00:25 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
