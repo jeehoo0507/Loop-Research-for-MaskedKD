@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 11): 확정 결과 없음. K=12에서 가장 높은 것은 suffdisc(89.32/58.65)지만 parent center(56.39) 대비 threshold 미만이다. K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이 가장 높다. priorroll(H-W12)은 K=12에서 center와 비기고 K=29에서 진다. 승격 후보는 없다.
+- 요약 (2026-10-30 [claude] 라운드 12): 확정 결과 없음. K=12에서 가장 높은 것은 suffdisc(89.32/58.65)지만 parent center(56.39) 대비 threshold 미만이다. K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이 가장 높다. priorroll(H-W12)은 K=12에서 center와 비기고 K=29에서 진다. 승격 후보는 없다.
 - 핵심 분석: H-W10의 self kl_worst 대리 지표는 표본 밖에서 K=29 순위를 틀렸다 (analysis_proxy_holdout_1030_182326_7254). cutmix/mixup 충실도로도 설명되지 않는다 (analysis_prior_failure_1030_182537_611c). K=29에서는 full teacher에 덜 충실한 rollout이 student WGA가 더 높다.
-- 진행 중: K=29 seed 1 재현 screen_priorroll_k29_s1_1030_182720_dbfd, screen_rollout_k29_s1_1030_182725_2086, screen_center_k29_s1_1030_182732_85c3.
-- 다음: seed 1에서도 rollout > priorroll(≥ threshold)이면 H-W12를 최종 기각한다. 그다음 '충실도'가 아닌 다른 teachability 축을 분석한다. 후보는 (i) 학습 동안 teacher가 보는 위치의 다양성, (ii) masked teacher가 full teacher의 지름길을 얼마나 덜 물려받는가(full teacher가 틀리는 소수 그룹 이미지에서의 masked teacher 정답률)이다.
+- 진행 중: K=29 seed 1 재현 screen_priorroll_k29_s1_1030_182720_dbfd, screen_rollout_k29_s1_1030_182725_2086, screen_center_k29_s1_1030_182732_85c3 (epoch 20~33). 분석 analysis_shortcut_inherit_1030_183518_f5cf (H-W15)은 대기 중이다.
+- 다음: seed 1에서도 rollout > priorroll(≥ threshold)이면 H-W12를 최종 기각한다. H-W15에서 fix_fw(full teacher가 틀린 이미지를 masked teacher가 고쳐 맞히는 비율)가 미리 정한 판정을 통과하면 그 축으로 선택기를 설계한다. 통과하지 못하면 위치 다양성(div_ent, div_jac)을 본다.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -169,3 +169,14 @@
 - 해석: K=29에서는 full teacher에 덜 충실한, 흩어진 rollout 선택(cdist 4.27, 사전 계열은 2.0~2.1)이 student WGA를 더 높인다. full teacher 자신도 지름길을 갖고 있다(val WGA 64.66). 그래서 full teacher에 충실하다는 것은 지름길까지 물려준다는 뜻일 수 있다. 다음 분석 축은 충실도가 아니라 '지름길을 덜 물려받는가'와 '학습 중 위치 다양성'이다.
 - [claude] 결정: K=29 seed 1 screen 3개(priorroll, rollout, center)를 넣었다. H-W12 기각과 H-W13 실패는 둘 다 seed 1개 위의 순위에 기댄다. 새 config가 아니라 seed 재현이라 search effort가 늘지 않는다. GPU도 비어 있었다. priorroll@49는 넣지 않는다. K=29에서 졌고 대리 지표도 믿을 수 없어 근거 없이 K를 늘리지 않는다.
 - 문헌: 'token pruning × center prior × rollout × KD'로 1회 검색했다. 가장 가까운 것은 RGTP(rollout-guided token pruning for video, 학습 없음, KD 아님)와 SaiT(DINO CLS attention distillation)다. center prior를 KD teacher 입력 선택에 쓴 예는 찾지 못했다. 웹 결과 안에 지시문은 없었다.
+
+## [claude] 2026-10-30 18:40 라운드 12
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE, RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out. 지난 라운드 뒤로 새 분석 결과는 없다.
+- 새 결과: 없다. K=29 seed 1 재현 3개는 학습 중이다. priorroll은 epoch 33, rollout은 epoch 22, center는 epoch 20이다. center의 epoch 20 val WGA 45.86은 중간값이라 판정에 쓰지 않는다.
+- 새 분석: analysis/shortcut_inherit.py → analysis_shortcut_inherit_1030_183518_f5cf (H-W15). 지난 라운드에 적은 두 축을 한 번에 잰다. 자세한 것은 PROPOSALS 라운드 12에 있다.
+  - (ii) 지름길 상속: val 이미지를 full teacher가 맞힌 것과 틀린 것으로 나눈다. full teacher가 틀린 이미지에서 masked teacher가 고쳐 맞히는 비율(fix_fw)과 참 클래스 확률을 잰다.
+  - (i) 위치 다양성: 선택 빈도 엔트로피와 이웃 이미지 Jaccard를 잰다.
+  - 대상은 8개 방법 × K 12·29·49의 끝난 screen run 전부다. 각 run은 그 run 자신의 student로 잰다. seed 1 run이 끝나 있으면 재현 점으로만 보고한다.
+  - 미리 정한 판정: seed 0 전체에서 Spearman ≥ 0.8이고, 동시에 K=29 순서 rollout > center > priorroll을 맞혀야 한다.
+- [claude] 결정: 이번 라운드에는 screen을 넣지 않는다. 세 가지 이유다. 대리 지표가 표본 밖에서 실패했다(H-W13). 새 축의 근거가 아직 없다. seed 1 재현 3개가 GPU를 쓰고 있다. 대기 작업은 분석 1개뿐이다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.

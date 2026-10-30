@@ -85,3 +85,10 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 근거: 위 실패. 학습 batch는 전부 cutmix/mixup이라서 compact한 중앙 선택은 붙여 넣은 이미지 쪽을 teacher에게서 지울 수 있다.
   - 아이디어: cutmix/mixup 입력에서의 kl_worst와 cutmix 상자 비율을 self student로 잰다. student의 place 탐침도 함께 잰다.
   - 선행과의 차이: analysis_train_condition_gap(H-W8)는 L9 대 rollout만 봤다. 여기서는 공간 사전 계열(center, priorroll, suffdisc)을 같은 조건으로 잰다. 미리 정한 판정: K=29에서 cutmix/mixup kl_worst 순서가 rollout < center ≤ priorroll이면 (a)가 실패를 설명한다.
+
+## 2026-10-30 [claude] 라운드 12 메모
+- **H-W15 지름길 상속 (분석 analysis_shortcut_inherit_1030_183518_f5cf).**
+  - 근거: H-W13·H-W14 실패. K=29에서 full teacher에 덜 충실한 rollout(self kl_worst 0.443)이 priorroll(0.391)보다 student WGA가 높다(65.41 대 60.15). full teacher 자신도 지름길에 기댄다(val WGA 64.66).
+  - 아이디어: val 이미지를 full teacher가 맞힌 것(FR)과 틀린 것(FW)으로 나눈다. 각 run 자신의 student로 고른 masked teacher가 FW 이미지를 고쳐 맞히는 비율(fix_fw), FW에서의 참 클래스 확률, 그리고 비용으로 FR 소수 그룹에서의 참 클래스 확률을 잰다. 위치 다양성(선택 빈도 엔트로피, 이웃 이미지 Jaccard)도 함께 잰다. 대상은 끝난 screen run 전부(8개 방법 × K 12·29·49)이다.
+  - 미리 정한 판정: seed 0 run 전체에서 부호 보정 Spearman ≥ 0.8이고, K=29의 rollout > center > priorroll 순서를 맞히면 후보 축이다. 맞지 않으면 기각한다.
+  - 선행과의 차이: KD에서 teacher의 편향 상속을 다룬 연구(Debiased Distillation, arXiv 2302.11187)는 teacher의 출력이나 학습 데이터를 바꾼다. 여기서는 teacher 입력 토큰 선택만으로 상속을 줄이는지를 묻는다. 지지되면 '충실도 최대'가 아니라 '지름길 오류 지점에서의 탈충실'을 목표로 하는 선택기를 설계한다.
