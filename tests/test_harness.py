@@ -93,11 +93,11 @@ def test_variable_k_groups(models):
 
 
 def test_augment_shapes():
-    aug = GpuAugment(torch.device("cpu"))
-    x = torch.randint(0, 256, (8, 3, 32, 32), dtype=torch.uint8)
-    y = torch.arange(8)
+    aug = GpuAugment(torch.device("cpu"), C.NUM_CLASSES[C.STAGE1])
+    x = torch.randint(0, 256, (8, 3, 64, 64), dtype=torch.uint8)
+    y = torch.arange(8) % C.NUM_CLASSES[C.STAGE1]
     xa, ya = aug(x, y)
-    assert xa.shape == (8, 3, 224, 224) and ya.shape == (8, 100)
+    assert xa.shape == (8, 3, 224, 224) and ya.shape == (8, C.NUM_CLASSES[C.STAGE1])
     assert torch.isfinite(xa).all()
     assert torch.allclose(ya.sum(1), torch.ones(8), atol=1e-5)
 
@@ -143,8 +143,8 @@ def _step(method, selector, keep, models):
     s, t = models
     s.train()
     opt = torch.optim.AdamW(s.parameters(), lr=1e-4)
-    aug = GpuAugment(torch.device("cpu"))
-    x, y = aug(torch.randint(0, 256, (4, 3, 32, 32), dtype=torch.uint8), torch.arange(4))
+    aug = GpuAugment(torch.device("cpu"), C.NUM_CLASSES[C.STAGE1])
+    x, y = aug(torch.randint(0, 256, (4, 3, 64, 64), dtype=torch.uint8), torch.arange(4) % C.NUM_CLASSES[C.STAGE1])
     segs = Segments(True)
     from torch.utils.flop_counter import FlopCounterMode
     with FlopCounterMode(display=False) as fc:
@@ -254,8 +254,8 @@ def test_oracle_step_bills_teacher_to_selector(models):
 def test_submit_seed_and_oracle_rules(tmp_path, monkeypatch):
     from harness import submit
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
-    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "final", 2)
-    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "screen", 1)
+    monkeypatch.setitem(C.TIER_EPOCHS["waterbirds"], "final", 2)
+    monkeypatch.setitem(C.TIER_EPOCHS["waterbirds"], "screen", 1)
     with pytest.raises(SystemExit):
         submit.make_job("maskedkd", 49, 0, "final")          # screen seed never in final
     submit.make_job("maskedkd", 49, 1, "final")
@@ -263,7 +263,7 @@ def test_submit_seed_and_oracle_rules(tmp_path, monkeypatch):
         submit.make_job("oracle", 25, 0, "final")            # analysis-only
     submit.make_job("oracle", 25, 0, "screen")
     ids = submit.baselines()
-    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 5 * len(C.BASELINE_KEEPS) + 1   # maskedkd/random/grid/center/tome + oracle
+    assert len(ids) == 2 * len(C.NOISE_SEEDS) + 6 * len(C.BASELINE_KEEPS) + 1   # maskedkd/rollout/random/grid/center/tome + oracle
 
 
 def test_report_noise_and_discriminative():
@@ -273,7 +273,7 @@ def test_report_noise_and_discriminative():
                                ("full", 196, 1, 70.4), ("random", 25, 0, 60.0), ("maskedkd", 25, 0, 64.0)]]
     sigma, thr, _ = noise(runs)
     assert sigma is not None and thr >= C.PROMOTE_MIN
-    assert any("+4.00" in line for line in discriminative(runs))
+    assert any("K=25: maskedkd 64.00" in line and "random 60.00" in line for line in discriminative(runs))
     assert tries(runs)[0].startswith("Total agent screen configs: 0")
 
 
@@ -308,24 +308,24 @@ def _fake_runs(tmp_path, monkeypatch, recs):
         d = runs / f"r{i}"
         d.mkdir(parents=True)
         base = {"id": f"r{i}", "status": "done", "selector_sha": "builtin", "sel_args": {}, "flops": {"total_gflops_per_img": 10.0},
-                "img_per_s_mean": 500.0, "dataset": "cifar100"}
+                "img_per_s_mean": 500.0, "dataset": "waterbirds"}
         (d / "metrics.json").write_text(json.dumps({**base, **r}))
 
 
 def test_stage2_rules(tmp_path, monkeypatch):
     from harness import submit
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
-    monkeypatch.setitem(C.TIER_EPOCHS["in100"], "final", 2)
+    monkeypatch.setitem(C.TIER_EPOCHS["cub"], "final", 2)
     (tmp_path / "selectors").mkdir()
     monkeypatch.setattr("harness.validate.SELECTORS_DIR", tmp_path / "selectors")
     (tmp_path / "selectors" / "good.py").write_text(GOOD)
     import hashlib
     sha = hashlib.sha256(GOOD.encode()).hexdigest()
     _fake_runs(tmp_path, monkeypatch, [])
-    submit.make_job("ce", 0, 1, "final", dataset="in100")                 # baselines always allowed
+    submit.make_job("ce", 0, 1, "final", dataset="cub")                 # baselines always allowed
     with pytest.raises(SystemExit, match="gate"):
-        submit.make_job("good", 25, 1, "final", dataset="in100")         # stage 2 closed before its gate
-    gate = [{"method": m, "keep": k, "seed": 1, "tier": "final", "val_acc_last": v, "dataset": "in100"}
+        submit.make_job("good", 25, 1, "final", dataset="cub")         # stage 2 closed before its gate
+    gate = [{"method": m, "keep": k, "seed": 1, "tier": "final", "val_acc_last": v, "dataset": "cub"}
             for m, k, v in (("ce", 0, 70.0), ("full", 196, 75.0), ("maskedkd", 98, 74.8))]
     cifar = [{"method": "good", "keep": 25, "seed": s, "tier": "final", "val_acc_last": 70.0, "selector_sha": sha}
              for s in (1, 2, 3)]
@@ -333,24 +333,24 @@ def test_stage2_rules(tmp_path, monkeypatch):
     shutil.rmtree(tmp_path / "runs", ignore_errors=True)
     _fake_runs(tmp_path, monkeypatch, gate + cifar)
     with pytest.raises(SystemExit, match="audit"):
-        submit.make_job("good", 25, 1, "final", dataset="in100")         # no audit PASS yet
+        submit.make_job("good", 25, 1, "final", dataset="cub")         # no audit PASS yet
     (tmp_path / "AUDIT.md").write_text("# AUDIT\n\n## x audit by claude\nclaim good K=25\nVERDICT: PASS\n")
-    job = submit.make_job("good", 25, 1, "final", dataset="in100")
+    job = submit.make_job("good", 25, 1, "final", dataset="cub")
     assert job["stage2"] == "stage2_untouched" and job["priority"] <= C.STAGE2_PRIORITY
 
 
-def test_in100_smoke_run(tmp_path, monkeypatch):
+def test_stage2_smoke_run(tmp_path, monkeypatch):
     from harness import submit, train
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
     monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
     monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
     monkeypatch.setattr(C, "BATCH", 8)
-    job = submit.make_job("maskedkd", 49, 0, "smoke", dataset="in100", force=True)
+    job = submit.make_job("maskedkd", 49, 0, "smoke", dataset="cub", force=True)
     jp = tmp_path / "job.json"
     jp.write_text(json.dumps(job))
     assert train.run(str(jp)) == 0
     m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
-    assert m["dataset"] == "in100" and m["mean_kept"] == 49.0 and m["img_per_s_mean"] > 0
+    assert m["dataset"] == "cub" and m["mean_kept"] == 49.0 and m["img_per_s_mean"] > 0
 
 
 def test_figures(tmp_path, monkeypatch):
@@ -361,25 +361,25 @@ def test_figures(tmp_path, monkeypatch):
     from harness import figures
     monkeypatch.setattr("sys.argv", ["figures"])
     figures.main()
-    assert (tmp_path / "figures" / "cifar100_screen_tokens.png").exists()
-    assert "maskedkd" in (tmp_path / "figures" / "cifar100_screen.csv").read_text()
+    assert (tmp_path / "figures" / "waterbirds_screen_tokens.png").exists()
+    assert "maskedkd" in (tmp_path / "figures" / "waterbirds_screen.csv").read_text()
 
 
 def test_boot_rules(tmp_path, monkeypatch):
     from harness import boot
     monkeypatch.setattr(C, "STATE", tmp_path)
     monkeypatch.setattr(C, "EPOCHS_FILE", tmp_path / "epochs.json")
-    (tmp_path / "bench.json").write_text(json.dumps({"recommend": {"screen_epochs_for_1h_at_that_parallelism": 37,
-                                                                   "parallel_jobs": 3}}))
-    boot.epochs_from_bench()
-    d = json.loads((tmp_path / "epochs.json").read_text())
-    assert d["epochs"]["cifar100"] == {"screen": 37, "final": 74} and d["max_jobs"] == 3
-    _fake_runs(tmp_path, monkeypatch, [{"method": "maskedkd", "keep": 49, "seed": 0, "tier": "smoke", "val_acc_last": 1.0,
-                                        "img_per_s_mean": 400.0, "dataset": "in100"}])
-    boot.epochs_in100("r0")
-    d = json.loads((tmp_path / "epochs.json").read_text())
-    assert d["epochs"]["in100"]["final"] == int(12 * 3600 / (boot.IN100_TRAIN / 400.0))
-    assert d["epochs"]["cifar100"]["screen"] == 37
+    (tmp_path / "bench.json").write_text(json.dumps({"recommend": {"parallel_jobs": 3}}))
+    boot.jobs_from_bench()
+    assert json.loads((tmp_path / "epochs.json").read_text())["max_jobs"] == 3
+    recs = [{"method": m, "keep": k, "seed": 0, "tier": "screen", "val_acc_last": v}
+            for m, k, v in (("full", 196, 90.0), ("maskedkd", 49, 89.5), ("maskedkd", 29, 85.0), ("maskedkd", 12, 87.0))]
+    _fake_runs(tmp_path, monkeypatch, recs)
+    import io, contextlib
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        boot.pick_keeps()
+    assert out.getvalue().strip() == "29,12"      # where MaskedKD falls furthest below Full KD
 
 
 # ---- lessons from R2E: spatial baselines, parent rule, final-first, significant-only table ----
@@ -412,8 +412,8 @@ def test_parent_rule_final_priority_and_refs(tmp_path, monkeypatch):
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
     monkeypatch.setattr(C, "ROOT", tmp_path)
     monkeypatch.setattr(validate, "SELECTORS_DIR", tmp_path / "selectors")
-    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "final", 2)
-    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "screen", 1)
+    monkeypatch.setitem(C.TIER_EPOCHS["waterbirds"], "final", 2)
+    monkeypatch.setitem(C.TIER_EPOCHS["waterbirds"], "screen", 1)
     with pytest.raises(SelectorRejected):
         check_source(GOOD.replace(',\n        "parent": "none"', ""), "noparent")
     _write_sel(tmp_path, "orphan", "missing_sel")
@@ -445,7 +445,7 @@ def test_core_significant_and_parent_check():
     lines, sig = core(runs)
     assert any("vs maskedkd@25" in l and "WIN" in l for l in sig)          # +2 every seed
     assert not any("vs tome@25" in l for l in sig)                          # within noise: not significant
-    assert any("vs grid@25: missing" in l for l in lines)                   # missing references are shown, not hidden
+    assert any("vs grid@25 [acc]: missing" in l for l in lines)             # missing references are shown, not hidden
     assert any("vs full@196" in l and "LOSS" in l for l in sig)
     scr = [_run("child", 25, 0, 60.2, "screen", parent="mysel"), _run("mysel", 25, 0, 60.0, "screen", parent="maskedkd"),
            _run("maskedkd", 25, 0, 59.0, "screen")]
@@ -456,7 +456,7 @@ def test_core_significant_and_parent_check():
 
 def test_report_cli_accepts_dataset(tmp_path, monkeypatch):
     import subprocess, sys
-    r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "in100"],
+    r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "cub"],
                        capture_output=True, text=True, cwd=C.ROOT)
     assert "unrecognized arguments" not in r.stderr and "gate incomplete" in r.stdout
 
@@ -480,29 +480,18 @@ def test_gate_mean_over_seeds_and_epoch_filter(tmp_path, monkeypatch):
     assert ok and "seeds [0, 1, 2]" in msg                     # mean of three seeds: +1.33
     # runs at an old epoch budget drop out once the budget changes
     monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
-    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "screen", 56)
+    monkeypatch.setitem(C.TIER_EPOCHS["waterbirds"], "screen", 56)
     for i, (ep, v) in enumerate(((28, 60.0), (56, 62.0))):
         d = C.RUNS / f"r{i}"; d.mkdir(parents=True)
         (d / "metrics.json").write_text(json.dumps({"id": f"r{i}", "status": "done", "tier": "screen", "method": "ce",
                                                      "keep": 0, "seed": 0, "epochs": ep, "val_acc_last": v}))
-    assert [r["val_acc_last"] for r in report.load_runs("cifar100")] == [62.0]
+    assert [r["val_acc_last"] for r in report.load_runs("waterbirds")] == [62.0]
     # the gate's extra seeds are reused by --baselines instead of failing as duplicates
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
     ids = submit.gate_jobs(seeds=[1, 2])
     assert submit.gate_jobs(seeds=[1, 2]) == ids
     base = submit.baselines()
     assert all(i in base for i in ids if "_ce_" not in i)
-
-
-def test_scale_epochs(tmp_path, monkeypatch):
-    from harness import boot
-    monkeypatch.setattr(C, "STATE", tmp_path)
-    monkeypatch.setattr(C, "EPOCHS_FILE", tmp_path / "epochs.json")
-    (tmp_path / "epochs.json").write_text(json.dumps({"epochs": {"cifar100": {"screen": 28, "final": 56}}, "max_jobs": 4}))
-    boot.scale_epochs(2)
-    boot.scale_epochs(4)                                       # always relative to the bench rule, not compounding
-    d = json.loads((tmp_path / "epochs.json").read_text())
-    assert d["epochs"]["cifar100"] == {"screen": 112, "final": 224} and d["gate_scale"] == 4 and d["max_jobs"] == 4
 
 
 def test_tome_cost_ratio_flags_unmatched_budgets():
@@ -540,3 +529,46 @@ def test_tolerance_is_half_the_kd_gain():
             for m, a, k in (("full", 83.5, 196), ("ce", 82.7, 0), ("maskedkd", 83.2, 49), ("maskedkd", 83.0, 25))]
     out = "\n".join(primary(rows))
     assert "tolerance 0.40" in out and "maskedkd" in out and ": 49.0" in out    # K=25 (-0.5) is outside 0.40
+
+
+# ---- Waterbirds: worst-group accuracy, rollout baseline ----
+
+def test_waterbirds_run_records_worst_group(tmp_path, monkeypatch):
+    from harness import submit, train
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    job = submit.make_job("rollout", 29, 0, "smoke", force=True)
+    jp = tmp_path / "job.json"
+    jp.write_text(json.dumps(job))
+    assert train.run(str(jp)) == 0
+    m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
+    assert m["dataset"] == "waterbirds" and m["mean_kept"] == 29.0
+    assert m["val_wga_last"] is not None and set(m["val_group_acc_last"]) <= {"0", "1", "2", "3"}
+    assert m["val_wga_last"] == min(m["val_group_acc_last"].values())
+
+
+def test_rollout_baseline(models):
+    from harness.baselines import Rollout
+    s, _ = models
+    x = torch.randn(2, 3, 224, 224)
+    out = student_forward(s, x, attn_layers=Rollout.NEEDS["attn"])
+    ctx = Context(images=x, student=s, out=out, budget=29, num_patches=196, epoch=0, progress=0.0)
+    m = Rollout().select(ctx)
+    assert m.shape == (2, 196) and (m.sum(1) == 29).all()
+
+
+def test_gate_and_primary_use_worst_group():
+    from harness.report import gate, primary
+    g = lambda m, k, s, a, w: {"id": f"{m}{s}", "tier": "screen", "method": m, "keep": k, "seed": s,
+                               "val_acc_last": a, "val_wga_last": w, "dataset": "waterbirds"}
+    # accuracy gain only +0.5, but KD lifts worst-group accuracy by +6: the gate passes on WGA
+    runs = [g("ce", 0, 0, 90.0, 70.0), g("full", 196, 0, 90.5, 76.0), g("maskedkd", 98, 0, 90.4, 75.0)]
+    ok, msg = gate(runs)
+    assert ok and "WGA 76.00 vs 70.00" in msg
+    rows = [{"tier": "screen", "method": m, "acc": a, "wga": w, "kept": k, "sha": "x", "args": "{}"}
+            for m, a, w, k in (("full", 90.5, 76.0, 196), ("ce", 90.0, 70.0, 0),
+                               ("maskedkd", 90.4, 60.0, 29), ("rollout", 90.4, 75.5, 29))]
+    out = "\n".join(primary(rows, tol_wga=2.0))
+    assert "rollout" in out and "- maskedkd" not in out     # same accuracy, but MaskedKD loses 16 points of WGA

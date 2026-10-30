@@ -4,10 +4,11 @@
 #   bash agent/bootstrap.sh          # re-launches itself in tmux session "boot"; safe to re-run (skips finished steps)
 #
 # Steps (stops at the first failure and says why in agent/BOOT_STATUS.md and agent/logs/boot.log):
-#   check tools/logins -> setup -> lock -> GPU smoke -> teacher fine-tune -> bench (FLOP check)
-#   -> epochs by rule -> commit + relock -> CIFAR gate (waits hours) -> baselines -> loop
-#   + in the background: ImageNet-100 preparation and its own gate/baselines (agent/stage2_boot.sh)
-# If the CIFAR gate fails it stops: switching to the fallback setting is a human decision (docs/SETUP.md).
+#   check tools/logins -> setup -> lock -> data (Waterbirds, CUB) -> GPU smoke -> teacher (aim-lab-test-5's if it is
+#   on this server, else fine-tune) + student lr -> bench (FLOP check, parallelism) -> commit + relock
+#   -> Waterbirds gate (seed 0, then seeds 1-2 on the mean) -> baselines -> loop
+#   + in the background: the CUB teacher, gate and baselines (agent/stage2_boot.sh)
+# If the gate fails on seeds 0-2 it stops: what to change is a human decision.
 set -u
 cd "$(dirname "$0")/.."
 if [ -z "${TMUX:-}" ] && [ -z "${BOOT_NO_TMUX:-}" ]; then
@@ -46,16 +47,18 @@ else
   status "Codex not available: Claude audits; no emergency researcher (optional, see docs/SETUP.md)"
 fi
 avail_gb=$(( $(df -Pk "${DATA_ROOT:-.}" 2>/dev/null | awk 'NR==2{print $4}') / 1048576 ))
-STAGE2=1; [ "$avail_gb" -ge 40 ] || { STAGE2=0; status "only ${avail_gb} GB free (< 40): ImageNet-100 stage skipped for now"; }
+[ "$avail_gb" -ge 10 ] || fail "only ${avail_gb} GB free (< 10)"
+STAGE2=1
 
 # ---------- 1. environment + lock ----------
 done_step setup || { say "setup"; bash setup.sh >>"$LOG" 2>&1 || fail "setup.sh failed (see $LOG)"; mark setup; }
 bash agent/relock.sh >>"$LOG" 2>&1 || fail "tests failed during relock (see $LOG)"
 tmux has-session -t sched 2>/dev/null || bash agent/start.sh sched >>"$LOG" 2>&1
 
-# ---------- 2. GPU smoke (minutes) ----------
-if ! done_step data; then   # download CIFAR-100 once, before parallel jobs could race on it
-  $PY -c "from harness.data import load_split; load_split('train'); load_split('test')" >>"$LOG" 2>&1 || fail "CIFAR-100 download failed"
+# ---------- 2. data + GPU smoke (minutes) ----------
+if ! done_step data; then   # once, before parallel jobs could race on it
+  say "data: Waterbirds + CUB (aim-lab-test-5's extracted copies if present, else download)"
+  $PY -m harness.prepare_data >>"$LOG" 2>&1 || fail "data preparation failed (see $LOG)"
   mark data
 fi
 if ! done_step smoke; then
@@ -65,66 +68,50 @@ if ! done_step smoke; then
   mark smoke; status "GPU smoke passed"
 fi
 
-# ---------- 3. teacher ----------
+# ---------- 3. teacher + student lr ----------
 if [ ! -f state/teacher.json ]; then
-  say "teacher fine-tune (CIFAR-100, DeiT-B, label smoothing 0)"
-  $PY -m harness.finetune_teacher >>"$LOG" 2>&1 || fail "teacher fine-tune failed (see $LOG)"
+  say "teacher (Waterbirds, DeiT-B): import aim-lab-test-5's or fine-tune (about 1 h)"
+  $PY -m harness.finetune_teacher --dataset waterbirds >>"$LOG" 2>&1 || fail "teacher failed (see $LOG)"
 fi
-status "teacher val acc: $($PY -c 'import json;print(json.load(open("state/teacher.json"))["val_acc"])')"
+status "teacher: $($PY -c 'import json;d=json.load(open("state/teacher.json"));print(d["source"], "val acc", d["val_acc"], "WGA", d.get("val_wga"))'); recipe: $(tr -d '\n ' < state/recipe.json)"
 
-# ---------- 4. bench + epochs ----------
+# ---------- 4. bench ----------
 if [ ! -f state/epochs.json ]; then
   say "bench (FLOP counter check + speed)"
   $PY -m harness.bench >>"$LOG" 2>&1; rc=$?
   [ $rc -eq 2 ] && fail "FLOP counter check failed (see state/bench.json flop_check). Do not continue until fixed"
   [ $rc -ne 0 ] && fail "bench failed (see $LOG)"
-  $PY -m harness.boot epochs-from-bench >>"$LOG" 2>&1 || fail "could not derive epochs"
-  status "epochs: $(cat state/epochs.json | tr -d '\n ')"
-  git add state/bench.json state/teacher.json state/epochs.json agent/BOOT_STATUS.md
-  git commit -qm "boot: teacher, bench, epochs" && git push -q
+  $PY -m harness.boot jobs-from-bench >>"$LOG" 2>&1 || fail "could not read the bench"
+  status "parallel jobs: $(tr -d '\n ' < state/epochs.json)"
+  git add state/bench.json state/teacher.json state/recipe.json state/epochs.json agent/BOOT_STATUS.md
+  git commit -qm "boot: teacher, recipe, bench" && git push -q
   bash agent/relock.sh >>"$LOG" 2>&1 || fail "relock failed"
   tmux kill-session -t sched 2>/dev/null; bash agent/start.sh sched >>"$LOG" 2>&1   # reload MAX_JOBS
 fi
 
-# ---------- 5. CIFAR gate (escalates by itself) ----------
-# seed 0 -> + seeds 1, 2 (judged on the mean: one seed can miss by noise) -> 2x epochs -> 4x epochs.
-# Longer training is the known lever for KD > CE (Beyer et al. 2022). Only after 4x does a human decide.
+# ---------- 5. gate: seed 0, then seeds 1-2 judged on the mean (one seed can miss by noise) ----------
 gate_ok() { $PY -m harness.report --gate >/dev/null 2>&1; }
 run_gate() {  # $1 = id file name, rest = submit args; reuses runs that already exist
   local f="$S/$1"; shift
   [ -s "$f" ] || $PY -m harness.submit --gate "$@" > "$f" || fail "gate submit failed"
   $PY -m harness.submit --wait $(cat "$f") | tee -a "$LOG" || fail "a gate run failed: see runs/<id>/error.txt"
-  status "CIFAR gate: $($PY -m harness.report --gate)"
+  status "gate: $($PY -m harness.report --gate)"
 }
-for scale in 1 2 4; do
-  gate_ok && break
-  if [ "$scale" -gt 1 ]; then
-    [ "$(cat "$S/gate_scale" 2>/dev/null || echo 1)" -ge "$scale" ] || {
-      $PY -m harness.boot scale-epochs "$scale" >>"$LOG" 2>&1 || fail "could not scale epochs"
-      git add state/epochs.json agent/BOOT_STATUS.md && git commit -qm "boot: gate failed, epochs x$scale" && git push -q
-      bash agent/relock.sh >>"$LOG" 2>&1 || fail "relock failed"
-      tmux kill-session -t sched 2>/dev/null; bash agent/start.sh sched >>"$LOG" 2>&1
-      echo "$scale" > "$S/gate_scale"
-      status "CIFAR gate failed at shorter training: epochs x$scale -> $(tr -d '\n ' < state/epochs.json)"
-    }
-  fi
-  idf=gate_ids; [ "$scale" -gt 1 ] && idf="gate_ids_x$scale"
-  gate_ok || run_gate "$idf" --seeds 0
-  gate_ok || run_gate "${idf}_s12" --seeds 1,2
-done
-gate_ok || fail "CIFAR gate FAILED at 4x epochs on seeds 0-2: $($PY -m harness.report --gate). Fallback (human decision): DeiT-B teacher + pretrained student, docs/SETUP.md step 5"
-status "CIFAR gate PASSED: $($PY -m harness.report --gate)"
+gate_ok || run_gate gate_ids --seeds 0
+gate_ok || run_gate gate_ids_s12 --seeds 1,2
+gate_ok || fail "gate FAILED on seeds 0-2: $($PY -m harness.report --gate). Human decision (recipe, dataset)"
+status "gate PASSED: $($PY -m harness.report --gate)"
 
 # ---------- 6. baselines, stage 2, loop ----------
 if ! done_step baselines; then
-  $PY -m harness.submit --baselines > "$S/cifar_baseline_ids" || fail "baselines submit failed"
-  mark baselines; status "CIFAR baselines queued ($(wc -l < "$S/cifar_baseline_ids") jobs)"
+  $PY -m harness.submit --baselines > "$S/stage1_baseline_ids" || fail "baselines submit failed"
+  mark baselines; status "Waterbirds baselines queued ($(wc -l < "$S/stage1_baseline_ids") jobs)"
 fi
 $PY -m harness.report >/dev/null
-git add -A && git commit -qm "boot: CIFAR gate passed, baselines queued" ; git push -q
+git add -A && git commit -qm "boot: gate passed, baselines queued" ; git push -q
 if [ "$STAGE2" = 1 ] && ! tmux has-session -t stage2 2>/dev/null; then
   tmux new -d -s stage2 "bash agent/stage2_boot.sh"
-  status "ImageNet-100 preparation started in background (tmux: stage2)"
+  status "CUB (stage 2) teacher, gate and baselines started in background (tmux: stage2)"
 fi
 echo "$AUDITOR" > "$S/boot_auditor"
 AUDITOR=$AUDITOR bash agent/start.sh >>"$LOG" 2>&1

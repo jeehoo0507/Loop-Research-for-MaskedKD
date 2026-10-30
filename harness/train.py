@@ -20,7 +20,7 @@ from timm.loss import SoftTargetCrossEntropy
 from torch.utils.flop_counter import FlopCounterMode
 
 from . import config as C
-from .data import GpuAugment, as_tensor, load_split, make_loader, normalize_resize
+from .data import GpuAugment, as_tensor, load_groups, load_split, make_loader, normalize_resize
 from .lock import harness_digest
 from .models import make_student, make_teacher, student_forward, teacher_forward_keepmask
 from .selector_api import Context
@@ -49,46 +49,58 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def teacher_paths(dataset="cifar100"):
-    tag = "" if dataset == "cifar100" else f"_{dataset}"
+def teacher_paths(dataset=C.STAGE1):
+    tag = "" if dataset == C.STAGE1 else f"_{dataset}"
     return C.STATE / f"teacher{tag}.pt", C.STATE / f"teacher{tag}.json"
 
 
-def load_teacher(device, dataset="cifar100", allow_random=False):
+def load_teacher(device, dataset=C.STAGE1, allow_random=False):
     """allow_random: smoke runs before the teacher exists use a random-init teacher (same compute)."""
     ckpt, meta_path = teacher_paths(dataset)
     if os.environ.get("MASKEDKD_FAKE_DATA") or (allow_random and not meta_path.exists()):
-        t = make_teacher(pretrained=False)
+        t = make_teacher(dataset, pretrained=False)
         return t.to(device).eval(), "fake"
     meta = json.loads(meta_path.read_text())
     sha = sha256_file(ckpt)
     if sha != meta["sha256"]:
         raise HarnessViolation(f"teacher checkpoint sha256 {sha} != recorded {meta['sha256']}")
-    t = make_teacher(pretrained=False)
+    t = make_teacher(dataset, pretrained=False)
     t.load_state_dict(torch.load(ckpt, map_location="cpu"))
     for p in t.parameters():
         p.requires_grad_(False)
     return t.to(device).eval(), sha
 
 
-def lr_at(epoch_float, epochs):
-    if epoch_float < C.WARMUP_EPOCHS:
-        return C.WARMUP_LR + (C.LR - C.WARMUP_LR) * epoch_float / C.WARMUP_EPOCHS
-    t = (epoch_float - C.WARMUP_EPOCHS) / max(1e-8, epochs - C.WARMUP_EPOCHS)
-    return C.MIN_LR + 0.5 * (C.LR - C.MIN_LR) * (1 + math.cos(math.pi * min(1.0, t)))
+def lr_at(epoch_float, epochs, lr, warmup=C.WARMUP_EPOCHS):
+    """Linear warmup from WARMUP_LR, then cosine to lr * MIN_LR_RATIO (aim-lab-test-5 recipe)."""
+    if epoch_float < warmup:
+        return C.WARMUP_LR + (lr - C.WARMUP_LR) * epoch_float / warmup
+    t = (epoch_float - warmup) / max(1e-8, epochs - warmup)
+    lo = lr * C.MIN_LR_RATIO
+    return lo + 0.5 * (lr - lo) * (1 + math.cos(math.pi * min(1.0, t)))
 
 
 @torch.no_grad()
-def evaluate(model, x, y, device, batch=500):
+def predict(model, x, device, batch=250):
+    was = model.training
     model.eval()
-    correct = 0
-    for i in range(0, len(y), batch):
+    out = []
+    for i in range(0, len(x), batch):
         xb = normalize_resize(as_tensor(x[i:i + batch]).to(device))
         with torch.autocast(device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
-            logits = model(xb)
-        correct += (logits.argmax(1) == y[i:i + batch].to(device)).sum().item()
-    model.train()
-    return 100.0 * correct / len(y)
+            out.append(model(xb).argmax(1).cpu())
+    model.train(was)
+    return torch.cat(out)
+
+
+def evaluate(model, x, y, device, groups=None):
+    """Top-1 accuracy (%), or with `groups` a dict: acc, per-group acc, worst-group acc (wga)."""
+    hit = (predict(model, x, device) == y.cpu()).float()
+    acc = 100.0 * hit.mean().item()
+    if groups is None:
+        return acc
+    per = {int(g): round(100.0 * hit[groups == g].mean().item(), 2) for g in groups.unique().tolist()}
+    return {"acc": acc, "group_acc": per, "wga": min(per.values())}
 
 
 class Segments:
@@ -185,21 +197,24 @@ def run(job_path):
         if sel_sha != job.get("selector_sha", "builtin"):
             raise HarnessViolation("selector source changed after submit")
 
-    dataset = job.get("dataset", "cifar100")
+    dataset = job.get("dataset", C.STAGE1)
     xtr, ytr = load_split("train", dataset)
     xva, yva = load_split("val", dataset)
+    gva = load_groups("val", dataset)
     if job["tier"] == "smoke":
         xva, yva = xva[:C.SMOKE_VAL_LIMIT], yva[:C.SMOKE_VAL_LIMIT]
+        gva = None if gva is None else gva[:C.SMOKE_VAL_LIMIT]
     loader = make_loader(xtr, ytr, C.BATCH, device, job["seed"], dataset)
-    aug = GpuAugment(device)
-    student = make_student().to(device)
+    aug = GpuAugment(device, C.NUM_CLASSES[dataset])
+    student = make_student(dataset).to(device)
+    lr = C.student_lr(dataset)
     teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset, job["tier"] == "smoke")
     criterion = SoftTargetCrossEntropy()
     decay, no_decay = [], []
     for n, p in student.named_parameters():
         (no_decay if p.ndim <= 1 or n in ("pos_embed", "cls_token") else decay).append(p)
     opt = torch.optim.AdamW([{"params": decay, "weight_decay": C.WEIGHT_DECAY},
-                             {"params": no_decay, "weight_decay": 0.0}], lr=C.LR)
+                             {"params": no_decay, "weight_decay": 0.0}], lr=lr)
 
     state = {"epoch": 0, "history": [], "flops": None, "kept": [], "train_time_s": 0.0}
     ckpt_path = rdir / "ckpt.pt"
@@ -228,7 +243,7 @@ def run(job_path):
                 break
             g = epoch * steps_per_epoch + step
             for pg in opt.param_groups:
-                pg["lr"] = lr_at(g / steps_per_epoch, epochs)
+                pg["lr"] = lr_at(g / steps_per_epoch, epochs, lr)
             x, y = aug(xb, yb)
             measure = state["flops"] is None and C.FLOP_WARMUP <= g < C.FLOP_WARMUP + C.FLOP_STEPS
             segs = Segments(measure)
@@ -265,7 +280,11 @@ def run(job_path):
             rec["mean_kept"] = kept_sum / kept_n
             state["kept"].append(rec["mean_kept"])
         if (epoch + 1) % C.EVAL_EVERY == 0 or epoch + 1 == epochs:
-            rec["val_acc"] = evaluate(student, xva, yva, device)
+            ev = evaluate(student, xva, yva, device, gva)
+            if isinstance(ev, dict):
+                rec["val_acc"], rec["val_wga"], rec["val_group_acc"] = ev["acc"], ev["wga"], ev["group_acc"]
+            else:
+                rec["val_acc"] = ev
         state["history"].append(rec)
         state["epoch"] = epoch + 1
         say(json.dumps(rec))
@@ -288,13 +307,16 @@ def run(job_path):
 
 
 def write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status):
-    last_val = next((h["val_acc"] for h in reversed(state["history"]) if "val_acc" in h), None)
+    last = next((h for h in reversed(state["history"]) if "val_acc" in h), {})
+    last_val = last.get("val_acc")
     m = {
         "id": job["id"], "status": status, "method": job["method"], "keep": job["keep"], "seed": job["seed"],
         "tier": job["tier"], "epochs": job["epochs"], "epochs_done": state["epoch"],
         "val_acc_last": last_val,
+        "val_wga_last": last.get("val_wga"), "val_group_acc_last": last.get("val_group_acc"),
+        "student_lr": C.student_lr(job.get("dataset", C.STAGE1)),
         "mean_kept": (sum(state["kept"]) / len(state["kept"])) if state["kept"] else None,
-        "dataset": job.get("dataset", "cifar100"),
+        "dataset": job.get("dataset", C.STAGE1),
         "tome_r": r_for_budget(job["keep"]) if job["method"] == "tome" else None,
         # wall-clock throughput depends on how many jobs shared the GPU; compare within the same concurrency
         "img_per_s_mean": round(sum(h["img_per_s"] for h in state["history"]) / len(state["history"]), 1)

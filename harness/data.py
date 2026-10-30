@@ -1,8 +1,11 @@
-"""CIFAR-100 held as uint8 tensors on the GPU, with DeiT-style augmentation done on the GPU.
+"""Waterbirds and CUB-200-2011 held as uint8 tensors on the GPU, with DeiT-style augmentation done on the GPU.
 
 Earlier repos were data-loading bound (~152 img/s on an A5000), so nothing here uses a DataLoader.
-Splits: train 45k / val 5k (stratified, from the official train set) / test 10k (official test set).
-The test split is only read by harness/test_eval.py, which a human runs once at the end.
+harness/prepare_data.py stores train images at 256x256 (Resize(256) -> CenterCrop(256); RandomResizedCrop to 224
+happens on the GPU) and val / test images exactly as evaluated (Resize(256, bicubic) -> CenterCrop(224)).
+Splits: Waterbirds official train / val / test; CUB official test, official train split 90/10 per class into
+train / val (aim-lab-test-5's rule). The test split is only read by harness/test_eval.py (a human, once, at the end).
+Waterbirds group labels (2*y + place) are for evaluation only; training never sees them.
 """
 import json
 import math
@@ -20,63 +23,41 @@ from . import config as C
 
 MEAN = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
 STD = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+FAKE_N = {"train": 256, "val": 96, "test": 96}
 
 
-def _fake(n, seed, res=32):
+def _fake(dataset, split):
+    seed = {"train": 1, "val": 2, "test": 3}[split] + 10 * C.DATASETS.index(dataset)
     g = torch.Generator().manual_seed(seed)
+    n, res = FAKE_N[split], (64 if split == "train" else 56)
     x = torch.randint(0, 256, (n, 3, res, res), dtype=torch.uint8, generator=g)
-    y = torch.arange(n) % C.NUM_CLASSES
-    return x, y
+    y = torch.arange(n) % C.NUM_CLASSES[dataset]
+    groups = (2 * y + torch.randint(0, 2, (n,), generator=g)) if C.NUM_GROUPS[dataset] else torch.full((n,), -1)
+    return x, y, groups
 
 
-def _load_raw(train: bool):
-    """Official CIFAR-100 split as (uint8 N,3,32,32, int64 N)."""
+def _arrays(dataset, split):
     if os.environ.get("MASKEDKD_FAKE_DATA"):
-        return _fake(1000 if train else 200, 1 if train else 2)
-    cache = C.DATA_ROOT / f"cifar100_{'train' if train else 'test'}.pt"
-    if cache.exists():
-        d = torch.load(cache)
-        return d["x"], d["y"]
-    from torchvision.datasets import CIFAR100
-    ds = CIFAR100(root=str(C.DATA_ROOT), train=train, download=True)
-    x = torch.from_numpy(np.asarray(ds.data)).permute(0, 3, 1, 2).contiguous()
-    y = torch.tensor(ds.targets, dtype=torch.long)
-    torch.save({"x": x, "y": y}, cache)
-    return x, y
-
-
-def _in100(split):
-    """ImageNet-100 arrays written by harness/prepare_stage2.py: uint8 memmap [N,3,H,W] + int64 labels."""
-    if os.environ.get("MASKEDKD_FAKE_DATA"):
-        n = {"train": 400, "val": 200, "test": 200}[split]
-        return _fake(n, {"train": 11, "val": 12, "test": 13}[split], res=64 if split == "train" else 56)
-    d = C.DATA_ROOT / "in100"
+        return _fake(dataset, split)
+    d = C.DATA_ROOT / dataset
     meta = json.loads((d / "meta.json").read_text())
-    shape = tuple(meta["shapes"][split])
-    x = np.memmap(d / f"{split}_x.u8", dtype=np.uint8, mode="r", shape=shape)
+    x = np.memmap(d / f"{split}_x.u8", dtype=np.uint8, mode="r", shape=tuple(meta["shapes"][split]))
     y = torch.from_numpy(np.load(d / f"{split}_y.npy")).long()
+    g = torch.from_numpy(np.load(d / f"{split}_g.npy")).long()
+    return torch.from_numpy(np.ascontiguousarray(x)), y, g
+
+
+def load_split(split: str, dataset: str = C.STAGE1):
+    """split in {'train', 'val', 'test'} -> (uint8 images [N,3,H,W], int64 labels)."""
+    x, y, _ = _arrays(dataset, split)
     return x, y
 
 
-def load_split(split: str, dataset: str = "cifar100"):
-    """split in {'train', 'val', 'test'}. For in100 the images are a numpy memmap (not loaded into memory)."""
-    if dataset == "in100":
-        return _in100(split)
-    if split == "test":
-        return _load_raw(train=False)
-    x, y = _load_raw(train=True)
-    g = torch.Generator().manual_seed(C.SPLIT_SEED)
-    val_idx = []
-    per_class = C.VAL_PER_CLASS if not os.environ.get("MASKEDKD_FAKE_DATA") else 2
-    for c in range(C.NUM_CLASSES):
-        idx = (y == c).nonzero().flatten()
-        val_idx.append(idx[torch.randperm(len(idx), generator=g)[:per_class]])
-    val_idx = torch.cat(val_idx).sort().values
-    mask = torch.zeros(len(y), dtype=torch.bool)
-    mask[val_idx] = True
-    if split == "val":
-        return x[mask], y[mask]
-    return x[~mask], y[~mask]
+def load_groups(split: str, dataset: str = C.STAGE1):
+    """Waterbirds group of every image (2*y + place), or None for datasets without groups. Evaluation only."""
+    if not C.NUM_GROUPS[dataset]:
+        return None
+    return _arrays(dataset, split)[2]
 
 
 def as_tensor(x):
@@ -85,7 +66,7 @@ def as_tensor(x):
 
 
 def normalize_resize(x_uint8):
-    """Eval transform: [0,255] uint8 (32px CIFAR or 224px ImageNet-100) -> normalized float 224px."""
+    """Eval transform: [0,255] uint8 (stored at 224 already; fake test data is resized) -> normalized float 224px."""
     x = as_tensor(x_uint8).float() / 255.0
     x = F.interpolate(x, size=C.IMG_SIZE, mode="bilinear", align_corners=False)
     return (x - MEAN.to(x.device)) / STD.to(x.device)
@@ -102,11 +83,12 @@ class GpuAugment:
     COLOR = ("identity", "autocontrast", "brightness", "contrast", "color", "solarize", "posterize")
     GEOM = ("rotate", "shear_x", "shear_y", "translate_x", "translate_y")
 
-    def __init__(self, device, smoothing=C.SMOOTHING, mixup=True, erase=True):
+    def __init__(self, device, num_classes, smoothing=C.SMOOTHING, mixup=True, erase=True):
         self.device = device
+        self.num_classes = num_classes
         self.ops = self.COLOR + self.GEOM
         self.mixup = Mixup(mixup_alpha=C.MIXUP, cutmix_alpha=C.CUTMIX, label_smoothing=smoothing,
-                           num_classes=C.NUM_CLASSES) if mixup else None
+                           num_classes=num_classes) if mixup else None
         self.erase = RandomErasing(probability=C.REPROB, mode="pixel", device=str(device)) if erase else None
         self.smoothing = smoothing
 
@@ -206,7 +188,7 @@ class GpuAugment:
                 x, y = x[:-1], y[:-1]
             x, y = self.mixup(x, y)
         else:
-            y = F.one_hot(y, C.NUM_CLASSES).float() * (1 - self.smoothing) + self.smoothing / C.NUM_CLASSES
+            y = F.one_hot(y, self.num_classes).float() * (1 - self.smoothing) + self.smoothing / self.num_classes
         return x, y
 
 

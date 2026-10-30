@@ -27,7 +27,7 @@ def flop_check(device):
     teacher cost (config.TEACHER_REF_GFLOPS, from the DeiT paper's GMACs at 197 tokens, forward)."""
     from torch.utils.flop_counter import FlopCounterMode
     from .models import teacher_forward_keepmask
-    t = make_teacher(pretrained=False).to(device).eval()
+    t = make_teacher(C.STAGE1, pretrained=False).to(device).eval()
     x = torch.randn(4, 3, C.IMG_SIZE, C.IMG_SIZE, device=device)
     keep = torch.ones(4, C.NUM_PATCHES, dtype=torch.bool, device=device)
     with torch.no_grad(), torch.autocast(device.type, dtype=torch.bfloat16), FlopCounterMode(display=False) as fc:
@@ -40,14 +40,14 @@ def flop_check(device):
 
 def worker(method, keep, steps):
     device = torch.device("cuda")
-    student = make_student().to(device)
-    teacher = None if method == "ce" else make_teacher(pretrained=False).to(device).eval()
+    student = make_student(C.STAGE1).to(device)
+    teacher = None if method == "ce" else make_teacher(C.STAGE1, pretrained=False).to(device).eval()
     selector = BUILTIN[method]() if method in BUILTIN else None
     opt = torch.optim.AdamW(student.parameters(), lr=1e-4)
-    aug = GpuAugment(device)
+    aug = GpuAugment(device, C.NUM_CLASSES[C.STAGE1])
     crit = SoftTargetCrossEntropy()
-    xs = torch.randint(0, 256, (C.BATCH, 3, 32, 32), dtype=torch.uint8, device=device)
-    ys = torch.randint(0, C.NUM_CLASSES, (C.BATCH,), device=device)
+    xs = torch.randint(0, 256, (C.BATCH, 3, C.RESIZE, C.RESIZE), dtype=torch.uint8, device=device)
+    ys = torch.randint(0, C.NUM_CLASSES[C.STAGE1], (C.BATCH,), device=device)
     torch.cuda.reset_peak_memory_stats()
     for i in range(steps + 5):
         if i == 5:
@@ -86,7 +86,7 @@ def main():
         agg = sum(o["img_per_s"] for o in outs)
         res["parallel"][str(n)] = {"aggregate_img_per_s": round(agg, 1), "per_job": outs}
         print(f"parallel x{n} maskedkd@98: aggregate {agg:.0f} img/s", flush=True)
-    n_train = 50000 - C.VAL_PER_CLASS * C.NUM_CLASSES
+    n_train = C.EXPECTED_SIZES[C.STAGE1]["train"]
     worst = min(r["img_per_s"] for r in res["single"].values())
     best_par = max([(1, worst)] + [(int(n), v["aggregate_img_per_s"] / int(n)) for n, v in res["parallel"].items()],
                    key=lambda t: t[0] * t[1])

@@ -34,6 +34,23 @@ class Random(SelectorBase):
         return topk_mask(scores, int(ctx.budget))
 
 
+class Rollout(SelectorBase):
+    """Attention rollout (Abnar & Zuidema, ACL 2020) on the student: head-mean attention of every block with the
+    residual added (0.5 A + 0.5 I, rows renormalised), multiplied from the first block to the last; the CLS row
+    ranks the patches, top-K. The best-known way to read "where a ViT looks" from all layers: a selector that is
+    only a variant of it is not new."""
+    NEEDS = {"attn": list(range(12)), "tokens": []}
+
+    def select(self, ctx: Context):
+        r = None
+        for a in ctx.out.attn:
+            a = a.detach().float().mean(dim=1)
+            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)
+            a = a / a.sum(dim=-1, keepdim=True)
+            r = a if r is None else a @ r
+        return topk_mask(r[:, 0, 1:], int(ctx.budget))
+
+
 class Grid(SelectorBase):
     """K patch tokens evenly spaced in raster order, same for every image. A selector that wins only by
     spreading its tokens over the image does not beat this."""
@@ -65,4 +82,4 @@ def oracle_keep(teacher, x, k):
     return topk_mask(attn.float().mean(dim=1)[:, 0, 1:], int(k))
 
 
-BUILTIN = {"full": Full, "maskedkd": MaskedKD, "random": Random, "grid": Grid, "center": Center}
+BUILTIN = {"full": Full, "maskedkd": MaskedKD, "random": Random, "grid": Grid, "center": Center, "rollout": Rollout}

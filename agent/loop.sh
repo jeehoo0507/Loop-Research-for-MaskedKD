@@ -29,7 +29,7 @@ REMOTE="${REMOTE:-origin}"
 # read-only; the emergency researcher, which needs a shell to submit jobs, is off.
 if bwrap --ro-bind / / true 2>/dev/null; then CODEX_SHELL=1; else CODEX_SHELL=0; fi
 PY=.venv/bin/python
-LOCKED=(harness tests agent/loop.sh agent/relock.sh agent/AGENT_PROMPT.md agent/AUDIT_PROMPT.md agent/IDEAS_PROMPT.md requirements.txt state/epochs.json)
+LOCKED=(harness tests agent/loop.sh agent/relock.sh agent/AGENT_PROMPT.md agent/AUDIT_PROMPT.md agent/IDEAS_PROMPT.md requirements.txt state/epochs.json state/recipe.json)
 S=agent/.state; mkdir -p "$S" agent/logs
 
 notify() { :; }   # phone alerts: decided later (see docs/SETUP.md)

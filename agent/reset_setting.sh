@@ -19,7 +19,8 @@ for p in runs queue analysis_out RESULTS_TABLE.md figures PROGRESS.md RESULTS.md
          agent/AUDIT_REQUEST.md agent/INVALID.md; do
   [ -e "$p" ] && mkdir -p "$A/$(dirname "$p")" && mv "$p" "$A/$p"
 done
-for p in state/teacher.pt state/teacher.json state/teacher_in100.pt state/teacher_in100.json state/bench.json state/epochs.json; do
+for p in state/teacher.pt state/teacher.json state/teacher_in100.pt state/teacher_in100.json state/bench.json state/epochs.json state/recipe.json \
+         state/teacher_cub.pt state/teacher_cub.json agent/BOOT_STATUS.md; do
   [ -e "$p" ] && mv "$p" "$A/$p"
 done
 
@@ -29,11 +30,12 @@ printf '# PROPOSALS\n\n' > PROPOSALS.md
 printf '# AUDIT (agent/loop.sh가 씀)\n' > AUDIT.md
 : > agent/AUDIT_REQUEST.md
 
-# keep: environment, CIFAR download. redo: smoke (models changed), teacher, bench, gate, baselines, stage 2 steps
-find "$S" -maxdepth 1 -type f ! -name boot_setup ! -name boot_data -delete 2>/dev/null
+# keep: environment. redo: data (if the dataset changed), smoke, teacher, bench, gate, baselines, stage 2 steps
+find "$S" -maxdepth 1 -type f ! -name boot_setup -delete 2>/dev/null
+printf '# BOOT_STATUS (agent/bootstrap.sh)\n\n' > agent/BOOT_STATUS.md
 { echo; echo "- $(date '+%Y-%m-%d %H:%M') RESET: setting changed (harness/config.py); old results in $A"; } >> agent/BOOT_STATUS.md
 rm -f agent/STOP
 
-git add -A && git commit -qm "reset: new setting (DeiT-B teacher, pretrained DeiT-Ti student); old results in $A" && git push -q
+git add -A && git commit -qm "reset: new setting; old results in $A" && git -c pull.rebase=true pull -q --autostash; git push -q
 echo "[reset] done; starting bootstrap"
 bash agent/bootstrap.sh

@@ -33,7 +33,7 @@ def main():
     try:
         run, script_meta = load_analysis(job["method"], job["selector_src"])
         meta["meta"] = script_meta
-        dataset = job.get("dataset", "cifar100")
+        dataset = job.get("dataset", C.STAGE1)
         teacher = load_teacher(device, dataset)[0]
         with torch.autocast(device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
             run(AnalysisAPI(out, device, teacher, dataset))

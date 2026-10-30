@@ -53,20 +53,20 @@ def audit_passed(method):
 
 
 def stage2_rule(method, sha):
-    """Stage 2 (ImageNet-100) admits harness baselines, and agent methods that finished CIFAR final on
-    all fresh seeds and passed audit, only after the ImageNet-100 gate passed. Returns a label."""
+    """Stage 2 admits harness baselines, and agent methods that finished stage-1 final on all fresh seeds and
+    passed audit, only after the stage-2 gate passed. Returns a label."""
     if method in C.BASELINES:
         return "baseline"
     from .report import gate, load_runs
     runs = load_runs()
     ok, msg = gate(runs, "final", C.STAGE2, seed=C.FINAL_SEEDS[0])
     if not ok:
-        raise SystemExit(f"stage 2 is closed until the ImageNet-100 gate passes: {msg}")
-    cifar = [r for r in runs if r.get("dataset", "cifar100") == "cifar100" and r["tier"] == "final" and r["method"] == method]
-    passed_shas = {r["selector_sha"] for r in cifar
-                   if set(C.FINAL_SEEDS) <= {x["seed"] for x in cifar if x["selector_sha"] == r["selector_sha"]}}
+        raise SystemExit(f"stage 2 is closed until the stage-2 gate passes: {msg}")
+    s1 = [r for r in runs if r.get("dataset", C.STAGE1) == C.STAGE1 and r["tier"] == "final" and r["method"] == method]
+    passed_shas = {r["selector_sha"] for r in s1
+                   if set(C.FINAL_SEEDS) <= {x["seed"] for x in s1 if x["selector_sha"] == r["selector_sha"]}}
     if not passed_shas or not audit_passed(method):
-        raise SystemExit(f"'{method}' needs CIFAR final on seeds {C.FINAL_SEEDS} and an audit PASS before stage 2")
+        raise SystemExit(f"'{method}' needs stage-1 final on seeds {C.FINAL_SEEDS} and an audit PASS before stage 2")
     if sha in passed_shas:
         return "stage2_untouched"
     if not any(r["method"] == method and r.get("stage2") == "stage2_untouched" for r in runs):
@@ -74,7 +74,7 @@ def stage2_rule(method, sha):
     return "stage2_tuned"
 
 
-def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", priority=0, force=False, dataset="cifar100"):
+def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", priority=0, force=False, dataset=C.STAGE1):
     if dataset not in C.DATASETS:
         raise SystemExit(f"dataset must be one of {C.DATASETS}")
     epochs = C.TIER_EPOCHS[dataset].get(tier)
@@ -82,8 +82,8 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         raise SystemExit(f"{dataset} tier '{tier}' has no epoch budget (a human sets it after harness.bench)")
     if tier == "final" and seed not in C.FINAL_SEEDS:
         raise SystemExit(f"final runs use fresh seeds {C.FINAL_SEEDS} only (screen seed {C.SCREEN_SEED} never enters a claim)")
-    if method in C.ANALYSIS_ONLY and tier == "final" and dataset == "cifar100":
-        raise SystemExit(f"'{method}' is an analysis-only reference; screen tier only on cifar100")
+    if method in C.ANALYSIS_ONLY and tier == "final" and dataset == C.STAGE1:
+        raise SystemExit(f"'{method}' is an analysis-only reference; screen tier only on stage 1")
     if method == "ce":
         keep = 0
     elif not (0 <= keep <= C.NUM_PATCHES):
@@ -111,13 +111,13 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True), dataset, epochs)
     for j in all_jobs():
         jk = (j["method"], j.get("selector_sha"), float(j["keep"]), j["seed"], j["tier"],
-              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", "cifar100"), j.get("epochs"))
+              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", C.STAGE1), j.get("epochs"))
         if jk == key and not force and j.get("returncode", 0) == 0:
             raise SystemExit(f"duplicate of {j['id']} ({j['_state']}); use --force to rerun")
     ts = time.strftime("%m%d_%H%M%S")
     tag = hashlib.sha1(json.dumps(key).encode()).hexdigest()[:4]
     keep_s = f"{keep:g}"
-    ds = "" if dataset == "cifar100" else f"{dataset}_"
+    ds = "" if dataset == C.STAGE1 else f"{dataset}_"
     job = {"id": f"{ds}{tier}_{method}_k{keep_s}_s{seed}_{ts}_{tag}", "kind": "train", "dataset": dataset,
            "stage2": stage2, "method": method, "keep": keep, "seed": seed,
            "tier": tier, "epochs": epochs, "sel_args": sel_args, "selector_src": src, "selector_sha": sha,
@@ -127,11 +127,11 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     return job
 
 
-def final_refs(method, keep, seed, dataset="cifar100"):
+def final_refs(method, keep, seed, dataset=C.STAGE1):
     """With an agent final run, queue the comparisons it needs on the same seed (skips ones that exist):
     the claim references at the same budget, full KD, and the selector's parent at the same budget."""
     # stage 2 has one long GPU slot: only maskedkd and tome there
-    refs = [(m, keep) for m in C.CLAIM_REFS if dataset != C.STAGE2 or m in ("maskedkd", "tome")] + [("full", 196)]
+    refs = [(m, keep) for m in C.CLAIM_REFS if dataset != C.STAGE2 or m in ("maskedkd", "rollout", "tome")] + [("full", 196)]
     src = selector_source(method)
     parent = check_source(src, method)["parent"].strip() if src else "none"
     if parent != "none":
@@ -145,7 +145,7 @@ def final_refs(method, keep, seed, dataset="cifar100"):
     return ids
 
 
-def make_analysis(name, note="", by="agent", priority=0, dataset="cifar100"):
+def make_analysis(name, note="", by="agent", priority=0, dataset=C.STAGE1):
     try:
         src = analysis_source(name)
         check_source(src, name, kind="analysis")
@@ -163,11 +163,11 @@ def make_analysis(name, note="", by="agent", priority=0, dataset="cifar100"):
 GATE = (("ce", 0), ("full", 196), ("maskedkd", 98))
 
 
-def gate_jobs(dataset="cifar100", force=False, seeds=None):
-    """CIFAR: screen, seed 0 unless `seeds` (bootstrap adds 1, 2 when one seed misses). ImageNet-100: final seed 1.
+def gate_jobs(dataset=C.STAGE1, force=False, seeds=None):
+    """Stage 1: screen, seed 0 unless `seeds` (bootstrap adds 1, 2 when one seed misses). Stage 2: final seed 1.
     Runs that already exist at the current epochs are reused (their ids are returned)."""
-    tier = "screen" if dataset == "cifar100" else "final"
-    seeds = seeds or ([C.SCREEN_SEED] if dataset == "cifar100" else [C.FINAL_SEEDS[0]])
+    tier = "screen" if dataset == C.STAGE1 else "final"
+    seeds = seeds or ([C.SCREEN_SEED] if dataset == C.STAGE1 else [C.FINAL_SEEDS[0]])
     return [job_or_existing(m, k, s, tier, by="gate", priority=10, force=force, dataset=dataset)
             for s in seeds for m, k in GATE]
 
@@ -182,17 +182,18 @@ def job_or_existing(method, keep, seed, tier, **kw):
         raise
 
 
-def baselines(dataset="cifar100", force=False, keeps=None):
-    """CIFAR: seed-noise runs (maskedkd@98, full on NOISE_SEEDS) + maskedkd/random/grid/center/tome at BASELINE_KEEPS.
-    ImageNet-100: gate trio on the remaining final seeds + maskedkd/random/tome at `keeps` (seed 1) + oracle."""
+def baselines(dataset=C.STAGE1, force=False, keeps=None):
+    """Stage 1: seed-noise runs (maskedkd@98, full on NOISE_SEEDS) + maskedkd/rollout/random/grid/center/tome at
+    BASELINE_KEEPS + oracle. Stage 2: gate trio on the remaining final seeds + maskedkd/rollout/random/tome at `keeps`
+    (seed 1) + oracle."""
     keeps = tuple(keeps or C.BASELINE_KEEPS)
     ids = []
-    if dataset == "cifar100":
+    if dataset == C.STAGE1:
         for s in C.NOISE_SEEDS:   # may already exist from the gate's extra seeds
             for m, k in (("maskedkd", 98), ("full", 196)):
                 ids.append(job_or_existing(m, k, s, "screen", by="baselines", priority=5, force=force))
         for k in keeps:
-            for m in ("maskedkd", "random", "grid", "center", "tome"):
+            for m in ("maskedkd", "rollout", "random", "grid", "center", "tome"):
                 ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
         ids.append(make_job("oracle", keeps[-1], C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
         return ids
@@ -200,7 +201,7 @@ def baselines(dataset="cifar100", force=False, keeps=None):
         for m, k in GATE:
             ids.append(make_job(m, k, s, "final", by="baselines", force=force, dataset=dataset)["id"])
     for k in keeps:
-        for m in ("maskedkd", "random", "tome"):
+        for m in ("maskedkd", "rollout", "random", "tome"):
             ids.append(make_job(m, k, C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset)["id"])
     ids.append(make_job("oracle", keeps[-1], C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset)["id"])
     return ids
@@ -242,9 +243,9 @@ if __name__ == "__main__":
     ap.add_argument("--keep", type=float, default=98)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--tier", default="screen", choices=["smoke", "screen", "final"])
-    ap.add_argument("--dataset", default="cifar100", choices=list(C.DATASETS))
+    ap.add_argument("--dataset", default=C.STAGE1, choices=list(C.DATASETS))
     ap.add_argument("--keeps", default="", help="comma list of budgets for --baselines on in100")
-    ap.add_argument("--seeds", default="", help="comma list of seeds for --gate (cifar100)")
+    ap.add_argument("--seeds", default="", help="comma list of seeds for --gate (stage 1)")
     ap.add_argument("--smoke", action="store_true", help="human: a few-minute GPU check of every path")
     ap.add_argument("--sel-args", default="{}")
     ap.add_argument("--note", default="")
@@ -262,7 +263,7 @@ if __name__ == "__main__":
     elif a.status:
         status()
     elif a.smoke:
-        for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("grid", 49), ("center", 49),
+        for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("grid", 49), ("center", 49), ("rollout", 49),
                      ("tome", 49), ("oracle", 49)):
             print(make_job(m, k, 0, "smoke", by="smoke", priority=20, force=True, dataset=a.dataset)["id"])
     elif a.baselines:

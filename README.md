@@ -4,7 +4,7 @@
 무인 에이전트 루프로 탐색한다.
 
 - 기준 논문: [MaskedKD](https://arxiv.org/abs/2302.10494), 코드 [effl-lab/MaskedKD](https://github.com/effl-lab/MaskedKD)
-- 설정: CIFAR-100 224px (train 45k / val 5k / test 10k), teacher DeiT-B (ImageNet → fine-tune, 라벨 스무딩 0), student DeiT-Ti (ImageNet-1k 사전학습에서 시작). 처음부터 학습하던 설정은 1시간 예산에서 정확도 24%에 그쳐 2026-10-30에 바꿨다
+- 설정 (2026-10-30 확정): 1단계 **Waterbirds**(탐색, 평균 정확도 + 최악 그룹 정확도), 2단계 **CUB-200-2011**(일반화 확인). teacher DeiT-B(데이터셋 fine-tune, 라벨 스무딩 0), student DeiT-Ti(ImageNet-1k 사전학습). 레시피는 KD > CE가 확인된 aim-lab-test-5와 같다. CIFAR-100은 처음부터 학습하면 24%, 사전학습 student면 KD 이득 +0.76%p라 버렸다 (기록: `archive/`).
 - 주 지표: Full KD 대비 val 하락이 min(1%p, KD 이득의 절반) 이내인 **최소 평균 teacher 토큰 수**. 비용은 학습 1스텝 전체 GFLOPs/img 실측(선택기 포함)
 
 ## 구조
@@ -95,5 +95,5 @@ bash agent/start.sh                                # 스케줄러 + 에이전트
 - 루프 종료: `END_DATE`(기본 2026-11-05) 또는 `agent/STOP`.
 - 라운드는 변화(끝난 작업, QUEUE 변경, 빈 큐)가 있을 때만 돈다. 최소 60분에 한 번, GPU가 30분 놀면 강제로 돈다. 기본 모델 Opus.
 - 관문 통과 직후 사람이 한 번: `.venv/bin/python -m harness.submit --baselines` (잡음 측정 + maskedkd·random·grid·center·ToMe 격자 + 오라클).
-- 2단계 ImageNet-100: 공개 HF 데이터를 자동으로 받고(`harness.prepare_stage2`), CIFAR에서 final 3시드 + 감사 PASS를 받은 방법만 승급한다. 첫 실행은 소스 그대로, 조정 변형은 따로 표시.
+- 2단계 CUB: bootstrap이 데이터를 함께 준비하고, `agent/stage2_boot.sh`가 teacher → 관문 → 기준선을 혼자 진행한다.
 - 논문용 그림: `.venv/bin/python -m harness.figures` → `figures/`.

@@ -87,7 +87,7 @@ def main():
                 w = csv.DictWriter(f, fieldnames=list(rows[0]))
                 w.writeheader()
                 w.writerows(rows)
-            title = f"{'CIFAR-100' if ds == 'cifar100' else 'ImageNet-100'} · {tier}"
+            title = f"{ds} · {tier}"
             draw(rows, "keep", f"{stem}_tokens.png", title, ce)
             draw(rows, "gflops", f"{stem}_gflops.png", title, ce)
             print(f"wrote {stem}_tokens.png, {stem}_gflops.png, {stem}.csv")

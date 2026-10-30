@@ -4,9 +4,9 @@ a training step and nothing here can become a result in RESULTS_TABLE.
 An analysis file must define:
 
     META = {
-        "question": "which student layer's attention best matches the teacher's important tokens?",
-        "method": "Attention Rollout vs occlusion importance",
-        "paper": "Abnar & Zuidema 2020; Zeiler & Fergus 2014",
+        "question": "<what this analysis asks>",
+        "method": "<interpretability method used>",
+        "paper": "<source of that method>",
     }
 
     def run(api):            # api: AnalysisAPI
@@ -21,7 +21,7 @@ import json
 import torch
 
 from . import config as C
-from .data import as_tensor, load_split, normalize_resize
+from .data import as_tensor, load_groups, load_split, normalize_resize
 from .models import (make_student, student_forward, teacher_forward_keepmask, teacher_forward_masked,
                      _attn_with_weights)
 
@@ -34,12 +34,13 @@ class AnalysisAPI:
     attn_with_weights = staticmethod(_attn_with_weights)
     num_patches = C.NUM_PATCHES
 
-    def __init__(self, out_dir, device, teacher, dataset="cifar100"):
+    def __init__(self, out_dir, device, teacher, dataset=C.STAGE1):
         self._out = out_dir
         self.device = device
         self.teacher = teacher
         self.dataset = dataset
         self._x, self._y = load_split("val", dataset)
+        self._g = load_groups("val", dataset)
 
     def val_batches(self, batch=100, limit=None):
         """Normalized 224px val images and labels, fixed order."""
@@ -47,6 +48,11 @@ class AnalysisAPI:
         for i in range(0, n, batch):
             j = min(i + batch, n)
             yield normalize_resize(as_tensor(self._x[i:j]).to(self.device)), self._y[i:j].to(self.device)
+
+    def val_groups(self):
+        """Waterbirds group of every val image in val_batches order (2*y + place), or None. For analysis only:
+        selectors never see groups."""
+        return None if self._g is None else self._g.clone()
 
     def runs(self):
         """Finished runs: id -> {method, keep, seed, tier, val_acc_last, snapshots}."""
@@ -56,7 +62,8 @@ class AnalysisAPI:
             if r.get("status") != "done":
                 continue
             snaps = sorted(int(p.stem.split("_e")[1]) for p in m.parent.glob("student_e*.pt"))
-            out[r["id"]] = {k: r[k] for k in ("method", "keep", "seed", "tier", "val_acc_last", "epochs")}
+            out[r["id"]] = {k: r.get(k) for k in ("method", "keep", "seed", "tier", "dataset", "val_acc_last",
+                                                  "val_wga_last", "epochs")}
             out[r["id"]]["snapshots"] = snaps
         return out
 
@@ -66,7 +73,8 @@ class AnalysisAPI:
         path = C.RUNS / str(run_id) / name
         if not path.resolve().is_relative_to(C.RUNS.resolve()) or not path.exists():
             raise ValueError(f"no checkpoint {name} for run {run_id}")
-        m = make_student()
+        ds = json.loads((C.RUNS / str(run_id) / "metrics.json").read_text()).get("dataset", C.STAGE1)
+        m = make_student(ds, pretrained=False)
         m.load_state_dict(torch.load(path, map_location="cpu"))
         return m.to(self.device).eval()
 

@@ -17,7 +17,7 @@ def main():
     ap.add_argument("--a", required=True)
     ap.add_argument("--b", required=True)
     ap.add_argument("--tier", default="final")
-    ap.add_argument("--dataset", default="cifar100", choices=list(C.DATASETS))
+    ap.add_argument("--dataset", default=C.STAGE1, choices=list(C.DATASETS))
     a = ap.parse_args()
     runs = load_runs(a.dataset)
     A, B = (by_seed(runs, *spec.rsplit(":", 1), a.tier) for spec in (a.a, a.b))

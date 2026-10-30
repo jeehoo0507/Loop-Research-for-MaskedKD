@@ -28,11 +28,12 @@ def main():
     a = ap.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     sel, meta, sha = load_selector(a.method, kwargs=json.loads(a.sel_args))
-    s = make_student().to(device).train()
-    t = make_teacher(pretrained=False).to(device).eval()
+    s = make_student(C.STAGE1).to(device).train()
+    t = make_teacher(C.STAGE1, pretrained=False).to(device).eval()
     opt = torch.optim.AdamW(s.parameters(), lr=1e-4)
-    aug = GpuAugment(device)
-    x, y = aug(torch.randint(0, 256, (8, 3, 32, 32), dtype=torch.uint8), torch.arange(8))
+    aug = GpuAugment(device, C.NUM_CLASSES[C.STAGE1])
+    x, y = aug(torch.randint(0, 256, (8, 3, C.RESIZE, C.RESIZE), dtype=torch.uint8),
+               torch.arange(8) % C.NUM_CLASSES[C.STAGE1])
     segs = Segments(True)
     t0 = time.time()
     with FlopCounterMode(display=False) as fc:

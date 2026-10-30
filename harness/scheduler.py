@@ -62,7 +62,7 @@ def main():
             rc = p.poll() if p is not None else (None if alive(pid) else -1)
             if rc is None:
                 jj = json.loads((q["running"] / f"{jid}.json").read_text())
-                limit = C.time_limit_h(jj.get("dataset", "cifar100"), jj.get("tier", "screen"))
+                limit = C.time_limit_h(jj.get("dataset", C.STAGE1), jj.get("tier", "screen"))
                 if p is not None and time.time() - started.get(jid, time.time()) > limit * 3600 * 1.3:
                     p.kill()   # hard stop (train jobs normally stop themselves at the tier limit)
                     print(f"[sched] killed {jid}: wall-clock limit", flush=True)

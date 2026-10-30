@@ -21,14 +21,17 @@ bootstrap은 tmux 세션 `boot` 안에서 아래를 순서대로 하고, 실패�
 | 확인 | GPU, claude, git push 권한, Codex(있으면 GPT 감사·비상 연구자), 디스크 40GB | 1분 |
 | 환경 | `setup.sh` + 잠금 | 10분 |
 | 스모크 | 모든 방법을 30스텝씩 | 몇 분 |
-| teacher | CIFAR-100 fine-tune | 측정 전 |
+| 데이터 | Waterbirds + CUB 받기·변환 (aim-lab-test-5 사본이 있으면 재사용) | 10~20분 |
+| teacher | Waterbirds DeiT-B: aim-lab-test-5 것이 있으면 가져오고, 없으면 fine-tune | 0~1시간 |
 | bench | FLOPs 계량기 검사 + 속도 → 에폭 자동 결정(screen = 1시간, final = 2배) → 잠금 | 15분 |
-| CIFAR 관문 | CE, Full KD, MaskedKD@98 | screen 1회 시간 |
-| 시작 | 기준선 20개 제출, ImageNet-100 준비(백그라운드), 루프 시작 | — |
+| 관문 | CE, Full KD, MaskedKD@98 (seed 0, 필요하면 1·2 추가) | 약 10~30분 |
+| 시작 | 기준선 23개 제출, CUB 2단계(백그라운드), 루프 시작 | — |
 
 - **관문이 실패하면** 루프를 시작하지 않고 멈춘다. 대안 설정(아래 5단계)은 네가 정한다.
 - 중간에 멈췄으면 원인을 고치고 `bash agent/bootstrap.sh`를 다시 실행한다. 끝난 단계는 건너뛴다.
-- ImageNet-100 쪽(`agent/stage2_boot.sh`, tmux `stage2`)은 받기·변환 → teacher → 스모크로 에폭 결정(1회 12시간 이내) → 잠금(루프 잠깐 멈춤) → 관문 → 기준선 순서로 혼자 진행한다.
+- CUB 쪽(`agent/stage2_boot.sh`, tmux `stage2`)은 teacher(가져오기 또는 fine-tune) → 잠금(루프 잠깐 멈춤) → 관문 → 기준선 순서로 혼자 진행한다.
+
+> 주의: 아래 손 단계 설명은 CIFAR-100/ImageNet-100 설정 시절에 쓴 것이다. 2026-10-30부터는 Waterbirds/CUB이고, `agent/bootstrap.sh`와 `agent/stage2_boot.sh`가 기준이다.
 
 아래는 bootstrap이 하는 일을 손으로 할 때의 단계별 설명이다.
 
