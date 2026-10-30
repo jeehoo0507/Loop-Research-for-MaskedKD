@@ -31,8 +31,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs center@12 [WGA]: +8.27 %p, 95% CI [+8.27, +8.27], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [acc]: +4.50 %p, 95% CI [-9.27, +18.28], seeds 1,2, GFLOPs ratio 1.270 -> no difference
 - gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs full@196 [acc]: missing (needs >= 2 shared seeds)
-- gradroll@12 vs full@196 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs full@196 [acc]: -2.75 %p, 95% CI [-10.17, +4.67], seeds 1,2, GFLOPs ratio 0.300 -> no difference
+- gradroll@12 vs full@196 [WGA]: -4.51 %p, 95% CI [-14.04, +5.02], seeds 1,2, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs rollout@12 [acc]: +0.71 %p, 95% CI [-3.00, +4.42], seeds 1,2, GFLOPs ratio 1.271 -> no difference
 - gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 
@@ -47,7 +47,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - suffdisc@12 vs parent center: acc +0.58 %p (threshold 0.76), WGA +2.26 %p (threshold 2.45) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 91.33; CE not run: tolerance 1.00 %p; WGA 66.92, WGA tolerance 2.45 %p; smallest mean kept tokens within it
+### final: Full KD val 90.95; CE not run: tolerance 1.00 %p; WGA 67.30, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 ### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 - maskedkd : 98.0
 
@@ -70,7 +70,7 @@ Total agent screen configs: 10
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | center |  | 12 | 12.0 | 1,2 | 88.74 ± 0.59 | 54.52 ± 0.53 | 10.09 | 2.45 | 0.00 | 300 | final_center_k12_s1_1030_201811_341b final_center_k12_s2_1030_212126_5486 |
-| final | full |  | 196 | 196.0 | 1 | 91.33 ± 0.00 | 66.92 ± 0.00 | 42.77 | 35.13 | 0.00 | 195 | final_full_k196_s1_1030_201811_b764 |
+| final | full |  | 196 | 196.0 | 1,2 | 90.95 ± 0.53 | 67.30 ± 0.53 | 42.77 | 35.13 | 0.00 | 191 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2 | 88.20 ± 0.29 | 62.78 ± 0.53 | 12.81 | 2.45 | 2.90 | 197 | final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2 | 83.57 ± 0.24 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 300 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2 | 84.20 ± 0.06 | 22.18 ± 1.60 | 10.07 | 2.45 | 0.00 | 281 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 |
