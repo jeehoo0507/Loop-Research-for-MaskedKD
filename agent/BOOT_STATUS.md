@@ -12,3 +12,4 @@
 - 2026-10-30 13:59 Waterbirds baselines queued (23 jobs)
 - 2026-10-30 13:59 CUB (stage 2) teacher, gate and baselines started in background (tmux: stage2)
 - 2026-10-30 13:59 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
+- 2026-10-30 15:00 [stage2] CUB teacher: fine-tuned here val acc 84.67

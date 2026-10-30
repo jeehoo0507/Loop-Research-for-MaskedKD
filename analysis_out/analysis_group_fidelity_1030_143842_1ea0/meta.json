@@ -1,0 +1,13 @@
+{
+ "id": "analysis_group_fidelity_1030_143842_1ea0",
+ "name": "group_fidelity",
+ "source_sha": "1ea07006a723aea48d60ce33e488c83eb0c46d187cf2cf52d4377ff73132423e",
+ "status": "error",
+ "meta": {
+  "question": "which student-side signal keeps the masked teacher correct on the Waterbirds minority groups (where the background shortcut fails), and does background-only input carry the shortcut?",
+  "method": "per-layer CLS attention, Attention Rollout, Grad-weighted attention, token norm; group-sliced faithfulness of the masked prediction (deletion/insertion-style)",
+  "paper": "Abnar & Zuidema ACL 2020; Chefer, Gur & Wolf ICCV 2021; Darcet et al. ICLR 2024; Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "error": "OutOfMemoryError: CUDA out of memory. Tried to allocate 16.00 MiB. GPU 0 has a total capacity of 23.55 GiB of which 7.12 MiB is free. Process 603838 has 9.01 GiB memory in use. Process 673837 has 5.09 GiB memory in use. Process 685854 has 4.25 GiB memory in use. Process 688058 has 5.09 GiB memory in use. Of the allocated memory 3.81 GiB is allocated by PyTorch, and 182.11 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)",
+ "seconds": 324.4
+}

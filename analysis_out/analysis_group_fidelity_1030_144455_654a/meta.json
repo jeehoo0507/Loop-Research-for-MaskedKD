@@ -1,0 +1,12 @@
+{
+ "id": "analysis_group_fidelity_1030_144455_654a",
+ "name": "group_fidelity",
+ "source_sha": "654ab447559a44ad7818018247579be0ca658347a6aba071c85d7235719e52cb",
+ "status": "done",
+ "meta": {
+  "question": "which student-side signal keeps the masked teacher correct on the Waterbirds minority groups (where the background shortcut fails), and does background-only input carry the shortcut?",
+  "method": "per-layer CLS attention, Attention Rollout, Grad-weighted attention, token norm; group-sliced faithfulness of the masked prediction (deletion/insertion-style)",
+  "paper": "Abnar & Zuidema ACL 2020; Chefer, Gur & Wolf ICCV 2021; Darcet et al. ICLR 2024; Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 1556.6
+}

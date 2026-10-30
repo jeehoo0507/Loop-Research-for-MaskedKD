@@ -42,3 +42,22 @@ recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-
 {'epoch': 15, 'val_acc': 83.83333086967468, 'epoch_s': 16.1}
 {'epoch': 20, 'val_acc': 83.1666648387909, 'epoch_s': 16.1}
 {'epoch': 25, 'val_acc': 84.50000286102295, 'epoch_s': 16.1}
+{'epoch': 30, 'val_acc': 81.16666674613953, 'epoch_s': 17.7}
+{'epoch': 35, 'val_acc': 82.33333230018616, 'epoch_s': 47.7}
+{'epoch': 40, 'val_acc': 81.99999928474426, 'epoch_s': 47.4}
+{'epoch': 45, 'val_acc': 83.49999785423279, 'epoch_s': 47.7}
+{'epoch': 50, 'val_acc': 84.6666693687439, 'epoch_s': 47.8}
+{'epoch': 55, 'val_acc': 83.49999785423279, 'epoch_s': 47.8}
+{'epoch': 60, 'val_acc': 83.99999737739563, 'epoch_s': 48.0}
+{'epoch': 65, 'val_acc': 83.66666436195374, 'epoch_s': 47.9}
+{'epoch': 70, 'val_acc': 82.833331823349, 'epoch_s': 47.8}
+{'epoch': 75, 'val_acc': 84.16666388511658, 'epoch_s': 52.2}
+{'epoch': 80, 'val_acc': 83.66666436195374, 'epoch_s': 46.4}
+{'epoch': 85, 'val_acc': 83.83333086967468, 'epoch_s': 46.7}
+{'epoch': 90, 'val_acc': 83.99999737739563, 'epoch_s': 46.6}
+{'epoch': 95, 'val_acc': 83.66666436195374, 'epoch_s': 46.4}
+{'epoch': 100, 'val_acc': 83.83333086967468, 'epoch_s': 49.8}
+/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py:80: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(out, map_location="cpu"))
+{"val_acc": 84.67, "source": "fine-tuned here", "sha256": "59b864387ba5d333842ac95289e0bd90e86922133af1acca7c42b5821768bc45"}
+[stage2 10-30 15:00] CUB teacher: fine-tuned here val acc 84.67
