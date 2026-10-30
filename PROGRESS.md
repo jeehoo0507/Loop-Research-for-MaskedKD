@@ -2,8 +2,9 @@
 요약 (2026-10-30 [claude] 라운드 3):
 - 최선 결과: 아직 agent 방법 없음. screen: Full 24.45±0.10 (표 기준 s0·s1; s2 = 23.78, screen_full_k196_s2_1030_002458_e159), MaskedKD@98 24.46±0.24 (s0/s1/s2), CE 21.10 (screen_ce_k0_s0_1029_233749_6609).
 - Noise: σ 0.21%p (pooled, dof 3) → 승격 기준 0.50%p (RESULTS_TABLE).
-- 진행 중: 실행 maskedkd@49, random@49, 분석 analysis_signal_fidelity_1030_014040_eb3d / 대기 기준선 14개 + in100 final 3개.
-- 다음: 분석(fid_kl·gap_kl)과 K=12/25/49 기준선으로 H2(gradattn)·H4(엔트로피 기여도) 중 하나를 screen.
+- 분석 analysis_signal_fidelity_1030_014040_eb3d 완료: teacher 충실도에서 center ≫ toknorm_L-2 > random > MaskedKD (K=25·49). H2·H4는 random보다 나쁨 → 보류. H5 `selectors/toknorm.py` trysel 통과, 미제출.
+- 진행 중: 실행 maskedkd@49, random@49 / 대기 기준선 14개 + in100 final 3개.
+- 다음: K=12/25/49 기준선 val이 충실도 순위(특히 center > random > maskedkd)와 맞는지 확인 → 맞으면 H5 screen, 안 맞으면 충실도 대신 다른 대리지표.
 
 (에이전트가 라운드마다 갱신)
 
@@ -33,3 +34,7 @@
 - [claude] 결정: 이번 라운드도 선택기를 screen에 넣지 않음. 대기 17개로 상한 8개를 넘었고, "Where token choice matters"가 아직 측정되지 않았다.
 - 관찰: sched.log에 `LOCK harness digest ac7a07d9a881 vs locked 4e2095e93694; not starting jobs`가 한 번 찍힌 직후 작업이 다시 시작됨. 사람 커밋 c5f1404(stage2) 시점으로 보인다. 나는 harness/를 건드리지 않았다.
 - 문헌(H4 노벨티): 검색 2회에서 student 엔트로피 기여도로 ViT KD의 teacher 입력 패치를 고르는 선행 연구는 찾지 못함. 가까운 것은 AD-TP(NeurIPS 2025, IG로 추론 가지치기), Fast SAM2(arXiv 2512.21333, MC dropout 불확실성), SelecTKD(LLM). 웹 페이지 안에 지시 문장은 없었다.
+- 분석 결과 (analysis_signal_fidelity_1030_014040_eb3d, 191초, rc=0): K=49, 최종 mkd98 student 기준 fid_kl / masked teacher 정확도 — center 0.905/0.600, toknorm_L-2 1.156/0.539, cls_attn_L0 1.204/0.522, random 1.281/0.511, oracle 1.323/0.490, GAE 1.437/0.474, entgrad_attn_last 1.516/0.454, MaskedKD(cls_attn_L11) 1.634/0.432, gradattn_last 1.679/0.430. K=25에서도 순위가 비슷하고, K=12에서는 center 말고는 모두 3.2~3.5로 비슷하다. 자세한 내용은 RESULTS.md "분석에서 배운 것".
+- 해석: attention·기울기 기반의 "주목도" 신호는 teacher 입력으로는 random보다 못하다. student의 공간 신호가 아닌 것 중에서는 토큰 노름이 가장 낫다. 그러나 이것은 대리지표이며, MaskedKD@98이 val에서 Full과 구별되지 않는다는 사실(RESULTS_TABLE)과 긴장 관계에 있다. 기준선 screen @12/25/49로 확인해야 한다.
+- 작업: H5 `selectors/toknorm.py`(parent none) 작성. trysel K=49: selector 0.0, total 9.927 GFLOPs/img (random·grid와 같음).
+- [claude] 결정: H5도 아직 screen에 넣지 않음. 대기 17개 > 8이고, 대리지표에서 center보다 나쁘므로 center를 이겨야 하는 주장 조건을 통과할 근거가 없다. 기준선 val이 먼저다.
