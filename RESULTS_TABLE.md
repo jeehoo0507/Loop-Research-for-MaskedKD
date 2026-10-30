@@ -73,7 +73,7 @@ Total agent screen configs: 10
 | final | full |  | 196 | 196.0 | 1,2 | 90.95 ± 0.53 | 67.30 ± 0.53 | 42.77 | 35.13 | 0.00 | 191 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2 | 88.20 ± 0.29 | 62.78 ± 0.53 | 12.81 | 2.45 | 2.90 | 197 | final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2 | 83.57 ± 0.24 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 300 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s1_1030_201811_dc71 |
-| final | maskedkd |  | 12 | 12.0 | 1,2 | 84.20 ± 0.06 | 22.18 ± 1.60 | 10.07 | 2.45 | 0.00 | 281 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 |
+| final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
 | final | random |  | 12 | 12.0 | 1,2 | 83.69 ± 1.24 | 36.47 ± 1.59 | 10.09 | 2.45 | 0.00 | 306 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf |
 | final | rollout |  | 12 | 12.0 | 1,2 | 87.49 ± 0.71 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 239 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s2_1030_212126_33d1 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2 | 89.70 ± 0.06 | 50.00 ± 1.60 | 12.00 | 4.36 | 0.00 | 289 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s1_1030_201811_9fb4 |
