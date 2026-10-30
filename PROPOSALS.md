@@ -136,3 +136,9 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
 - H-W17 (adaroll) 닫음: adaroll@49 90.08/63.91 (screen_adaroll_k49_s0_1030_192757_7edc). parent rollout@49 대비 +0.42/−0.75로 UNPROVEN이다. 주 지표 조건(WGA ≥ 64.22)도 만족하지 못한다. 이미지별 예산 배분은 효과가 없다.
 - H-W18 student 수준 판정: gradrep@12 54.89 (screen_gradrep_k12_s0_1030_193817_c83d) 대 gradroll 60.90 → −6.01. center(56.39)를 앞선 몫은 gradroll 고유 토큰에서 온다. 그러나 교집합+random도 rollout(45.11)보다 9.8 높다. 해석 후보는 'MaskedKD와 겹치는 4~5개 토큰(새 위)에 무작위 문맥을 더하면 작은 K에서 teacher 입력 위치가 다양해진다'이다. jitdisc(H-W19)와 같은 축이다. jitdisc 결과와 함께 다음 라운드에 본다.
 - 다음 분석 후보(final seed 1 뒤): gradroll 고유 토큰이 객체 위인지 확인한다. 기준은 full teacher Chefer relevance top-K와의 겹침이다(분석 전용). 그리고 gradrep의 이득 중 rollout 대비 남은 부분을 '위치 다양성'으로 설명할 수 있는지 본다. 예측 지표는 학습 중 선택 위치 엔트로피다.
+
+## 2026-10-30 [claude] 라운드 20 메모
+- H-W19 판정 (미리 정한 읽기 그대로): jitdisc@12 2-seed 88.53/53.01 (screen_jitdisc_k12_s0_1030_195912_ead1, screen_jitdisc_k12_s1_1030_195921_48c7) ≤ 56.6 → **위치 지터 가설을 기각한다.** suffdisc 2-seed 61.28과의 차이 −8.27은 threshold 2.45의 3배가 넘는다. center 2-seed 54.14와는 같은 수준이다.
+- 부수 결과: 무작위 위치 다양성 자체는 K=12에서 WGA를 올리지 않는다. 그래서 라운드 19에 적은 gradrep 잔여 이득(rollout 대비 +9.8)을 '위치 다양성'으로 설명하는 후보는 약해진다. gradrep는 MaskedKD 교집합 토큰(새 위)을 유지한다는 점이 jitdisc와 다르다. 따라서 남은 설명은 '객체 위 소수 토큰 + 문맥'이다(분석 미검증).
+- suffdisc 승격 전 분해의 남은 부분(겹침·공간 분포·drop-path 잡음)은 analysis/suffdisc_decomp.py → analysis_suffdisc_decomp_1030_202612_878c. 미리 정한 읽기: (a) 학습 시 픽(train mode)과 eval 픽의 일치율이 1/25 근처(≤ 0.15)면 학습 중 선택은 사실상 무작위다. 그렇다면 jitdisc와의 차이를 신호로 설명할 수 없으니 승격하지 않고 재검토한다. (b) centre_frac가 0.8 이상이면 suffdisc는 center와 거의 같다. 그렇다면 이득의 출처를 다시 본다.
+- 선행과의 차이(변화 없음): RISE/ERASER sufficiency는 설명 평가용이다. KD teacher 입력 위치 선택에 쓴 예는 찾지 못했다(검색은 승격 시 수행).

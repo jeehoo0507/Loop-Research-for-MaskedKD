@@ -1,18 +1,20 @@
 {
- "id": "screen_jitdisc_k12_s1_1030_195921_48c7",
+ "id": "screen_jitdisc_k12_s0_1030_195912_ead1",
  "kind": "train",
  "dataset": "waterbirds",
  "stage2": null,
  "method": "jitdisc",
  "keep": 12.0,
- "seed": 1,
+ "seed": 0,
  "tier": "screen",
  "epochs": 100,
  "sel_args": {},
  "selector_src": "\"\"\"Decomposition control for suffdisc (required before promotion, AGENT_PROMPT \"\uc2b9\uaca9 \uc804 \ubd84\ud574\").\n\nsuffdisc picks, per image, one of the (2r+1)^2 centre-disc shifts by the student's own keep-only sufficiency.\nHere the shift is drawn uniformly at random from the same candidates, with no student forward. If suffdisc's\nK=12 gain over center (2-seed 89.62/61.28 vs 88.37/54.14, screen_suffdisc_k12_s{0,1}, screen_center_k12_s{0,1})\nstays, it comes from disc jitter (teacher-input diversity), not the sufficiency signal; if it goes, the signal\nis the cause. Not a candidate method: an ablation whose parent is suffdisc.\n\nsel_args: r = max shift in patches (default 2, same as suffdisc).\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase\n\nMETA = {\n    \"method\": \"ablation of student-sufficiency disc placement: the disc shift is random instead of sufficiency-chosen\",\n    \"paper\": \"DeYoung et al. ACL 2020 (ERASER sufficiency); Hooker et al. NeurIPS 2019 (replacement control)\",\n    \"why\": \"tests whether suffdisc's gain comes from the sufficiency signal or only from moving the disc\",\n    \"vs_maskedkd\": \"contiguous disc at a random shift of the centre; no attention ranking and no student signal\",\n    \"prior_art\": \"random-replacement control in the style of ROAR; not a proposed method\",\n    \"parent\": \"suffdisc\",\n}\n\nSIDE = 14\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [], \"tokens\": []}\n\n    def __init__(self, **kwargs):\n        super().__init__(**kwargs)\n        self.r = int(kwargs.get(\"r\", 2))\n\n    def select(self, ctx):\n        B, dev = ctx.images.shape[0], ctx.images.device\n        k = int(ctx.budget)\n        n = ctx.num_patches\n        rr = torch.arange(n, device=dev)\n        rows, cols = (rr // SIDE).float(), (rr % SIDE).float()\n        c = (SIDE - 1) / 2\n        tie = rr.float() * 1e-6\n        dy = torch.randint(-self.r, self.r + 1, (B, 1), device=dev).float()\n        dx = torch.randint(-self.r, self.r + 1, (B, 1), device=dev).float()\n        d = (rows[None] - (c + dy)) ** 2 + (cols[None] - (c + dx)) ** 2 + tie[None]\n        idx = (-d).topk(k, dim=1).indices\n        return torch.zeros(B, n, dtype=torch.bool, device=dev).scatter_(1, idx, True)\n",
  "selector_sha": "8a1e65e6927646d71253ea8c0c1176ec9c1514e4b1dc4b8527bdf6618903e734",
- "note": "suffdisc decomposition seed 1 (suffdisc gain is mostly on seed 1)",
+ "note": "suffdisc decomposition: random disc shift replaces sufficiency choice",
  "by": "claude",
  "priority": 6,
- "submitted": "2026-10-30 19:59:21"
+ "submitted": "2026-10-30 19:59:12",
+ "returncode": 0,
+ "finished": "2026-10-30 20:23:45"
 }
