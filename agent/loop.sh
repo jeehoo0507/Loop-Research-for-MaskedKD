@@ -24,6 +24,10 @@ CODEX_MODEL="${CODEX_MODEL:-gpt-6-astra}"
 CODEX_EFFORT="${CODEX_EFFORT:-high}"
 CODEX_BASE="${CODEX_BASE:-codex exec -m $CODEX_MODEL -c model_reasoning_effort=\"$CODEX_EFFORT\"}"
 REMOTE="${REMOTE:-origin}"
+# Codex's sandbox (bubblewrap) cannot start in an unprivileged container ("bwrap: Failed to make / slave"), so its
+# shell commands all fail there. Audit and ideas then get their files in the prompt (harness/evidence.py) and stay
+# read-only; the emergency researcher, which needs a shell to submit jobs, is off.
+if bwrap --ro-bind / / true 2>/dev/null; then CODEX_SHELL=1; else CODEX_SHELL=0; fi
 PY=.venv/bin/python
 LOCKED=(harness tests agent/loop.sh agent/relock.sh agent/AGENT_PROMPT.md agent/AUDIT_PROMPT.md agent/IDEAS_PROMPT.md requirements.txt state/epochs.json)
 S=agent/.state; mkdir -p "$S" agent/logs
@@ -102,7 +106,11 @@ run_audit() {
 --- AUDIT_REQUEST.md ---
 $(cat agent/AUDIT_REQUEST.md)"
     if [ "$who" = "codex" ]; then
-      $CODEX_BASE -s read-only "$prompt" > "$out" 2>&1
+      { echo "$prompt"; echo; echo "Do not run shell commands: everything you need is in the EVIDENCE below (collected by the"
+        echo "locked harness). Use web search for novelty. If something needed is missing, answer NEEDS-MORE and name it."
+        echo "--- EVIDENCE ---"; $PY -m harness.evidence audit; } |
+        $CODEX_BASE -s read-only -o "$out.final" - > "$out" 2>&1
+      [ -s "$out.final" ] && cat "$out.final" >> "$out"
     else
       claude -p "$prompt" --model "$MODEL_HARD" --allowedTools "$AUDIT_ALLOWED" --output-format text > "$out" 2>&1 || {
         echo "[loop] audit by claude failed; request kept" | tee -a agent/logs/loop.log; return 0; }
@@ -120,10 +128,13 @@ daily_ideas() {  # only when GPT is the configured auditor: 2 independent ideas 
   [ "$AUDITOR" = "codex" ] || return 0
   [ "$(cat "$S/ideas_day" 2>/dev/null)" = "$(date +%F)" ] && return 0
   local out="agent/logs/ideas_$(date +%Y%m%d).log"
-  # IDEA 2 retrieves inspiring papers, so this call gets live web search
-  codex --search exec -m "$CODEX_MODEL" -c model_reasoning_effort="\"$CODEX_EFFORT\"" -s read-only \
-    "$(cat agent/IDEAS_PROMPT.md)" > "$out" 2>&1
-  { echo; echo "## $(date +%F) ideas from Codex (independent)"; sed -n '/^IDEA/,$p' "$out" | head -30; } >> PROPOSALS.md
+  # IDEA 2 retrieves inspiring papers, so this call gets live web search. The files it may read come in the prompt;
+  # only Codex's final message is kept (the prompt itself also has lines starting with IDEA).
+  { cat agent/IDEAS_PROMPT.md; echo; echo "Do not run shell commands: the three files are attached below."
+    $PY -m harness.evidence ideas; } |
+    codex --search exec -m "$CODEX_MODEL" -c model_reasoning_effort="\"$CODEX_EFFORT\"" -s read-only -o "$out.final" - > "$out" 2>&1
+  grep -qE '^IDEA [12]:' "$out.final" 2>/dev/null || return 0   # failed: try again next round
+  { echo; echo "## $(date +%F) ideas from Codex (independent)"; grep -E '^IDEA [12]:' "$out.final" | head -2; } >> PROPOSALS.md
   date +%F > "$S/ideas_day"
 }
 
@@ -156,7 +167,11 @@ while true; do
   daily_ideas
   who=claude
   if claude_down || ! run_claude_research "$log" "$extra"; then
-    who=codex; run_codex_research "$log" "$extra"
+    if [ "$CODEX_SHELL" = 1 ]; then
+      who=codex; run_codex_research "$log" "$extra"
+    else
+      who=none; echo "[loop] Claude unavailable and Codex has no shell here: round skipped, Claude retried in $((CLAUDE_RETRY / 60)) min" | tee -a agent/logs/loop.log
+    fi
   fi
   last_rc=$?
   echo "[loop] round $round end researcher=$who rc=$last_rc $(date +%Y%m%d_%H%M%S)" | tee -a agent/logs/loop.log

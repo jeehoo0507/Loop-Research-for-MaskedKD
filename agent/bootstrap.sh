@@ -36,7 +36,9 @@ git push --dry-run -q >/dev/null 2>&1 || fail "git push not authorized. Run: gh 
 AUDITOR=claude
 if command -v codex >/dev/null && timeout 180 codex exec -m "${CODEX_MODEL:-gpt-6-astra}" -c model_reasoning_effort="\"${CODEX_EFFORT:-high}\"" \
      -s read-only "Reply with the single word OK" 2>/dev/null | grep -q OK; then
-  AUDITOR=codex; status "Codex works: GPT audits and is the emergency researcher"
+  AUDITOR=codex
+  if bwrap --ro-bind / / true 2>/dev/null; then status "Codex works: GPT audits, adds 2 ideas a day, and is the emergency researcher"
+  else status "Codex works without a shell here (container blocks its sandbox): GPT audits and adds ideas from files the harness attaches; no emergency researcher"; fi
 else
   status "Codex not available: Claude audits; no emergency researcher (optional, see docs/SETUP.md)"
 fi

@@ -320,6 +320,7 @@ rm ~/.maskedkd_auditor                # 시작할 때 설정으로 복귀
 **확인:**
 - 감사 요청이 생긴 라운드가 끝나면 `AUDIT.md`에 `audit by codex` 블록이 추가된다.
 - 원본 출력은 `agent/logs/audit_*.log`에 있다.
+- 서버 컨테이너가 Codex 샌드박스(bubblewrap)를 막으면 Codex는 셸을 못 쓴다. 그때 감사와 아이디어는 harness가 모은 파일(`harness/evidence.py`)을 프롬프트로 받아 읽기 전용으로 돌고, 비상 연구자는 꺼진다 (Claude가 멈추면 그 라운드는 쉬고 60분 뒤 다시 시도). `BOOT_STATUS.md` 첫 줄에 어느 쪽인지 적힌다.
 - 아이디어는 하루 2개 (1: 해석가능성 기법 근거, 2: 웹에서 영감 논문을 찾아 그 논문에서 출발 — ScholarCatalyst 방식). `PROPOSALS.md`의 `ideas from Codex` 절과 `agent/logs/ideas_*.log`에 있다.
 
 ### 참고

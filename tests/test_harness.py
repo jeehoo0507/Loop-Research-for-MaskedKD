@@ -509,3 +509,23 @@ def test_tome_cost_ratio_flags_unmatched_budgets():
     from harness.tome import cost_ratio
     assert cost_ratio(98) <= 1.0 and cost_ratio(49) <= 1.0     # matched
     assert cost_ratio(12) > 1.05                               # r caps out: ToMe uses more teacher compute
+
+
+def test_evidence_bundle_attaches_cited_runs(tmp_path, monkeypatch):
+    from harness import evidence
+    monkeypatch.setattr(C, "ROOT", tmp_path)
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    rid = "final_mysel_k25_s1_1030_120000_abcd"
+    (tmp_path / "runs" / rid).mkdir(parents=True)
+    (tmp_path / "runs" / rid / "metrics.json").write_text(json.dumps(
+        {"id": rid, "val_acc_last": 80.1, "history": [{"epoch": 1, "loss": 2.0}, {"epoch": 2, "val_acc": 80.1}]}))
+    (tmp_path / "q" / "done").mkdir(parents=True)
+    (tmp_path / "q" / "done" / f"{rid}.json").write_text(json.dumps(
+        {"method": "mysel", "selector_sha": "f" * 64, "selector_src": "META = {'parent': 'none'}"}))
+    (tmp_path / "agent").mkdir()
+    (tmp_path / "agent" / "AUDIT_REQUEST.md").write_text(f"claim: mysel wins, runs {rid}")
+    text = evidence.audit()
+    assert f"runs/{rid}/metrics.json" in text and '"val_acc": 80.1' in text and '"loss"' not in text
+    assert "selector source mysel" in text and "META = {'parent': 'none'}" in text
+    assert "selector_api" in evidence.ideas() or "missing: harness/selector_api.py" in evidence.ideas()
