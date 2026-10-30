@@ -112,3 +112,11 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 아이디어: student rollout 분포의 유효 패치 수 exp(H)에 비례해 이미지별 k_i를 정한다([K/2, 2K]로 자르고 배치 평균 ≤ K). top-k_i rollout 패치를 teacher에 준다.
   - 선행과의 차이: A-ViT(Yin et al. 2022)·AdaViT(Meng et al. 2022)·DynamicViT는 추론 중인 모델 자신의 토큰 수를 바꾼다. 여기서는 student의 attention 퍼짐이 고정 KD teacher의 입력 수를 정한다. MaskedKD·rollout은 모든 이미지에 같은 K를 쓴다.
   - 판정: K=49에서 rollout 대비 threshold 이상(정확도 +0.76 또는 WGA +2.45, 다른 쪽에서 지지 않음), 그리고 center·maskedkd·tome·grid·random보다 낮지 않을 것. 정확도 ≥ 90.08과 WGA ≥ 64.22를 동시에 만족하면 주 지표 후보다. 이기면 분해: (1) k_i를 무작위로 섞은 변형(배분 신호 제거), (2) 이미지별 k_i와 그룹의 관계(분석 전용), (3) maskedkd 겹침·중심 거리.
+
+## 2026-10-30 [claude] 라운드 16 메모
+- H-W16 판정 (K=12): gradroll@12 88.16/60.90 (screen_gradroll_k12_s0_1030_184259_e2cd)는 parent rollout(45.11)보다 WGA +15.79, center(56.39)보다 +4.51. **승격 후보**지만 분해 전이다. K=29에서는 rollout과 비김(−1.50).
+- **H-W18 (분해로 검증할 가설): 작은 K에서 plain rollout이 무너지는 이유는 rollout top-K가 소수 고노름/배경 토큰에 몰리기 때문이고, 예측 클래스 logit에 양의 기여를 하는 attention만 전파하면(gradroll) 그 토큰을 피한다.**
+  - 근거: rollout@12 45.11 대 rollout@29 65.41의 급락, H-W5(analysis_register_tokens_1030_153157_efbe)의 고노름 토큰 쏠림, gradroll@12의 회복.
+  - 분석: analysis_gradroll_decomp_1030_193812_07ca (hn_frac, 겹침, cdist, 대체 변형의 teacher 충실도). 미리 정한 읽기: gradroll의 hn_frac이 rollout보다 낮고, gradroll∩rollout 겹침이 K=12에서 K=29보다 낮으면 H-W18 지지. gradroll cdist가 center(≈1.6) 수준이면 공간 배치 설명을 배제할 수 없다.
+  - 대체 screen: gradrep@12 (gradroll∩maskedkd 유지 + random). WGA가 random@12(33.83) 근처로 떨어지면 이득은 gradroll 고유 토큰에서 온다.
+  - 선행과의 차이: Chefer et al. 2021은 설명용, Prune and Merge(2503.23455)는 추론 가지치기. MaskedKD·SaiT·MoVE-KD는 CLS attention만 쓴다. KD teacher 입력 선택에 클래스 기울기 relevance를 쓰고, 그 이득이 작은 K의 최악 그룹에서 나온다는 것이 차이다(1회 검색 기준).

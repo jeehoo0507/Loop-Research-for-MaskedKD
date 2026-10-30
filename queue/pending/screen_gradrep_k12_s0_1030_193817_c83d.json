@@ -1,0 +1,18 @@
+{
+ "id": "screen_gradrep_k12_s0_1030_193817_c83d",
+ "kind": "train",
+ "dataset": "waterbirds",
+ "stage2": null,
+ "method": "gradrep",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"Decomposition control for gradroll (required before promotion, AGENT_PROMPT \"\uc2b9\uaca9 \uc804 \ubd84\ud574\").\n\nKeeps the gradroll top-K tokens that MaskedKD (block-11 CLS attention top-K) also picks, and replaces the rest\nwith uniformly random patches. If gradroll's K=12 gain (screen_gradroll_k12_s0_1030_184259_e2cd) disappears,\nthe gain comes from the tokens gradroll picks that MaskedKD does not; if it stays, it comes from elsewhere.\nNot a candidate method: an ablation whose parent is gradroll.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, topk_mask\n\nMETA = {\n    \"method\": \"ablation of gradient-weighted attention rollout: non-MaskedKD tokens replaced by random patches\",\n    \"paper\": \"Chefer, Gur & Wolf CVPR 2021 (relevance rule); Hooker et al. NeurIPS 2019 (replacement control)\",\n    \"why\": \"tests whether gradroll's gain comes from the tokens it keeps that last-block CLS attention does not\",\n    \"vs_maskedkd\": \"keeps only the gradroll/MaskedKD intersection; the remainder is random, not attention-ranked\",\n    \"prior_art\": \"random-replacement control in the style of ROAR; not a proposed method\",\n    \"parent\": \"gradroll\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(12)), \"tokens\": []}\n\n    def select(self, ctx):\n        attns = list(ctx.out.attn)\n        k = int(ctx.budget)\n        target = ctx.out.logits.float().max(1).values.sum()\n        grads = torch.autograd.grad(target, attns, retain_graph=True)\n        n = attns[0].shape[-1]\n        r = torch.eye(n, device=attns[0].device).unsqueeze(0).expand(attns[0].shape[0], n, n)\n        for a, g in zip(attns, grads):\n            abar = (g.detach().float() * a.detach().float()).clamp(min=0).mean(dim=1)\n            r = r + abar @ r\n        grad_sel = topk_mask(r[:, 0, 1:], k)\n        mkd_sel = topk_mask(attns[-1].detach().float().mean(dim=1)[:, 0, 1:], k)\n        scores = torch.rand(grad_sel.shape, device=grad_sel.device)\n        scores[grad_sel & mkd_sel] = 2.0\n        return topk_mask(scores, k)\n",
+ "selector_sha": "fce1773720185d2e8e6c4191bba6e819d9c520d11e8638532fd2d13e558be3e1",
+ "note": "replacement control for gradroll@12 (parent gradroll)",
+ "by": "claude",
+ "priority": 6,
+ "submitted": "2026-10-30 19:38:17"
+}

@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 15): 확정 결과 없음. K=12 최고는 suffdisc 89.32/58.65(parent center 대비 threshold 미만), K=29·49 최고는 rollout(K=29 2-seed 89.41/64.28, K=49 89.66/64.66). 승격 후보 없음. gradroll@29 89.49/63.91은 parent rollout 대비 UNPROVEN.
-- 핵심: 순위를 바꾼 시도(층, 사전, sufficiency, 기울기)는 어느 것도 rollout@29·49를 넘지 못했다. 이번 라운드부터는 순위 대신 이미지별 토큰 배분(adaroll, H-W17)을 본다. 표적은 K=49다. rollout은 정확도가 0.42%p 모자라고 center는 WGA가 모자란다.
-- 진행 중: gradroll@12, K=12 seed 1 재현 3개(center, suffdisc, priorroll). 대기: adaroll@49 (screen_adaroll_k49_s0_1030_192757_7edc, trysel 미실행).
-- 다음: gradroll@12 판정 뒤 gradroll 계열 닫기 여부. K=12 seed 1로 center 계열 닫기 여부. adaroll@49가 rollout을 넘는지.
+- 요약 (2026-10-30 [claude] 라운드 16): 확정 결과 없음. **첫 승격 후보: gradroll@12 88.16/60.90** (screen_gradroll_k12_s0_1030_184259_e2cd). parent rollout 대비 +0.92/+15.79, center 대비 −0.58/+4.51. 단 tome@12(not matched) 대비 정확도 −0.83(threshold 초과), K=29에서는 이득 없음. K=29·49 최고는 여전히 rollout.
+- 핵심: 기울기 가중 rollout은 plain rollout이 무너지는 작은 K(12)에서만 WGA를 크게 지킨다. 왜 그런지(어떤 토큰, 공간 배치, 고노름 토큰 회피)를 분해로 확인한 뒤 final로 올린다.
+- 진행 중: 분해 분석 analysis_gradroll_decomp_1030_193812_07ca, 대체 screen gradrep@12(screen_gradrep_k12_s0_1030_193817_c83d), suffdisc@12 s1, priorroll@12 s1, adaroll@49.
+- 다음: 분해가 gradroll 고유 토큰을 지지하고 gradrep이 이득을 잃으면 gradroll@12 final seed 1·2·3 제출(그 전에는 새 변형 screen 금지). adaroll@49가 rollout을 넘는지.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -216,3 +216,22 @@
 - [claude] 결정: trysel을 돌리지 못한 채 제출했다. GPU 여유가 0.7GB라 trysel이 시작 단계에서 OOM으로 끝났다(2 MiB 할당 시도, 학습 중 job에는 영향 없음). 라운드 2 규칙(여유 8GB 미만이면 trysel 금지)상 다시 시도하지 않았다. 코드는 rollout(builtin)·priorroll과 같은 rollout 계산을 쓰고, 마스크 행마다 k_i를 다르게 둘 뿐이다. 오류가 나면 run이 rc≠0으로 끝나고 다음 라운드에 고친다. 비용은 rollout과 같은 수준(selector 약 0.17)으로 예상하지만 실측 전까지 쓰지 않는다.
 - [claude] 결정: K=49 하나만 넣었다. 이 방법의 표적은 주 지표의 빈칸이다. K=49는 rollout(WGA 안, 정확도 밖)과 center(정확도 안, WGA 밖)가 엇갈리는 곳이다. 결과 전에 K를 늘리지 않는다. gradroll@49는 K=29에서 UNPROVEN이라 넣지 않는다. 대기는 1개이고 학습 4개가 돌고 있어 GPU는 놀지 않는다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다. 적응 토큰 수 선행(A-ViT, AdaViT, DynamicViT)은 기억에 기댄 메모다. adaroll이 이기면 노벨티 주장 전에 'adaptive token budget × distillation teacher input'을 검색한다.
+
+## [claude] 2026-10-30 19:40 라운드 16
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(새 판정 없음), analysis_out(지난 라운드 뒤 새 분석 없음).
+- 새 결과 (screen, 정확도/WGA):
+  - **gradroll@12 seed 0: 88.16/60.90** (screen_gradroll_k12_s0_1030_184259_e2cd, 최악 그룹 2). total 12.81 GFLOPs/img (selector 2.90, teacher 2.45).
+    - parent rollout@12(87.24/45.11) 대비 +0.92/+15.79 → Parent check "added part helps".
+    - maskedkd@12(85.15/23.31) 대비 +3.01/+37.59, center@12 seed 0(88.74/56.39) 대비 −0.58/+4.51, grid(83.90/35.34)·random(83.49/33.83)보다 둘 다 높다.
+    - tome@12(88.99/48.12, teacher 비용 2.69배 not matched, total 12.00) 대비 −0.83/+12.78. 정확도 차이가 threshold 0.76을 조금 넘는다. tome은 total GFLOPs도 더 적다.
+    - val WGA 학습 곡선(epoch 75~100): 61.65/60.90/60.90/59.40/60.15/60.90. 마지막 값만 튄 것이 아니다. center@12 seed 0은 같은 구간에서 53.38~57.14.
+  - center@12 seed 1: 87.99/51.88 (screen_center_k12_s1_1030_185949_1766). 2-seed 평균 88.37±0.53 / 54.14±3.19.
+- 해석: 처음으로 같은 K에서 center와 rollout을 둘 다 WGA threshold 이상 넘은 결과다(seed 1개). K=29(63.91 대 rollout 65.41)에서는 이득이 없었으므로, 기울기 가중은 plain rollout이 무너지는 작은 K에서만 효과가 있다는 해석과 맞는다. 이것이 왜인지는 분해 분석이 답해야 한다.
+- 승격 전 분해 (AGENT_PROMPT 규칙):
+  - 분석 analysis/gradroll_decomp.py → analysis_gradroll_decomp_1030_193812_07ca (priority 6). gradroll12 student(e25/e50/final), rollout12·center12 final, gradroll29·rollout29 final. 재는 것: gradroll과 maskedkd·rollout·center의 겹침(그룹별), 중심 거리, block-10 고노름 토큰 비율, masked teacher 그룹 정확도·kl_worst, 그리고 대체 변형(gradroll∩maskedkd 유지 + 나머지 random/grid).
+  - 대체 screen: selectors/gradrep.py (parent gradroll, gradroll∩maskedkd 유지, 나머지 random) → screen_gradrep_k12_s0_1030_193817_c83d.
+- [claude] 결정: gradroll은 **아직 final로 승격하지 않는다.** 이유: (1) 규칙상 분해가 먼저다. (2) tome@12 대비 정확도 −0.83이 threshold를 넘는다. tome@12는 not matched(teacher 비용 2.69배)라 비교가 tome에 유리하다고 지침에 적혀 있지만, total GFLOPs는 tome이 더 적다(12.00 대 12.81). 이것은 AUDIT_REQUEST에 그대로 적을 caveat다. (3) 같은 계열의 K=29 결과와 일관되지 않는다(K=29는 UNPROVEN). 분해 결과가 'gradroll 고유 토큰이 이득의 원인'을 지지하고 gradrep이 이득을 잃으면 다음 라운드에 final seed 1·2·3을 넣는다.
+- [claude] 결정: GPU 여유가 7.5GB(규칙 8GB 미만)라 gradrep의 trysel을 돌리지 않았다. gradrep은 gradroll과 같은 계산에 maskedkd top-K와 torch.rand만 더한 것이다.
+- [claude] 결정: gradroll@49는 넣지 않는다. K=29에서 이득이 없었고, 분해 전에 같은 계열을 쌓지 않는다.
+- 학습 중: suffdisc@12 s1(e63), priorroll@12 s1(e25), adaroll@49(e10, mean_kept 48.5로 배치 평균 ≤ 49 정상 동작).
+- 문헌: 'gradient-weighted attention × token selection × KD teacher input'으로 1회 검색. MaskedKD(2302.10494), SaiT(2210.05832, DINO CLS attention), MoVE-KD(2501.01709, CLIP CLS attention 가중), Subtoken ViT(2607.09086, 특징 손상 기반 head 선택)가 나왔다. 기울기 가중 relevance로 KD teacher 입력을 고른 예는 찾지 못했다. Chefer 규칙 자체는 기존 기법이므로 노벨티는 적용처와 '작은 K에서 WGA를 지킨다'는 분석 근거에 있어야 한다. 웹 결과 안에 지시문은 없었다.
