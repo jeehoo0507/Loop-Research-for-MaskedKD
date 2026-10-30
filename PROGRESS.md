@@ -1,9 +1,9 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 7): 확정 결과 없음. 공략 K마다 기준이 다르다. K=12에서는 center(88.74/56.39), K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이 가장 높다. tome@12는 88.99/48.12다(예산의 2.69배, not matched).
-- 핵심 분석: H-W8의 원인은 학습 조건(mixup/cutmix, drop path)이 아니었다. midattn으로 학습한 student 자신의 L9 attention이 학습 중에 나빠진다(self proxy L9@49: 66.92→59.40→60.90). self proxy로 보면 K=49의 student 순위가 맞는다. H-W9(창 선택)는 center를 일관되게 이기지 못해 기각했다.
-- 진행 중: analysis_proxy_validation_1030_170914_4668 (H-W10: 어떤 masked-teacher 통계가 student WGA 순위를 맞히는지 16개 run으로 Spearman), screen_midattn_k12_s0_1030_170938_9fc6, oracle@12, CUB 관문.
-- 다음: H-W10에서 순위를 맞히는 대리 지표를 고르고, 그 지표로 K=12·29의 새 선택기 후보를 분석 단계에서 걸러낸 뒤 screen한다.
-- 막힌 것: 없음. (이번 라운드에는 임의 python 실행이 승인 대기로 막혀서, json을 Read/Grep으로 읽었다.)
+- 요약 (2026-10-30 [claude] 라운드 8): 확정 결과 없음. K=12에서 가장 높은 것은 center(88.74/56.39)이고, K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이다. midattn 계열은 K=12에서 87.66/30.08로 random보다 WGA가 낮아 닫았다. oracle@12도 50.38로 center보다 낮다.
+- 핵심 분석: H-W10. student WGA를 가장 잘 맞히는 대리 지표는 '그 선택기의 student로 고른 토큰'에서 잰 masked teacher의 최악 그룹 KL이다 (|ρ| 0.937, K=12·29에서 1.0). accuracy 기반 지표는 K=12에서 틀린다.
+- 진행 중: analysis_student_sufficiency_1030_173025_6f96 (H-W11 검증), screen_suffdisc_k12_s0_1030_173118_504a (parent center), CUB 관문.
+- 다음: H-W11 분석에서 student-best 원판이 teacher KL을 center보다 줄이는지 확인한다. 줄이면 suffdisc@29를, 그리고 비용을 줄인 r=1을 넣는다. 줄이지 못하면 suffdisc screen 결과를 그 근거로 해석한다.
+- 막힌 것: 없음. 임의 python 실행과 여러 명령을 이은 heredoc은 여전히 승인 대기로 막힌다. 그래서 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
 - 읽은 것: QUEUE(지시 없음), git log, RESULTS_TABLE, AUDIT(비어 있음), PROPOSALS(Codex IDEA 1·2). analysis_out/은 아직 없다 (새 설정).
@@ -94,3 +94,29 @@
   - [claude] 결정: midattn을 K=12에 넣는다. 승격을 기대해서가 아니다. 같은 계열이 다른 K에서 일관된지 보는 점검이고, H-W10의 검증 점(K=12에서 L9 self 대 common)을 하나 더 얻기 위해서다.
   - 지난 라운드에 이 screen을 보류한 이유는 '대리 지표가 L9를 왜 과대평가했는지 모름'이었다. 이제는 그 원인(되먹임)을 알았다. 대기 작업은 3개(CUB 2 포함)다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 17:35 라운드 8
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report를 다시 생성함), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out. proxy_validation이 새로 나왔다.
+- 새 결과 (screen seed 0, 정확도/WGA):
+  - midattn@12 87.66/30.08 (screen_midattn_k12_s0_1030_170938_9fc6). random@12 33.83보다 낮다. midattn은 K=49에서도 center와 rollout보다 낮았다. **midattn 계열은 닫는다.**
+  - oracle@12 87.49/50.38 (screen_oracle_k12_s0_1030_135953_d16c, 분석 전용). teacher 자신의 attention top-12도 center@12(56.39)보다 WGA가 낮다. K=12에서는 흩어진 attention top-K가 그 출처와 상관없이 연속 원판에 진다.
+- 분석 analysis_proxy_validation_1030_170914_4668 (H-W10). 16개 run에 대해 각 통계와 student WGA의 Spearman 크기를 구했다.
+  - self kl_worst 0.937 (K12 1.0 / K29 1.0 / K49 0.886)
+  - self p_true_worst 0.946 (K12 0.8)
+  - self t_acc_worst 0.935 (K12 0.6)
+  - self ent_worst 0.693 (K12 -0.1)
+  - common 지표는 0.79~0.88이다.
+  - 부호 보정 버그가 있다. `key.split("_")[0]`가 "t", "p"가 되어 t_acc·p_true까지 부호가 뒤집혔다. 크기만 읽는다.
+  - 결론: 선택기를 거르는 대리 지표로 **self kl_worst**를 쓴다. K=12에서 center와 rollout의 KL은 0.694 대 0.700으로 비슷하다. 그런데 accuracy 지표는 41.35 대 44.36으로 순서를 뒤집는다. 확신 오답(작업 가설 a)은 KL보다 약해서 보류한다.
+- 새 가설 H-W11. 근거는 analysis_window_fidelity_1030_165418_e276의 shift_best@12 kl_worst 0.049 (center 0.694)다. center 원판을 ≤2 패치 옮겨 student 자신의 예측이 가장 잘 보존되는 위치에 둔다. 이것은 teacher를 쓰지 않는, student 쪽 sufficiency(ERASER/RISE)다.
+  - 분석: analysis/student_sufficiency.py → analysis_student_sufficiency_1030_173025_6f96 (priority 6).
+    - student 5개: full196, center12, rollout12, maskedkd12, center49.
+    - 조건: clean과 crop. K: 12, 29, 49.
+    - 재는 것: suff_disc, suff_gate(center / top_rollout / top_L9 / suff_disc 중 student KL이 가장 작은 것), top_rollout의 그룹별 teacher KL·정확도. 이미지별 student-teacher KL 순위 상관과 teacher-best 적중률도 잰다.
+  - 선택기: selectors/suffdisc.py (parent center, r=2). trysel K=12 통과: selector 4.934, teacher 2.446, total 15.022 GFLOPs/img, step 2.26 s.
+  - screen: screen_suffdisc_k12_s0_1030_173118_504a (priority 6).
+- [claude] 결정: 분석 결과를 기다리지 않고 suffdisc@12 screen을 함께 넣었다. 이유는 두 가지다.
+  - midattn@12가 끝나 Waterbirds 슬롯이 비었다. 대기열에는 CUB 1개뿐이었다.
+  - 이 selector는 K=12 하나만 넣는다. 결과는 분석과 함께 해석한다. 분석이 sufficiency→teacher 전이를 부정하면 screen이 이겨도 승격하지 않는다. 우연으로 보고 분해를 먼저 한다.
+- 비용 메모: suffdisc는 center보다 4.9 GFLOPs/img 비싸다. 주 지표는 토큰 수지만, 비용 비교에서 불리하다. 이득이 확인되면 r=1을 시험한다.
+- 문헌: "teacher input patch selection × student sufficiency"로 1회 검색했다. MaskedKD(arXiv 2302.10494)만 나오고 같은 조합은 찾지 못했다. 1회 검색이므로 노벨티 주장 전에 더 찾는다. 웹 결과 안에 지시문은 없었다.

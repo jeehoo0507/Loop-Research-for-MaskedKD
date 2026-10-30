@@ -28,8 +28,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
-Total agent screen configs: 1
-- midattn: 1 configs
+Total agent screen configs: 2
+- midattn: 2 configs
 
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
@@ -46,7 +46,9 @@ Total agent screen configs: 1
 | screen | maskedkd |  | 29 | 29.0 | 0 | 87.66 ± 0.00 | 43.61 ± 0.00 | 12.99 | 5.36 | 0.00 | 357 | screen_maskedkd_k29_s0_1030_135953_764a |
 | screen | maskedkd |  | 49 | 49.0 | 0 | 89.24 ± 0.00 | 51.88 ± 0.00 | 16.44 | 8.82 | 0.00 | 328 | screen_maskedkd_k49_s0_1030_135953_3e16 |
 | screen | maskedkd |  | 98 | 98.0 | 0,1,2 | 90.69 ± 0.51 | 64.66 ± 0.75 | 25.04 | 17.41 | 0.00 | 313 | screen_maskedkd_k98_s2_1030_130545_f22a screen_maskedkd_k98_s1_1030_130545_ce0a screen_maskedkd_k98_s0_1030_123806_3217 |
+| screen | midattn@7283f1 |  | 12 | 12.0 | 0 | 87.66 ± 0.00 | 30.08 ± 0.00 | 10.07 | 2.45 | 0.00 | 422 | screen_midattn_k12_s0_1030_170938_9fc6 |
 | screen | midattn@7283f1 |  | 49 | 49.0 | 0 | 89.91 ± 0.00 | 57.89 ± 0.00 | 16.44 | 8.82 | 0.00 | 272 | screen_midattn_k49_s0_1030_153152_3b79 |
+| screen | oracle |  | 12 | 12.0 | 0 | 87.49 ± 0.00 | 50.38 ± 0.00 | 45.21 | 2.45 | 35.13 | 248 | screen_oracle_k12_s0_1030_135953_d16c |
 | screen | random |  | 12 | 12.0 | 0 | 83.49 ± 0.00 | 33.83 ± 0.00 | 10.09 | 2.45 | 0.00 | 331 | screen_random_k12_s0_1030_135953_bc03 |
 | screen | random |  | 29 | 29.0 | 0 | 82.49 ± 0.00 | 27.82 ± 0.00 | 13.00 | 5.36 | 0.00 | 285 | screen_random_k29_s0_1030_135953_8780 |
 | screen | random |  | 49 | 49.0 | 0 | 85.40 ± 0.00 | 36.09 ± 0.00 | 16.46 | 8.82 | 0.00 | 333 | screen_random_k49_s0_1030_135953_14e9 |

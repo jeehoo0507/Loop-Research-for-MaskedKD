@@ -12,7 +12,10 @@
 
 - (seed 0, 관찰) K=12: center 88.74 / 56.39 (screen_center_k12_s0_1030_135953_c64e), rollout 87.24 / 45.11 (screen_rollout_k12_s0_1030_135953_489a), grid 83.90 / 35.34 (screen_grid_k12_s0_1030_135953_1e84), random 83.49 / 33.83 (screen_random_k12_s0_1030_135953_bc03), maskedkd 85.15 / 23.31 (screen_maskedkd_k12_s0_1030_135953_ba8e). K=12에서 MaskedKD는 random보다 WGA가 낮다. center는 rollout보다 WGA가 11.3 높다.
 
+- (seed 0, 관찰) midattn@12는 87.66 / 30.08이다 (screen_midattn_k12_s0_1030_170938_9fc6). random@12(33.83)보다 WGA가 낮다. 분석 전용인 oracle@12는 87.49 / 50.38이다 (screen_oracle_k12_s0_1030_135953_d16c). teacher 자신의 attention top-12조차 center@12(56.39)보다 WGA가 낮다.
+
 ## 실패한 방향
+- [claude] 2026-10-30 midattn(student block-9 CLS attention top-K). K=49에서 89.91/57.89 (screen_midattn_k49_s0_1030_153152_3b79), K=12에서 87.66/30.08 (screen_midattn_k12_s0_1030_170938_9fc6). 두 K 모두 center와 rollout보다 WGA가 낮다. 원인은 선택기→student attention 되먹임이다 (analysis_train_condition_gap_1030_162956_067e). 이 계열은 닫는다.
 - [claude] 2026-10-30 H-W6 'MaskedKD top-K에서 고노름(register성) 토큰 빼기'. 분석 단계에서 기각했다. 빼도 masked teacher WGA가 회복되지 않는다. full student 기준으로 K=49에서 48.87→49.62, K=29에서 40.60→40.60이고, mkd49 student 기준으로 K=49에서 42.86→42.11이다(analysis_register_tokens_1030_153157_efbe). 평균 정확도만 1.4~5%p 오른다. 선택기는 제출하지 않았다.
 
 ## 분석에서 배운 것
@@ -28,3 +31,9 @@
 - **[claude] 2026-10-30 clean 이미지 대리 지표가 처음으로 student 순위를 틀렸다.** L9@49의 대리 지표는 72.18로 rollout 72.93과 비슷했고 center 63.91보다 높았다 (analysis_group_fidelity_1030_143842_1ea0). 그런데 student WGA는 midattn 57.89 < center 60.15 < rollout 64.66이다. 대리 지표는 학습 조건(mixup/cutmix, drop path)을 반영하지 않는다. 이를 확인하는 분석이 analysis_train_condition_gap_1030_162956_067e이다.
 - **[claude] 2026-10-30 대리 지표는 그 선택기로 학습한 student로 재야 한다 (H-W8).** 공통 student에서는 L9@49가 rollout 수준이었다(analysis_group_fidelity_1030_143842_1ea0). 그러나 midattn student 자신의 L9@49 masked teacher WGA는 e25/e50/final에서 66.92/59.40/60.90으로 떨어진다. rollout student 자신의 rollout은 65.41/69.17/68.42를 유지한다. self proxy의 K=49 순위(L11 41.35 < L9 60.90 < center 63.91 < rollout 68.42)는 student WGA 순위(51.88 < 57.89 < 60.15 < 64.66)와 같다. mixup/cutmix와 drop path는 원인이 아니었다(analysis_train_condition_gap_1030_162956_067e).
 - **[claude] 2026-10-30 K=12에서는 clean masked-teacher WGA가 student 순위를 예측하지 못한다.** center@12의 대리 지표는 41.35로 top_rollout@12(48.12~53.38)보다 낮다(analysis_window_fidelity_1030_165418_e276). 그런데 student WGA는 center 56.39 > rollout 45.11이다. 이것을 검증하는 분석이 analysis_proxy_validation_1030_170914_4668이다.
+- **[claude] 2026-10-30 가장 좋은 대리 지표는 masked teacher의 최악 그룹 KL(full teacher‖masked teacher)이다. 토큰은 그 선택기로 학습한 student(self)로 고른다** (analysis_proxy_validation_1030_170914_4668, 16 run).
+  - |Spearman|: self kl_worst 0.937 (K=12 1.0, K=29 1.0, K=49 0.886), self p_true_worst 0.946, self t_acc_worst 0.935.
+  - common student로 재면 0.85~0.88로 낮아진다. 엔트로피는 약하다 (self ent_worst 0.693, K=12에서 -0.1).
+  - 주의: 스크립트의 부호 보정에 버그가 있다(`key.split("_")[0]`가 "t", "p"가 된다). 그래서 t_acc와 p_true의 상관은 음수로 찍혔다. 크기만 읽는다.
+  - K=12의 self kl_worst: maskedkd 1.555 > random 1.302 > grid 1.191 > rollout 0.700 > center 0.694. student WGA 순위와 같다.
+  - K=12에서 accuracy 기반 지표가 틀린 이유: center와 rollout의 KL은 비슷하다. accuracy는 argmax 경계 근처의 차이를 과장한다.
