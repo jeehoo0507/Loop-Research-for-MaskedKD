@@ -10,10 +10,28 @@ Gate: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs 
 Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sigma 1.23 %p (pooled, dof 4) -> threshold 2.45 %p
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
-- none yet
+- gradroll@12 vs maskedkd@12 [acc]: +4.00 %p, 95% CI [+1.88, +6.12], seeds 1,2, GFLOPs ratio 1.272 -> WIN
+- gradroll@12 vs maskedkd@12 [WGA]: +40.60 %p, 95% CI [+21.48, +59.73], seeds 1,2, GFLOPs ratio 1.272 -> WIN
+- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
+- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- no agent method has >= 2 final seeds yet
+- gradroll@12 vs maskedkd@12 [acc]: +4.00 %p, 95% CI [+1.88, +6.12], seeds 1,2, GFLOPs ratio 1.272 -> WIN
+- gradroll@12 vs maskedkd@12 [WGA]: +40.60 %p, 95% CI [+21.48, +59.73], seeds 1,2, GFLOPs ratio 1.272 -> WIN
+- gradroll@12 vs rollout@12 [acc]: +0.71 %p, 95% CI [-3.00, +4.42], seeds 1,2, GFLOPs ratio 1.271 -> no difference
+- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
+- gradroll@12 vs tome@12 [acc]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs tome@12 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs grid@12 [acc]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs grid@12 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs center@12 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs random@12 [acc]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs random@12 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs full@196 [acc]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs full@196 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs rollout@12 [acc]: +0.71 %p, 95% CI [-3.00, +4.42], seeds 1,2, GFLOPs ratio 1.271 -> no difference
+- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.76), WGA -0.75 %p (threshold 2.45) -> added part UNPROVEN
@@ -50,11 +68,11 @@ Total agent screen configs: 10
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | center |  | 12 | 12.0 | 1 | 88.32 ± 0.00 | 54.89 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_center_k12_s1_1030_201811_341b |
 | final | full |  | 196 | 196.0 | 1 | 91.33 ± 0.00 | 66.92 ± 0.00 | 42.77 | 35.13 | 0.00 | 195 | final_full_k196_s1_1030_201811_b764 |
-| final | gradroll@4f3962 |  | 12 | 12.0 | 1 | 87.99 ± 0.00 | 63.16 ± 0.00 | 12.81 | 2.45 | 2.90 | 202 | final_gradroll_k12_s1_1030_201811_faf0 |
+| final | gradroll@4f3962 |  | 12 | 12.0 | 1,2 | 88.20 ± 0.29 | 62.78 ± 0.53 | 12.81 | 2.45 | 2.90 | 197 | final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1 | 83.74 ± 0.00 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2 | 84.20 ± 0.06 | 22.18 ± 1.60 | 10.07 | 2.45 | 0.00 | 281 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 |
 | final | random |  | 12 | 12.0 | 1 | 84.57 ± 0.00 | 37.59 ± 0.00 | 10.09 | 2.45 | 0.00 | 316 | final_random_k12_s1_1030_201811_19bf |
-| final | rollout |  | 12 | 12.0 | 1 | 86.99 ± 0.00 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 244 | final_rollout_k12_s1_1030_201811_6293 |
+| final | rollout |  | 12 | 12.0 | 1,2 | 87.49 ± 0.71 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 239 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s2_1030_212126_33d1 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 89.66 ± 0.00 | 48.87 ± 0.00 | 12.00 | 4.36 | 0.00 | 288 | final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
