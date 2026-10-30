@@ -59,7 +59,7 @@ Total agent screen configs: 1
 
 # Stage 2: cub (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -81,5 +81,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 Total agent screen configs: 0
 
 ## All finished runs
-- none yet
+| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 
