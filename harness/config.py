@@ -87,7 +87,17 @@ FLOP_WARMUP = 2
 GATE_KD_OVER_CE = 1.0        # Full KD val acc >= CE + 1.0 %p
 GATE_MASKEDKD98_GAP = 0.5    # |MaskedKD@98 - Full KD| <= 0.5 %p
 # Primary metric: smallest mean teacher-token budget whose val acc >= FullKD - 1.0 %p
-TOLERANCE = 1.0
+# A pretrained student gains little from KD (gate run 2026-10-30: Full 83.50 vs CE 82.74), so a fixed 1 %p would let
+# CE itself (zero teacher tokens) almost qualify. The tolerance is therefore a share of the KD gain: a method must keep
+# at least half of what the full teacher adds over CE, and never fall more than 1 %p below Full KD.
+TOLERANCE = 1.0              # cap, %p
+TOLERANCE_FRAC = 0.5         # tolerance = min(TOLERANCE, TOLERANCE_FRAC * (Full KD - CE)), same tier
+
+
+def tolerance(full_acc, ce_acc):
+    if ce_acc is None or full_acc is None:
+        return TOLERANCE
+    return max(0.0, min(TOLERANCE, TOLERANCE_FRAC * (full_acc - ce_acc)))
 KEEP_GRID = (196, 98, 49, 25, 12)
 ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric
 BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "tome", "oracle")   # harness-owned reference methods

@@ -529,3 +529,14 @@ def test_evidence_bundle_attaches_cited_runs(tmp_path, monkeypatch):
     assert f"runs/{rid}/metrics.json" in text and '"val_acc": 80.1' in text and '"loss"' not in text
     assert "selector source mysel" in text and "META = {'parent': 'none'}" in text
     assert "selector_api" in evidence.ideas() or "missing: harness/selector_api.py" in evidence.ideas()
+
+
+def test_tolerance_is_half_the_kd_gain():
+    assert C.tolerance(83.50, 82.74) == pytest.approx(0.38)    # pretrained student: small KD gain
+    assert C.tolerance(24.38, 21.10) == 1.0                     # large gain: capped at 1 %p
+    assert C.tolerance(80.0, None) == 1.0 and C.tolerance(80.0, 80.5) == 0.0
+    from harness.report import primary
+    rows = [{"tier": "final", "method": m, "acc": a, "kept": k, "sha": "x", "args": "{}"}
+            for m, a, k in (("full", 83.5, 196), ("ce", 82.7, 0), ("maskedkd", 83.2, 49), ("maskedkd", 83.0, 25))]
+    out = "\n".join(primary(rows))
+    assert "tolerance 0.40" in out and "maskedkd" in out and ": 49.0" in out    # K=25 (-0.5) is outside 0.40

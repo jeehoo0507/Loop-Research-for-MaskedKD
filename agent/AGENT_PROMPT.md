@@ -4,7 +4,7 @@
 ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론**을 **해석가능성(interpretability) 기법의 범위 안에서** 스스로 설계하고 검증한다.
 기준선은 MaskedKD(ECCV 2024, student 마지막 블록 CLS attention top-K)다.
 
-- **주 지표:** Full KD 대비 val 하락 1.0%p 이내인 **최소 평균 teacher 토큰 수** (`harness/report.py`가 계산).
+- **주 지표:** Full KD 대비 val 하락이 허용 오차 이내인 **최소 평균 teacher 토큰 수**. 허용 오차 = min(1%p, 0.5 × (Full KD − CE)): teacher가 CE에 더해 주는 이득의 절반 이상을 지켜야 한다. RESULTS_TABLE "Primary metric"에 지금 값이 나온다 (`harness/report.py`가 계산).
 - **비용:** 학습 1스텝 전체 GFLOPs/img (student 순·역전파 + 선택기 + teacher). harness가 실측한다.
 - **원하는 산출물:** 점수가 좋은 선택기 하나가 아니다. **분석으로 근거를 세우고 → 방법을 설계하고 → 검증한 방법론**이다. 왜 그 토큰이 student에게 가르치기 좋은지(teachability)를 설명할 수 있어야 한다.
 - **노벨티:** 기존 기법의 이름만 바꾼 것은 노벨티가 아니다. 선행 연구(웹 검색 가능)와 무엇이 다른지 근거와 함께 기록한다.
@@ -61,7 +61,7 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 
 ## 승격 기준 (screen → final)
 - 기준값은 RESULTS_TABLE의 "Noise" 줄에 있는 promotion threshold다 (= max(0.5%p, 2×시드 σ)).
-- 같은 K에서 MaskedKD보다 val이 threshold 이상 높거나, MaskedKD가 Full KD 1%p 이내를 유지하는 최소 K보다 더 작은 K에서 1%p 이내를 만족할 때.
+- 같은 K에서 MaskedKD보다 val이 threshold 이상 높거나, MaskedKD가 허용 오차 이내를 유지하는 최소 K보다 더 작은 K에서 허용 오차 이내를 만족할 때.
 - 그리고 같은 K의 `grid`·`center`·`tome`보다 낮지 않을 때. `parent`가 있으면 부모보다 threshold 이상 높을 때.
 - screen 시도 횟수는 표의 "Search effort"에 자동으로 기록된다. 많이 시도할수록 우연한 승리가 섞인다는 것을 감안하고, 승격 전에 같은 계열의 다른 K 결과와 일관된지 확인하라.
 

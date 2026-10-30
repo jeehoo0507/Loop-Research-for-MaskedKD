@@ -4,7 +4,7 @@
     python -m harness.report --gate     # gate verdict only, exit 1 if not passed
 
 Primary metric per method (same tier, same seeds): smallest mean kept tokens whose val acc is within
-TOLERANCE %p of Full KD. FLOPs columns are measured, per image, for a whole training step.
+config.tolerance(Full, CE) %p of Full KD (half the KD gain, at most 1 %p). FLOPs columns are measured, per image, for a whole training step.
 """
 import argparse
 import json
@@ -206,15 +206,18 @@ def primary(rows):
         if not full:
             continue
         ref = full[0]["acc"]
+        ce = [r["acc"] for r in rows if r["tier"] == tier and r["method"] == "ce"]
+        tol = C.tolerance(ref, ce[0] if ce else None)
         best = defaultdict(lambda: None)
         for r in rows:
             if r["tier"] != tier or r["method"] in ("ce", "full") + C.ANALYSIS_ONLY or r["kept"] is None:
                 continue
-            if r["acc"] >= ref - C.TOLERANCE:
+            if r["acc"] >= ref - tol:
                 k = (r["method"], r["sha"], r["args"])
                 if best[k] is None or r["kept"] < best[k]:
                     best[k] = r["kept"]
-        out.append(f"### {tier}: Full KD val {ref:.2f}; smallest mean kept tokens within {C.TOLERANCE} %p")
+        gain = f"KD gain {ref - ce[0]:+.2f}, " if ce else "CE not run: "
+        out.append(f"### {tier}: Full KD val {ref:.2f}; {gain}tolerance {tol:.2f} %p; smallest mean kept tokens within it")
         for (m, sha, args), kept in sorted(best.items(), key=lambda t: t[1]):
             out.append(f"- {m}{'@' + sha[:6] if sha and sha != 'builtin' else ''} {args if args != '{}' else ''}: {kept:.1f}")
     return out

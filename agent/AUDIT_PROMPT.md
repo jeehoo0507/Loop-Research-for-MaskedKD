@@ -9,7 +9,7 @@ Context: the agent searches for interpretability-based token selectors (selector
 masked teacher use fewer input tokens than MaskedKD in ViT knowledge distillation (CIFAR-100,
 DeiT-B teacher, ImageNet-pretrained DeiT-Ti student). The harness (harness/) is locked and is the only thing allowed to
 produce numbers. Primary metric: the smallest mean kept-token budget whose val accuracy is within
-1.0 %p of Full KD. Cost: measured train-step GFLOPs per image, including the selector.
+min(1.0, 0.5 x (Full KD - CE)) %p of Full KD (RESULTS_TABLE prints the value). Cost: measured train-step GFLOPs per image, including the selector.
 
 For every claim, check:
 1. Every cited run id exists under runs/ with metrics.json status "done", and the numbers quoted in

@@ -52,8 +52,9 @@ def draw(rows, x, path, title, ce):
                     color=color, linestyle=ls, marker="o", ms=4, capsize=3, lw=2 if m not in REF else 1.4)
     full = [r for r in rows if r["method"] == "full"]
     if full:
-        ax.axhspan(full[0]["mean"] - C.TOLERANCE, full[0]["mean"], color="#2e8b57", alpha=0.10, lw=0,
-                   label=f"within {C.TOLERANCE:g} %p of Full KD")
+        tol = C.tolerance(full[0]["mean"], ce)
+        ax.axhspan(full[0]["mean"] - tol, full[0]["mean"], color="#2e8b57", alpha=0.10, lw=0,
+                   label=f"within {tol:.2f} %p of Full KD (half the KD gain)")
     if ce is not None:
         ax.axhline(ce, color="#999999", lw=1, linestyle=(0, (1, 3)), label="CE (no KD)")
     ax.set_xlabel("teacher patch tokens (mean, of 196)" if x == "keep" else "train-step GFLOPs per image")
