@@ -1,6 +1,7 @@
 # PROGRESS
 - 요약 (2026-10-30 [claude] 라운드 27): 확정 결과 없음. tome@12 s2 89.74/51.13 (final_tome_k12_s2_1030_212126_9500)이 나왔다. gradroll vs tome Core comparison(seeds 1,2)은 정확도 −1.50, WGA +12.78로 둘 다 차이 없음이다(CI가 0을 포함). **final gradroll@12 2-seed 평균 88.20/62.79** (s1 87.99/63.16 final_gradroll_k12_s1_1030_201811_faf0, s2 88.41/62.41 final_gradroll_k12_s2_1030_212126_da50). Significant only(seeds 1,2): maskedkd 대비 acc +4.00·WGA +40.60, rollout 대비 WGA +10.90 WIN(rollout 대비 acc는 차이 없음). seed 1에서 같은 seed의 center(88.32/54.89)보다 WGA +8.27(정확도 −0.33, threshold 안), grid(83.74/35.34)·maskedkd(84.15/21.05)·rollout(86.99/51.88)·random(84.57/37.59)보다 높다. tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다. full@196 s1(91.33/66.92)과 비교하면 −3.34/−3.76이라 주 지표의 허용 오차(1.00/2.45) 밖이다.
 - 핵심: K=12에서 center를 넘는 후보는 gradroll(final s1이 center 통과, seed 2 실행 중)과 suffdisc(분해 a·b 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다. 주장할 수 있는 형태는 '같은 K에서 기준선 대비 WGA 우위'이고, 'Full 허용 오차 안의 최소 K'는 아니다.
+- **라운드 32 (주의): gradroll@12 s3 87.57/51.88** (final_gradroll_k12_s3_1030_220958_176b). s1·s2보다 WGA가 10 이상 낮고, 3-seed 평균은 87.99/59.15다. maskedkd 대비는 3-seed WIN(acc +3.78, WGA +36.84)이다. center·rollout·tome 대비 우위는 비교군 s3이 끝나야 판정할 수 있고, 약해질 가능성이 높다.
 - 라운드 31: maskedkd@12 s3 84.24/22.56 (final_maskedkd_k12_s3_1030_220958_cc4e). 3-seed 평균 84.21/22.31로 안정적이다. gradroll s3은 e93이고 판정은 아직 바뀌지 않았다. report 재생성은 이번 세션에서 승인 대기로 막혔다.
 - 라운드 30: full@196 s2 90.58/67.67 (final_full_k196_s2_1030_212126_a1dc). final Full 2-seed는 90.95/67.30이다. gradroll@12 vs full (seeds 1,2)은 정확도 −2.75, WGA −4.51로 CI상 차이는 없다. 다만 평균은 허용 오차(1.00/2.45) 밖이라 'Full 수준'이라고 주장하지 않는다.
 - 진행 중 (라운드 29 기준): center·random@12 s2가 끝났다(89.16/54.14, 82.82/35.34). seeds 1,2 Core comparison에서 gradroll@12는 WGA로 maskedkd +40.60·rollout +10.90·grid +27.44·center +8.27·random +26.32를 모두 이긴다(CI가 0 밖). 정확도는 maskedkd 대비 WIN이고 나머지는 n.s.다. tome만 미결이다(acc −1.50, WGA +12.78, 둘 다 n.s.). full@196 s2와 maskedkd·rollout·gradroll@12 s3가 실행 중이고, 비교군 s3 5개가 대기 중이다.
@@ -414,4 +415,13 @@
 - RESULTS_TABLE: 이번 세션에서는 `python -m harness.report`가 승인 대기로 막혀 재생성하지 못했다. Core comparison은 seed가 맞는 run만 쓰고 gradroll s3이 아직 끝나지 않았으므로, 판정은 라운드 30과 같다(seeds 1,2).
 - 진행: gradroll@12 s3 e93/100, rollout·tome·grid@12 s3 실행 중, center·random@12와 full@196 s3 대기 중(3개).
 - [claude] 결정: 새 screen·분석은 넣지 않는다. 승격 후보 final의 seed 3이 몇 분 안에 끝나고 비교군 s3이 진행 중이다(지침 7). AUDIT_REQUEST는 라운드 29 결정대로 3-seed 결과가 나온 뒤에 쓴다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 23:10 라운드 32
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(`harness.report` 재생성 성공), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(지난 라운드 뒤 새 분석 없음).
+- 새 결과 (final seed 3, K=12): **gradroll 87.57/51.88** (final_gradroll_k12_s3_1030_220958_176b, 최악 그룹 2). s1 87.99/63.16, s2 88.41/62.41보다 WGA가 10 이상 낮다. 후반 val WGA(e65~e100)는 46.62/43.61/42.11/53.38/58.65/52.63/55.64/51.88로 흔들린다. 같은 구간에서 s1은 60~67, s2는 52~64였다. 마지막 에폭만 떨어진 것이 아니다. 3-seed 평균은 87.99/59.15다.
+- RESULTS_TABLE Core comparison: maskedkd 대비는 seeds 1,2,3에서 acc +3.78 [+2.74, +4.82], WGA +36.84 [+20.23, +53.46]로 WIN을 유지한다. 나머지는 비교군 s3이 아직 없어서 seeds 1,2 값 그대로다. rollout·tome·grid·center s3은 실행 중이고 random·full s3은 대기 중이다.
+- 해석: gradroll의 WGA는 seed에 따라 크게 흔들린다(3 seed 범위 11.28). s3 WGA(51.88)는 center s1·s2(54.89, 54.14)보다 낮다. 그래서 3-seed로 보면 center 대비 WGA WIN(seeds 1,2에서 +8.27)과 rollout 대비 WIN(+10.90)의 CI가 0을 포함하게 될 수 있다. 지금 주장할 수 있는 것은 'MaskedKD@12 대비 정확도와 WGA 우위(3-seed)'뿐이다. 비교군 s3이 나오기 전에는 판정하지 않는다.
+- [claude] 결정: AUDIT_REQUEST는 쓰지 않는다. 비교군 s3이 다 끝나야 3-seed Core comparison이 완성된다. 결과가 나쁘게 나와도 비교군을 빼거나 seed를 골라내지 않는다(규칙 6).
+- [claude] 결정: 새 screen·분석은 넣지 않는다. 승격 후보의 비교군 final이 진행 중이고(실행 4, 대기 2) GPU가 차 있다. 다음 후보 분석은 'gradroll seed 불안정의 원인'이다. s1/s2/s3 student 각각의 self-proxy(gradroll@12 masked teacher WGA, e25/e50/final)를 비교해, 학습 중에 선택이 무너졌는지 student 자체가 약한지 가른다. 비교군 s3이 끝난 뒤 넣는다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
