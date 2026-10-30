@@ -17,3 +17,7 @@
 - 2026-10-30 01:39 [stage2] ImageNet-100 gate submitted (one GPU slot; long)
 
 - 2026-10-30 02:35 RESET: setting changed (harness/config.py); old results in archive/20261030_0235
+- 2026-10-30 02:35 Codex works: GPT audits and is the emergency researcher
+- 2026-10-30 02:44 GPU smoke passed
+- 2026-10-30 03:06 teacher val acc: 88.78
+- 2026-10-30 03:08 epochs: {"epochs":{"cifar100":{"screen":27,"final":54}},"base_screen":27,"gate_scale":1,"max_jobs":3,"rule":"screen=1hatbenchparallelism(>=10),final=2xscreen"}
