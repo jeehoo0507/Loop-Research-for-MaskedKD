@@ -10,3 +10,5 @@
 - 2026-10-30 13:59 gate: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs CE 89.32 (need +1.0), WGA 66.67 vs 66.42 (or need +2.0): PASS; MaskedKD@98 90.69 vs Full 90.83 (need within 0.5): PASS
 - 2026-10-30 13:59 gate PASSED: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs CE 89.32 (need +1.0), WGA 66.67 vs 66.42 (or need +2.0): PASS; MaskedKD@98 90.69 vs Full 90.83 (need within 0.5): PASS
 - 2026-10-30 13:59 Waterbirds baselines queued (23 jobs)
+- 2026-10-30 13:59 CUB (stage 2) teacher, gate and baselines started in background (tmux: stage2)
+- 2026-10-30 13:59 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
