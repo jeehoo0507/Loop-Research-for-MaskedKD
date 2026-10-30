@@ -47,7 +47,9 @@ Total agent screen configs: 10
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | center |  | 12 | 12.0 | 1 | 88.32 ± 0.00 | 54.89 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_center_k12_s1_1030_201811_341b |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1 | 87.99 ± 0.00 | 63.16 ± 0.00 | 12.81 | 2.45 | 2.90 | 202 | final_gradroll_k12_s1_1030_201811_faf0 |
+| final | grid |  | 12 | 12.0 | 1 | 83.74 ± 0.00 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1 | 84.15 ± 0.00 | 21.05 ± 0.00 | 10.07 | 2.45 | 0.00 | 285 | final_maskedkd_k12_s1_1030_201811_e49a |
 | final | rollout |  | 12 | 12.0 | 1 | 86.99 ± 0.00 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 244 | final_rollout_k12_s1_1030_201811_6293 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 89.66 ± 0.00 | 48.87 ± 0.00 | 12.00 | 4.36 | 0.00 | 288 | final_tome_k12_s1_1030_201811_9fb4 |
