@@ -1,0 +1,12 @@
+{
+ "id": "analysis_prior_rollout_1030_174424_16a6",
+ "name": "prior_rollout",
+ "source_sha": "16a60ae799b76d22fd57a5d7daa438d580267862e1b04d6ca780f738fbd0a524",
+ "status": "done",
+ "meta": {
+  "question": "does a Gaussian centre prior on student attention rollout give a masked teacher that is more faithful on the worst group than both the centre disc and plain rollout, at K 12, 29 and 49?",
+  "method": "attention rollout with a spatial prior; keep-only faithfulness of the masked teacher per group",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); DeYoung et al. ACL 2020 (ERASER sufficiency); Sagawa et al. ICLR 2020 (worst-group)"
+ },
+ "seconds": 129.1
+}

@@ -69,3 +69,10 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 근거: screen seed 0에서 K=12는 center > rollout (56.39 vs 45.11), K=29·49는 rollout > center. center@12 student에서 읽은 rollout top-12의 kl_worst 0.603 < center 원판 0.694 (analysis_student_sufficiency_1030_173025_6f96). 분석 analysis_prior_rollout_1030_174424_16a6로 먼저 검증한다.
   - 아이디어: rollout 점수에 중앙 가우시안 사전을 곱해(로그 공간에서 더해) top-K를 고른다. K가 작을수록 사전이 연속성을 주고, K가 크면 rollout 순위가 남는다.
   - 가장 가까운 선행 기법과의 차이: MaskedKD·rollout은 사전 없는 attention 순위, center는 신호 없는 사전이다. saliency에 center-bias 사전을 더하는 것은 시선 예측(saliency prediction) 문헌에서 흔하다(예: Judd et al. 2009 center prior). KD teacher 입력 선택에 쓴 예는 아직 찾지 못했다. 이 조합은 노벨티가 약하므로, 분해(사전만 쓴 random+prior)로 신호의 기여를 보여야 한다.
+
+## 2026-10-30 [claude] 라운드 10 메모
+- H-W12 판정 (analysis_prior_rollout_1030_174424_16a6): 지지. rollout student 3개와 full student에서는 모든 K에서 prior_s가 center·top_rollout보다 kl_worst가 낮다. center12 student의 K=12만 예외다(0.614 대 0.603).
+- **`priorroll` 제출 (selectors/priorroll.py, parent rollout).** σ = √(K/π), 곧 같은 K의 center 원판 반지름(K=12/29/49에서 1.95/3.04/3.95)이다. 분석에서 K별 최적 σ는 대체로 2/4/4였다. σ 규칙은 분석을 본 뒤 정했고, screen에서 고른 값이 아니다.
+  - 근거: 위 분석. 아이디어: 사전으로 연속성을 주고, rollout 신호로 사전 안팎의 패치를 고른다.
+  - 선행과의 차이: rollout(사전 없음)과 center(신호 없음)의 결합이다. 시선 예측의 center-bias(Judd et al. 2009)와 같은 형태라 노벨티는 약하다. 이기면 분해가 필수다: (1) random 점수에 같은 사전을 씌운 변형(`priorrand`)으로 신호의 기여를 본다. (2) 사전만 쓴 결과는 곧 center다. (3) MaskedKD와의 겹침, 중심 거리를 잰다.
+  - parent check: 같은 K에서 rollout보다 승격 기준 이상 높아야 사전 부분이 효과가 있다고 본다. K=12에서는 rollout 45.11, center 56.39다. 그래서 실질 기준은 center를 넘는 것이다.

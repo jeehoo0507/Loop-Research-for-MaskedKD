@@ -1,9 +1,9 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 8): 확정 결과 없음. K=12에서 가장 높은 것은 center(88.74/56.39)이고, K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이다. midattn 계열은 K=12에서 87.66/30.08로 random보다 WGA가 낮아 닫았다. oracle@12도 50.38로 center보다 낮다.
+- 요약 (2026-10-30 [claude] 라운드 10): 확정 결과 없음. K=12에서 가장 높은 것은 center(88.74/56.39)이고, K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이다. midattn 계열은 K=12에서 87.66/30.08로 random보다 WGA가 낮아 닫았다. oracle@12도 50.38로 center보다 낮다.
 - 핵심 분석: H-W10. student WGA를 가장 잘 맞히는 대리 지표는 '그 선택기의 student로 고른 토큰'에서 잰 masked teacher의 최악 그룹 KL이다 (|ρ| 0.937, K=12·29에서 1.0). accuracy 기반 지표는 K=12에서 틀린다.
-- 진행 중 (라운드 9 갱신): screen_suffdisc_k12_s0_1030_173118_504a (epoch 33, parent center), analysis_prior_rollout_1030_174424_16a6 (H-W12), CUB 관문. H-W11 분석은 끝났다: student sufficiency는 teacher KL을 일부만 줄이고 masked teacher WGA는 올리지 못한다(라운드 9 항목).
-- 다음: suffdisc@12 결과는 center@12(56.39)와 비교해 판정한다. H-W12 분석에서 prior_s*가 K 12·29·49 모두에서 center와 top_rollout보다 kl_worst가 낮으면 priorroll 선택기(parent rollout)를 K=12에 screen한다.
-- 막힌 것: 없음. 임의 python 실행과 여러 명령을 이은 heredoc은 여전히 승인 대기로 막힌다. 그래서 Read/Grep/Edit로 작업한다.
+- 진행 중 (라운드 10 갱신): screen_suffdisc_k12_s0_1030_173118_504a (epoch 58), screen_priorroll_k12_s0_1030_175140_405f (실행 중), screen_priorroll_k29_s0_1030_175144_018d (대기), CUB 관문(cub_final_maskedkd_k98_s1). H-W12 분석은 지지로 끝났다(라운드 10 항목).
+- 다음: suffdisc@12는 center@12(56.39)와 비교해 판정한다. priorroll@12는 center@12(56.39)·tome@12(48.12)를, priorroll@29는 rollout@29(65.41)를 넘어야 한다. 이기면 분해(priorrand 대체, 겹침, 중심 거리)를 먼저 하고, K=49는 그 뒤에 넣는다.
+- 막힌 것: 없음. `python -c`와 여러 줄 명령은 승인 대기로 막힌다. 그래서 jq와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
 - 읽은 것: QUEUE(지시 없음), git log, RESULTS_TABLE, AUDIT(비어 있음), PROPOSALS(Codex IDEA 1·2). analysis_out/은 아직 없다 (새 설정).
@@ -133,4 +133,22 @@
 - 새 분석: analysis/prior_rollout.py → analysis_prior_rollout_1030_174424_16a6 (H-W12, priority 6). 선택은 center, top_rollout, prior_s{2,3,4}(log rollout − d²/2σ²의 top-K), union_half(center 원판 K/2 + 나머지 rollout top)이다. K는 12·29·49, student는 full196과 center/rollout@12·29·49다. 그룹별 teacher KL·정확도, 중심 거리, center 원판과의 겹침을 잰다.
 - [claude] 결정: 이번 라운드에는 screen을 넣지 않는다. suffdisc@12가 아직 학습 중이고, H-W12는 분석 전이다. 대기 작업은 CUB 1개 + 분석 1개, 실행 중은 2개라 GPU는 놀지 않는다.
 - 노벨티 주의: prior_s는 '공간 사전 + attention'이다. 이기더라도 이득이 사전에서 오는지 신호에서 오는지 분해해야 한다. 같은 K의 center와 rollout을 모두 이겨야 주장할 수 있고, 분해 때는 rollout 대신 random 점수에 같은 사전을 씌운 변형을 대체 실험으로 넣는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 17:55 라운드 10
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out. prior_rollout이 새로 나왔다. 새 screen 결과는 없다. suffdisc@12는 epoch 58이고, epoch 55의 val WGA는 49.62다(중간값이라 판정에 쓰지 않는다).
+- 분석 analysis_prior_rollout_1030_174424_16a6 (H-W12). kl_worst, 낮을수록 좋다. 표기는 center / top_rollout / prior_s2 / s3 / s4.
+  - rollout12 student, K=12: 0.694 / 0.700 / 0.637 / 0.644 / 0.636
+  - rollout29 student, K=29: 0.517 / 0.443 / 0.426 / 0.415 / 0.390
+  - rollout49 student, K=49: 0.300 / 0.320 / 0.273 / 0.248 / 0.227
+  - full196 student, K=12/29/49에서 최선의 prior: 0.552 (s2) / 0.300 (s4) / 0.228 (s4). 같은 K의 center와 top_rollout은 각각 0.694·0.721, 0.517·0.368, 0.300·0.350이다.
+  - 예외: center12 student의 K=12에서는 top_rollout 0.603이 prior_s3 0.614, s4 0.615보다 조금 낮다.
+  - 되먹임: rollout12 student에서 K=29 masked teacher WGA는 top_rollout 46.62, prior_s 60.15~61.65다. 사전이 rollout의 self-feedback 손실을 막는다.
+  - 판정: 라운드 9에 미리 정한 조건('K 12·29·49 모두에서 center와 top_rollout보다 kl_worst가 낮다')을 student 7개 중 6개가 모든 K에서 만족한다. 나머지 1개(center12, K=12)는 차이가 0.011이다. **H-W12 지지.**
+- 새 선택기: selectors/priorroll.py (parent rollout). 점수는 log rollout − d²/(2σ²)이고 σ = √(K/π)다.
+  - trysel K=12 통과: selector 0.168, teacher 2.446, total 10.077 GFLOPs/img, step 1.04 s. rollout@12(10.08)와 비용이 같다.
+  - screen: screen_priorroll_k12_s0_1030_175140_405f, screen_priorroll_k29_s0_1030_175144_018d.
+- [claude] 결정: σ는 'K의 center 원판 반지름'으로 정했다. 분석의 K별 최적 σ(2/4/4)에 가깝고, 자유 매개변수가 없다. 분석을 본 뒤 정한 것이므로 사후 선택임을 기록한다. screen 결과로 σ를 다시 고르지 않는다.
+- [claude] 결정: K=12와 K=29를 함께 넣었다. 이 방법의 주장은 'center가 이기는 K와 rollout이 이기는 K 모두에서 둘을 이긴다'는 것이라서 한 K만으로는 판정할 수 없다. 대기열도 비어 있어 GPU가 놀 참이었다. K=49는 두 결과를 본 뒤 넣는다.
+- 노벨티 주의: center-bias 사전 + saliency는 시선 예측 문헌에서 흔하다. 이기더라도 random 점수에 같은 사전을 씌운 대체 실험으로 rollout 신호의 기여를 분리해야 한다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.

@@ -37,3 +37,4 @@
   - 주의: 스크립트의 부호 보정에 버그가 있다(`key.split("_")[0]`가 "t", "p"가 된다). 그래서 t_acc와 p_true의 상관은 음수로 찍혔다. 크기만 읽는다.
   - K=12의 self kl_worst: maskedkd 1.555 > random 1.302 > grid 1.191 > rollout 0.700 > center 0.694. student WGA 순위와 같다.
   - K=12에서 accuracy 기반 지표가 틀린 이유: center와 rollout의 KL은 비슷하다. accuracy는 argmax 경계 근처의 차이를 과장한다.
+- **[claude] 2026-10-30 rollout에 중앙 가우시안 사전을 더하면(log rollout − d²/2σ²) masked teacher의 최악 그룹 KL이 center와 rollout보다 모두 낮아진다 (H-W12, analysis_prior_rollout_1030_174424_16a6).** rollout-trained student에서 읽은 kl_worst: K=12 rollout12 prior_s2 0.637 (center 0.694, top_rollout 0.700), K=29 rollout29 prior_s4 0.390 (0.517, 0.443), K=49 rollout49 prior_s4 0.227 (0.300, 0.320). full196 student도 같은 방향이다. 예외는 center12 student의 K=12로, top_rollout 0.603이 prior_s3 0.614보다 조금 낮다. 사전은 plain rollout의 되먹임 손실도 없앤다: rollout12 student에서 K=29 masked teacher WGA는 top_rollout 46.62, prior_s2~s4 60.15~61.65다. 아직 student 결과가 아니라 teacher 쪽 대리 지표다.
