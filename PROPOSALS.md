@@ -92,3 +92,11 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 아이디어: val 이미지를 full teacher가 맞힌 것(FR)과 틀린 것(FW)으로 나눈다. 각 run 자신의 student로 고른 masked teacher가 FW 이미지를 고쳐 맞히는 비율(fix_fw), FW에서의 참 클래스 확률, 그리고 비용으로 FR 소수 그룹에서의 참 클래스 확률을 잰다. 위치 다양성(선택 빈도 엔트로피, 이웃 이미지 Jaccard)도 함께 잰다. 대상은 끝난 screen run 전부(8개 방법 × K 12·29·49)이다.
   - 미리 정한 판정: seed 0 run 전체에서 부호 보정 Spearman ≥ 0.8이고, K=29의 rollout > center > priorroll 순서를 맞히면 후보 축이다. 맞지 않으면 기각한다.
   - 선행과의 차이: KD에서 teacher의 편향 상속을 다룬 연구(Debiased Distillation, arXiv 2302.11187)는 teacher의 출력이나 학습 데이터를 바꾼다. 여기서는 teacher 입력 토큰 선택만으로 상속을 줄이는지를 묻는다. 지지되면 '충실도 최대'가 아니라 '지름길 오류 지점에서의 탈충실'을 목표로 하는 선택기를 설계한다.
+
+## 2026-10-30 [claude] 라운드 13 메모
+- H-W15 판정 (analysis_shortcut_inherit_1030_183518_f5cf): **기각.** fix_fw의 Spearman은 0.64이고 K=29 순서도 틀렸다(priorroll 40.51 > rollout 37.97 > center 36.71). 위치 다양성은 음의 상관이다(div_ent −0.27).
+- **H-W16 class-gradient-weighted rollout (`gradroll`, parent rollout).**
+  - 근거: 끝난 screen에서 rollout은 K=29·49 최고이고 K=12에서 center에 진다. rollout은 클래스와 무관한 신호라 배경을 그대로 담는다. H-W7(analysis_shortcut_probe_1030_160112_bfc0)에서 rollout masked teacher의 place 탐침은 78.38(full student, K=49)로 L9(71.35)보다 높다.
+  - 아이디어: 층마다 attention을 student 자신의 예측 logit 기울기로 가중한다(음수 제거). 그 relevance를 전파해 teacher 입력 top-K를 고른다.
+  - 선행과의 차이: Chefer et al. 2021은 설명용이다. Prune and Merge(arXiv 2503.23455)는 추론 가지치기에 기울기 가중 attention을 쓴다. 여기서는 KD 중 고정 teacher의 입력을 student 관점에서 고른다. 규칙 자체는 기존 기법이라 노벨티는 적용처에만 있다.
+  - 판정: 같은 K에서 rollout보다 threshold 이상 높아야 하고, center·maskedkd 등도 넘어야 한다. 이기면 (1) rollout·maskedkd와의 겹침, (2) 겹치지 않는 토큰을 random으로 바꾼 대체 실험, (3) 중심 거리를 본다.

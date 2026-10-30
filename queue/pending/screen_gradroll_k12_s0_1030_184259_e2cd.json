@@ -1,0 +1,18 @@
+{
+ "id": "screen_gradroll_k12_s0_1030_184259_e2cd",
+ "kind": "train",
+ "dataset": "waterbirds",
+ "stage2": null,
+ "method": "gradroll",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-W16: class-gradient-weighted rollout (Chefer, Gur & Wolf CVPR 2021 relevance rule) on the student.\n\nR = I;  for each block b:  Abar_b = mean_h relu(dA_b,h * A_b,h);  R = R + Abar_b @ R;  score = R[cls, 1:].\ndA = d(sum of the student's max logit) / d(attention of every block). Target is the student's own predicted\nclass (no labels, no teacher). Plain rollout is class-agnostic and keeps whatever the student attends to,\nbackground included; the gradient term keeps only attention that raises the predicted-class logit.\nExploratory screen: the teacher-side proxies failed out of sample (H-W13/H-W15), so no proxy pre-filter.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, topk_mask\n\nMETA = {\n    \"method\": \"gradient-weighted attention rollout (Generic Attention-model Explainability relevance rule)\",\n    \"paper\": \"Chefer, Gur & Wolf CVPR 2021 (Transformer Interpretability Beyond Attention Visualization) / ICCV 2021\",\n    \"why\": \"rollout keeps every token the student looks at, background included; weighting each layer's attention \"\n           \"by its gradient on the student's own decision keeps only tokens that support the class evidence\",\n    \"vs_maskedkd\": \"MaskedKD ranks by raw last-block CLS attention; this propagates gradient-weighted attention \"\n                   \"through all 12 blocks and drops negatively contributing heads\",\n    \"prior_art\": \"Chefer et al. use it for explanation; Prune and Merge (arXiv 2503.23455) uses gradient-weighted \"\n                 \"attention to prune for inference; here it picks the frozen teacher's input tokens during KD\",\n    \"parent\": \"rollout\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(12)), \"tokens\": []}\n\n    def select(self, ctx):\n        attns = list(ctx.out.attn)\n        target = ctx.out.logits.float().max(1).values.sum()\n        grads = torch.autograd.grad(target, attns, retain_graph=True)\n        n = attns[0].shape[-1]\n        r = torch.eye(n, device=attns[0].device).unsqueeze(0).expand(attns[0].shape[0], n, n)\n        for a, g in zip(attns, grads):\n            abar = (g.detach().float() * a.detach().float()).clamp(min=0).mean(dim=1)\n            r = r + abar @ r\n        return topk_mask(r[:, 0, 1:], int(ctx.budget))\n",
+ "selector_sha": "4f3962acf8b7c56efebafe93a3f82ee77df30ca7a3c4a3b709c2bbe3d813a064",
+ "note": "",
+ "by": "agent",
+ "priority": 0,
+ "submitted": "2026-10-30 18:42:59"
+}

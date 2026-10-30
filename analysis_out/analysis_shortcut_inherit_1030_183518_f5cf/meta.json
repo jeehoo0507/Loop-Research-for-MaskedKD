@@ -1,0 +1,12 @@
+{
+ "id": "analysis_shortcut_inherit_1030_183518_f5cf",
+ "name": "shortcut_inherit",
+ "source_sha": "f5cfc4968eb5db5e942ffbbe2a8dbe4bc0bba609b2d3905afcc686a6f573a73a",
+ "status": "done",
+ "meta": {
+  "question": "does a teacher-input selector raise student worst-group accuracy by correcting the full teacher's shortcut errors (unfaithfulness where the full teacher is wrong) or by the spatial diversity of its choices, rather than by faithfulness to the full teacher?",
+  "method": "keep-only evaluation of the masked teacher split by full-teacher correctness, per Waterbirds group, under CLS attention, attention rollout and spatial priors; selection-frequency entropy",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only evaluation); Sagawa et al. ICLR 2020 (Waterbirds groups); Kirichenko et al. ICLR 2023 (shortcut features in the last layer)"
+ },
+ "seconds": 78.2
+}
