@@ -1,0 +1,12 @@
+{
+ "id": "analysis_shortcut_probe_1030_160112_bfc0",
+ "name": "shortcut_probe",
+ "source_sha": "bfc0a7fcd28c9ba96b0875d7e31e2443c893a30aa2262bc2a067aefe612de567",
+ "status": "done",
+ "meta": {
+  "question": "does last-block CLS-attention top-K give the masked teacher more background (place) information than mid-block top-K or rollout, explaining the worst-group loss?",
+  "method": "linear probing of the masked teacher's representation for a nuisance attribute (place), within class; group-sliced faithfulness of the masked prediction",
+  "paper": "Alain & Bengio, Understanding intermediate layers using linear classifier probes, ICLR-W 2017; Sagawa et al. ICLR 2020 (Waterbirds groups); Abnar & Zuidema ACL 2020 (rollout)"
+ },
+ "seconds": 43.9
+}

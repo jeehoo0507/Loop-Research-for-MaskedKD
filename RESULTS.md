@@ -8,6 +8,8 @@
 
 - (seed 0, 관찰) K=29: rollout 89.82 / 65.41 (screen_rollout_k29_s0_1030_135953_7320), center 88.99 / 62.41 (screen_center_k29_s0_1030_135953_2878), grid 81.65 / 36.84 (screen_grid_k29_s0_1030_135953_a69e), random 82.49 / 27.82 (screen_random_k29_s0_1030_135953_8780). MaskedKD@29(87.66/43.61)는 center와 rollout 둘 다에게 진다.
 
+- (seed 0, 관찰) midattn@49 89.91 / 57.89 (screen_midattn_k49_s0_1030_153152_3b79). MaskedKD@49보다 WGA가 6.01 높다. 하지만 rollout@49(64.66)와 center@49(60.15)보다 낮아서 승격 기준에 못 미친다. val WGA는 epoch 45에 70.68까지 올랐다가 마지막 20 에폭 동안 57~59에 머문다. MaskedKD@12는 85.15 / 23.31이다 (screen_maskedkd_k12_s0_1030_135953_ba8e).
+
 ## 실패한 방향
 - [claude] 2026-10-30 H-W6 'MaskedKD top-K에서 고노름(register성) 토큰 빼기'. 분석 단계에서 기각했다. 빼도 masked teacher WGA가 회복되지 않는다. full student 기준으로 K=49에서 48.87→49.62, K=29에서 40.60→40.60이고, mkd49 student 기준으로 K=49에서 42.86→42.11이다(analysis_register_tokens_1030_153157_efbe). 평균 정확도만 1.4~5%p 오른다. 선택기는 제출하지 않았다.
 
@@ -20,3 +22,5 @@
   - mkd98 student (e25 / e50 / final), masked teacher WGA: K=49에서 L9 72.18/70.68/72.93, L11 53.38/51.88/49.62, rollout 66.92/66.17/72.93. K=12에서 L9 49.62/55.64/57.90, L11 40.60/33.84/29.32, rollout 43.61/48.87/47.37 (analysis_group_fidelity_1030_144455_654a). 학습 시점과 student 5개 전부에서 L9 > L11이다. K=12에서는 L9 > rollout도 5개 전부에서 성립한다.
   - full teacher 자신의 val 그룹 정확도는 [100.0, 94.85, 64.66, 93.98]이다(reference.json). 즉 L9 top-49만 받은 teacher(WGA 69~73)는 소수 그룹에서 full teacher보다 낫다. 토큰 선택이 비용만 줄이는 게 아니라 teacher의 배경 지름길을 덜어낼 수 있다(H-W1의 강한 형태). 단 133장 기준으로 6~11장 차이다.
   - 주의: 이것은 teacher 쪽 신호 품질이다. student 학습 결과는 screen으로 따로 확인해야 한다. 그룹 2·3의 val은 133장이라 1장이 0.75%p다.
+- **[claude] 2026-10-30 마지막 블록 top-K를 받은 teacher는 배경(장소) 정보를 가장 많이 가진다 (H-W7).** masked teacher pre-logit feature에서 class 안의 place를 선형 탐침으로 맞힌 균형 정확도는 full student, K=49에서 L11 86.10, L8 84.09, center 82.89, L10 82.02, rollout 78.38, L9 71.35이다. full teacher는 95.28이다. K=29와 mkd49 student에서도 L11이 최고이고 L9가 최저다 (analysis_shortcut_probe_1030_160112_bfc0). masked teacher WGA와는 거의 역순이다.
+- **[claude] 2026-10-30 clean 이미지 대리 지표가 처음으로 student 순위를 틀렸다.** L9@49의 대리 지표는 72.18로 rollout 72.93과 비슷했고 center 63.91보다 높았다 (analysis_group_fidelity_1030_143842_1ea0). 그런데 student WGA는 midattn 57.89 < center 60.15 < rollout 64.66이다. 대리 지표는 학습 조건(mixup/cutmix, drop path)을 반영하지 않는다. 이를 확인하는 분석이 analysis_train_condition_gap_1030_162956_067e이다.

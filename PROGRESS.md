@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 4): 확정 결과 없음. seed 0 정확도/WGA. K=49: MaskedKD 89.24/51.88, center 90.16/60.15, rollout 89.66/64.66, tome 89.66/51.13. K=29: MaskedKD 87.66/43.61, rollout 89.82/65.41, center 88.99/62.41, grid 81.65/36.84, random 82.49/27.82. Full seed 0은 90.66/65.41.
-- 핵심 분석: 9번째 블록의 CLS attention으로 고르면 masked teacher WGA가 47에서 72로 오른다(analysis_group_fidelity_1030_143842_1ea0). register(고노름) 토큰을 빼는 것으로는 WGA가 회복되지 않는다(analysis_register_tokens_1030_153157_efbe). H-W6은 기각한다.
-- 진행 중: screen_midattn_k49_s0_1030_153152_3b79 (epoch 24/100), analysis_shortcut_probe_1030_160112_bfc0 (H-W7, priority 6), K=12 기준선, tome@29, CUB 관문.
-- 다음: midattn@49 결과가 나오면 rollout(64.66)·center(60.15)와 비교한다. 이기면 K=29 screen과 승격 전 분해를 한다. rollout은 K=29에서 Full과 WGA가 같아 가장 강한 상대다.
+- 요약 (2026-10-30 [claude] 라운드 5): 확정 결과 없음. midattn@49는 89.91/57.89다(screen_midattn_k49_s0_1030_153152_3b79). MaskedKD(89.24/51.88)보다 WGA가 6.0 높지만 rollout(64.66)과 center(60.15)보다 낮아 승격하지 못한다. K=49 기준 rollout이 가장 강한 기준선이다.
+- 핵심 분석: masked teacher의 place 정보는 L11에서 가장 많고 L9에서 가장 적다(K=49 탐침 균형 정확도 86.10 vs 71.35, analysis_shortcut_probe_1030_160112_bfc0). 이것은 H-W7을 teacher 수준에서 지지한다. 하지만 clean 이미지 대리 지표는 L9(72.18)를 rollout(72.93) 수준으로 예측했는데 student에서는 그렇게 나오지 않았다. 대리 지표가 처음으로 순위를 틀렸다.
+- 진행 중: analysis_train_condition_gap_1030_162956_067e (H-W8: 학습 조건, 즉 cutmix/mixup/drop path에서의 fidelity, priority 6), K=12 기준선(center/grid/random/tome 진행 중, oracle 대기), CUB 관문.
+- 다음: H-W8 결과로 대리 지표를 학습 조건에 맞게 고친다. 그 뒤 K=12(MaskedKD 85.15/23.31로 차이가 가장 큰 곳)에서 후보를 screen한다.
 - 막힌 것: 없음.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -44,3 +44,15 @@
 - 새 분석: analysis/shortcut_probe.py → analysis_shortcut_probe_1030_160112_bfc0 (H-W7, priority 6). masked teacher의 pre-logit feature에 class 안에서 place를 맞히는 선형 탐침(닫힌 형태 ridge, 2-fold CV, 균형 정확도)을 붙인다. full feature와의 cosine도 그룹별로 잰다. 대상은 L8~L11·rollout·center이고 K는 29·49, student는 full·mkd49다. L11의 place 균형 정확도가 L9·rollout보다 높으면 'MaskedKD는 배경을 teacher에게 넘긴다'는 내용 수준의 원인이 선다. validator가 `.backward`와 `.manual_seed`를 막아서 LBFGS 로지스틱 회귀를 닫힌 형태 ridge로 바꾸고 random 선택을 뺐다.
 - [claude] 결정: midattn K=29·12 screen은 이번에도 넣지 않는다. 대기 작업이 이미 9개(8개 초과)이고 midattn@49가 epoch 24다. 한 계열을 결과 전에 여러 K로 쌓지 않는다는 지난 라운드 결정을 유지한다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 16:35 라운드 5
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report를 다시 생성함), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(shortcut_probe가 새로 나옴).
+- 새 결과 (screen seed 0, 정확도/WGA): midattn@49 89.91/57.89 (screen_midattn_k49_s0_1030_153152_3b79), maskedkd@12 85.15/23.31 (screen_maskedkd_k12_s0_1030_135953_ba8e), tome@29 89.66/51.13 (screen_tome_k29_s0_1030_135953_88a4, 예산에 맞춰지지 않음: teacher 비용이 예산의 1.16배). tome@29의 정확도와 WGA는 tome@49와 소수점까지 같다. 두 run은 teacher GFLOPs가 4.36과 6.86으로 서로 다르다. 학습 곡선도 다르다. 그래서 우연한 일치로 본다(1075/1199, 68/133).
+- 판정: midattn@49는 MaskedKD보다 WGA가 +6.01이다. threshold 2.45를 넘는다. 정확도는 +0.67이고 threshold 0.76 안이다. 하지만 같은 K의 rollout(64.66)과 center(60.15)보다 WGA가 낮다. 승격 기준의 "rollout·grid·center·tome보다 낮지 않을 것"을 어긴다. **승격하지 않는다.**
+- 학습 곡선 (val WGA, 5 에폭마다): midattn은 epoch 45에 70.68까지 올랐다가 후반에 떨어진다. 마지막 4번은 57.14/58.65/57.89/57.89다. rollout의 마지막 4번은 63.91/64.66/64.66/64.66, center는 62.41/62.41/62.41/60.15이고, MaskedKD는 51.88이 3번이다. 마지막 값만 튄 것이 아니다. midattn의 후반 하락은 실제다.
+- 분석 analysis_shortcut_probe_1030_160112_bfc0 (H-W7). masked teacher pre-logit feature에서 class 안의 place를 맞히는 선형 탐침의 균형 정확도를 쟀다. full student, K=49 기준으로 L11 86.10 > L8 84.09 > center 82.89 > L10 82.02 > rollout 78.38 > L9 71.35이고, full teacher는 95.28이다. K=29에서는 L11 77.60 > center 74.20 > L8 73.50 > L10 72.53 > rollout 67.62 > L9 60.81이다. mkd49 student도 순서가 같다(K=49에서 L11 88.27, L9 77.84). masked teacher WGA와는 거의 역순이다. 해석: 마지막 블록 top-K는 teacher에게 배경(장소) 정보를 가장 많이 넘긴다. H-W7은 teacher 수준에서 지지된다.
+- 해석 (대리 지표의 첫 실패): clean 이미지와 eval 모드에서 잰 대리 지표는 L9@49(72.18)를 rollout(72.93) 수준, center(63.91)보다 위로 예측했다. 실제 student는 57.89로 center보다도 낮다. 그동안 순위가 맞은 5개 방법은 모두 학습 동역학이 단순한 경우일 수 있다. 차이가 날 만한 원인은 학습 조건이다. 학습에서는 student가 train 모드(drop path 0.1)이고, 모든 batch가 mixup 또는 cutmix다. 대리 지표에는 이것이 없었다. 또 midattn은 epoch 45 이후 WGA가 떨어진다. student L9 attention이 학습 후반에 바뀌었을 수도 있다.
+- 새 분석: analysis/train_condition_gap.py → analysis_train_condition_gap_1030_162956_067e (H-W8, priority 6). 조건은 clean_eval, clean_train(drop path), cutmix(패치 격자에 맞춘 상자), mixup(0.6)이다. 선택기는 L9, L11, rollout, center이고 K는 29와 49다. 재는 것은 그룹별 KL(full teacher‖masked teacher)과 일치율, cutmix 상자 안 토큰 비율, drop path에서의 선택 안정성이다. student는 midattn@49와 rollout@49(e25/e50/final), maskedkd@49 final이다. GPU가 공유 중이라 입력은 CPU에 두었다.
+- [claude] 결정: midattn의 K=29·12 screen은 넣지 않는다. 대리 지표가 L9를 과대평가한 이유를 모르는 채로 같은 계열을 다른 K에 쌓으면, 이길 경우에도 우연을 가려낼 수 없다. 그래서 H-W8 분석을 먼저 돌린다. 대기 작업은 5개(분석 1 포함), 실행 중은 4개다. GPU는 놀지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+- (추가) rollout@12가 끝났다: 87.24/45.11 (screen_rollout_k12_s0_1030_135953_489a). MaskedKD@12(85.15/23.31)보다 WGA가 21.8 높다. K=12는 토큰 선택의 차이가 가장 큰 K다. center/grid/random/tome@12는 아직 학습 중이다.
