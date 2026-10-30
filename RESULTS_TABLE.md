@@ -12,17 +12,15 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs maskedkd@12 [WGA]: +36.84 %p, 95% CI [+20.23, +53.46], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
-- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 - gradroll@12 vs grid@12 [WGA]: +27.44 %p, 95% CI [+22.68, +32.21], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs center@12 [WGA]: +8.27 %p, 95% CI [+8.27, +8.27], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs maskedkd@12 [WGA]: +36.84 %p, 95% CI [+20.23, +53.46], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
-- gradroll@12 vs rollout@12 [acc]: +0.71 %p, 95% CI [-3.00, +4.42], seeds 1,2, GFLOPs ratio 1.271 -> no difference
-- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
+- gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
+- gradroll@12 vs rollout@12 [WGA]: +8.27 %p, 95% CI [-3.09, +19.64], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 - gradroll@12 vs tome@12 [acc]: -1.50 %p, 95% CI [-3.62, +0.62], seeds 1,2, GFLOPs ratio 1.068 -> no difference
 - gradroll@12 vs tome@12 [WGA]: +12.78 %p, 95% CI [-6.34, +31.91], seeds 1,2, GFLOPs ratio 1.068 -> no difference
 - gradroll@12 vs grid@12 [acc]: +4.63 %p, 95% CI [-0.14, +9.40], seeds 1,2, GFLOPs ratio 1.270 -> no difference
@@ -33,8 +31,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -2.75 %p, 95% CI [-10.17, +4.67], seeds 1,2, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs full@196 [WGA]: -4.51 %p, 95% CI [-14.04, +5.02], seeds 1,2, GFLOPs ratio 0.300 -> no difference
-- gradroll@12 vs rollout@12 [acc]: +0.71 %p, 95% CI [-3.00, +4.42], seeds 1,2, GFLOPs ratio 1.271 -> no difference
-- gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
+- gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
+- gradroll@12 vs rollout@12 [WGA]: +8.27 %p, 95% CI [-3.09, +19.64], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.76), WGA -0.75 %p (threshold 2.45) -> added part UNPROVEN
@@ -75,7 +73,7 @@ Total agent screen configs: 10
 | final | grid |  | 12 | 12.0 | 1,2 | 83.57 ± 0.24 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 300 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
 | final | random |  | 12 | 12.0 | 1,2 | 83.69 ± 1.24 | 36.47 ± 1.59 | 10.09 | 2.45 | 0.00 | 306 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf |
-| final | rollout |  | 12 | 12.0 | 1,2 | 87.49 ± 0.71 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 239 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s2_1030_212126_33d1 |
+| final | rollout |  | 12 | 12.0 | 1,2,3 | 88.10 ± 1.17 | 50.88 ± 1.74 | 10.08 | 2.45 | 0.17 | 237 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s3_1030_220958_d961 final_rollout_k12_s2_1030_212126_33d1 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2 | 89.70 ± 0.06 | 50.00 ± 1.60 | 12.00 | 4.36 | 0.00 | 289 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
