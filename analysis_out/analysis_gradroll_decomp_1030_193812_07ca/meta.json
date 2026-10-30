@@ -1,0 +1,12 @@
+{
+ "id": "analysis_gradroll_decomp_1030_193812_07ca",
+ "name": "gradroll_decomp",
+ "source_sha": "07ca171882a78a13f0964d69cce2bb1341aa3028c20478e970df3352082af945",
+ "status": "done",
+ "meta": {
+  "question": "which tokens does gradient-weighted rollout keep that plain rollout, MaskedKD and the centre disc do not, and does its K=12 gain come from those tokens, from spatial placement, or from avoiding register-like high-norm tokens?",
+  "method": "gradient-weighted attention rollout (relevance propagation) vs attention rollout vs last-block CLS attention; selection overlap, centre distance, high-norm token share, keep-only evaluation",
+  "paper": "Chefer, Gur & Wolf CVPR 2021; Abnar & Zuidema ACL 2020; Darcet et al. ICLR 2024 (registers); Hooker et al. NeurIPS 2019 (keep-only evaluation)"
+ },
+ "seconds": 162.6
+}

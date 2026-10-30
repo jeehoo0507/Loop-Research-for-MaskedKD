@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 16): 확정 결과 없음. **첫 승격 후보: gradroll@12 88.16/60.90** (screen_gradroll_k12_s0_1030_184259_e2cd). parent rollout 대비 +0.92/+15.79, center 대비 −0.58/+4.51. 단 tome@12(not matched) 대비 정확도 −0.83(threshold 초과), K=29에서는 이득 없음. K=29·49 최고는 여전히 rollout.
+- 요약 (2026-10-30 [claude] 라운드 17): 확정 결과 없음. **첫 승격 후보: gradroll@12 88.16/60.90** (screen_gradroll_k12_s0_1030_184259_e2cd). parent rollout 대비 +0.92/+15.79, center 대비 −0.58/+4.51. 단 tome@12(not matched) 대비 정확도 −0.83(threshold 초과), K=29에서는 이득 없음. K=29·49 최고는 여전히 rollout.
 - 핵심: 기울기 가중 rollout은 plain rollout이 무너지는 작은 K(12)에서만 WGA를 크게 지킨다. 왜 그런지(어떤 토큰, 공간 배치, 고노름 토큰 회피)를 분해로 확인한 뒤 final로 올린다.
-- 진행 중: 분해 분석 analysis_gradroll_decomp_1030_193812_07ca, 대체 screen gradrep@12(screen_gradrep_k12_s0_1030_193817_c83d), suffdisc@12 s1, priorroll@12 s1, adaroll@49.
-- 다음: 분해가 gradroll 고유 토큰을 지지하고 gradrep이 이득을 잃으면 gradroll@12 final seed 1·2·3 제출(그 전에는 새 변형 screen 금지). adaroll@49가 rollout을 넘는지.
+- 진행 중: 대체 screen gradrep@12(screen_gradrep_k12_s0_1030_193817_c83d), suffdisc@12 s1, priorroll@12 s1, adaroll@49. 분해 분석 analysis_gradroll_decomp_1030_193812_07ca는 끝났고(라운드 17), teacher 수준에서는 gradroll 고유 토큰이 원인이라는 쪽이다.
+- 다음: gradrep@12의 student WGA가 random@12(33.83)~maskedkd 쪽으로 떨어지면 gradroll@12 final seed 1·2·3을 제출한다(그 전에는 새 변형 screen 금지). adaroll@49가 rollout을 넘는지 본다.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -235,3 +235,22 @@
 - [claude] 결정: gradroll@49는 넣지 않는다. K=29에서 이득이 없었고, 분해 전에 같은 계열을 쌓지 않는다.
 - 학습 중: suffdisc@12 s1(e63), priorroll@12 s1(e25), adaroll@49(e10, mean_kept 48.5로 배치 평균 ≤ 49 정상 동작).
 - 문헌: 'gradient-weighted attention × token selection × KD teacher input'으로 1회 검색. MaskedKD(2302.10494), SaiT(2210.05832, DINO CLS attention), MoVE-KD(2501.01709, CLIP CLS attention 가중), Subtoken ViT(2607.09086, 특징 손상 기반 head 선택)가 나왔다. 기울기 가중 relevance로 KD teacher 입력을 고른 예는 찾지 못했다. Chefer 규칙 자체는 기존 기법이므로 노벨티는 적용처와 '작은 K에서 WGA를 지킨다'는 분석 근거에 있어야 한다. 웹 결과 안에 지시문은 없었다.
+
+## [claude] 2026-10-30 19:50 라운드 17
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(새 판정 없음), analysis_out(gradroll_decomp가 새로 나옴).
+- 새 screen 결과: 없다. 학습 중인 것은 suffdisc@12 s1 e86, priorroll@12 s1 e59, adaroll@49 e36, gradrep@12 e9다. 중간 val 값(adaroll e35 WGA 59.40, suffdisc e85 63.16)은 판정에 쓰지 않는다. 대기 0, 실행 4, GPU 메모리 24.0/24.6GB 사용.
+- 분석 analysis_gradroll_decomp_1030_193812_07ca (승격 전 분해, H-W18). 표의 값은 masked teacher val WGA / kl_worst / 중심 거리 cdist / 고노름 비율 hn_frac이다.
+  - gradroll12 student final, K=12: gradroll 51.88 / 0.555 / 4.68 / 0.057, rollout 49.62 / 0.624 / 4.16 / 0.058, center 41.35 / 0.694 / 1.29 / 0.018, maskedkd 36.09 / 0.518 / 5.30 / 0.402.
+  - 대체 변형(gradroll∩maskedkd만 남기고 나머지를 다시 채움)은 rand 25.56, grid 27.07이다. maskedkd(36.09)보다도 낮다.
+  - 겹침(K 대비, gradroll12 final): gradroll∩maskedkd 0.43, gradroll∩rollout 0.29, gradroll∩center 0.15. gradroll29 final에서는 각각 0.58 / 0.50 / 0.34다.
+  - 다른 student에서도 대체 변형은 떨어진다. rollout12 student: gradroll 50.38 → rep 26.32/27.07. center12 student: gradroll 48.87 → rep 22.56/19.55.
+  - 학습 시점별(gradroll12 student e25/e50/final) gradroll 자신의 teacher WGA는 28.57 / 39.85 / 51.88이다. 학습 초반에는 rollout(42.11/45.11)보다 낮다.
+- 미리 정한 읽기(PROPOSALS 라운드 16)에 따른 판정:
+  - (a) 공간 배치 설명은 배제한다. gradroll의 cdist는 4.68(rollout12 student 4.44)로 center 1.29와 멀다. center와의 겹침도 0.15다.
+  - (b) 'gradroll∩rollout 겹침이 K=12에서 K=29보다 낮다'는 맞다(0.29 대 0.50, rollout student 0.54 대 0.59).
+  - (c) 고노름 회피는 반만 맞다. rollout12 student 안에서는 rollout 0.125 대 gradroll 0.049로 gradroll이 낮다. 하지만 gradroll12 student 안에서는 0.058 대 0.057로 같다. 고노름 토큰 회피로는 이득을 설명할 수 없다.
+  - (d) teacher 수준에서는 gradroll 고유(MaskedKD 밖) 토큰 57%가 이득의 원인이다. 그것을 random·grid로 바꾸면 teacher WGA가 random 수준으로 떨어진다. 이 결과는 student 3개에서 모두 같다.
+- 주의: 이 분해는 masked teacher(clean eval) 지표다. 이 계열 대리 지표는 표본 밖에서 이미 여러 번 실패했다(H-W8, H-W13~15). 이번 분석에서도 K=29에서 gradroll teacher WGA는 rollout보다 높았다(gradroll29 student 63.16 대 60.15, rollout29 student 66.92 대 54.89). 그런데 student는 이기지 못했다(screen_gradroll_k29_s0_1030_184255_9017 63.91 대 rollout 65.41). 그래서 student 수준의 판정은 대체 screen gradrep@12에 맡긴다.
+- [claude] 결정: gradroll@12 final은 이번 라운드에도 제출하지 않는다. 라운드 16에 정한 두 조건 중 분해 쪽은 충족됐다(teacher 수준). gradrep screen 쪽은 epoch 9라 아직 판정할 수 없다. 기다리는 비용은 약 40분이고 기한(11-04)까지 여유가 있다. 반대로 대체 실험 없이 final 3개(+자동 비교군)를 넣으면 GPU를 크게 쓰게 된다. 가장 보수적인 선택이 기다리는 것이다.
+- [claude] 결정: 새 screen이나 분석은 넣지 않는다. 학습 4개가 GPU를 꽉 채우고 있다(여유 0.5GB). 승격 후보 판정 전에 새 변형을 쌓지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
