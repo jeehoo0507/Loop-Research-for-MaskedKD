@@ -61,3 +61,13 @@ recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-
   model.load_state_dict(torch.load(out, map_location="cpu"))
 {"val_acc": 84.67, "source": "fine-tuned here", "sha256": "59b864387ba5d333842ac95289e0bd90e86922133af1acca7c42b5821768bc45"}
 [stage2 10-30 15:00] CUB teacher: fine-tuned here val acc 84.67
+................................                                         [100%]
+32 passed in 29.03s
+locked: 033df9786a4a53fe0265ef342cdb76f464c0ef033c6672e87ae61e8d49a5ff07
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+agent: 1 windows (created Fri Oct 30 15:30:52 2026)
+boot: 1 windows (created Fri Oct 30 11:57:04 2026)
+sched: 1 windows (created Fri Oct 30 12:38:02 2026)
+stage2: 1 windows (created Fri Oct 30 13:59:59 2026)
+[stage2 10-30 15:30] loop restarted after stage-2 relock
+[stage2 10-30 15:30] CUB gate submitted (one GPU slot)

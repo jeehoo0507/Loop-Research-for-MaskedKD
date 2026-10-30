@@ -13,3 +13,5 @@
 - 2026-10-30 13:59 CUB (stage 2) teacher, gate and baselines started in background (tmux: stage2)
 - 2026-10-30 13:59 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
 - 2026-10-30 15:00 [stage2] CUB teacher: fine-tuned here val acc 84.67
+- 2026-10-30 15:30 [stage2] loop restarted after stage-2 relock
+- 2026-10-30 15:30 [stage2] CUB gate submitted (one GPU slot)
