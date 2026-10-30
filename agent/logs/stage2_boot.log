@@ -33,3 +33,12 @@ sched: 1 windows (created Thu Oct 29 23:37:45 2026)
 stage2: 1 windows (created Fri Oct 30 00:25:01 2026)
 [stage2 10-30 01:39] loop restarted after stage-2 relock
 [stage2 10-30 01:39] ImageNet-100 gate submitted (one GPU slot; long)
+[stage2 10-30 13:59] CUB teacher: import aim-lab-test-5's or fine-tune (about 1 h)
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-test-5 sweep found)"}
+{'epoch': 5, 'val_acc': 70.6666648387909, 'epoch_s': 16.0}
+{'epoch': 10, 'val_acc': 79.666668176651, 'epoch_s': 16.1}
+{'epoch': 15, 'val_acc': 83.83333086967468, 'epoch_s': 16.1}
+{'epoch': 20, 'val_acc': 83.1666648387909, 'epoch_s': 16.1}
+{'epoch': 25, 'val_acc': 84.50000286102295, 'epoch_s': 16.1}
