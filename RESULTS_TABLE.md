@@ -13,6 +13,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs maskedkd@12 [acc]: +4.00 %p, 95% CI [+1.88, +6.12], seeds 1,2, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs maskedkd@12 [WGA]: +40.60 %p, 95% CI [+21.48, +59.73], seeds 1,2, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
+- gradroll@12 vs grid@12 [WGA]: +27.44 %p, 95% CI [+22.68, +32.21], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
@@ -22,8 +23,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
 - gradroll@12 vs tome@12 [acc]: -1.50 %p, 95% CI [-3.62, +0.62], seeds 1,2, GFLOPs ratio 1.068 -> no difference
 - gradroll@12 vs tome@12 [WGA]: +12.78 %p, 95% CI [-6.34, +31.91], seeds 1,2, GFLOPs ratio 1.068 -> no difference
-- gradroll@12 vs grid@12 [acc]: missing (needs >= 2 shared seeds)
-- gradroll@12 vs grid@12 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs grid@12 [acc]: +4.63 %p, 95% CI [-0.14, +9.40], seeds 1,2, GFLOPs ratio 1.270 -> no difference
+- gradroll@12 vs grid@12 [WGA]: +27.44 %p, 95% CI [+22.68, +32.21], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
 - gradroll@12 vs center@12 [WGA]: missing (needs >= 2 shared seeds)
 - gradroll@12 vs random@12 [acc]: missing (needs >= 2 shared seeds)
@@ -69,7 +70,7 @@ Total agent screen configs: 10
 | final | center |  | 12 | 12.0 | 1 | 88.32 ± 0.00 | 54.89 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_center_k12_s1_1030_201811_341b |
 | final | full |  | 196 | 196.0 | 1 | 91.33 ± 0.00 | 66.92 ± 0.00 | 42.77 | 35.13 | 0.00 | 195 | final_full_k196_s1_1030_201811_b764 |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2 | 88.20 ± 0.29 | 62.78 ± 0.53 | 12.81 | 2.45 | 2.90 | 197 | final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
-| final | grid |  | 12 | 12.0 | 1 | 83.74 ± 0.00 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 302 | final_grid_k12_s1_1030_201811_dc71 |
+| final | grid |  | 12 | 12.0 | 1,2 | 83.57 ± 0.24 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 300 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2 | 84.20 ± 0.06 | 22.18 ± 1.60 | 10.07 | 2.45 | 0.00 | 281 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 |
 | final | random |  | 12 | 12.0 | 1 | 84.57 ± 0.00 | 37.59 ± 0.00 | 10.09 | 2.45 | 0.00 | 316 | final_random_k12_s1_1030_201811_19bf |
 | final | rollout |  | 12 | 12.0 | 1,2 | 87.49 ± 0.71 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 239 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s2_1030_212126_33d1 |
