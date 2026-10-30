@@ -10,6 +10,8 @@
 
 - (seed 0, 관찰) midattn@49 89.91 / 57.89 (screen_midattn_k49_s0_1030_153152_3b79). MaskedKD@49보다 WGA가 6.01 높다. 하지만 rollout@49(64.66)와 center@49(60.15)보다 낮아서 승격 기준에 못 미친다. val WGA는 epoch 45에 70.68까지 올랐다가 마지막 20 에폭 동안 57~59에 머문다. MaskedKD@12는 85.15 / 23.31이다 (screen_maskedkd_k12_s0_1030_135953_ba8e).
 
+- (seed 0, 관찰) K=12: center 88.74 / 56.39 (screen_center_k12_s0_1030_135953_c64e), rollout 87.24 / 45.11 (screen_rollout_k12_s0_1030_135953_489a), grid 83.90 / 35.34 (screen_grid_k12_s0_1030_135953_1e84), random 83.49 / 33.83 (screen_random_k12_s0_1030_135953_bc03), maskedkd 85.15 / 23.31 (screen_maskedkd_k12_s0_1030_135953_ba8e). K=12에서 MaskedKD는 random보다 WGA가 낮다. center는 rollout보다 WGA가 11.3 높다.
+
 ## 실패한 방향
 - [claude] 2026-10-30 H-W6 'MaskedKD top-K에서 고노름(register성) 토큰 빼기'. 분석 단계에서 기각했다. 빼도 masked teacher WGA가 회복되지 않는다. full student 기준으로 K=49에서 48.87→49.62, K=29에서 40.60→40.60이고, mkd49 student 기준으로 K=49에서 42.86→42.11이다(analysis_register_tokens_1030_153157_efbe). 평균 정확도만 1.4~5%p 오른다. 선택기는 제출하지 않았다.
 

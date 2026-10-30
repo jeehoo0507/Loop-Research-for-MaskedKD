@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 5): 확정 결과 없음. midattn@49는 89.91/57.89다(screen_midattn_k49_s0_1030_153152_3b79). MaskedKD(89.24/51.88)보다 WGA가 6.0 높지만 rollout(64.66)과 center(60.15)보다 낮아 승격하지 못한다. K=49 기준 rollout이 가장 강한 기준선이다.
-- 핵심 분석: masked teacher의 place 정보는 L11에서 가장 많고 L9에서 가장 적다(K=49 탐침 균형 정확도 86.10 vs 71.35, analysis_shortcut_probe_1030_160112_bfc0). 이것은 H-W7을 teacher 수준에서 지지한다. 하지만 clean 이미지 대리 지표는 L9(72.18)를 rollout(72.93) 수준으로 예측했는데 student에서는 그렇게 나오지 않았다. 대리 지표가 처음으로 순위를 틀렸다.
-- 진행 중: analysis_train_condition_gap_1030_162956_067e (H-W8: 학습 조건, 즉 cutmix/mixup/drop path에서의 fidelity, priority 6), K=12 기준선(center/grid/random/tome 진행 중, oracle 대기), CUB 관문.
-- 다음: H-W8 결과로 대리 지표를 학습 조건에 맞게 고친다. 그 뒤 K=12(MaskedKD 85.15/23.31로 차이가 가장 큰 곳)에서 후보를 screen한다.
+- 요약 (2026-10-30 [claude] 라운드 6): 확정 결과 없음. K=12 기준선이 모였다. center@12는 88.74/56.39다. rollout@12(87.24/45.11)와 MaskedKD@12(85.15/23.31)를 크게 앞선다. 신호가 없는 center가 K=12·29·49 모두에서 MaskedKD보다 WGA가 높다. midattn@49(89.91/57.89)는 승격하지 못했다.
+- 핵심 분석: L11 top-K를 받은 teacher가 place 정보를 가장 많이 가진다(analysis_shortcut_probe_1030_160112_bfc0). clean 이미지 대리 지표는 L9를 과대평가했다. 원인을 확인하는 H-W8 분석이 실행 중이다.
+- 진행 중: analysis_train_condition_gap_1030_162956_067e (H-W8), analysis_window_fidelity_1030_165418_e276 (H-W9: student attention으로 위치를 정한 연속 창 vs center. K=12·29·49, clean과 off-centre crop 조건), tome@12, oracle@12, CUB 관문.
+- 다음: H-W9에서 win_* 선택이 crop 조건 WGA로 center를 이기면 selectors/attnwin(parent=center)을 K=12에서 screen한다. midattn 계열을 계속할지는 H-W8 결과로 정한다.
 - 막힌 것: 없음.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -56,3 +56,17 @@
 - [claude] 결정: midattn의 K=29·12 screen은 넣지 않는다. 대리 지표가 L9를 과대평가한 이유를 모르는 채로 같은 계열을 다른 K에 쌓으면, 이길 경우에도 우연을 가려낼 수 없다. 그래서 H-W8 분석을 먼저 돌린다. 대기 작업은 5개(분석 1 포함), 실행 중은 4개다. GPU는 놀지 않는다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
 - (추가) rollout@12가 끝났다: 87.24/45.11 (screen_rollout_k12_s0_1030_135953_489a). MaskedKD@12(85.15/23.31)보다 WGA가 21.8 높다. K=12는 토큰 선택의 차이가 가장 큰 K다. center/grid/random/tome@12는 아직 학습 중이다.
+
+## [claude] 2026-10-30 16:55 라운드 6
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report를 다시 생성함), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out. train_condition_gap은 16:51에 시작해 아직 결과가 없고 students.json만 있다.
+- 새 결과 (screen seed 0, K=12, 정확도/WGA): center 88.74/56.39 (screen_center_k12_s0_1030_135953_c64e), grid 83.90/35.34 (screen_grid_k12_s0_1030_135953_1e84), random 83.49/33.83 (screen_random_k12_s0_1030_135953_bc03). 이미 있던 것은 rollout 87.24/45.11 (screen_rollout_k12_s0_1030_135953_489a)와 maskedkd 85.15/23.31 (screen_maskedkd_k12_s0_1030_135953_ba8e)이다. tome@12와 oracle@12는 아직 끝나지 않았다.
+- 해석 1: K=12에서 MaskedKD는 random보다도 WGA가 10.5 낮다. 작은 K에서 마지막 블록 top-K는 소수 그룹에 해롭다. 이것은 H-W7(L11 top-K는 teacher에게 장소 정보를 넘긴다)과 맞는다.
+- 해석 2: K=12에서 center는 rollout보다 WGA가 11.3, 정확도가 1.5 높다. K=49와 K=29에서는 반대로 rollout이 center보다 WGA가 4.5, 3.0 높았다. K가 작을수록 '연속된 중앙 영역 하나'가 흩어진 top-K보다 유리해진다. 그래서 K=12에서 주장하려면 center를 이겨야 한다. 지금 가장 높은 기준이다.
+- 가설 H-W9: teacher에게 좋은 입력은 점수가 높은 흩어진 토큰이 아니라 객체 위의 연속된 영역 하나다. Waterbirds val에서는 새가 대체로 가운데 있어서 center가 잘 맞는다. 학습 중에는 RandomResizedCrop 때문에 새가 가운데에서 벗어난다. 그럴 때 student attention으로 창의 위치만 정하면 center보다 나을 수 있다. 이 가설은 분석으로 먼저 확인한다.
+- 새 분석: analysis/window_fidelity.py → analysis_window_fidelity_1030_165418_e276 (priority 6). 이전 설정의 analysis/object_window.py를 그룹 단위로 고친 것이다.
+  - 조건: clean, 그리고 off-centre crop(넓이 0.45~0.7, 위치는 batch마다 결정적으로 바꿈).
+  - 선택: center, win_{L9,L11,rollout}_{cent,peak}(attention 무게중심 또는 blur 뒤 최댓값 주변의 K개), top_{L9,L11,rollout}, 분석 전용 상한 shift_best(이동시킨 원판 25개 중 teacher KL이 가장 작은 것).
+  - K는 12·29·49이고, student는 full@196·maskedkd@49·rollout@49·center@49의 final이다. 그룹별 masked teacher 정확도와 KL을 잰다.
+  - [claude] 결정: GPU를 학습 작업과 함께 쓰고 있어 미리 돌려 보지 않고 제출했다. 오류가 나면 다음 라운드에 고친다.
+- [claude] 결정: 이번 라운드에는 screen을 넣지 않는다. midattn 계열은 H-W8 결과가 나올 때까지 보류한다(라운드 5 결정 유지). attnwin은 H-W9 근거가 나오기 전에는 제출하지 않는다. 대기 중인 작업(oracle@12, CUB 3개)과 실행 중인 작업이 있어 GPU는 놀지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
