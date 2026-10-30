@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 18): 확정 결과 없음. K=12 후보가 둘이다. **gradroll@12 88.16/60.90** (seed 0, screen_gradroll_k12_s0_1030_184259_e2cd)과 **suffdisc@12 2-seed 89.62/61.28** (screen_suffdisc_k12_s{0,1}). suffdisc는 center 2-seed(88.37/54.14) 대비 +1.25/+7.14지만 seed 0 Parent check는 UNPROVEN이다. K=29·49 최고는 여전히 rollout.
-- 핵심: K=12에서는 center를 넘는 방법이 처음으로 2개 나왔다. 둘 다 승격 전 대체 실험(gradrep, jitdisc)으로 '신호 때문인지'를 확인 중이다.
-- 진행 중: gradrep@12 s0(screen_gradrep_k12_s0_1030_193817_c83d), adaroll@49 s0, jitdisc@12 s0·s1(screen_jitdisc_k12_s0_1030_195912_ead1, screen_jitdisc_k12_s1_1030_195921_48c7).
-- 다음: gradrep WGA가 random 쪽으로 떨어지면 gradroll@12 final seed 1·2·3 제출. jitdisc 2-seed WGA ≤ 56.6이면 suffdisc의 이득은 sufficiency 신호 → 승격 후보, ≥ 58.8이면 위치 지터 → suffdisc 닫음(PROPOSALS 라운드 18). 둘 다 통과하면 final은 하나만(gradroll 먼저) 넣는다.
+- 요약 (2026-10-30 [claude] 라운드 19): 확정 결과 없음. **gradroll@12를 final로 승격했다**(seed 1만 먼저, final_gradroll_k12_s1_1030_201811_faf0 + 비교군 7개). 대체 실험 gradrep@12는 87.99/54.89다(screen_gradrep_k12_s0_1030_193817_c83d, gradroll 대비 −6.01). gradroll이 center를 앞선 몫은 gradroll 고유 토큰에서 온다. adaroll@49(90.08/63.91)는 parent rollout 대비 UNPROVEN이라 닫았다.
+- 핵심: K=12에서 center를 넘는 후보는 gradroll(final 진행 중)과 suffdisc(jitdisc 대체 실험 중) 둘이다. K=29·49 최고는 여전히 rollout이다.
+- 진행 중: final gradroll@12 s1 및 비교군(대기 8), jitdisc@12 s0·s1(screen_jitdisc_k12_s0_1030_195912_ead1, screen_jitdisc_k12_s1_1030_195921_48c7).
+- 다음: final seed 1에서 gradroll이 같은 seed의 center·tome 등을 이기면 seed 2·3을 넣는다. center보다 낮으면 seed 2·3은 넣지 않고 다시 판단한다. jitdisc의 읽기는 라운드 18과 같다(≤ 56.6이면 신호, ≥ 58.8이면 지터). final이 끝나기 전에는 새 screen 변형을 넣지 않는다.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -272,3 +272,13 @@
 - [claude] 결정: gradroll@12 final은 이번에도 넣지 않는다. gradrep@12는 epoch 43이다. 라운드 17 결정을 유지한다. 두 후보가 모두 통과하면 final은 gradroll부터 하나씩 넣는다. 승격 후보의 final이 끝나기 전에 다른 변형을 쌓지 말라는 규칙 때문이다.
 - 학습 중: gradrep@12 e43, adaroll@49 e69. 중간값은 판정에 쓰지 않는다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다. suffdisc가 승격되면 'sufficiency/insertion faithfulness × KD teacher input'을 검색한다.
+
+## [claude] 2026-10-30 20:20 라운드 19
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(새 판정 없음), analysis_out(새 분석 없음).
+- 새 결과 (screen seed 0, 정확도/WGA):
+  - adaroll@49 90.08/63.91 (screen_adaroll_k49_s0_1030_192757_7edc, mean_kept 48.5, total 16.36 GFLOPs/img). Parent check: rollout 대비 +0.42/−0.75 → UNPROVEN. WGA가 주 지표 조건 64.22보다 0.31 낮다. **H-W17을 닫는다.**
+  - gradrep@12 87.99/54.89 (screen_gradrep_k12_s0_1030_193817_c83d). gradroll∩maskedkd만 남기고 나머지를 random으로 바꾼 대체 변형이다. gradroll@12(88.16/60.90) 대비 −0.17/−6.01로, WGA 하락이 threshold 2.45를 넘는다. val WGA 마지막 4번(e85~100)은 56.39/52.63/52.63/54.89다.
+- 해석: gradrep는 center@12(56.39)보다 1.50 낮다. 그래서 gradroll이 center를 앞선 몫(+4.51)은 MaskedKD 밖의 gradroll 고유 토큰에서 온다. teacher 수준 분해(analysis_gradroll_decomp_1030_193812_07ca)와 방향이 같다. 그러나 gradrep는 random@12(33.83)나 rollout@12(45.11)까지 떨어지지 않았다. rollout 대비 이득 가운데 약 9.8은 '교집합 토큰 + 무작위 문맥'에도 남는다. 라운드 16에 미리 정한 읽기('random 근처로 떨어지면')는 절반만 맞았다. 남은 몫은 jitdisc(H-W19)와 같은 위치 다양성 효과일 수 있다.
+- [claude] 결정: gradroll@12를 final로 승격하되 **seed 1만 먼저** 넣었다. final_gradroll_k12_s1_1030_201811_faf0이고, 비교군 maskedkd·rollout·tome·grid·center·random@12와 full@196은 harness가 자동으로 넣었다(대기 8). 승격 근거: (1) 승격 기준(maskedkd 대비 +37.59, rollout·center·grid보다 높음, parent 대비 +15.79), (2) 승격 전 분해 3가지(겹침·공간 분포·대체 실험)를 마쳤고, 대체 실험에서 center를 앞선 몫이 사라졌다. caveat: tome@12 대비 정확도 −0.83(tome은 not matched), K=29에서는 이득이 없다, 미리 정한 읽기는 부분적으로만 충족됐다. seed 하나만 넣은 이유: seed마다 비교군 7개가 따라와 seed 3개면 24개다. 이는 대기 상한 8의 3배다. 그리고 seed 0에서 center와의 차이(+4.51)가 center 자체의 seed 차이(4.51)와 같은 크기다. seed 1에서 center를 다시 이기는지 본 뒤에 seed 2·3을 넣는 것이 가장 보수적이다.
+- [claude] 결정: 새 screen이나 분석은 넣지 않는다. 승격 후보의 final이 진행 중이므로 규칙상 새 변형을 쌓지 않는다. 대기 8개, 실행 2개라 GPU도 놀지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.

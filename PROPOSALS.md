@@ -131,3 +131,8 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 근거: analysis_student_sufficiency_1030_173025_6f96에서 sufficiency 위치와 teacher-best 위치의 상관은 약했다(이미지별 순위 상관 0.25~0.30). masked teacher WGA도 center와 같았다(39.85~41.35). 그런데 student WGA는 2-seed 평균으로 center보다 7.14 높다. 신호가 약한데 이득이 크면 신호 밖의 요인을 의심해야 한다.
   - 대체 screen: jitdisc@12 (parent suffdisc, 같은 25개 후보 위치 중 균등 무작위, student forward 없음), seed 0·1. 미리 정한 읽기: jitdisc 2-seed WGA가 center 2-seed(54.14) 쪽(≤ 56.6)이면 이득은 sufficiency 신호에서 온다. suffdisc(61.28) 쪽(≥ 58.8)이면 이득은 위치 지터에서 오고, 그 경우 suffdisc의 4.93 GFLOPs/img는 쓸모없는 비용이다. 그 사이면 판정하지 않는다.
   - 선행과의 차이: jitdisc는 방법 후보가 아니다. ROAR식 대체 대조군이다. jitdisc가 이기면 그것은 해석가능성 신호가 없는 공간 규칙이라 주장 대상이 아니다. 대신 'K=12에서 teacher 입력 위치를 흔들면 student WGA가 오른다'는 분석 결과로 기록한다.
+
+## 2026-10-30 [claude] 라운드 19 메모
+- H-W17 (adaroll) 닫음: adaroll@49 90.08/63.91 (screen_adaroll_k49_s0_1030_192757_7edc). parent rollout@49 대비 +0.42/−0.75로 UNPROVEN이다. 주 지표 조건(WGA ≥ 64.22)도 만족하지 못한다. 이미지별 예산 배분은 효과가 없다.
+- H-W18 student 수준 판정: gradrep@12 54.89 (screen_gradrep_k12_s0_1030_193817_c83d) 대 gradroll 60.90 → −6.01. center(56.39)를 앞선 몫은 gradroll 고유 토큰에서 온다. 그러나 교집합+random도 rollout(45.11)보다 9.8 높다. 해석 후보는 'MaskedKD와 겹치는 4~5개 토큰(새 위)에 무작위 문맥을 더하면 작은 K에서 teacher 입력 위치가 다양해진다'이다. jitdisc(H-W19)와 같은 축이다. jitdisc 결과와 함께 다음 라운드에 본다.
+- 다음 분석 후보(final seed 1 뒤): gradroll 고유 토큰이 객체 위인지 확인한다. 기준은 full teacher Chefer relevance top-K와의 겹침이다(분석 전용). 그리고 gradrep의 이득 중 rollout 대비 남은 부분을 '위치 다양성'으로 설명할 수 있는지 본다. 예측 지표는 학습 중 선택 위치 엔트로피다.
