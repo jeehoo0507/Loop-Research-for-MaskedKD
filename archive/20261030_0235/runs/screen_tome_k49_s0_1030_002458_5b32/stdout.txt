@@ -2,9 +2,13 @@
   d = torch.load(cache)
 /home/coder/Loop-Research-for-MaskedKD/harness/train.py:68: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
   t.load_state_dict(torch.load(ckpt, map_location="cpu"))
-[2026-10-30 01:42:39] job screen_grid_k49_s0_1030_002458_560a method=grid keep=49 seed=0 epochs=28 device=cuda
-[2026-10-30 01:42:41] flops per image (train step): {'total_gflops_per_img': 9.9272, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 2.2851, 'student_gflops_per_img': 7.6421}
-[2026-10-30 01:44:32] {"epoch": 1, "loss": 3.031607900249992, "epoch_s": 113.7, "img_per_s": 395.2, "mean_kept": 49.0}
-[2026-10-30 01:46:29] {"epoch": 2, "loss": 2.9542966316907835, "epoch_s": 116.4, "img_per_s": 386.0, "mean_kept": 49.0}
-[2026-10-30 01:48:31] {"epoch": 3, "loss": 2.903892652940886, "epoch_s": 121.9, "img_per_s": 368.6, "mean_kept": 49.0}
-[2026-10-30 01:50:33] {"epoch": 4, "loss": 2.882371206908484, "epoch_s": 121.3, "img_per_s": 370.4, "mean_kept": 49.0}
+[2026-10-30 02:18:40] job screen_tome_k49_s0_1030_002458_5b32 method=tome keep=49 seed=0 epochs=28 device=cuda
+[2026-10-30 02:18:43] flops per image (train step): {'total_gflops_per_img': 9.4415, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 1.7994, 'student_gflops_per_img': 7.6421}
+[2026-10-30 02:20:41] {"epoch": 1, "loss": 2.731443395641794, "epoch_s": 121.4, "img_per_s": 370.2, "mean_kept": 49.0}
+[2026-10-30 02:22:40] {"epoch": 2, "loss": 2.6712116549836944, "epoch_s": 118.6, "img_per_s": 378.7, "mean_kept": 49.0}
+[2026-10-30 02:24:41] {"epoch": 3, "loss": 2.641224996996062, "epoch_s": 120.7, "img_per_s": 372.3, "mean_kept": 49.0}
+[2026-10-30 02:26:41] {"epoch": 4, "loss": 2.623182145958273, "epoch_s": 119.8, "img_per_s": 375.0, "mean_kept": 49.0}
+[2026-10-30 02:28:44] {"epoch": 5, "loss": 2.6115241050720215, "epoch_s": 120.2, "img_per_s": 373.8, "mean_kept": 49.0, "val_acc": 7.44}
+[2026-10-30 02:30:42] {"epoch": 6, "loss": 2.595181033821867, "epoch_s": 117.7, "img_per_s": 381.7, "mean_kept": 49.0}
+[2026-10-30 02:32:41] {"epoch": 7, "loss": 2.5857949338407598, "epoch_s": 119.5, "img_per_s": 376.0, "mean_kept": 49.0}
+[2026-10-30 02:34:35] {"epoch": 8, "loss": 2.577732728077815, "epoch_s": 113.3, "img_per_s": 396.5, "mean_kept": 49.0}

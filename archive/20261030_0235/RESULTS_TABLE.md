@@ -32,6 +32,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | screen | ce |  | 0 | None | 0 | 21.10 ± 0.00 | 7.64 | 0.00 | 0.00 | 667 | screen_ce_k0_s0_1029_233749_6609 |
 | screen | full |  | 196 | 196.0 | 0,1,2 | 24.23 ± 0.39 | 16.84 | 9.20 | 0.00 | 385 | screen_full_k196_s2_1030_002458_e159 screen_full_k196_s1_1030_002458_ec36 screen_full_k196_s0_1029_233749_5549 |
+| screen | maskedkd |  | 49 | 49.0 | 0 | 21.68 ± 0.00 | 9.91 | 2.29 | 0.00 | 708 | screen_maskedkd_k49_s0_1030_002458_0194 |
 | screen | maskedkd |  | 98 | 98.0 | 0,1,2 | 24.46 ± 0.24 | 12.13 | 4.50 | 0.00 | 402 | screen_maskedkd_k98_s1_1030_002458_b791 screen_maskedkd_k98_s0_1029_233749_7ad0 screen_maskedkd_k98_s2_1030_002458_a96d |
 
 # Stage 2: ImageNet-100 (fixed methods from stage 1; 'stage2' column in metrics.json says untouched/tuned)

@@ -15,3 +15,5 @@
 - 2026-10-30 01:35 [stage2] ImageNet-100 epochs: {"epochs":{"cifar100":{"screen":28,"final":56},"in100":{"final":97}},"max_jobs":4,"rule":"screen=1hatbenchparallelism(>=10),final=2xscreen","in100_rule":"12hat276img/smeasuredbysmokerunin100_smoke_maskedkd_k49_s0_1030_003529_1113(>=10epochs)"}
 - 2026-10-30 01:39 [stage2] loop restarted after stage-2 relock
 - 2026-10-30 01:39 [stage2] ImageNet-100 gate submitted (one GPU slot; long)
+
+- 2026-10-30 02:35 RESET: setting changed (harness/config.py); old results in archive/20261030_0235
