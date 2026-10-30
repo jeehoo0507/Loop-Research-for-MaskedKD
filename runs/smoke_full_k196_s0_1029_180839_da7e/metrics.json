@@ -1,0 +1,44 @@
+{
+ "id": "smoke_full_k196_s0_1029_180839_da7e",
+ "status": "done",
+ "method": "full",
+ "keep": 196,
+ "seed": 0,
+ "tier": "smoke",
+ "epochs": 1,
+ "epochs_done": 1,
+ "val_acc_last": 1.4,
+ "mean_kept": 196.0,
+ "dataset": "cifar100",
+ "tome_r": null,
+ "img_per_s_mean": 917.1,
+ "flops": {
+  "total_gflops_per_img": 16.8392,
+  "selector_gflops_per_img": 0.0,
+  "teacher_gflops_per_img": 9.1971,
+  "student_gflops_per_img": 7.6421
+ },
+ "train_time_s": 4.2,
+ "peak_vram_gib": 2.87,
+ "history": [
+  {
+   "epoch": 1,
+   "loss": 2.375020392735799,
+   "epoch_s": 4.2,
+   "img_per_s": 917.1,
+   "mean_kept": 196.0,
+   "val_acc": 1.4
+  }
+ ],
+ "selector_meta": {
+  "method": "builtin:full"
+ },
+ "selector_sha": "builtin",
+ "sel_args": {},
+ "teacher_sha": "fake",
+ "harness_digest": "70da089424c0d7f731007136004c18cf9590e43b27c4a68743f19ddf1e9354a9",
+ "git": "8b9703ebb5dc549dc6cdf2422fc19923536f398d",
+ "submitted_by": "smoke",
+ "note": "",
+ "analysis_only": false
+}

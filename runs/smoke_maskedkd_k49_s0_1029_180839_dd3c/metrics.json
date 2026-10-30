@@ -1,0 +1,44 @@
+{
+ "id": "smoke_maskedkd_k49_s0_1029_180839_dd3c",
+ "status": "done",
+ "method": "maskedkd",
+ "keep": 49,
+ "seed": 0,
+ "tier": "smoke",
+ "epochs": 1,
+ "epochs_done": 1,
+ "val_acc_last": 1.8,
+ "mean_kept": 49.0,
+ "dataset": "cifar100",
+ "tome_r": null,
+ "img_per_s_mean": 1041.0,
+ "flops": {
+  "total_gflops_per_img": 9.9123,
+  "selector_gflops_per_img": 0.0,
+  "teacher_gflops_per_img": 2.2851,
+  "student_gflops_per_img": 7.6272
+ },
+ "train_time_s": 3.7,
+ "peak_vram_gib": 2.71,
+ "history": [
+  {
+   "epoch": 1,
+   "loss": 2.377578584353129,
+   "epoch_s": 3.7,
+   "img_per_s": 1041.0,
+   "mean_kept": 49.0,
+   "val_acc": 1.8
+  }
+ ],
+ "selector_meta": {
+  "method": "builtin:maskedkd"
+ },
+ "selector_sha": "builtin",
+ "sel_args": {},
+ "teacher_sha": "fake",
+ "harness_digest": "70da089424c0d7f731007136004c18cf9590e43b27c4a68743f19ddf1e9354a9",
+ "git": "8b9703ebb5dc549dc6cdf2422fc19923536f398d",
+ "submitted_by": "smoke",
+ "note": "",
+ "analysis_only": false
+}
