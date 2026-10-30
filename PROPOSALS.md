@@ -76,3 +76,12 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 근거: 위 분석. 아이디어: 사전으로 연속성을 주고, rollout 신호로 사전 안팎의 패치를 고른다.
   - 선행과의 차이: rollout(사전 없음)과 center(신호 없음)의 결합이다. 시선 예측의 center-bias(Judd et al. 2009)와 같은 형태라 노벨티는 약하다. 이기면 분해가 필수다: (1) random 점수에 같은 사전을 씌운 변형(`priorrand`)으로 신호의 기여를 본다. (2) 사전만 쓴 결과는 곧 center다. (3) MaskedKD와의 겹침, 중심 거리를 잰다.
   - parent check: 같은 K에서 rollout보다 승격 기준 이상 높아야 사전 부분이 효과가 있다고 본다. K=12에서는 rollout 45.11, center 56.39다. 그래서 실질 기준은 center를 넘는 것이다.
+
+## 2026-10-30 [claude] 라운드 11 메모
+- H-W12 판정 (screen): priorroll@12 89.07/54.89 (screen_priorroll_k12_s0_1030_175140_405f)는 center@12(56.39)와 비긴다. priorroll@29 89.82/60.15 (screen_priorroll_k29_s0_1030_175144_018d)는 rollout@29(65.41)와 center@29(62.41)보다 낮다. **기각.** suffdisc@12 89.32/58.65 (screen_suffdisc_k12_s0_1030_173118_504a)는 parent center 대비 threshold 미만이다(UNPROVEN). **H-W11도 닫는다.**
+- **H-W13 대리 지표의 표본 밖 검증 (analysis_proxy_holdout_1030_182326_7254): 실패.** 각 run 자신의 student로 잰 self kl_worst는 K=29에서 priorroll 0.391 < rollout 0.443 < center 0.517이다. student WGA는 rollout 65.41 > center 62.41 > priorroll 60.15다. K=12에서는 suffdisc 0.533 < priorroll 0.605 < center 0.694 < rollout 0.700이고, student WGA는 suffdisc 58.65 > center 56.39 > priorroll 54.89 > rollout 45.11다(priorroll과 center의 차이 1.50은 threshold 안). 결론: H-W10에서 고른 대리 지표는 16개 run에 맞춘 것이고 표본 밖에서 K=29 순위를 틀린다. 앞으로 이 지표로 선택기를 미리 거르지 않는다. 'clean 이미지에서 teacher가 충실하다'는 것만으로는 teachability가 설명되지 않는다.
+  - 되먹임 관찰: priorroll student 자신의 plain rollout top-K는 priorroll 선택과 0.81~0.85 겹친다. rollout student에서 같은 겹침은 0.34~0.53이다. 사전으로 학습하면 student attention이 중앙으로 모인다.
+- **H-W14 (분석 analysis_prior_failure_1030_182537_611c).**
+  - 근거: 위 실패. 학습 batch는 전부 cutmix/mixup이라서 compact한 중앙 선택은 붙여 넣은 이미지 쪽을 teacher에게서 지울 수 있다.
+  - 아이디어: cutmix/mixup 입력에서의 kl_worst와 cutmix 상자 비율을 self student로 잰다. student의 place 탐침도 함께 잰다.
+  - 선행과의 차이: analysis_train_condition_gap(H-W8)는 L9 대 rollout만 봤다. 여기서는 공간 사전 계열(center, priorroll, suffdisc)을 같은 조건으로 잰다. 미리 정한 판정: K=29에서 cutmix/mixup kl_worst 순서가 rollout < center ≤ priorroll이면 (a)가 실패를 설명한다.

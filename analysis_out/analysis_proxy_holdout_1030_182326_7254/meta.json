@@ -1,0 +1,12 @@
+{
+ "id": "analysis_proxy_holdout_1030_182326_7254",
+ "name": "proxy_holdout",
+ "source_sha": "7254fb10f6d31ac4c4883b247a973e89f9fffa8ddbce8c7453937a37f7a49461",
+ "status": "done",
+ "meta": {
+  "question": "is the self worst-group KL(full teacher || masked teacher) proxy still rank-correct on held-out selectors (priorroll@12/29, suffdisc@12), and did H-W12 fail because it was read on the parent's student instead of the selector's own student?",
+  "method": "group-sliced keep-only faithfulness (KL to the full teacher) of the masked teacher under attention rollout with / without a centre prior and under student-sufficiency disc placement",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); DeYoung et al. ACL 2020 (ERASER sufficiency); Hooker et al. NeurIPS 2019 (keep-only evaluation); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 20.7
+}

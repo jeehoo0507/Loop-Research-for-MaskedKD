@@ -15,3 +15,4 @@
 - 2026-10-30 15:00 [stage2] CUB teacher: fine-tuned here val acc 84.67
 - 2026-10-30 15:30 [stage2] loop restarted after stage-2 relock
 - 2026-10-30 15:30 [stage2] CUB gate submitted (one GPU slot)
+- 2026-10-30 18:19 [stage2] STOPPED: CUB gate FAILED: [cub final, 100 epochs, mean of seeds [1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL (stage 2 stays closed; human decision)

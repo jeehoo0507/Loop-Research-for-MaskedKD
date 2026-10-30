@@ -1,18 +1,18 @@
 {
- "id": "screen_priorroll_k12_s0_1030_175140_405f",
+ "id": "screen_priorroll_k29_s1_1030_182720_dbfd",
  "kind": "train",
  "dataset": "waterbirds",
  "stage2": null,
  "method": "priorroll",
- "keep": 12.0,
- "seed": 0,
+ "keep": 29.0,
+ "seed": 1,
  "tier": "screen",
  "epochs": 100,
  "sel_args": {},
  "selector_src": "\"\"\"H-W12: attention rollout with a Gaussian centre prior. Score = log rollout(CLS -> patch) - d^2 / (2 sigma^2),\nd = patch distance from the image centre; keep the top-K. sigma defaults to the radius of the K-patch centre disc,\nsqrt(K / pi), so the prior is as wide as the `center` baseline at the same budget and the rollout signal decides\nwhich patches inside / just outside that disc are kept.\n\nBasis: analysis_prior_rollout_1030_174424_16a6. The centre disc wins at K=12 and rollout at K=29/49 (screen seed 0),\nbut neither at every K. Read from rollout-trained students (rollout12/29/49, the self proxy closest to this parent),\nprior_s{2,3,4} gives a lower worst-group KL(full teacher || masked teacher) than both center and top_rollout at every\nK (e.g. K=12 rollout12: 0.637 vs center 0.694 / rollout 0.700; K=49 rollout49: 0.227 vs 0.300 / 0.320). The prior\nalso removes the self-feedback loss of plain rollout (rollout12 student, K=29: top_rollout WGA 46.62, prior 60-62).\nsigma = sqrt(K/pi) (~1.95 / 3.04 / 3.95 at K=12/29/49) tracks the best sigma of that analysis per K (2 / 4 / 4);\nit was fixed after seeing the analysis, not tuned on any screen run.\n\nsel_args: sigma (float, optional) overrides the disc-radius rule.\n\"\"\"\nimport math\n\nimport torch\n\nfrom harness.selector_api import SelectorBase, topk_mask\n\nMETA = {\n    \"method\": \"attention rollout (CLS row over all student blocks) with a Gaussian spatial prior\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Sagawa et al. ICLR 2020 (worst-group evaluation)\",\n    \"why\": \"a compact on-object region keeps the masked teacher faithful on the minority groups at small K, while \"\n           \"the rollout signal moves the kept set toward the object when it is off-centre\",\n    \"vs_maskedkd\": \"all-layer rollout instead of last-block CLS attention, and a centre prior that keeps the selection \"\n                   \"compact instead of a scattered top-K\",\n    \"prior_art\": \"rollout (no prior, scattered) and center (prior only, no signal); MaskedKD uses last-block attention; \"\n                 \"saliency-with-centre-bias models (e.g. Judd et al. 2009) are for fixation prediction, not KD inputs\",\n    \"parent\": \"rollout\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(12)), \"tokens\": []}\n\n    def __init__(self, **kwargs):\n        super().__init__(**kwargs)\n        self.sigma = kwargs.get(\"sigma\")\n\n    def select(self, ctx):\n        r = None\n        for a in ctx.out.attn:\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        R = r[:, 0, 1:]\n        n, k = ctx.num_patches, int(ctx.budget)\n        side = int(round(n ** 0.5))\n        rr = torch.arange(n, device=R.device)\n        c = (side - 1) / 2\n        d2 = ((rr // side).float() - c) ** 2 + ((rr % side).float() - c) ** 2\n        s = float(self.sigma) if self.sigma is not None else math.sqrt(k / math.pi)\n        return topk_mask(R.clamp_min(1e-12).log() - d2 / (2 * s * s), k)\n",
  "selector_sha": "6e20f56dec9dc9f0e179c1b3a427d038144fd00e8bf23a541b16140f0072694b",
- "note": "",
- "by": "agent",
- "priority": 0,
- "submitted": "2026-10-30 17:51:40"
+ "note": "seed replication of H-W12 K=29 loss",
+ "by": "claude",
+ "priority": 6,
+ "submitted": "2026-10-30 18:27:20"
 }

@@ -16,7 +16,9 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - no agent method has >= 2 final seeds yet
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
-- no child selectors yet
+- priorroll@12 vs parent rollout: acc +1.83 %p (threshold 0.76), WGA +9.78 %p (threshold 2.45) -> added part helps
+- priorroll@29 vs parent rollout: acc +0.00 %p (threshold 0.76), WGA -5.26 %p (threshold 2.45) -> added part UNPROVEN
+- suffdisc@12 vs parent center: acc +0.58 %p (threshold 0.76), WGA +2.26 %p (threshold 2.45) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
 ### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
@@ -28,8 +30,10 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
-Total agent screen configs: 2
+Total agent screen configs: 5
+- priorroll: 2 configs
 - midattn: 2 configs
+- suffdisc: 1 configs
 
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
@@ -49,19 +53,22 @@ Total agent screen configs: 2
 | screen | midattn@7283f1 |  | 12 | 12.0 | 0 | 87.66 ± 0.00 | 30.08 ± 0.00 | 10.07 | 2.45 | 0.00 | 422 | screen_midattn_k12_s0_1030_170938_9fc6 |
 | screen | midattn@7283f1 |  | 49 | 49.0 | 0 | 89.91 ± 0.00 | 57.89 ± 0.00 | 16.44 | 8.82 | 0.00 | 272 | screen_midattn_k49_s0_1030_153152_3b79 |
 | screen | oracle |  | 12 | 12.0 | 0 | 87.49 ± 0.00 | 50.38 ± 0.00 | 45.21 | 2.45 | 35.13 | 248 | screen_oracle_k12_s0_1030_135953_d16c |
+| screen | priorroll@6e20f5 |  | 12 | 12.0 | 0 | 89.07 ± 0.00 | 54.89 ± 0.00 | 10.08 | 2.45 | 0.17 | 290 | screen_priorroll_k12_s0_1030_175140_405f |
+| screen | priorroll@6e20f5 |  | 29 | 29.0 | 0 | 89.82 ± 0.00 | 60.15 ± 0.00 | 12.99 | 5.36 | 0.17 | 325 | screen_priorroll_k29_s0_1030_175144_018d |
 | screen | random |  | 12 | 12.0 | 0 | 83.49 ± 0.00 | 33.83 ± 0.00 | 10.09 | 2.45 | 0.00 | 331 | screen_random_k12_s0_1030_135953_bc03 |
 | screen | random |  | 29 | 29.0 | 0 | 82.49 ± 0.00 | 27.82 ± 0.00 | 13.00 | 5.36 | 0.00 | 285 | screen_random_k29_s0_1030_135953_8780 |
 | screen | random |  | 49 | 49.0 | 0 | 85.40 ± 0.00 | 36.09 ± 0.00 | 16.46 | 8.82 | 0.00 | 333 | screen_random_k49_s0_1030_135953_14e9 |
 | screen | rollout |  | 12 | 12.0 | 0 | 87.24 ± 0.00 | 45.11 ± 0.00 | 10.08 | 2.45 | 0.17 | 296 | screen_rollout_k12_s0_1030_135953_489a |
 | screen | rollout |  | 29 | 29.0 | 0 | 89.82 ± 0.00 | 65.41 ± 0.00 | 12.99 | 5.36 | 0.17 | 253 | screen_rollout_k29_s0_1030_135953_7320 |
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
+| screen | suffdisc@0f0600 |  | 12 | 12.0 | 0 | 89.32 ± 0.00 | 58.65 ± 0.00 | 15.02 | 2.45 | 4.93 | 221 | screen_suffdisc_k12_s0_1030_173118_504a |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 88.99 ± 0.00 | 48.12 ± 0.00 | 12.00 | 4.36 | 0.00 | 315 | screen_tome_k12_s0_1030_135953_84af |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
 
 # Stage 2: cub (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [1], full seeds [1], maskedkd seeds []
+Gate: [cub final, 100 epochs, mean of seeds [1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -76,6 +83,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 82.83; KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
+- maskedkd : 98.0
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -88,4 +96,5 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 | final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
+| final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 

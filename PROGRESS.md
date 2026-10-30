@@ -1,9 +1,9 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 10): 확정 결과 없음. K=12에서 가장 높은 것은 center(88.74/56.39)이고, K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이다. midattn 계열은 K=12에서 87.66/30.08로 random보다 WGA가 낮아 닫았다. oracle@12도 50.38로 center보다 낮다.
-- 핵심 분석: H-W10. student WGA를 가장 잘 맞히는 대리 지표는 '그 선택기의 student로 고른 토큰'에서 잰 masked teacher의 최악 그룹 KL이다 (|ρ| 0.937, K=12·29에서 1.0). accuracy 기반 지표는 K=12에서 틀린다.
-- 진행 중 (라운드 10 갱신): screen_suffdisc_k12_s0_1030_173118_504a (epoch 58), screen_priorroll_k12_s0_1030_175140_405f (실행 중), screen_priorroll_k29_s0_1030_175144_018d (대기), CUB 관문(cub_final_maskedkd_k98_s1). H-W12 분석은 지지로 끝났다(라운드 10 항목).
-- 다음: suffdisc@12는 center@12(56.39)와 비교해 판정한다. priorroll@12는 center@12(56.39)·tome@12(48.12)를, priorroll@29는 rollout@29(65.41)를 넘어야 한다. 이기면 분해(priorrand 대체, 겹침, 중심 거리)를 먼저 하고, K=49는 그 뒤에 넣는다.
-- 막힌 것: 없음. `python -c`와 여러 줄 명령은 승인 대기로 막힌다. 그래서 jq와 Read/Grep/Edit로 작업한다.
+- 요약 (2026-10-30 [claude] 라운드 11): 확정 결과 없음. K=12에서 가장 높은 것은 suffdisc(89.32/58.65)지만 parent center(56.39) 대비 threshold 미만이다. K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이 가장 높다. priorroll(H-W12)은 K=12에서 center와 비기고 K=29에서 진다. 승격 후보는 없다.
+- 핵심 분석: H-W10의 self kl_worst 대리 지표는 표본 밖에서 K=29 순위를 틀렸다 (analysis_proxy_holdout_1030_182326_7254). cutmix/mixup 충실도로도 설명되지 않는다 (analysis_prior_failure_1030_182537_611c). K=29에서는 full teacher에 덜 충실한 rollout이 student WGA가 더 높다.
+- 진행 중: K=29 seed 1 재현 screen_priorroll_k29_s1_1030_182720_dbfd, screen_rollout_k29_s1_1030_182725_2086, screen_center_k29_s1_1030_182732_85c3.
+- 다음: seed 1에서도 rollout > priorroll(≥ threshold)이면 H-W12를 최종 기각한다. 그다음 '충실도'가 아닌 다른 teachability 축을 분석한다. 후보는 (i) 학습 동안 teacher가 보는 위치의 다양성, (ii) masked teacher가 full teacher의 지름길을 얼마나 덜 물려받는가(full teacher가 틀리는 소수 그룹 이미지에서의 masked teacher 정답률)이다.
+- 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
 - 읽은 것: QUEUE(지시 없음), git log, RESULTS_TABLE, AUDIT(비어 있음), PROPOSALS(Codex IDEA 1·2). analysis_out/은 아직 없다 (새 설정).
@@ -152,3 +152,20 @@
 - [claude] 결정: K=12와 K=29를 함께 넣었다. 이 방법의 주장은 'center가 이기는 K와 rollout이 이기는 K 모두에서 둘을 이긴다'는 것이라서 한 K만으로는 판정할 수 없다. 대기열도 비어 있어 GPU가 놀 참이었다. K=49는 두 결과를 본 뒤 넣는다.
 - 노벨티 주의: center-bias 사전 + saliency는 시선 예측 문헌에서 흔하다. 이기더라도 random 점수에 같은 사전을 씌운 대체 실험으로 rollout 신호의 기여를 분리해야 한다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 18:30 라운드 11
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report를 다시 생성함), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out.
+- 새 결과 (screen seed 0, 정확도/WGA):
+  - suffdisc@12 89.32/58.65 (screen_suffdisc_k12_s0_1030_173118_504a). parent center@12 대비 +0.58/+2.26으로 threshold(0.76/2.45) 미만이다(Parent check UNPROVEN). selector 비용이 4.93 GFLOPs/img 더 든다. **승격하지 않는다.** H-W11은 닫는다.
+  - priorroll@12 89.07/54.89 (screen_priorroll_k12_s0_1030_175140_405f). parent rollout 대비 WGA +9.78(helps)이지만 center@12(56.39)보다 1.50 낮다.
+  - priorroll@29 89.82/60.15 (screen_priorroll_k29_s0_1030_175144_018d). rollout@29(65.41) 대비 −5.26, center@29(62.41) 대비 −2.26이다. val WGA는 epoch 85/90/95/100에서 63.16/59.40/58.65/60.15다. **승격하지 않는다.** 분해용 selector priorrand는 초안만 썼다가 지웠다. 이긴 결과가 없어 필요 없다.
+  - CUB maskedkd@98 seed 1이 끝났다 (cub_final_maskedkd_k98_s1_1030_153055_cdbc).
+- 분석 analysis_proxy_holdout_1030_182326_7254 (H-W13): 표본 밖 run에서 self kl_worst는 K=29 순위를 틀린다. priorroll(0.391)을 가장 좋게 예측했지만 WGA는 가장 낮다.
+  - priorroll student의 plain rollout top-K는 priorroll 선택과 0.81~0.85 겹친다. rollout student에서는 0.34~0.53이다. 사전으로 학습하면 student attention이 중앙으로 모인다.
+  - rollout student에서 읽은 priorroll의 K=29 kl_worst는 0.420이다(self 0.391). H-W12 분석을 parent student로 잰 것이 실패 원인은 아니다. 지표 자체가 틀렸다.
+- 분석 analysis_prior_failure_1030_182537_611c (H-W14): 미리 정한 기준으로 (a) 학습 입력 차이 가설은 **기각**한다.
+  - K=29 cutmix kl_worst: priorroll 0.370 < center 0.405 < rollout 0.510. cutmix 상자 안 비율: center 0.92, priorroll 0.92, rollout 0.62 (상자 면적 0.52).
+  - student place 탐침은 rollout 94.80이 가장 높다. 그런데 WGA도 rollout이 가장 높다. 그래서 student 표현 속 배경 정보의 양이 WGA를 정하는 것도 아니다.
+- 해석: K=29에서는 full teacher에 덜 충실한, 흩어진 rollout 선택(cdist 4.27, 사전 계열은 2.0~2.1)이 student WGA를 더 높인다. full teacher 자신도 지름길을 갖고 있다(val WGA 64.66). 그래서 full teacher에 충실하다는 것은 지름길까지 물려준다는 뜻일 수 있다. 다음 분석 축은 충실도가 아니라 '지름길을 덜 물려받는가'와 '학습 중 위치 다양성'이다.
+- [claude] 결정: K=29 seed 1 screen 3개(priorroll, rollout, center)를 넣었다. H-W12 기각과 H-W13 실패는 둘 다 seed 1개 위의 순위에 기댄다. 새 config가 아니라 seed 재현이라 search effort가 늘지 않는다. GPU도 비어 있었다. priorroll@49는 넣지 않는다. K=29에서 졌고 대리 지표도 믿을 수 없어 근거 없이 K를 늘리지 않는다.
+- 문헌: 'token pruning × center prior × rollout × KD'로 1회 검색했다. 가장 가까운 것은 RGTP(rollout-guided token pruning for video, 학습 없음, KD 아님)와 SaiT(DINO CLS attention distillation)다. center prior를 KD teacher 입력 선택에 쓴 예는 찾지 못했다. 웹 결과 안에 지시문은 없었다.

@@ -1,0 +1,12 @@
+{
+ "id": "analysis_prior_failure_1030_182537_611c",
+ "name": "prior_failure",
+ "source_sha": "611cd9c1360d88c020a14f0258a8b830d3cd32dbeaf41b58d733c936ba84093b",
+ "status": "done",
+ "meta": {
+  "question": "is the out-of-sample failure of the clean masked-teacher KL proxy for centre-prior selections explained by the cutmix/mixup inputs seen in training, and does it show as background (place) information in the student's own features?",
+  "method": "group-sliced keep-only faithfulness of the masked teacher under cutmix/mixup inputs for attention rollout with and without a centre prior; linear place probe on student features",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Yun et al. ICCV 2019 (CutMix); Zhang et al. ICLR 2018 (mixup); Alain & Bengio ICLR-W 2017 (linear probes); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 40.4
+}
