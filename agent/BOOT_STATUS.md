@@ -21,3 +21,5 @@
 - 2026-10-30 02:44 GPU smoke passed
 - 2026-10-30 03:06 teacher val acc: 88.78
 - 2026-10-30 03:08 epochs: {"epochs":{"cifar100":{"screen":27,"final":54}},"base_screen":27,"gate_scale":1,"max_jobs":3,"rule":"screen=1hatbenchparallelism(>=10),final=2xscreen"}
+- 2026-10-30 04:09 CIFAR gate: [screen, 27 epochs, mean of seeds [0]] Full KD 83.50 vs CE 82.74 (need +1.0): FAIL; MaskedKD@98 83.12 vs Full 83.50 (need within 0.5): PASS
+- 2026-10-30 04:57 STOPPED: git push not authorized. Run: gh auth login && gh auth setup-git
