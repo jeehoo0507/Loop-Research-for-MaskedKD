@@ -14,7 +14,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs maskedkd@12 [WGA]: +36.84 %p, 95% CI [+20.23, +53.46], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
+- gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
+- gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
@@ -27,8 +28,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs center@12 [acc]: -0.70 %p, 95% CI [-1.53, +0.14], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
 - gradroll@12 vs center@12 [WGA]: +5.51 %p, 95% CI [-6.35, +17.38], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
-- gradroll@12 vs random@12 [acc]: +4.50 %p, 95% CI [-9.27, +18.28], seeds 1,2, GFLOPs ratio 1.270 -> no difference
-- gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
+- gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
+- gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -2.75 %p, 95% CI [-10.17, +4.67], seeds 1,2, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs full@196 [WGA]: -4.51 %p, 95% CI [-14.04, +5.02], seeds 1,2, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
@@ -72,7 +73,7 @@ Total agent screen configs: 10
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
-| final | random |  | 12 | 12.0 | 1,2 | 83.69 ± 1.24 | 36.47 ± 1.59 | 10.09 | 2.45 | 0.00 | 306 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf |
+| final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 88.10 ± 1.17 | 50.88 ± 1.74 | 10.08 | 2.45 | 0.17 | 237 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s3_1030_220958_d961 final_rollout_k12_s2_1030_212126_33d1 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
