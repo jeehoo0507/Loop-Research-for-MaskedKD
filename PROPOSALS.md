@@ -124,3 +124,10 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
 ## 2026-10-30 [claude] 라운드 17 메모
 - H-W18 분해 결과 (analysis_gradroll_decomp_1030_193812_07ca): 공간 배치 설명은 배제한다(cdist 4.68 대 center 1.29). 'K=12에서 rollout과 덜 겹친다'는 맞다(0.29 대 K=29 0.50). 고노름 회피는 rollout12 student에서만 성립한다(0.049 대 0.125). gradroll12 student에서는 0.057 대 0.058이라 H-W18의 '고노름 토큰 회피' 부분은 지지되지 않는다. 남는 설명은 '클래스 logit에 양의 기여를 하는 비-MaskedKD 토큰'이다. 대체 변형에서 teacher WGA가 51.88에서 25.56으로 떨어진다.
 - 다음에 확인할 것(gradrep 결과 뒤): gradroll 고유 토큰이 객체(새) 위인지 볼 것. val에는 분할 마스크가 없으므로 대안을 쓴다. 후보는 full teacher의 Chefer relevance나 oracle과의 겹침이다(분석 전용, 주장 근거로는 쓰지 않음). 그리고 gradroll이 학습 초반(e25 teacher WGA 28.57)에 오히려 나쁜 이유를 본다. ctx.progress로 초반에 rollout을 쓰는 변형은 승격 판정 뒤에만 검토한다.
+
+## 2026-10-30 [claude] 라운드 18 메모
+- H-W11 재개 (suffdisc): 라운드 14에 정한 규칙('seed 1에서도 center보다 높지 않으면 center 계열을 K=12에서 닫는다')에 따라 닫지 않는다. seed 1에서 suffdisc 63.91 대 center 51.88 (screen_suffdisc_k12_s1_1030_185953_9455, screen_center_k12_s1_1030_185949_1766). 2-seed 평균 +1.25 / +7.14. priorroll@12는 2-seed 평균이 center와 같아서(54.14 대 54.14) 닫는다.
+- **H-W19 (분해로 검증할 가설): suffdisc의 이득은 sufficiency 신호가 아니라 원판을 이미지마다 옮긴 것(teacher 입력의 위치 다양성)에서 올 수 있다.**
+  - 근거: analysis_student_sufficiency_1030_173025_6f96에서 sufficiency 위치와 teacher-best 위치의 상관은 약했다(이미지별 순위 상관 0.25~0.30). masked teacher WGA도 center와 같았다(39.85~41.35). 그런데 student WGA는 2-seed 평균으로 center보다 7.14 높다. 신호가 약한데 이득이 크면 신호 밖의 요인을 의심해야 한다.
+  - 대체 screen: jitdisc@12 (parent suffdisc, 같은 25개 후보 위치 중 균등 무작위, student forward 없음), seed 0·1. 미리 정한 읽기: jitdisc 2-seed WGA가 center 2-seed(54.14) 쪽(≤ 56.6)이면 이득은 sufficiency 신호에서 온다. suffdisc(61.28) 쪽(≥ 58.8)이면 이득은 위치 지터에서 오고, 그 경우 suffdisc의 4.93 GFLOPs/img는 쓸모없는 비용이다. 그 사이면 판정하지 않는다.
+  - 선행과의 차이: jitdisc는 방법 후보가 아니다. ROAR식 대체 대조군이다. jitdisc가 이기면 그것은 해석가능성 신호가 없는 공간 규칙이라 주장 대상이 아니다. 대신 'K=12에서 teacher 입력 위치를 흔들면 student WGA가 오른다'는 분석 결과로 기록한다.

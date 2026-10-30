@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 17): 확정 결과 없음. **첫 승격 후보: gradroll@12 88.16/60.90** (screen_gradroll_k12_s0_1030_184259_e2cd). parent rollout 대비 +0.92/+15.79, center 대비 −0.58/+4.51. 단 tome@12(not matched) 대비 정확도 −0.83(threshold 초과), K=29에서는 이득 없음. K=29·49 최고는 여전히 rollout.
-- 핵심: 기울기 가중 rollout은 plain rollout이 무너지는 작은 K(12)에서만 WGA를 크게 지킨다. 왜 그런지(어떤 토큰, 공간 배치, 고노름 토큰 회피)를 분해로 확인한 뒤 final로 올린다.
-- 진행 중: 대체 screen gradrep@12(screen_gradrep_k12_s0_1030_193817_c83d), suffdisc@12 s1, priorroll@12 s1, adaroll@49. 분해 분석 analysis_gradroll_decomp_1030_193812_07ca는 끝났고(라운드 17), teacher 수준에서는 gradroll 고유 토큰이 원인이라는 쪽이다.
-- 다음: gradrep@12의 student WGA가 random@12(33.83)~maskedkd 쪽으로 떨어지면 gradroll@12 final seed 1·2·3을 제출한다(그 전에는 새 변형 screen 금지). adaroll@49가 rollout을 넘는지 본다.
+- 요약 (2026-10-30 [claude] 라운드 18): 확정 결과 없음. K=12 후보가 둘이다. **gradroll@12 88.16/60.90** (seed 0, screen_gradroll_k12_s0_1030_184259_e2cd)과 **suffdisc@12 2-seed 89.62/61.28** (screen_suffdisc_k12_s{0,1}). suffdisc는 center 2-seed(88.37/54.14) 대비 +1.25/+7.14지만 seed 0 Parent check는 UNPROVEN이다. K=29·49 최고는 여전히 rollout.
+- 핵심: K=12에서는 center를 넘는 방법이 처음으로 2개 나왔다. 둘 다 승격 전 대체 실험(gradrep, jitdisc)으로 '신호 때문인지'를 확인 중이다.
+- 진행 중: gradrep@12 s0(screen_gradrep_k12_s0_1030_193817_c83d), adaroll@49 s0, jitdisc@12 s0·s1(screen_jitdisc_k12_s0_1030_195912_ead1, screen_jitdisc_k12_s1_1030_195921_48c7).
+- 다음: gradrep WGA가 random 쪽으로 떨어지면 gradroll@12 final seed 1·2·3 제출. jitdisc 2-seed WGA ≤ 56.6이면 suffdisc의 이득은 sufficiency 신호 → 승격 후보, ≥ 58.8이면 위치 지터 → suffdisc 닫음(PROPOSALS 라운드 18). 둘 다 통과하면 final은 하나만(gradroll 먼저) 넣는다.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -254,3 +254,21 @@
 - [claude] 결정: gradroll@12 final은 이번 라운드에도 제출하지 않는다. 라운드 16에 정한 두 조건 중 분해 쪽은 충족됐다(teacher 수준). gradrep screen 쪽은 epoch 9라 아직 판정할 수 없다. 기다리는 비용은 약 40분이고 기한(11-04)까지 여유가 있다. 반대로 대체 실험 없이 final 3개(+자동 비교군)를 넣으면 GPU를 크게 쓰게 된다. 가장 보수적인 선택이 기다리는 것이다.
 - [claude] 결정: 새 screen이나 분석은 넣지 않는다. 학습 4개가 GPU를 꽉 채우고 있다(여유 0.5GB). 승격 후보 판정 전에 새 변형을 쌓지 않는다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 20:00 라운드 18
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(새 판정 없음), analysis_out(지난 라운드 뒤 새 분석 없음).
+- 새 결과 (K=12 seed 1 재현, 정확도/WGA):
+  - **suffdisc@12 s1 89.91/63.91** (screen_suffdisc_k12_s1_1030_185953_9455). 같은 seed의 center(87.99/51.88, screen_center_k12_s1_1030_185949_1766) 대비 +1.92/+12.03. val WGA 마지막 4번(e85~100)은 63.16/63.91/63.16/63.91이라 마지막 값만 튄 것이 아니다.
+  - 2-seed 평균(RESULTS_TABLE): suffdisc 89.62±0.41 / 61.28±3.72, center 88.37±0.53 / 54.14±3.19 → +1.25/+7.14로 둘 다 threshold(0.76/2.45)를 넘는다. 두 seed 모두 두 지표에서 suffdisc가 높다. 단 harness Parent check는 seed 0만 보므로 UNPROVEN(+0.58/+2.26) 그대로다.
+  - 같은 K의 다른 기준선(seed 0): rollout 45.11, tome 48.12(not matched), grid 35.34, random 33.83, maskedkd 23.31보다 높다. 정확도도 tome@12(88.99)보다 높다.
+  - priorroll@12 s1 88.74/53.38 (screen_priorroll_k12_s1_1030_185957_7cf9). 2-seed 88.91/54.14로 center와 같다. **priorroll은 K=12에서도 닫는다.**
+- 해석: 라운드 14에 정한 규칙('seed 1에서도 center보다 높지 않으면 center 계열을 닫는다')에 따라 suffdisc는 닫지 않는다. 라운드 11에 'H-W11을 닫는다'고 쓴 것은 seed 0만 본 판정이었다. 다만 분석(analysis_student_sufficiency_1030_173025_6f96)에서 sufficiency 위치는 teacher-best 위치를 약하게만 가리켰다(순위 상관 0.25~0.30). 그래서 이득이 신호가 아니라 '원판을 이미지마다 옮긴 것' 자체에서 올 가능성을 먼저 배제해야 한다(H-W19).
+- 작업 (승격 전 분해, 대체 실험):
+  - selectors/jitdisc.py (parent suffdisc): 같은 25개 후보(±2 패치) 중 이미지마다 균등 무작위로 원판 위치를 고른다. student forward가 없다. trysel K=12 통과: selector 0.0, teacher 2.446, total 10.088 GFLOPs/img, step 0.95 s (GPU 여유 12GB에서 실행).
+  - screen_jitdisc_k12_s0_1030_195912_ead1, screen_jitdisc_k12_s1_1030_195921_48c7 (priority 6).
+  - 미리 정한 읽기는 PROPOSALS 라운드 18에 적었다(jitdisc 2-seed WGA ≤ 56.6이면 신호, ≥ 58.8이면 지터).
+- [claude] 결정: suffdisc는 아직 승격하지 않는다. 이유: (1) 공식 Parent check(seed 0)가 UNPROVEN이다. (2) 대체 실험 전이다. (3) center@12 자체의 seed 차이가 4.51이라 2-seed 평균도 흔들린다.
+- [claude] 결정: jitdisc를 seed 0과 1 둘 다 넣었다. suffdisc의 이득은 대부분 seed 1에서 나왔다(+2.26 대 +12.03). seed 0만으로는 판정할 수 없다. 대조군이라 search effort의 '새 방법'이 아니고, 대기 0·실행 2라 GPU가 빈다.
+- [claude] 결정: gradroll@12 final은 이번에도 넣지 않는다. gradrep@12는 epoch 43이다. 라운드 17 결정을 유지한다. 두 후보가 모두 통과하면 final은 gradroll부터 하나씩 넣는다. 승격 후보의 final이 끝나기 전에 다른 변형을 쌓지 말라는 규칙 때문이다.
+- 학습 중: gradrep@12 e43, adaroll@49 e69. 중간값은 판정에 쓰지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다. suffdisc가 승격되면 'sufficiency/insertion faithfulness × KD teacher input'을 검색한다.

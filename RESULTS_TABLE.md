@@ -66,7 +66,7 @@ Total agent screen configs: 7
 | screen | rollout |  | 12 | 12.0 | 0 | 87.24 ± 0.00 | 45.11 ± 0.00 | 10.08 | 2.45 | 0.17 | 296 | screen_rollout_k12_s0_1030_135953_489a |
 | screen | rollout |  | 29 | 29.0 | 0,1 | 89.41 ± 0.59 | 64.28 ± 1.59 | 12.99 | 5.36 | 0.17 | 266 | screen_rollout_k29_s0_1030_135953_7320 screen_rollout_k29_s1_1030_182725_2086 |
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
-| screen | suffdisc@0f0600 |  | 12 | 12.0 | 0 | 89.32 ± 0.00 | 58.65 ± 0.00 | 15.02 | 2.45 | 4.93 | 221 | screen_suffdisc_k12_s0_1030_173118_504a |
+| screen | suffdisc@0f0600 |  | 12 | 12.0 | 0,1 | 89.62 ± 0.41 | 61.28 ± 3.72 | 15.02 | 2.45 | 4.93 | 189 | screen_suffdisc_k12_s0_1030_173118_504a screen_suffdisc_k12_s1_1030_185953_9455 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 88.99 ± 0.00 | 48.12 ± 0.00 | 12.00 | 4.36 | 0.00 | 315 | screen_tome_k12_s0_1030_135953_84af |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
