@@ -1,8 +1,8 @@
 # PROGRESS
 - 요약 (2026-10-30 [claude] 라운드 8): 확정 결과 없음. K=12에서 가장 높은 것은 center(88.74/56.39)이고, K=29·49에서는 rollout(89.82/65.41, 89.66/64.66)이다. midattn 계열은 K=12에서 87.66/30.08로 random보다 WGA가 낮아 닫았다. oracle@12도 50.38로 center보다 낮다.
 - 핵심 분석: H-W10. student WGA를 가장 잘 맞히는 대리 지표는 '그 선택기의 student로 고른 토큰'에서 잰 masked teacher의 최악 그룹 KL이다 (|ρ| 0.937, K=12·29에서 1.0). accuracy 기반 지표는 K=12에서 틀린다.
-- 진행 중: analysis_student_sufficiency_1030_173025_6f96 (H-W11 검증), screen_suffdisc_k12_s0_1030_173118_504a (parent center), CUB 관문.
-- 다음: H-W11 분석에서 student-best 원판이 teacher KL을 center보다 줄이는지 확인한다. 줄이면 suffdisc@29를, 그리고 비용을 줄인 r=1을 넣는다. 줄이지 못하면 suffdisc screen 결과를 그 근거로 해석한다.
+- 진행 중 (라운드 9 갱신): screen_suffdisc_k12_s0_1030_173118_504a (epoch 33, parent center), analysis_prior_rollout_1030_174424_16a6 (H-W12), CUB 관문. H-W11 분석은 끝났다: student sufficiency는 teacher KL을 일부만 줄이고 masked teacher WGA는 올리지 못한다(라운드 9 항목).
+- 다음: suffdisc@12 결과는 center@12(56.39)와 비교해 판정한다. H-W12 분석에서 prior_s*가 K 12·29·49 모두에서 center와 top_rollout보다 kl_worst가 낮으면 priorroll 선택기(parent rollout)를 K=12에 screen한다.
 - 막힌 것: 없음. 임의 python 실행과 여러 명령을 이은 heredoc은 여전히 승인 대기로 막힌다. 그래서 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -120,3 +120,17 @@
   - 이 selector는 K=12 하나만 넣는다. 결과는 분석과 함께 해석한다. 분석이 sufficiency→teacher 전이를 부정하면 screen이 이겨도 승격하지 않는다. 우연으로 보고 분해를 먼저 한다.
 - 비용 메모: suffdisc는 center보다 4.9 GFLOPs/img 비싸다. 주 지표는 토큰 수지만, 비용 비교에서 불리하다. 이득이 확인되면 r=1을 시험한다.
 - 문헌: "teacher input patch selection × student sufficiency"로 1회 검색했다. MaskedKD(arXiv 2302.10494)만 나오고 같은 조합은 찾지 못했다. 1회 검색이므로 노벨티 주장 전에 더 찾는다. 웹 결과 안에 지시문은 없었다.
+
+## [claude] 2026-10-30 17:45 라운드 9
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE, RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out. student_sufficiency가 새로 나왔다. 새 screen 결과는 없다(suffdisc@12는 epoch 33, 중간 val WGA는 epoch 30에 39.1).
+- 분석 analysis_student_sufficiency_1030_173025_6f96 (H-W11, clean, K=12, kl_worst / masked teacher WGA):
+  - 고정 center 0.694 / 41.35, 분석 전용 상한 shift_best 0.049 / 60.90.
+  - suff_disc: full196 0.508 / 40.60, center12 0.548 / 39.85, center49 0.476 / 41.35, maskedkd12 0.724 / 35.34, rollout12 0.740 / 31.58.
+  - student KL과 teacher KL의 이미지별 Spearman은 0.25~0.30, teacher-best 원판 적중률은 0.07~0.10이다(우연 1/25 = 0.04).
+  - K=29·49에서도 suff_disc의 masked teacher WGA는 top_rollout보다 낮다 (예: center49 student, K=49에서 60.15 대 74.44).
+- 해석: student sufficiency는 teacher-best 위치를 약하게만 가리킨다. 좋은 student(full·center)에서는 kl_worst를 center보다 20~30% 줄이지만, 상한(0.049)과는 거리가 멀다. 소수 그룹 정확도는 오르지 않는다. 지름길에 기댄 student(maskedkd12, rollout12)에서는 center보다 나쁘다. 그래서 suffdisc는 학습 중 student가 나빠지면 같이 나빠질 위험이 있다. H-W11은 **약하게만 지지**된다. suffdisc@12 screen은 그대로 두고, 결과를 보고 판정한다. suffdisc@29·r=1은 넣지 않는다.
+- 새로 본 점: rollout top-12를 center@12 student에서 읽으면 kl_worst 0.603으로 center 원판(0.694)보다 낮다. rollout@12 student 자신에서 읽으면 0.700이다. midattn 때와 같은 되먹임이 rollout에도 K=12에서 보인다. 그리고 K=12에서는 center, K=29·49에서는 rollout이 이긴다. 그래서 둘을 섞은 선택기가 모든 K에서 둘 다를 이길 수 있는지 분석한다.
+- 새 분석: analysis/prior_rollout.py → analysis_prior_rollout_1030_174424_16a6 (H-W12, priority 6). 선택은 center, top_rollout, prior_s{2,3,4}(log rollout − d²/2σ²의 top-K), union_half(center 원판 K/2 + 나머지 rollout top)이다. K는 12·29·49, student는 full196과 center/rollout@12·29·49다. 그룹별 teacher KL·정확도, 중심 거리, center 원판과의 겹침을 잰다.
+- [claude] 결정: 이번 라운드에는 screen을 넣지 않는다. suffdisc@12가 아직 학습 중이고, H-W12는 분석 전이다. 대기 작업은 CUB 1개 + 분석 1개, 실행 중은 2개라 GPU는 놀지 않는다.
+- 노벨티 주의: prior_s는 '공간 사전 + attention'이다. 이기더라도 이득이 사전에서 오는지 신호에서 오는지 분해해야 한다. 같은 K의 center와 rollout을 모두 이겨야 주장할 수 있고, 분해 때는 rollout 대신 random 점수에 같은 사전을 씌운 변형을 대체 실험으로 넣는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.

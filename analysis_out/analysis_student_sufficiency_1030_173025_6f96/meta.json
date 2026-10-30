@@ -1,0 +1,12 @@
+{
+ "id": "analysis_student_sufficiency_1030_173025_6f96",
+ "name": "student_sufficiency",
+ "source_sha": "6f9697836bd11567bb1907641993f78413cdd5fbbfcb27b437cb9c91cf1f56dc",
+ "status": "done",
+ "meta": {
+  "question": "does the disc that best preserves the student's own prediction (student sufficiency) also keep the masked teacher faithful on the worst group, better than the fixed centre disc?",
+  "method": "keep-only sufficiency / insertion faithfulness of a token subset (ERASER sufficiency, RISE insertion, ROAR keep) evaluated on the student and transferred to the teacher; attention rollout",
+  "paper": "DeYoung et al. ACL 2020 (ERASER sufficiency); Petsiuk et al. BMVC 2018 (RISE); Hooker et al. NeurIPS 2019 (ROAR); Abnar & Zuidema ACL 2020; Sagawa et al. ICLR 2020"
+ },
+ "seconds": 587.8
+}

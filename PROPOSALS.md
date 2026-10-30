@@ -62,3 +62,10 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 선행과의 차이: ERASER sufficiency(DeYoung et al. 2020)와 RISE insertion(Petsiuk et al. 2018)은 주어진 마스크를 설명 평가용으로 점수 매긴다. 여기서는 student 쪽의 sufficiency로 teacher 입력 창을 고른다. center와 달리 이미지마다 위치가 바뀐다. MaskedKD·rollout과 달리 attention 순위를 쓰지 않는다.
   - 비용: trysel K=12 기준 selector 4.93 GFLOPs/img, 합계 15.02다 (center 10.09). r=1(9개 위치)이면 약 1/3이 된다.
   - 되먹임 위험: midattn과 달리 attention이 아니라 출력을 쓴다. 그래도 student가 원판 밖 정보를 덜 쓰도록 바뀔 수 있다. screen 뒤에 self proxy로 확인한다.
+
+## 2026-10-30 [claude] 라운드 9 메모
+- H-W11 판정 (analysis_student_sufficiency_1030_173025_6f96): 약한 지지. suff_disc는 좋은 student에서 K=12 teacher kl_worst를 0.694→0.48~0.55로 줄이지만 masked teacher WGA는 그대로다(39.85~41.35). 이미지별 student-teacher KL 순위 상관 0.25~0.30. 지름길 student에서는 center보다 나쁘다. suffdisc@12 screen 결과로 최종 판정한다.
+- **H-W12 centre-prior rollout (`priorroll`, parent rollout, 아직 만들지 않음).**
+  - 근거: screen seed 0에서 K=12는 center > rollout (56.39 vs 45.11), K=29·49는 rollout > center. center@12 student에서 읽은 rollout top-12의 kl_worst 0.603 < center 원판 0.694 (analysis_student_sufficiency_1030_173025_6f96). 분석 analysis_prior_rollout_1030_174424_16a6로 먼저 검증한다.
+  - 아이디어: rollout 점수에 중앙 가우시안 사전을 곱해(로그 공간에서 더해) top-K를 고른다. K가 작을수록 사전이 연속성을 주고, K가 크면 rollout 순위가 남는다.
+  - 가장 가까운 선행 기법과의 차이: MaskedKD·rollout은 사전 없는 attention 순위, center는 신호 없는 사전이다. saliency에 center-bias 사전을 더하는 것은 시선 예측(saliency prediction) 문헌에서 흔하다(예: Judd et al. 2009 center prior). KD teacher 입력 선택에 쓴 예는 아직 찾지 못했다. 이 조합은 노벨티가 약하므로, 분해(사전만 쓴 random+prior)로 신호의 기여를 보여야 한다.
