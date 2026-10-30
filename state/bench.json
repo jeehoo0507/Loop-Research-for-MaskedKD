@@ -1,0 +1,92 @@
+{
+ "gpu": "NVIDIA RTX A5000",
+ "batch": 128,
+ "single": {
+  "ce@0": {
+   "img_per_s": 1507.6,
+   "peak_vram_gib": 2.28
+  },
+  "full@196": {
+   "img_per_s": 715.3,
+   "peak_vram_gib": 3.47
+  },
+  "maskedkd@98": {
+   "img_per_s": 925.2,
+   "peak_vram_gib": 3.23
+  },
+  "maskedkd@25": {
+   "img_per_s": 1195.7,
+   "peak_vram_gib": 2.99
+  },
+  "tome@49": {
+   "img_per_s": 1121.3,
+   "peak_vram_gib": 2.9
+  }
+ },
+ "parallel": {
+  "2": {
+   "aggregate_img_per_s": 890.4,
+   "per_job": [
+    {
+     "img_per_s": 451.7,
+     "peak_vram_gib": 3.23
+    },
+    {
+     "img_per_s": 438.7,
+     "peak_vram_gib": 3.23
+    }
+   ]
+  },
+  "3": {
+   "aggregate_img_per_s": 892.1,
+   "per_job": [
+    {
+     "img_per_s": 300.1,
+     "peak_vram_gib": 3.23
+    },
+    {
+     "img_per_s": 299.2,
+     "peak_vram_gib": 3.23
+    },
+    {
+     "img_per_s": 292.8,
+     "peak_vram_gib": 3.23
+    }
+   ]
+  },
+  "4": {
+   "aggregate_img_per_s": 892.5,
+   "per_job": [
+    {
+     "img_per_s": 219.7,
+     "peak_vram_gib": 3.23
+    },
+    {
+     "img_per_s": 225.4,
+     "peak_vram_gib": 3.23
+    },
+    {
+     "img_per_s": 222.1,
+     "peak_vram_gib": 3.23
+    },
+    {
+     "img_per_s": 225.3,
+     "peak_vram_gib": 3.23
+    }
+   ]
+  }
+ },
+ "flop_check": {
+  "teacher_gflops_measured": 35.126,
+  "reference": 35.2,
+  "rel_err": 0.0021,
+  "ok": true
+ },
+ "recommend": {
+  "epoch_s_slowest_single": 6.7,
+  "screen_epochs_for_1h_single": 537,
+  "parallel_jobs": 4,
+  "epoch_s_per_job_at_that_parallelism": 21.5,
+  "screen_epochs_for_1h_at_that_parallelism": 167
+ }
+}
