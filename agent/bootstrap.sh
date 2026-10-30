@@ -34,7 +34,7 @@ command -v nvidia-smi >/dev/null && nvidia-smi --query-gpu=name,memory.total --f
 command -v claude >/dev/null || fail "claude CLI not found. Install Claude Code, run 'claude' once to log in, then re-run"
 # catch up first: a local "boot:" commit next to new commits on GitHub would make the push check fail for the wrong reason
 git add -A agent/BOOT_STATUS.md >/dev/null 2>&1; git commit -qm "boot: status" >/dev/null 2>&1
-git -c pull.rebase=true pull -q >/dev/null 2>&1 || fail "git pull failed (local changes conflict with GitHub?): run git status"
+git pull -q --rebase --autostash >>"$LOG" 2>&1 || fail "git pull failed (local changes conflict with GitHub?): run git status"
 git push --dry-run -q >/dev/null 2>&1 || fail "git push not authorized. Run: gh auth login && gh auth setup-git"
 AUDITOR=claude
 if command -v codex >/dev/null && timeout 180 codex exec -m "${CODEX_MODEL:-gpt-6-astra}" -c model_reasoning_effort="\"${CODEX_EFFORT:-high}\"" \
