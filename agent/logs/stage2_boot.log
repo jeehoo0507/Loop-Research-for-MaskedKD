@@ -3,3 +3,21 @@
 train 121689, val 5000, test 5000
   train: 0/121689
   train: 10000/121689
+  train: 20000/121689
+  train: 30000/121689
+  train: 40000/121689
+  train: 50000/121689
+  train: 60000/121689
+  train: 70000/121689
+  train: 80000/121689
+  train: 90000/121689
+  train: 100000/121689
+  train: 110000/121689
+  train: 120000/121689
+  val: 0/5000
+  test: 0/5000
+done {'train': [121689, 3, 256, 256], 'val': [5000, 3, 224, 224], 'test': [5000, 3, 224, 224]}
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:84: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)) if isinstance(x, np.ndarray) else x
+{"val_acc": 96.96}
+[stage2 10-30 00:35] ImageNet-100 ready; teacher val acc 96.96

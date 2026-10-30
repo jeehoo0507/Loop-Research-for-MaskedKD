@@ -11,3 +11,4 @@
 - 2026-10-30 00:24 CIFAR baselines queued (20 jobs)
 - 2026-10-30 00:25 ImageNet-100 preparation started in background (tmux: stage2)
 - 2026-10-30 00:25 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
+- 2026-10-30 00:35 [stage2] ImageNet-100 ready; teacher val acc 96.96

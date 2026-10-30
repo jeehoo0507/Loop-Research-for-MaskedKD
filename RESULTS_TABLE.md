@@ -6,7 +6,7 @@
 
 Gate (screen, seed 0): Full KD 24.38 vs CE 21.10 (need +1.0): PASS; MaskedKD@98 24.74 vs Full 24.38 (need within 0.5): PASS
 
-Noise: seed sigma: not measured yet (run harness.submit --baselines)
+Noise: seed sigma 0.31 %p (pooled, dof 1) -> promotion threshold 0.62 %p
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - none yet
@@ -32,7 +32,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | screen | ce |  | 0 | None | 0 | 21.10 ± 0.00 | 7.64 | 0.00 | 0.00 | 667 | screen_ce_k0_s0_1029_233749_6609 |
 | screen | full |  | 196 | 196.0 | 0 | 24.38 ± 0.00 | 16.84 | 9.20 | 0.00 | 488 | screen_full_k196_s0_1029_233749_5549 |
-| screen | maskedkd |  | 98 | 98.0 | 0 | 24.74 ± 0.00 | 12.13 | 4.50 | 0.00 | 493 | screen_maskedkd_k98_s0_1029_233749_7ad0 |
+| screen | maskedkd |  | 98 | 98.0 | 0,1 | 24.52 ± 0.31 | 12.13 | 4.50 | 0.00 | 442 | screen_maskedkd_k98_s1_1030_002458_b791 screen_maskedkd_k98_s0_1029_233749_7ad0 |
 
 # Stage 2: ImageNet-100 (fixed methods from stage 1; 'stage2' column in metrics.json says untouched/tuned)
 
