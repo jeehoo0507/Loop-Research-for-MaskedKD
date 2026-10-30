@@ -3,8 +3,12 @@
   "cifar100": {
    "screen": 28,
    "final": 56
+  },
+  "in100": {
+   "final": 97
   }
  },
  "max_jobs": 4,
- "rule": "screen = 1 h at bench parallelism (>=10), final = 2x screen"
+ "rule": "screen = 1 h at bench parallelism (>=10), final = 2x screen",
+ "in100_rule": "12 h at 276 img/s measured by smoke run in100_smoke_maskedkd_k49_s0_1030_003529_1113 (>=10 epochs)"
 }
