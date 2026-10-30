@@ -20,8 +20,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs maskedkd@12 [WGA]: +40.60 %p, 95% CI [+21.48, +59.73], seeds 1,2, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs rollout@12 [acc]: +0.71 %p, 95% CI [-3.00, +4.42], seeds 1,2, GFLOPs ratio 1.271 -> no difference
 - gradroll@12 vs rollout@12 [WGA]: +10.90 %p, 95% CI [+6.14, +15.67], seeds 1,2, GFLOPs ratio 1.271 -> WIN
-- gradroll@12 vs tome@12 [acc]: missing (needs >= 2 shared seeds)
-- gradroll@12 vs tome@12 [WGA]: missing (needs >= 2 shared seeds)
+- gradroll@12 vs tome@12 [acc]: -1.50 %p, 95% CI [-3.62, +0.62], seeds 1,2, GFLOPs ratio 1.068 -> no difference
+- gradroll@12 vs tome@12 [WGA]: +12.78 %p, 95% CI [-6.34, +31.91], seeds 1,2, GFLOPs ratio 1.068 -> no difference
 - gradroll@12 vs grid@12 [acc]: missing (needs >= 2 shared seeds)
 - gradroll@12 vs grid@12 [WGA]: missing (needs >= 2 shared seeds)
 - gradroll@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
@@ -73,7 +73,7 @@ Total agent screen configs: 10
 | final | maskedkd |  | 12 | 12.0 | 1,2 | 84.20 ± 0.06 | 22.18 ± 1.60 | 10.07 | 2.45 | 0.00 | 281 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 |
 | final | random |  | 12 | 12.0 | 1 | 84.57 ± 0.00 | 37.59 ± 0.00 | 10.09 | 2.45 | 0.00 | 316 | final_random_k12_s1_1030_201811_19bf |
 | final | rollout |  | 12 | 12.0 | 1,2 | 87.49 ± 0.71 | 51.88 ± 0.00 | 10.08 | 2.45 | 0.17 | 239 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s2_1030_212126_33d1 |
-| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 89.66 ± 0.00 | 48.87 ± 0.00 | 12.00 | 4.36 | 0.00 | 288 | final_tome_k12_s1_1030_201811_9fb4 |
+| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2 | 89.70 ± 0.06 | 50.00 ± 1.60 | 12.00 | 4.36 | 0.00 | 289 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
 | screen | center |  | 12 | 12.0 | 0,1 | 88.37 ± 0.53 | 54.14 ± 3.19 | 10.09 | 2.45 | 0.00 | 296 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s1_1030_185949_1766 |
