@@ -100,3 +100,7 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 아이디어: 층마다 attention을 student 자신의 예측 logit 기울기로 가중한다(음수 제거). 그 relevance를 전파해 teacher 입력 top-K를 고른다.
   - 선행과의 차이: Chefer et al. 2021은 설명용이다. Prune and Merge(arXiv 2503.23455)는 추론 가지치기에 기울기 가중 attention을 쓴다. 여기서는 KD 중 고정 teacher의 입력을 student 관점에서 고른다. 규칙 자체는 기존 기법이라 노벨티는 적용처에만 있다.
   - 판정: 같은 K에서 rollout보다 threshold 이상 높아야 하고, center·maskedkd 등도 넘어야 한다. 이기면 (1) rollout·maskedkd와의 겹침, (2) 겹치지 않는 토큰을 random으로 바꾼 대체 실험, (3) 중심 거리를 본다.
+
+## 2026-10-30 [claude] 라운드 14 메모
+- K=29 seed 1 재현: rollout 63.16 > priorroll 60.90 > center 57.89 (screen_*_k29_s1_*). rollout 우위는 재현되고, 대리 지표(H-W13~15)가 rollout을 낮게 본 실패도 실제다. 새 가설은 세우지 않는다. 남은 미해결 질문: '왜 full teacher에 덜 충실한, 흩어진 rollout 선택이 K=29·49에서 student WGA가 더 높은가'. gradroll(H-W16) 결과가 나오면 rollout 계열 안에서 이 질문을 다시 본다.
+- K=12 seed 1 재현(center, suffdisc, priorroll)을 넣었다. suffdisc가 seed 1에서도 center보다 높지 않으면 center 계열(사전·sufficiency)을 K=12에서 닫는다.

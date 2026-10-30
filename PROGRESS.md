@@ -1,8 +1,8 @@
 # PROGRESS
-- 요약 (2026-10-30 [claude] 라운드 13): 확정 결과 없음. K=12 최고는 suffdisc 89.32/58.65(parent center 대비 threshold 미만), K=29·49 최고는 rollout 89.82/65.41, 89.66/64.66. 승격 후보 없음.
-- 핵심 분석: teacher 쪽 대리 지표는 모두 K=29 순위를 틀렸다. self kl_worst(H-W13), cutmix/mixup 충실도(H-W14), 지름길 상속 fix_fw·위치 다양성(H-W15, analysis_shortcut_inherit_1030_183518_f5cf)이 모두 해당한다. 대리 지표로 미리 거르지 않고 screen으로만 판정한다.
-- 진행 중: K=29 seed 1 재현 3개(priorroll e61, rollout e50, center e53). 새 계열 gradroll(Chefer 기울기 가중 rollout, parent rollout) screen K=29·12가 대기 중이다.
-- 다음: seed 1에서 K=29의 rollout·center·priorroll 차이가 재현되는지 본다. 재현되지 않으면 K=29 순위가 잡음이라는 뜻이고, 대리 지표 실패의 일부도 잡음 탓이다. gradroll이 parent rollout을 threshold 이상 넘으면 분해(겹침, 대체 실험)로 간다.
+- 요약 (2026-10-30 [claude] 라운드 14): 확정 결과 없음. K=12 최고는 suffdisc 89.32/58.65(parent center 대비 threshold 미만), K=29·49 최고는 rollout(K=29 2-seed 89.41/64.28, K=49 89.66/64.66). 승격 후보 없음.
+- 핵심: K=29 seed 1 재현에서 rollout이 다시 1위(63.16 > priorroll 60.90 > center 57.89). 'rollout > center·priorroll'은 2 seed 모두 성립하고, center와 priorroll의 순서만 뒤집힌다. teacher 쪽 대리 지표들이 rollout을 낮게 본 것은 잡음이 아니라 실제 실패다.
+- 진행 중: gradroll(Chefer 기울기 가중 rollout, parent rollout) screen K=29(e40)·12(e12). 대기: K=12 seed 1 재현 3개(center, suffdisc, priorroll).
+- 다음: gradroll 판정(parent rollout 대비 threshold). K=12 seed 1로 suffdisc·priorroll·center 순서가 신호인지 본다.
 - 막힌 것: 없음. `python -c`, heredoc, 변수가 든 for 루프는 승인 대기로 막힌다. 그래서 jq·printf와 Read/Grep/Edit로 작업한다.
 
 ## [claude] 2026-10-30 14:05 라운드 1
@@ -194,3 +194,14 @@
 - [claude] 결정: 분석 근거 없이 탐색 screen을 넣었다. 이유는 세 가지다. 대리 지표가 표본 밖에서 신뢰를 잃어 분석으로 미리 거를 수 없다. 지금까지 해 본 것은 attention 순위·공간 사전·출력 sufficiency 계열이고, 클래스 기울기 계열은 아직 없다(규칙 7: 넓게 보기). 대기열이 비어 곧 GPU가 놀게 된다. K는 rollout이 가장 강한 29와 MaskedKD가 가장 약한 12다. 49는 결과를 본 뒤 넣는다.
 - [claude] 결정: 이전 설정의 초안 gradattn.py(마지막 블록만 사용, parent maskedkd)는 제출하지 않는다. 마지막 블록 top-K는 teacher에게 place 정보를 가장 많이 넘긴다(H-W7). 그래서 모든 층을 쓰는 gradroll을 먼저 본다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다. 노벨티 메모는 PROPOSALS 라운드 13에 있다(Chefer 규칙 자체는 기존 기법이다. 이기면 분해와 추가 문헌 검색이 필요하다).
+
+## [claude] 2026-10-30 19:00 라운드 14
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(report 재생성), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(지난 라운드 뒤 새 분석 없음).
+- 새 결과 (K=29 seed 1 재현, 정확도/WGA): rollout 88.99/63.16 (screen_rollout_k29_s1_1030_182725_2086), priorroll 89.41/60.90 (screen_priorroll_k29_s1_1030_182720_dbfd), center 89.07/57.89 (screen_center_k29_s1_1030_182732_85c3). 최악 그룹은 셋 다 그룹 2.
+  - 2-seed 평균(RESULTS_TABLE): rollout 89.41±0.59 / 64.28±1.59, priorroll 89.62±0.29 / 60.52±0.53, center 89.03±0.06 / 60.15±3.20.
+  - seed 0 순서 rollout 65.41 > center 62.41 > priorroll 60.15, seed 1 순서 rollout 63.16 > priorroll 60.90 > center 57.89.
+- 해석: (1) rollout의 K=29 WGA 우위는 두 seed에서 재현된다(priorroll 대비 +5.26, +2.26; center 대비 +3.00, +5.27). 따라서 H-W12 기각(priorroll@29가 parent rollout에 진다)은 유지된다. (2) center와 priorroll의 순서는 seed마다 뒤집힌다. 이 쌍은 잡음 범위다. (3) 라운드 13에 'K=29 순서 자체가 잡음일 수 있다'고 적은 것은 절반만 맞다. self kl_worst(H-W13), cutmix/mixup 충실도(H-W14), fix_fw(H-W15)가 모두 rollout을 priorroll보다 낮게 본 것은 재현된 순위를 틀린 것이다. teacher 충실도 계열 대리 지표의 실패는 실제다. (4) rollout의 정확도는 seed 1에서 88.99로 떨어져, 2-seed 평균 89.41은 Full 90.83 대비 허용 오차 0.75 밖이다.
+- 작업: K=12 seed 1 재현 3개 제출: screen_center_k12_s1_1030_185949_1766, screen_suffdisc_k12_s1_1030_185953_9455, screen_priorroll_k12_s1_1030_185957_7cf9 (priority 6).
+- [claude] 결정: 새 계열 screen을 더 넣지 않고 K=12 재현을 넣었다. 이유: gradroll 2개가 아직 학습 중이라 새 계열을 쌓지 않는다는 규칙(결과 전에 같은 축을 쌓지 않음)을 지킨다. K=12는 center 계열(suffdisc 58.65, center 56.39, priorroll 54.89)이 threshold 안에서 엇갈리는 K라, seed 1이 있어야 이 계열을 닫을지 정할 수 있다. seed 재현이라 search effort는 늘지 않는다. 대기열이 비면 GPU가 놀게 된다. rollout@12(45.11)는 다른 셋과 차이가 커서 재현하지 않는다.
+- 새 분석: 없음. 대리 지표 설계는 라운드 13 결정대로 멈춘다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
