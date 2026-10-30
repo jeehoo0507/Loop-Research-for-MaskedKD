@@ -18,15 +18,21 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 VAL_PER_CLASS = 50                       # 45k train / 5k val split of the CIFAR-100 train set
 SPLIT_SEED = 0
 
-STUDENT = "deit_tiny_patch16_224"        # from scratch
-TEACHER = "deit_small_patch16_224.fb_in1k"
+# Setting (changed 2026-10-30): a DeiT-Ti student trained from scratch on 45k CIFAR images reached only ~24 % in
+# the 1-hour screen budget, too far from convergence for token-selection results to mean anything. The student now
+# starts from ImageNet-1k weights (new 100-way head) and the teacher is DeiT-B, so the teacher dominates the step
+# cost, which is the cost MaskedKD-style token reduction attacks.
+STUDENT = "deit_tiny_patch16_224.fb_in1k"
+STUDENT_PRETRAINED = True                # ImageNet-1k weights; the classifier head is new (100 classes)
+TEACHER = "deit_base_patch16_224.fb_in1k"
+TEACHER_DIM = 768                        # used by the ToMe cost model to match budgets
 
 # Student recipe (DeiT defaults; MaskedKD loss)
 BATCH = 128
 LR = 5e-4 * BATCH / 512
 MIN_LR = 1e-5
 WARMUP_LR = 1e-6
-WARMUP_EPOCHS = 5
+WARMUP_EPOCHS = 1        # fine-tuning a pretrained student (was 5 for scratch)
 WEIGHT_DECAY = 0.05
 DROP_PATH = 0.1
 SMOOTHING = 0.1          # label smoothing for the student CE term (via mixup targets)
@@ -39,6 +45,7 @@ ALPHA = 0.5              # loss = (1-ALPHA)*CE + ALPHA*KD
 TAU = 1.0
 
 # Teacher fine-tune (label smoothing 0: LS 0.1 flattened the teacher in aim-lab-test-4)
+TEACHER_BATCH = 64       # DeiT-B full fine-tune fits a 24 GB GPU at this batch
 TEACHER_EPOCHS = 10
 TEACHER_LR = 1e-4
 TEACHER_WARMUP_EPOCHS = 1
@@ -88,8 +95,8 @@ BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "tome", "orac
 CLAIM_REFS = ("maskedkd", "tome", "grid", "center", "random")
 FINAL_PRIORITY = 3           # agent final-seed jobs run before agent screen jobs (default priority 0)
 
-# FLOP counter self-check (bench): DeiT-S forward at 197 tokens is 4.6 GMACs (DeiT paper) = 9.2 GFLOPs
-TEACHER_REF_GFLOPS = 9.2
+# FLOP counter self-check (bench): DeiT-B forward at 197 tokens is 17.6 GMACs (DeiT paper) = 35.2 GFLOPs
+TEACHER_REF_GFLOPS = 35.2
 FLOP_CHECK_TOL = 0.10
 
 

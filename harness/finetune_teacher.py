@@ -1,4 +1,4 @@
-"""Fine-tune the teacher once (human runs this). DeiT-S ImageNet-1k -> CIFAR-100 224px, label smoothing 0.
+"""Fine-tune the teacher once (bootstrap runs this). DeiT-B ImageNet-1k -> CIFAR-100 224px, label smoothing 0.
 
     python -m harness.finetune_teacher
 
@@ -26,7 +26,7 @@ def main():
     torch.manual_seed(0)
     xtr, ytr = load_split("train")
     xva, yva = load_split("val")
-    loader = GpuLoader(xtr, ytr, C.BATCH, device, seed=0)
+    loader = GpuLoader(xtr, ytr, C.TEACHER_BATCH, device, seed=0)
     aug = GpuAugment(device, smoothing=0.0)
     model = make_teacher(pretrained=True).to(device)
     crit = SoftTargetCrossEntropy()

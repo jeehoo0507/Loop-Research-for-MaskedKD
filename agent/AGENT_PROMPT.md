@@ -13,11 +13,11 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 방향은 정해 주지 않는다. 어떤 해석가능성 기법을 볼지, 무엇을 분석할지는 네가 문헌과 분석 결과로 정한다.
 
 ## 고정된 것 (harness/, 잠금. 바꾸면 라운드 전체가 되돌려지고 무효 처리된다)
-- CIFAR-100 224px, train 45k / val 5k. teacher DeiT-S(fine-tune, 고정), student DeiT-Ti scratch.
+- CIFAR-100 224px, train 45k / val 5k. teacher DeiT-B(ImageNet → CIFAR fine-tune, 고정), student DeiT-Ti(ImageNet-1k 사전학습에서 시작, 분류 head만 새로).
 - DeiT 증강, AdamW, α=0.5, τ=1, tier별 에폭, FLOPs 측정, 평가.
 - 기준 방법: `ce`, `full`, `maskedkd`, `random`, `grid`(래스터 순서로 고르게 K개, 모든 이미지 같음), `center`(중앙에서 가까운 K개), `tome`(teacher 안에서 비슷한 토큰을 합치는 ToMe, 같은 teacher 비용에 맞춤), 그리고 분석 전용 상한 `oracle`(teacher 자신의 attention으로 고름, 주장에 사용 금지).
 - **주장하려면 같은 K에서 `maskedkd`, `tome`, `grid`, `center`, `random`을 모두 이겨야 한다** (`config.CLAIM_REFS`). `grid`·`center`는 해석가능성 신호가 전혀 없는 공간 규칙이다. 이것들과 비슷하면 이득은 신호가 아니라 "토큰을 넓게/가운데 고른 것"에서 온 것이다.
-- "student 관점으로 고르는 것"이 "teacher를 그냥 가볍게 하는 것(`tome`)"보다 나은지가 핵심 질문 중 하나다.
+- "student 관점으로 고르는 것"이 "teacher를 그냥 가볍게 하는 것(`tome`)"보다 나은지가 핵심 질문 중 하나다. 작은 K(25, 12)에서는 ToMe가 예산까지 줄이지 못해 teacher 연산을 더 쓴다 (결과 표에 "not matched"로 표시). 그 K에서 ToMe와의 비교는 ToMe에 유리하다.
 
 ## 네가 할 수 있는 것
 1. **분석:** `analysis/<이름>.py`를 쓰고 `.venv/bin/python -m harness.submit --analysis <이름>`. 규칙은 `harness/analysis_api.py` 맨 위.
@@ -47,6 +47,7 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 
 ## 2단계: ImageNet-100 (`--dataset in100`)
 - CIFAR 결과가 CIFAR에서만 통하는지 진짜 224px 이미지에서 확인하는 단계다. screen이 없고 final(시드 1·2·3)만 있다.
+- student의 ImageNet-1k 사전학습에는 ImageNet-100의 train 이미지가 들어 있다. 이 단계는 정확도 자체가 아니라 **CIFAR에서 만든 선택기가 같은 순위를 유지하는지**를 보는 것이다. 정확도 수치를 일반화 성능으로 주장하지 마라.
 - **제출 조건 (harness가 검사):** ImageNet-100 관문 통과 + 그 방법이 CIFAR final 시드 1·2·3을 마침 + AUDIT.md에 그 방법의 PASS.
 - 첫 제출은 CIFAR에서 PASS 받은 소스 그대로다(`stage2_untouched`). 그 뒤 ImageNet에 맞춘 변형은 `stage2_tuned`로 따로 기록된다. 둘을 섞어 주장하지 마라.
 - 기준선(관문, maskedkd·random·tome 격자, oracle)은 사람이 미리 넣어 둔다. 같은 시드의 기준선과 `harness.compare --dataset in100`으로 비교한다.

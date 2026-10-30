@@ -108,10 +108,10 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         stage2 = stage2_rule(method, sha)
         priority = min(priority, C.STAGE2_PRIORITY)
     sel_args = sel_args or {}
-    key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True), dataset)
+    key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True), dataset, epochs)
     for j in all_jobs():
         jk = (j["method"], j.get("selector_sha"), float(j["keep"]), j["seed"], j["tier"],
-              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", "cifar100"))
+              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", "cifar100"), j.get("epochs"))
         if jk == key and not force and j.get("returncode", 0) == 0:
             raise SystemExit(f"duplicate of {j['id']} ({j['_state']}); use --force to rerun")
     ts = time.strftime("%m%d_%H%M%S")
@@ -163,10 +163,23 @@ def make_analysis(name, note="", by="agent", priority=0, dataset="cifar100"):
 GATE = (("ce", 0), ("full", 196), ("maskedkd", 98))
 
 
-def gate_jobs(dataset="cifar100", force=False):
-    """CIFAR: screen seed 0. ImageNet-100: final seed 1 (stage 2 has no screen tier)."""
-    tier, seed = ("screen", C.SCREEN_SEED) if dataset == "cifar100" else ("final", C.FINAL_SEEDS[0])
-    return [make_job(m, k, seed, tier, by="gate", priority=10, force=force, dataset=dataset)["id"] for m, k in GATE]
+def gate_jobs(dataset="cifar100", force=False, seeds=None):
+    """CIFAR: screen, seed 0 unless `seeds` (bootstrap adds 1, 2 when one seed misses). ImageNet-100: final seed 1.
+    Runs that already exist at the current epochs are reused (their ids are returned)."""
+    tier = "screen" if dataset == "cifar100" else "final"
+    seeds = seeds or ([C.SCREEN_SEED] if dataset == "cifar100" else [C.FINAL_SEEDS[0]])
+    return [job_or_existing(m, k, s, tier, by="gate", priority=10, force=force, dataset=dataset)
+            for s in seeds for m, k in GATE]
+
+
+def job_or_existing(method, keep, seed, tier, **kw):
+    """make_job, but a duplicate at the current epochs returns the existing job id instead of failing."""
+    try:
+        return make_job(method, keep, seed, tier, **kw)["id"]
+    except SystemExit as e:
+        if str(e).startswith("duplicate of "):
+            return str(e).split()[2]
+        raise
 
 
 def baselines(dataset="cifar100", force=False, keeps=None):
@@ -175,9 +188,9 @@ def baselines(dataset="cifar100", force=False, keeps=None):
     keeps = tuple(keeps or C.BASELINE_KEEPS)
     ids = []
     if dataset == "cifar100":
-        for s in C.NOISE_SEEDS:
+        for s in C.NOISE_SEEDS:   # may already exist from the gate's extra seeds
             for m, k in (("maskedkd", 98), ("full", 196)):
-                ids.append(make_job(m, k, s, "screen", by="baselines", priority=5, force=force)["id"])
+                ids.append(job_or_existing(m, k, s, "screen", by="baselines", priority=5, force=force))
         for k in keeps:
             for m in ("maskedkd", "random", "grid", "center", "tome"):
                 ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
@@ -231,6 +244,7 @@ if __name__ == "__main__":
     ap.add_argument("--tier", default="screen", choices=["smoke", "screen", "final"])
     ap.add_argument("--dataset", default="cifar100", choices=list(C.DATASETS))
     ap.add_argument("--keeps", default="", help="comma list of budgets for --baselines on in100")
+    ap.add_argument("--seeds", default="", help="comma list of seeds for --gate (cifar100)")
     ap.add_argument("--smoke", action="store_true", help="human: a few-minute GPU check of every path")
     ap.add_argument("--sel-args", default="{}")
     ap.add_argument("--note", default="")
@@ -257,7 +271,7 @@ if __name__ == "__main__":
     elif a.analysis:
         print(make_analysis(a.analysis, a.note, a.by, a.priority, a.dataset)["id"])
     elif a.gate:
-        print("\n".join(gate_jobs(a.dataset, a.force)))
+        print("\n".join(gate_jobs(a.dataset, a.force, [int(s) for s in a.seeds.split(",") if s] or None)))
     else:
         if not a.method:
             ap.error("--method required")

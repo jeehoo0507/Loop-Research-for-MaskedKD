@@ -4,7 +4,7 @@
 무인 에이전트 루프로 탐색한다.
 
 - 기준 논문: [MaskedKD](https://arxiv.org/abs/2302.10494), 코드 [effl-lab/MaskedKD](https://github.com/effl-lab/MaskedKD)
-- 설정: CIFAR-100 224px (train 45k / val 5k / test 10k), teacher DeiT-S (ImageNet → fine-tune, 라벨 스무딩 0), student DeiT-Ti scratch
+- 설정: CIFAR-100 224px (train 45k / val 5k / test 10k), teacher DeiT-B (ImageNet → fine-tune, 라벨 스무딩 0), student DeiT-Ti (ImageNet-1k 사전학습에서 시작). 처음부터 학습하던 설정은 1시간 예산에서 정확도 24%에 그쳐 2026-10-30에 바꿨다
 - 주 지표: Full KD 대비 val 1%p 이내를 유지하는 **최소 평균 teacher 토큰 수**. 비용은 학습 1스텝 전체 GFLOPs/img 실측(선택기 포함)
 
 ## 구조

@@ -4,7 +4,7 @@ Be skeptical: the researcher is rewarded for positive results.
 
 Context: the agent searches for interpretability-based token selectors (selectors/*.py) that let a
 masked teacher use fewer input tokens than MaskedKD in ViT knowledge distillation (CIFAR-100,
-DeiT-S teacher, DeiT-Ti student). The harness (harness/) is locked and is the only thing allowed to
+DeiT-B teacher, ImageNet-pretrained DeiT-Ti student). The harness (harness/) is locked and is the only thing allowed to
 produce numbers. Primary metric: the smallest mean kept-token budget whose val accuracy is within
 1.0 %p of Full KD. Cost: measured train-step GFLOPs per image, including the selector.
 

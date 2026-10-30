@@ -4,6 +4,7 @@ The masked teacher forward follows the official MaskedKD code (models_teacher.py
 patch_embed -> concat CLS -> add pos_embed (all 197) -> gather kept patch tokens -> blocks -> norm -> CLS head.
 tests/test_equivalence.py checks this against plain timm forwards.
 """
+import os
 from dataclasses import dataclass, field
 from typing import List, Optional
 
@@ -14,8 +15,11 @@ import torch.nn as nn
 from . import config as C
 
 
-def make_student():
-    return timm.create_model(C.STUDENT, pretrained=False, num_classes=C.NUM_CLASSES, drop_path_rate=C.DROP_PATH)
+def make_student(pretrained=None):
+    """ImageNet-1k weights with a new 100-way head (C.STUDENT_PRETRAINED); never downloads in fake-data tests."""
+    if pretrained is None:
+        pretrained = C.STUDENT_PRETRAINED and not os.environ.get("MASKEDKD_FAKE_DATA")
+    return timm.create_model(C.STUDENT, pretrained=pretrained, num_classes=C.NUM_CLASSES, drop_path_rate=C.DROP_PATH)
 
 
 def make_teacher(pretrained=True):

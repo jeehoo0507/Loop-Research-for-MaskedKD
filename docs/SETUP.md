@@ -95,7 +95,7 @@ tmux new -s teacher '.venv/bin/python -m harness.finetune_teacher 2>&1 | tee age
 # 빠져나오기: Ctrl-b 다음 d / 다시 보기: tmux attach -t teacher
 ```
 
-처음 실행하면 CIFAR-100(약 170MB)과 DeiT-S ImageNet 가중치를 받는다.
+처음 실행하면 CIFAR-100(약 170MB)과 DeiT-B·DeiT-Ti ImageNet 가중치를 받는다.
 
 **확인:** `state/teacher.json`의 `val_acc`가 충분히 높아야 한다. 내 추정은 88% 이상이고, 측정한 값은 아니다. 낮으면 진행하지 말고 원인부터 본다.
 
@@ -105,7 +105,7 @@ tmux new -s teacher '.venv/bin/python -m harness.finetune_teacher 2>&1 | tee age
 .venv/bin/python -m harness.bench
 ```
 
-먼저 **FLOPs 계량기 자체를 검사**한다: teacher DeiT-S(196토큰)의 측정값이 공식값 9.2 GFLOPs(4.6 GMACs)와 10% 넘게 다르면 `FLOP CHECK FAILED`를 출력하고 종료 코드 2로 끝난다. 이 경우 relock하지 말고 원인을 먼저 본다(모든 결과의 비용 축이 이 계량기에 달려 있다).
+먼저 **FLOPs 계량기 자체를 검사**한다: teacher DeiT-B(196토큰)의 측정값이 공식값 35.2 GFLOPs(17.6 GMACs)와 10% 넘게 다르면 `FLOP CHECK FAILED`를 출력하고 종료 코드 2로 끝난다. 이 경우 relock하지 말고 원인을 먼저 본다(모든 결과의 비용 축이 이 계량기에 달려 있다).
 
 그다음 단독 실행과 동시 2~4개 실행의 처리량, VRAM을 재서 `state/bench.json`에 쓰고 권장값을 출력한다.
 - `screen_epochs_for_1h_at_that_parallelism`: 거르기 1회를 1시간 안에 끝내는 에폭 수
@@ -142,7 +142,7 @@ bash agent/start.sh sched                       # GPU 스케줄러만 tmux(sched
 
 ```bash
 tmux new -d -s prep '.venv/bin/python -m harness.prepare_stage2 2>&1 | tee agent/logs/prep.log'   # 받기 약 8.4GB, 변환 결과 약 25GB
-.venv/bin/python -m harness.prepare_stage2 --teacher      # teacher: ImageNet-1k DeiT-S의 100클래스 행. val 정확도 출력
+.venv/bin/python -m harness.prepare_stage2 --teacher      # teacher: ImageNet-1k DeiT-B의 100클래스 행. val 정확도 출력
 .venv/bin/python -m harness.submit --smoke --dataset in100
 ```
 

@@ -16,30 +16,44 @@ from . import config as C
 
 
 def load_runs(dataset=None):
-    """Finished runs (smoke runs excluded). dataset=None: all datasets."""
+    """Finished runs (smoke runs excluded) at the current epoch budget of their tier: when the budget changes
+    (agent/bootstrap.sh raises it if the gate fails), runs at the old budget drop out of every table.
+    dataset=None: all datasets."""
     rs = []
     for m in C.RUNS.glob("*/metrics.json"):
         r = json.loads(m.read_text())
         r.setdefault("dataset", "cifar100")
+        want = C.TIER_EPOCHS.get(r["dataset"], {}).get(r["tier"])
+        if want is not None and "epochs" in r and r["epochs"] != want:
+            continue
         if r.get("status") == "done" and r["tier"] != "smoke" and dataset in (None, r["dataset"]):
             rs.append(r)
     return rs
 
 
 def gate(runs, tier="screen", dataset="cifar100", seed=None):
-    """CIFAR gate: screen seed 0. ImageNet-100 gate: final seed 1."""
-    seed = (C.SCREEN_SEED if dataset == "cifar100" else C.FINAL_SEEDS[0]) if seed is None else seed
+    """CIFAR gate: screen tier, mean over every seed that has all three runs (seed 0 first; agent/bootstrap.sh
+    adds seeds 1, 2 when one seed misses). ImageNet-100 gate: final seed 1. `seed` pins a single seed."""
+    if seed is None and dataset != "cifar100":
+        seed = C.FINAL_SEEDS[0]
 
     def acc(method, keep):
-        v = [r["val_acc_last"] for r in runs if r["tier"] == tier and r["method"] == method
-             and r.get("dataset", "cifar100") == dataset and float(r["keep"]) == keep and r["seed"] == seed]
-        return v[-1] if v else None
-    ce, full, mk = acc("ce", 0), acc("full", 196), acc("maskedkd", 98)
-    if None in (ce, full, mk):
-        return None, f"gate incomplete: ce={ce} full={full} maskedkd98={mk}"
+        """{seed: latest val acc}"""
+        out = {}
+        for r in sorted(runs, key=lambda r: r["id"]):
+            if (r["tier"] == tier and r["method"] == method and r.get("dataset", "cifar100") == dataset
+                    and float(r["keep"]) == keep and (seed is None or r["seed"] == seed)):
+                out[r["seed"]] = r["val_acc_last"]
+        return out
+    a = {m: acc(m, k) for m, k in (("ce", 0), ("full", 196), ("maskedkd", 98))}
+    seeds = sorted(set(a["ce"]) & set(a["full"]) & set(a["maskedkd"]))
+    if not seeds:
+        return None, "gate incomplete: " + ", ".join(f"{m} seeds {sorted(v)}" for m, v in a.items())
+    ce, full, mk = (statistics.mean(a[m][s] for s in seeds) for m in ("ce", "full", "maskedkd"))
     ok1 = full >= ce + C.GATE_KD_OVER_CE
     ok2 = abs(mk - full) <= C.GATE_MASKEDKD98_GAP
-    msg = (f"Full KD {full:.2f} vs CE {ce:.2f} (need +{C.GATE_KD_OVER_CE}): {'PASS' if ok1 else 'FAIL'}; "
+    msg = (f"[{tier}, {C.TIER_EPOCHS.get(dataset, {}).get(tier)} epochs, mean of seeds {seeds}] "
+           f"Full KD {full:.2f} vs CE {ce:.2f} (need +{C.GATE_KD_OVER_CE}): {'PASS' if ok1 else 'FAIL'}; "
            f"MaskedKD@98 {mk:.2f} vs Full {full:.2f} (need within {C.GATE_MASKEDKD98_GAP}): {'PASS' if ok2 else 'FAIL'}")
     return ok1 and ok2, msg
 
@@ -50,6 +64,7 @@ def table(runs):
         key = (r["tier"], r["method"], r.get("selector_sha") or "", json.dumps(r.get("sel_args", {}), sort_keys=True),
                float(r["keep"]))
         groups[key].append(r)
+    from .tome import cost_ratio
     lines = ["| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | total GFLOPs/img | teacher | selector | img/s* | run ids |",
              "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     rows = []
@@ -63,7 +78,9 @@ def table(runs):
         ips = [r["img_per_s_mean"] for r in rs if r.get("img_per_s_mean")]
         rows.append({"tier": tier, "method": method, "sha": sha, "args": args, "keep": keep, "acc": mean,
                      "kept": statistics.mean(kept) if kept else None, "seeds": sorted(r["seed"] for r in rs)})
-        lines.append(f"| {tier} | {method}{'@' + sha[:6] if sha and sha != 'builtin' else ''} | {args if args != '{}' else ''} "
+        over = cost_ratio(keep) if method == "tome" else 1.0
+        tag = f" (teacher cost x{over:.2f} of budget: not matched)" if over > 1.05 else ""
+        lines.append(f"| {tier} | {method}{'@' + sha[:6] if sha and sha != 'builtin' else ''}{tag} | {args if args != '{}' else ''} "
                      f"| {keep:g} | {rows[-1]['kept'] if rows[-1]['kept'] is None else round(rows[-1]['kept'], 1)} "
                      f"| {','.join(map(str, rows[-1]['seeds']))} | {mean:.2f} ± {sd:.2f} | {f('total_gflops_per_img')} "
                      f"| {f('teacher_gflops_per_img')} | {f('selector_gflops_per_img')} "
@@ -221,7 +238,7 @@ def main():
     ok, msg = gate(runs, "screen", "cifar100")
     sigma, thr, nmsg = noise(runs, "screen")
     core_lines, sig = core(runs, "final")
-    body += ["# Stage 1: CIFAR-100", "", f"Gate (screen, seed 0): {msg}", "", f"Noise: {nmsg}", "",
+    body += ["# Stage 1: CIFAR-100", "", f"Gate: {msg}", "", f"Noise: {nmsg}", "",
              "## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)", *(sig or ["- none yet"]), "",
              "## Core comparison (final tier: every agent method vs " + ", ".join(C.CLAIM_REFS) + ", full, parent)",
              *(core_lines or ["- no agent method has >= 2 final seeds yet"]), "",

@@ -74,7 +74,7 @@ def teacher_forward_tome(model, x, r):
     return model.forward_head(h)
 
 
-def _cost(tokens, dim=384):
+def _cost(tokens, dim=C.TEACHER_DIM):
     """Per-block cost model: linear layers ~ 12*n*d^2, attention ~ 2*n^2*d (only used to choose r)."""
     return 12 * tokens * dim * dim + 2 * tokens * tokens * dim
 
@@ -85,6 +85,14 @@ def token_schedule(r, depth=12, n0=C.NUM_PATCHES + 1):
         out.append(n)
         n -= min(r, (n - 1) // 2)
     return out
+
+
+def cost_ratio(keep, depth=12):
+    """Modelled ToMe teacher cost at r_for_budget(keep) / masked-teacher cost at `keep`. Above 1 when even the
+    largest r cannot reach the budget (K = 25, 12): ToMe then gets more teacher compute than the method it is
+    compared with, which favours ToMe."""
+    r = r_for_budget(keep, depth)
+    return sum(_cost(n) for n in token_schedule(r, depth)) / (depth * _cost(int(keep) + 1))
 
 
 def r_for_budget(keep, depth=12):

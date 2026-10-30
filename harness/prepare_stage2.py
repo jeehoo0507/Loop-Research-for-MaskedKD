@@ -10,7 +10,7 @@ validation (5,000 images), used only by harness.test_eval.
 Arrays: train uint8 [N,3,256,256] (shorter side 256, center crop; RandomResizedCrop to 224 happens on the
 GPU), val/test uint8 [N,3,224,224] (shorter side 256, center crop 224, the usual eval transform).
 
-Teacher: DeiT-S ImageNet-1k weights with the classifier rows of these 100 classes (no fine-tuning; class
+Teacher: the config teacher's ImageNet-1k weights with the classifier rows of these 100 classes (no fine-tuning; class
 names are matched to timm's ImageNet-1k descriptions, all 100 must match uniquely).
 """
 import argparse

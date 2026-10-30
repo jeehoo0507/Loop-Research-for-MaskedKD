@@ -466,3 +466,46 @@ def test_timm_can_reach_hf_hub():
     the teacher fine-tune then dies on the server. Catch that on CPU."""
     from timm.models._hub import _has_hf_hub
     assert _has_hf_hub, "pin huggingface_hub to a version timm can import (requirements.txt)"
+
+
+def test_gate_mean_over_seeds_and_epoch_filter(tmp_path, monkeypatch):
+    from harness import report, submit
+    from harness.report import gate
+    g = lambda m, k, s, v: {"id": f"{m}{s}", "tier": "screen", "method": m, "keep": k, "seed": s, "val_acc_last": v}
+    runs = [g("ce", 0, 0, 60.0), g("full", 196, 0, 60.8), g("maskedkd", 98, 0, 60.7)]
+    assert gate(runs)[0] is False                              # seed 0 alone: KD only +0.8
+    runs += [g("ce", 0, 1, 59.6), g("full", 196, 1, 61.0), g("maskedkd", 98, 1, 60.9),
+             g("ce", 0, 2, 59.4), g("full", 196, 2, 61.2), g("maskedkd", 98, 2, 61.0)]
+    ok, msg = gate(runs)
+    assert ok and "seeds [0, 1, 2]" in msg                     # mean of three seeds: +1.33
+    # runs at an old epoch budget drop out once the budget changes
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setitem(C.TIER_EPOCHS["cifar100"], "screen", 56)
+    for i, (ep, v) in enumerate(((28, 60.0), (56, 62.0))):
+        d = C.RUNS / f"r{i}"; d.mkdir(parents=True)
+        (d / "metrics.json").write_text(json.dumps({"id": f"r{i}", "status": "done", "tier": "screen", "method": "ce",
+                                                     "keep": 0, "seed": 0, "epochs": ep, "val_acc_last": v}))
+    assert [r["val_acc_last"] for r in report.load_runs("cifar100")] == [62.0]
+    # the gate's extra seeds are reused by --baselines instead of failing as duplicates
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    ids = submit.gate_jobs(seeds=[1, 2])
+    assert submit.gate_jobs(seeds=[1, 2]) == ids
+    base = submit.baselines()
+    assert all(i in base for i in ids if "_ce_" not in i)
+
+
+def test_scale_epochs(tmp_path, monkeypatch):
+    from harness import boot
+    monkeypatch.setattr(C, "STATE", tmp_path)
+    monkeypatch.setattr(C, "EPOCHS_FILE", tmp_path / "epochs.json")
+    (tmp_path / "epochs.json").write_text(json.dumps({"epochs": {"cifar100": {"screen": 28, "final": 56}}, "max_jobs": 4}))
+    boot.scale_epochs(2)
+    boot.scale_epochs(4)                                       # always relative to the bench rule, not compounding
+    d = json.loads((tmp_path / "epochs.json").read_text())
+    assert d["epochs"]["cifar100"] == {"screen": 112, "final": 224} and d["gate_scale"] == 4 and d["max_jobs"] == 4
+
+
+def test_tome_cost_ratio_flags_unmatched_budgets():
+    from harness.tome import cost_ratio
+    assert cost_ratio(98) <= 1.0 and cost_ratio(49) <= 1.0     # matched
+    assert cost_ratio(12) > 1.05                               # r caps out: ToMe uses more teacher compute

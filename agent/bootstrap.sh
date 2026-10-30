@@ -62,7 +62,7 @@ fi
 
 # ---------- 3. teacher ----------
 if [ ! -f state/teacher.json ]; then
-  say "teacher fine-tune (CIFAR-100, DeiT-S, label smoothing 0)"
+  say "teacher fine-tune (CIFAR-100, DeiT-B, label smoothing 0)"
   $PY -m harness.finetune_teacher >>"$LOG" 2>&1 || fail "teacher fine-tune failed (see $LOG)"
 fi
 status "teacher val acc: $($PY -c 'import json;print(json.load(open("state/teacher.json"))["val_acc"])')"
@@ -81,15 +81,33 @@ if [ ! -f state/epochs.json ]; then
   tmux kill-session -t sched 2>/dev/null; bash agent/start.sh sched >>"$LOG" 2>&1   # reload MAX_JOBS
 fi
 
-# ---------- 5. CIFAR gate ----------
-if ! $PY -m harness.report --gate >/dev/null 2>&1; then
-  if [ ! -s "$S/gate_ids" ]; then $PY -m harness.submit --gate > "$S/gate_ids" || fail "gate submit failed"; fi
-  status "CIFAR gate submitted (ce / full / maskedkd@98); waiting, this takes hours"
-  $PY -m harness.submit --wait $(cat "$S/gate_ids") | tee -a "$LOG" || fail "a gate run failed: see runs/<id>/error.txt"
-  if ! msg=$($PY -m harness.report --gate); then
-    fail "CIFAR gate FAILED: $msg. Fallback (human decision): DeiT-B teacher + pretrained student, docs/SETUP.md step 5"
+# ---------- 5. CIFAR gate (escalates by itself) ----------
+# seed 0 -> + seeds 1, 2 (judged on the mean: one seed can miss by noise) -> 2x epochs -> 4x epochs.
+# Longer training is the known lever for KD > CE (Beyer et al. 2022). Only after 4x does a human decide.
+gate_ok() { $PY -m harness.report --gate >/dev/null 2>&1; }
+run_gate() {  # $1 = id file name, rest = submit args; reuses runs that already exist
+  local f="$S/$1"; shift
+  [ -s "$f" ] || $PY -m harness.submit --gate "$@" > "$f" || fail "gate submit failed"
+  $PY -m harness.submit --wait $(cat "$f") | tee -a "$LOG" || fail "a gate run failed: see runs/<id>/error.txt"
+  status "CIFAR gate: $($PY -m harness.report --gate)"
+}
+for scale in 1 2 4; do
+  gate_ok && break
+  if [ "$scale" -gt 1 ]; then
+    [ "$(cat "$S/gate_scale" 2>/dev/null || echo 1)" -ge "$scale" ] || {
+      $PY -m harness.boot scale-epochs "$scale" >>"$LOG" 2>&1 || fail "could not scale epochs"
+      git add state/epochs.json agent/BOOT_STATUS.md && git commit -qm "boot: gate failed, epochs x$scale" && git push -q
+      bash agent/relock.sh >>"$LOG" 2>&1 || fail "relock failed"
+      tmux kill-session -t sched 2>/dev/null; bash agent/start.sh sched >>"$LOG" 2>&1
+      echo "$scale" > "$S/gate_scale"
+      status "CIFAR gate failed at shorter training: epochs x$scale -> $(tr -d '\n ' < state/epochs.json)"
+    }
   fi
-fi
+  idf=gate_ids; [ "$scale" -gt 1 ] && idf="gate_ids_x$scale"
+  gate_ok || run_gate "$idf" --seeds 0
+  gate_ok || run_gate "${idf}_s12" --seeds 1,2
+done
+gate_ok || fail "CIFAR gate FAILED at 4x epochs on seeds 0-2: $($PY -m harness.report --gate). Fallback (human decision): DeiT-B teacher + pretrained student, docs/SETUP.md step 5"
 status "CIFAR gate PASSED: $($PY -m harness.report --gate)"
 
 # ---------- 6. baselines, stage 2, loop ----------

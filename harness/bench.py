@@ -24,7 +24,7 @@ CASES = (("ce", 0), ("full", 196), ("maskedkd", 98), ("maskedkd", 25), ("tome", 
 
 def flop_check(device):
     """The cost axis of every result rests on FlopCounterMode. Check it on this GPU against the published
-    DeiT-S cost (4.6 GMACs at 197 tokens = 9.2 GFLOPs per image, forward)."""
+    teacher cost (config.TEACHER_REF_GFLOPS, from the DeiT paper's GMACs at 197 tokens, forward)."""
     from torch.utils.flop_counter import FlopCounterMode
     from .models import teacher_forward_keepmask
     t = make_teacher(pretrained=False).to(device).eval()
