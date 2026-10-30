@@ -1,0 +1,12 @@
+{
+ "id": "analysis_gradroll_seeds_1030_232303_4bd3",
+ "name": "gradroll_seeds",
+ "source_sha": "4bd327d5fd3628a3a831010f03a5f0a4ccd4420314ca2328bfbac3dc9ad8666d",
+ "status": "done",
+ "meta": {
+  "question": "is the seed-3 WGA drop of gradroll@12 a selection collapse (worse teacher inputs) or a student-side difference with equally good selections?",
+  "method": "gradient-weighted attention rollout vs attention rollout vs last-block CLS attention; keep-only masked-teacher evaluation per group, selection overlap and cross-seed agreement",
+  "paper": "Chefer, Gur & Wolf CVPR 2021; Abnar & Zuidema ACL 2020; Hooker et al. NeurIPS 2019 (keep-only)"
+ },
+ "seconds": 227.3
+}

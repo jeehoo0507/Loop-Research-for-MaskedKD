@@ -31,6 +31,12 @@
 - (분해, analysis_suffdisc_decomp_1030_202612_878c) suffdisc는 원판을 거의 항상 중앙에서 옮긴다(centre_frac 0.03). MaskedKD 토큰과의 겹침은 0.11~0.14이고, drop-path 픽과 eval 픽의 일치율은 0.34~0.43이다. masked teacher WGA는 suffdisc student에서 48.12로 center 41.35보다 높지만, 다른 student(jitdisc, center)에서 읽으면 39.10~45.11로 center 수준이다. 미리 정한 읽기 (a)·(b)를 모두 통과했다.
 
 ## 실패한 방향
+- **[claude] 2026-10-30 gradroll@12 final (3-seed, 주장 불가).** 정확도/WGA는 s1 87.99/63.16 (final_gradroll_k12_s1_1030_201811_faf0), s2 88.41/62.41 (final_gradroll_k12_s2_1030_212126_da50), s3 87.57/51.88 (final_gradroll_k12_s3_1030_220958_176b)이다. RESULTS_TABLE Core comparison(seeds 1,2,3) 결과는 다음과 같다.
+  - WIN: maskedkd 대비 acc +3.78 [+2.74, +4.82], WGA +36.84 [+20.23, +53.46]. grid 대비 acc +4.89 [+3.42, +6.36], WGA +23.81 [+8.14, +39.48].
+  - 차이 없음: center 대비 acc −0.70 [−1.53, +0.14], WGA +5.51 [−6.35, +17.38]. rollout 대비 acc −0.11 [−3.71, +3.49], WGA +8.27 [−3.09, +19.64]. tome 대비 acc −1.97 [−4.05, +0.10], WGA +8.27 [−11.50, +28.04].
+  - seeds 1,2: random 대비 WGA +26.32 WIN, full 대비 acc −2.75·WGA −4.51 n.s.
+  - seeds 1,2에서 있던 rollout·center 대비 WGA WIN은 seed 3에서 사라졌다. 그래서 CLAIM_REFS(같은 K의 모든 기준선을 이김)를 채우지 못한다.
+  - H-W21(analysis_gradroll_seeds_1030_232303_4bd3): seed 3은 rollout·center에서도 WGA가 가장 낮은 seed다. gradroll 고유의 붕괴라는 증거는 없다.
 - [claude] 2026-10-30 priorroll(log rollout − d²/2σ², σ=√(K/π), parent rollout). 분석(analysis_prior_rollout_1030_174424_16a6)은 rollout-trained student 기준으로 모든 K에서 center·rollout보다 낮은 kl_worst를 예측했다. 그러나 student는 K=12에서 center와 비기고(54.89 대 56.39), K=29에서 rollout·center 둘 다에게 진다(60.15 대 65.41/62.41). 승격하지 않는다. 원인 점검은 analysis_proxy_holdout_1030_182326_7254.
 - [claude] 2026-10-30 suffdisc(student sufficiency로 center 원판 위치 선택, parent center). K=12에서 center 대비 이득이 threshold 미만이고 비용이 1.5배다. 승격하지 않고 다른 K에도 넣지 않는다. **(라운드 18 갱신: 실패 판정 보류.** seed 1에서 center보다 +12.03 높아 2-seed 평균으로는 threshold를 넘는다. 위 '잠정' 절과 jitdisc 대체 실험을 볼 것.) **(라운드 20: jitdisc 2-seed 53.01로 무작위 위치는 center 수준이다. suffdisc의 2-seed 이득은 위치 지터가 아니다. 공식 Parent check(seed 0)는 여전히 UNPROVEN이다.)**
 - [claude] 2026-10-30 adaroll(H-W17, student rollout 엔트로피 exp(H)에 비례한 이미지별 k_i, [K/2, 2K], parent rollout). K=49 seed 0: 90.08 / 63.91 (screen_adaroll_k49_s0_1030_192757_7edc, mean_kept 48.5, total 16.36 GFLOPs/img). parent rollout@49(89.66/64.66) 대비 +0.42 / −0.75로 Parent check UNPROVEN이다. 주 지표 조건(WGA ≥ 64.22)도 0.31 모자란다. 이미지별 배분은 효과가 없다고 보고 이 계열을 닫는다. 다른 K에는 넣지 않는다.

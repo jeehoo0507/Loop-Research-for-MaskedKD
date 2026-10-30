@@ -14,7 +14,6 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs maskedkd@12 [WGA]: +36.84 %p, 95% CI [+20.23, +53.46], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs center@12 [WGA]: +8.27 %p, 95% CI [+8.27, +8.27], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
@@ -26,8 +25,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs tome@12 [WGA]: +8.27 %p, 95% CI [-11.50, +28.04], seeds 1,2,3, GFLOPs ratio 1.068 -> no difference
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs center@12 [acc]: -0.54 %p, 95% CI [-3.19, +2.11], seeds 1,2, GFLOPs ratio 1.270 -> no difference
-- gradroll@12 vs center@12 [WGA]: +8.27 %p, 95% CI [+8.27, +8.27], seeds 1,2, GFLOPs ratio 1.270 -> WIN
+- gradroll@12 vs center@12 [acc]: -0.70 %p, 95% CI [-1.53, +0.14], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
+- gradroll@12 vs center@12 [WGA]: +5.51 %p, 95% CI [-6.35, +17.38], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
 - gradroll@12 vs random@12 [acc]: +4.50 %p, 95% CI [-9.27, +18.28], seeds 1,2, GFLOPs ratio 1.270 -> no difference
 - gradroll@12 vs random@12 [WGA]: +26.32 %p, 95% CI [+16.79, +35.85], seeds 1,2, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -2.75 %p, 95% CI [-10.17, +4.67], seeds 1,2, GFLOPs ratio 0.300 -> no difference
@@ -68,7 +67,7 @@ Total agent screen configs: 10
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | center |  | 12 | 12.0 | 1,2 | 88.74 ± 0.59 | 54.52 ± 0.53 | 10.09 | 2.45 | 0.00 | 300 | final_center_k12_s1_1030_201811_341b final_center_k12_s2_1030_212126_5486 |
+| final | center |  | 12 | 12.0 | 1,2,3 | 88.69 ± 0.43 | 53.64 ± 1.57 | 10.09 | 2.45 | 0.00 | 304 | final_center_k12_s1_1030_201811_341b final_center_k12_s3_1030_220958_413c final_center_k12_s2_1030_212126_5486 |
 | final | full |  | 196 | 196.0 | 1,2 | 90.95 ± 0.53 | 67.30 ± 0.53 | 42.77 | 35.13 | 0.00 | 191 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |

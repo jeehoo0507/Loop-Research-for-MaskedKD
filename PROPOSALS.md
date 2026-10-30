@@ -154,3 +154,11 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
 - **H-W21 (분석 가설): gradroll@12 seed 3의 WGA 하락(51.88, final_gradroll_k12_s3_1030_220958_176b; s1 63.16, s2 62.41)은 (a) 학습 중 선택이 무너진 것(masked teacher WGA 하락, MaskedKD 쪽으로 이동)이거나 (b) 선택은 같고 student 자체가 group 2에서 약해진 것이다.**
   - 분석: analysis_gradroll_seeds_1030_232303_4bd3. 미리 정한 읽기: s3 student(e25/e50/final)의 gradroll masked teacher WGA가 s1·s2보다 5 이상 낮거나 grad∩maskedkd 겹침이 0.1 이상 높으면 (a). 그 차이가 없고 student 자신의 group 2 정확도만 낮으면 (b). (a)이면 선택 안정화(예: 학습 진행에 따른 rollout 혼합)가 다음 방법 후보이고, (b)이면 gradroll의 seed 분산은 방법 고유가 아니라 student 분산으로 보고 CI 해석만 바꾼다.
   - 선행과의 차이: Chefer et al. 2021의 gradient-weighted relevance는 설명 평가용이다. 학습 중 seed별 설명 안정성이 KD 입력 선택의 결과를 좌우하는지 본 예는 찾지 못했다(검색 미수행).
+
+## 2026-10-30 [claude] 라운드 34 메모
+- H-W21 결과(analysis_gradroll_seeds_1030_232303_4bd3): seed 3에서는 gradroll·rollout 둘 다 masked teacher WGA가 낮고 student WGA도 낮다. gradroll∩maskedkd 겹침은 seed 사이에 같다(0.37~0.40). seed 사이 선택 일치율은 0.50~0.55다. 선택 안정화 변형은 근거가 약해 보류한다.
+- **H-W22 (검증 계획): suffdisc@12의 center 대비 이득이 seed 2·3에서도 유지되는가.**
+  - 근거: screen s0 +0.58/+2.26, s1 +1.92/+12.03 (screen_suffdisc_k12_s{0,1}_*, screen_center_k12_s{0,1}_*). 분해 3가지를 통과했다(jitdisc, analysis_suffdisc_decomp_1030_202612_878c).
+  - 제출: screen_suffdisc_k12_s2_1030_233019_98dd, screen_center_k12_s2_1030_233024_3dcf, screen_suffdisc_k12_s3_1030_233028_39ad, screen_center_k12_s3_1030_233032_bf21.
+  - 미리 정한 읽기: 승격하려면 세 조건을 모두 채워야 한다. (1) 4 seed의 짝지은 WGA 차이(suffdisc − center) 평균이 2.45 이상이다. (2) 4 seed 중 3개 이상에서 그 차이가 양수다. (3) 정확도 차이 평균이 −0.76보다 크다. 이 경우 공식 Parent check(seed 0)가 UNPROVEN이라는 사실을 함께 적고 final s1을 제출한다. 셋 중 하나라도 어기면 suffdisc 계열을 닫는다.
+  - 선행과의 차이: 라운드 17·18 메모와 같다. student 자신의 sufficiency(원판만 받았을 때의 예측 유지)로 teacher 입력 위치를 고른다. RISE·Extremal Perturbation은 설명용이고, MaskedKD는 attention 순위를 쓴다.

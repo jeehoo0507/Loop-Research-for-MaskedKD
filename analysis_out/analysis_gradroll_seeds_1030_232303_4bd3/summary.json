@@ -1,0 +1,154 @@
+{
+ "note": "student = the student's own clean-val accuracy; t_* = masked teacher with that student's selection; overlap = share of K; cdist = mean patch distance from the centre; cross_seed = share of K that two final gradroll students pick in common on the same image",
+ "table": {
+  "gradroll_s1_e25": [
+   36.09,
+   30.08,
+   1.3114,
+   4.905,
+   0.3116,
+   0.1348
+  ],
+  "gradroll_s1_e50": [
+   47.37,
+   43.61,
+   0.8652,
+   4.707,
+   0.4131,
+   0.1519
+  ],
+  "gradroll_s1_final": [
+   63.16,
+   54.89,
+   0.6007,
+   4.845,
+   0.4035,
+   0.1473
+  ],
+  "rollout_s1_final": [
+   51.88,
+   48.12,
+   0.6652,
+   4.758,
+   0.5077,
+   0.1793
+  ],
+  "center_s1_final": [
+   55.64,
+   42.86,
+   0.5841,
+   1.971,
+   0.5371,
+   0.632
+  ],
+  "gradroll_s2_e25": [
+   39.85,
+   36.09,
+   1.0462,
+   4.685,
+   0.3929,
+   0.1592
+  ],
+  "gradroll_s2_e50": [
+   52.63,
+   42.86,
+   0.7067,
+   4.457,
+   0.4127,
+   0.1749
+  ],
+  "gradroll_s2_final": [
+   62.41,
+   55.64,
+   0.5114,
+   4.514,
+   0.3659,
+   0.1743
+  ],
+  "rollout_s2_final": [
+   51.88,
+   51.13,
+   0.5796,
+   4.259,
+   0.5292,
+   0.2097
+  ],
+  "center_s2_final": [
+   54.14,
+   55.64,
+   0.4698,
+   2.013,
+   0.4236,
+   0.6174
+  ],
+  "gradroll_s3_e25": [
+   38.35,
+   26.32,
+   1.2735,
+   4.532,
+   0.4193,
+   0.1612
+  ],
+  "gradroll_s3_e50": [
+   44.36,
+   34.59,
+   0.9287,
+   4.741,
+   0.3904,
+   0.1487
+  ],
+  "gradroll_s3_final": [
+   51.88,
+   45.86,
+   0.7757,
+   4.738,
+   0.3961,
+   0.1469
+  ],
+  "rollout_s3_final": [
+   48.87,
+   36.84,
+   0.7525,
+   4.392,
+   0.5376,
+   0.1753
+  ]
+ },
+ "table_cols": [
+  "student_wga",
+  "grad_t_wga",
+  "grad_kl_worst",
+  "grad_cdist",
+  "ov_mkd",
+  "ov_center"
+ ],
+ "cross_seed": {
+  "s1_s2": {
+   "mean": 0.5508,
+   "g": [
+    0.5257,
+    0.5798,
+    0.4994,
+    0.589
+   ]
+  },
+  "s1_s3": {
+   "mean": 0.5268,
+   "g": [
+    0.5029,
+    0.5536,
+    0.4881,
+    0.5558
+   ]
+  },
+  "s2_s3": {
+   "mean": 0.5025,
+   "g": [
+    0.4582,
+    0.5254,
+    0.5075,
+    0.5727
+   ]
+  }
+ }
+}

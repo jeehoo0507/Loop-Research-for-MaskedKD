@@ -1,4 +1,5 @@
 # PROGRESS
+- **라운드 34 (판정): gradroll@12는 3-seed에서 CLAIM_REFS를 채우지 못한다.** center s3 88.57/51.88, grid s3 82.15/35.34가 나왔다. 3-seed Core comparison에서 WIN은 maskedkd(acc +3.78, WGA +36.84)와 grid(acc +4.89, WGA +23.81)뿐이다. center(−0.70/+5.51), rollout(−0.11/+8.27), tome(−1.97/+8.27)은 모두 n.s.다. random·full s3은 실행 중이다. AUDIT_REQUEST는 쓰지 않는다. 분석 H-W21(analysis_gradroll_seeds_1030_232303_4bd3) 결과: seed 3은 모든 방법에 어려운 seed다. 다음 후보로 suffdisc@12를 screen seed 2·3에서 center와 짝지어 검증한다(4 job 제출).
 - 요약 (2026-10-30 [claude] 라운드 27): 확정 결과 없음. tome@12 s2 89.74/51.13 (final_tome_k12_s2_1030_212126_9500)이 나왔다. gradroll vs tome Core comparison(seeds 1,2)은 정확도 −1.50, WGA +12.78로 둘 다 차이 없음이다(CI가 0을 포함). **final gradroll@12 2-seed 평균 88.20/62.79** (s1 87.99/63.16 final_gradroll_k12_s1_1030_201811_faf0, s2 88.41/62.41 final_gradroll_k12_s2_1030_212126_da50). Significant only(seeds 1,2): maskedkd 대비 acc +4.00·WGA +40.60, rollout 대비 WGA +10.90 WIN(rollout 대비 acc는 차이 없음). seed 1에서 같은 seed의 center(88.32/54.89)보다 WGA +8.27(정확도 −0.33, threshold 안), grid(83.74/35.34)·maskedkd(84.15/21.05)·rollout(86.99/51.88)·random(84.57/37.59)보다 높다. tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다. full@196 s1(91.33/66.92)과 비교하면 −3.34/−3.76이라 주 지표의 허용 오차(1.00/2.45) 밖이다.
 - 핵심: K=12에서 center를 넘는 후보는 gradroll(final s1이 center 통과, seed 2 실행 중)과 suffdisc(분해 a·b 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다. 주장할 수 있는 형태는 '같은 K에서 기준선 대비 WGA 우위'이고, 'Full 허용 오차 안의 최소 K'는 아니다.
 - **라운드 33: rollout@12 s3 89.32/48.87, tome@12 s3 90.49/52.63.** 3-seed Core comparison에서 gradroll은 rollout 대비 WGA +8.27 [−3.09, +19.64]로 WIN을 잃었다(n.s.). tome 대비는 acc −1.97·WGA +8.27로 둘 다 n.s.다. 3-seed WIN은 maskedkd 대비뿐이다. grid·center·random·full s3은 실행 중이다. seed 불안정 분석 analysis_gradroll_seeds_1030_232303_4bd3을 제출했다.
@@ -441,4 +442,22 @@
 - 새 분석: analysis/gradroll_seeds.py → analysis_gradroll_seeds_1030_232303_4bd3 (H-W21). 대상은 gradroll final s1·s2·s3 student(e25/e50/final)와 같은 seed의 rollout·center final이다. student 자신의 그룹 정확도, 선택별 masked teacher 그룹 정확도와 KL, MaskedKD·center와의 겹침, cdist, seed 사이 gradroll 선택의 일치율을 잰다. 미리 정한 읽기는 PROPOSALS 라운드 33 메모에 적었다. gradroll_decomp의 `_scores`를 그대로 옮겨 쓰고 student logits만 더했다. 미리 돌려 보지 않고 제출했다.
 - [claude] 결정: 대기가 0이고 실행 4개가 모두 비교군이다. 비교군이 끝나면 GPU가 놀게 되므로 분석 1개만 넣었다. 새 screen은 넣지 않는다. 승격 후보의 비교군 final이 아직 진행 중이다(지침 7).
 - [claude] 결정: AUDIT_REQUEST는 쓰지 않는다. 3-seed에서 rollout·tome 대비 유의한 우위가 없어 주장 조건을 채우지 못한다. grid·center·random·full s3이 끝나면 최종 판정을 RESULTS.md에 옮긴다(진 비교 포함, 규칙 6). 그다음 방향(gradroll 안정화 또는 suffdisc final 승격)은 H-W21 결과를 보고 정한다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-30 23:35 라운드 34
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(`harness.report` 재생성 성공), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(gradroll_seeds가 새로 나옴).
+- 새 결과 (final seed 3, K=12, 정확도/WGA): center 88.57/51.88 (final_center_k12_s3_1030_220958_413c), grid 82.15/35.34 (final_grid_k12_s3_1030_220958_14eb). gradroll s3(87.57/51.88)은 center s3과 WGA가 같고 정확도는 −1.00이다.
+- RESULTS_TABLE Core comparison (seeds 1,2,3):
+  - WIN: maskedkd 대비 acc +3.78 [+2.74, +4.82], WGA +36.84 [+20.23, +53.46]. grid 대비 acc +4.89 [+3.42, +6.36], WGA +23.81 [+8.14, +39.48].
+  - 차이 없음: center 대비 acc −0.70 [−1.53, +0.14], WGA +5.51 [−6.35, +17.38]. rollout 대비 −0.11/+8.27, tome 대비 −1.97/+8.27(라운드 33과 같음).
+  - random(seeds 1,2: WGA +26.32 WIN)과 full(seeds 1,2: n.s.)은 s3이 실행 중이다.
+- **판정: gradroll@12는 CLAIM_REFS를 채우지 못한다.** 같은 K의 center·rollout·tome을 유의하게 이기지 못한다. random s3 결과와 관계없이 바뀌지 않는다. RESULTS.md '실패한 방향'으로 옮겼다(진 비교 포함). AUDIT_REQUEST는 쓰지 않는다.
+- 분석 analysis_gradroll_seeds_1030_232303_4bd3 (H-W21). 열은 student WGA / gradroll masked teacher WGA / kl_worst / cdist / gradroll∩maskedkd / gradroll∩center다.
+  - gradroll final: s1 63.16/54.89/0.601/4.85/0.40/0.15, s2 62.41/55.64/0.511/4.51/0.37/0.17, s3 51.88/45.86/0.776/4.74/0.40/0.15.
+  - s3은 e25(26.32)와 e50(34.59)부터 masked teacher WGA가 낮다. s1은 30.08/43.61, s2는 36.09/42.86이다.
+  - 같은 seed의 rollout final student도 masked teacher WGA가 s1 48.12, s2 51.13, s3 36.84로 s3에서 함께 떨어진다. student WGA도 rollout s3 48.87, center s3 51.88로 둘 다 seed 3에서 가장 낮다.
+  - 서로 다른 seed의 gradroll student가 같은 이미지에서 고르는 토큰의 일치율은 K의 0.50~0.55다.
+- 미리 정한 읽기에 따른 판정: s3의 masked teacher WGA는 s1·s2보다 9 이상 낮아서 형식상 (a) '선택이 무너짐'에 해당한다. 하지만 maskedkd 쪽으로 옮겨 간 흔적은 없다(겹침 0.40, s1과 같음). 그리고 같은 seed의 rollout과 center도 함께 떨어진다. 그래서 gradroll만의 붕괴가 아니라, seed 3(데이터 순서·증강)이 모든 방법에 불리하고 선택 품질이 student 품질을 따라간다고 읽는다. 결론적으로 gradroll의 seed 분산을 줄이는 안정화 변형(rollout 혼합 등)은 근거가 약하다. 제출하지 않는다.
+- 작업: suffdisc@12의 다중 seed 검증 screen을 4개 넣었다. screen_suffdisc_k12_s2_1030_233019_98dd, screen_center_k12_s2_1030_233024_3dcf, screen_suffdisc_k12_s3_1030_233028_39ad, screen_center_k12_s3_1030_233032_bf21이다. 미리 정한 읽기는 PROPOSALS 라운드 34에 적었다.
+- [claude] 결정: suffdisc를 바로 final로 올리지 않는다. 공식 Parent check(seed 0)가 UNPROVEN(+0.58/+2.26)이기 때문이다. 대신 screen seed 2·3에서 center와 짝지어 4-seed 근거를 먼저 모은다. gradroll에서 2 seed 우위가 3번째 seed에서 사라진 것을 방금 봤다. 그래서 final 비교군 7개를 띄우기 전에 싼 screen으로 seed 분산부터 확인하는 것이 보수적이다. 대기 4개, 실행 2개다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
