@@ -78,6 +78,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 ### final: Full KD val 91.16; CE not run: tolerance 1.00 %p; WGA 67.42, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 ### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 - suffdisc@0f0600 : 29.0
+- center : 49.0
 - maskedkd : 98.0
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
@@ -112,7 +113,7 @@ Total agent screen configs: 14
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
 | screen | center |  | 12 | 12.0 | 0,1,2,3,4,5,6 | 88.54 ± 0.42 | 54.03 ± 2.47 | 10.09 | 2.45 | 0.00 | 308 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s6_1031_051116_3b33 screen_center_k12_s3_1030_233032_bf21 screen_center_k12_s5_1031_051111_594a screen_center_k12_s4_1031_051107_b568 screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
 | screen | center |  | 29 | 29.0 | 0,1,2,3 | 89.37 ± 0.42 | 60.71 ± 2.16 | 13.00 | 5.36 | 0.00 | 282 | screen_center_k29_s2_1031_025420_4cff screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 screen_center_k29_s3_1031_025424_fc02 |
-| screen | center |  | 49 | 49.0 | 0,4 | 90.53 ± 0.53 | 62.41 ± 3.19 | 16.46 | 8.82 | 0.00 | 298 | screen_center_k49_s0_1030_135953_4476 screen_center_k49_s4_1031_064043_463c |
+| screen | center |  | 49 | 49.0 | 0,4,5 | 90.66 ± 0.43 | 64.91 ± 4.89 | 16.46 | 8.82 | 0.00 | 285 | screen_center_k49_s0_1030_135953_4476 screen_center_k49_s4_1031_064043_463c screen_center_k49_s5_1031_064047_c731 |
 | screen | conceptcov@5bd86b |  | 12 | 12.0 | 0 | 81.82 ± 0.00 | 27.07 ± 0.00 | 10.12 | 2.45 | 0.03 | 394 | screen_conceptcov_k12_s0_1031_000621_b88e |
 | screen | full |  | 196 | 196.0 | 0,1,2 | 90.83 ± 0.17 | 66.67 ± 1.57 | 42.77 | 35.13 | 0.00 | 273 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |
 | screen | gradrep@fce177 |  | 12 | 12.0 | 0 | 87.99 ± 0.00 | 54.89 ± 0.00 | 12.81 | 2.45 | 2.90 | 233 | screen_gradrep_k12_s0_1030_193817_c83d |
