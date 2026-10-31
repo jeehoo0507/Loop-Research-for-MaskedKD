@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_tckd_scores_1031_095253_a64e",
+ "name": "cub_tckd_scores",
+ "source_sha": "a64ebe29b3f3960545a97c12e1e47c52a46510865dea32a272bb6bf51a7e0a86",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does class-specific patch evidence from the student's own head (patch-token logit lens / CAM analogue), alone or multiplied with attention rollout, keep the masked teacher's target probability (TCKD) better than rollout at the same K?",
+  "method": "keep-only masked-teacher faithfulness (KL to full teacher with DKD TCKD/NCKD split, p_true, top-1 agreement) under patch-token logit-lens, rollout x logit-lens, partial rollout and attention scores",
+  "paper": "Zhou et al. CVPR 2016 (CAM); Chefer et al. CVPR 2021 (class-specific transformer relevance); nostalgebraist 2020 / Belrose et al. 2023 (logit lens); Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 17.2
+}
