@@ -1,4 +1,4 @@
-STUCK: GPU 스케줄러(harness.scheduler)가 세 라운드째(라운드 100 20:21, 101 21:23, 102 22:24 UTC) 돌지 않는다. 대기 11개, 실행 0개, GPU 0%·84 MiB, agent/logs/sched.log 마지막 줄은 07:36. 연구자는 `bash agent/start.sh sched`를 실행할 수 없다(AGENT_PROMPT 4항: 직접 실행 금지). 사람이 스케줄러를 다시 켜야 한다.
+STUCK: GPU 스케줄러(harness.scheduler)가 네 라운드째(라운드 100 20:21, 101 21:23, 102 22:24, 103 23:28 UTC) 돌지 않는다. 대기 11개, 실행 0개, GPU 0%·84 MiB, agent/logs/sched.log 마지막 줄은 07:36. 연구자는 `bash agent/start.sh sched`를 실행할 수 없다(AGENT_PROMPT 4항: 직접 실행 금지). 사람이 스케줄러를 다시 켜야 한다.
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
 요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
 진행 중(라운드 100, 대기, 스케줄러 꺼짐): analysis_cub_teacher_filter_1031_202037_032d (H-C14), screen_teacher_topk_k29_s0_1031_202120_8e2b (기준선). TrustMask 1회 run(selectors/trustfilt.py, K=29)은 H-C14 결과를 본 뒤 사전 등록 규칙 (a)/(b)/(c)로 정해 낸다.
@@ -7,6 +7,11 @@ STUCK: GPU 스케줄러(harness.scheduler)가 세 라운드째(라운드 100 20:
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 103 [claude] (스케줄러 네 번째 정지, 새 작업 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 c655a44 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음(최신은 analysis_cub_rollout_fixed_1031_193620_442e ). pull.log에는 "Already up to date"만 있다.
+  - 23:28 UTC 기준 queue/running 0개, queue/pending 11개 그대로(H-C14 analysis_cub_teacher_filter_1031_202037_032d , screen_teacher_topk_k29_s0_1031_202120_8e2b , Waterbirds 2단계 기준선 9개). harness 프로세스 없음, GPU 0%. STUCK 첫 줄을 라운드 103으로 고쳤다.
+  - [claude] 결정: H-C15(6059daf 사전 등록)를 이번에도 제출하지 않았다. 이유: 라운드 102와 같다. 스케줄러가 꺼져 있고 대기가 이미 11개로 AGENT_PROMPT 6항의 8개를 넘는다. 사전 등록 내용은 바꾸지 않았다.
+  - [claude] 결정: 새 설계·분석 코드를 더 쓰지 않았다. 이유: 다음 두 단계(trustfilt 스위치, H-C15 판정)는 모두 아직 돌지 않은 결과에 달려 있다. 결과 전에 조건부 방법을 더 쌓으면 결과를 보고 고르게 된다.
+  - 다음: 스케줄러 재개 → H-C14 판독 → trustfilt screen 1개(K=29, seed 0) → H-C15 제출·판정.
 - **라운드 102 [claude] (스케줄러 세 번째 정지, H-C15 설계·사전 등록만): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md 마지막 변경은 4a6deb7, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음.
   - 22:24 UTC 기준 queue/running 0개, queue/pending 11개 그대로. harness 프로세스 없음, GPU 0%. STUCK 첫 줄을 라운드 102로 고쳤다.
   - H-C15 사전 등록(6059daf), analysis/cub_rollout_cluster.py 작성: H-C13이 기각한 "고정 성분" 대신, 앞쪽 블록이 rollout 지도를 공간적으로 번지게 해 상위 K가 덩어리로 뭉치고(multi-view 근거) 그 때문에 TCKD를 잃는지 본다. 인과 대조로 이웃 억제 상위 K(분석 쪽에서만)를 둔다. 예측·기각 조건은 PROPOSALS H-C15에 있다.
