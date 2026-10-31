@@ -1,4 +1,5 @@
 # PROGRESS
+- **라운드 39 (감사 재요청): 첫 감사는 NEEDS-MORE였다(2026-10-31 01:17, codex).** 이유는 증거 묶음에 비교군 seed 2·3 metrics.json과 분석 출력이 없었다는 것이다. 원인은 run id 축약 표기(정규식이 못 잡음)와 묶음 한도 120k자다. 그래서 같은 주장을 비교군 2개씩 3부로 나눠 다시 요청한다. 지금은 1/3부(maskedkd·rollout + 분해 분석)다. 진행 중: H-W24 suffdisc r=1 @12 s0·s1, H-W25 suffdisc@29 s0, H-W26 suffdisc@49 s0(새로 제출). 다음: 1/3부가 PASS면 2/3부(tome·grid)를 요청한다.
 - **라운드 38 (판정): suffdisc@12 final 3-seed 89.63/62.40이 CLAIM_REFS 6개를 모두 이겼다.** WGA는 6개 모두 WIN이고(rollout +11.53, tome +11.53, center +8.77), 정확도 LOSS는 없다. agent/AUDIT_REQUEST.md를 썼고 지금 감사 대기다. caveat은 비용 1.49배, K=12 한정, Full 허용 오차 밖이다. 진행 중: 비용을 맞춘 suffdisc r=1 @12 screen s0·s1(11.86 GFLOPs < tome 12.00, H-W24)과 suffdisc@29 s0(H-W25). 다음: 감사 결과를 보고, PASS면 CUB stage2(stage2_untouched)를 제출한다.
 - **라운드 37: conceptcov@12 s0 81.82/27.07로 계열을 닫았다(H-W23).** H-W20 분석(analysis_suff_teacher_align_1031_003305_e9b8)은 지지로 나왔다. suffdisc student의 sufficiency 순위가 최악 그룹에서 teacher 충실도 순위와 center student보다 더 맞고(rho +0.03~+0.09), 학습 중 정렬이 커진다. 이것을 teachability 설명으로 쓴다. final_suffdisc_k12_s1~s3은 실행 중이다. 끝나면 Core comparison을 판정하고, 모두 이기면 AUDIT_REQUEST를 쓴다. 확정 결과는 아직 없다.
 - **라운드 36 (승격): H-W22를 통과해 suffdisc@12를 final로 올렸다.** screen 4 seed에서 center와 짝지어 비교했다. 정확도/WGA는 s2 90.24/62.41 대 88.41/49.62, s3 89.99/68.42 대 88.91/54.89다. 짝지은 차이의 평균은 acc +1.35, WGA +10.15이고, 4 seed 모두 양수다. final_suffdisc_k12_s{1,2,3}를 제출했다(비교군은 기존 final run 재사용). 공식 Parent check(seed 0)는 여전히 UNPROVEN이다. conceptcov@12 screen s0은 실행 중이다. 확정 결과는 아직 없다.
@@ -520,3 +521,22 @@
   - 미리 정한 읽기는 PROPOSALS 라운드 38에 적었다. 새 계열은 열지 않았다. 감사 결과가 나오기 전에 방향을 넓히는 것보다 주장의 caveat을 줄이는 것이 더 보수적이다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다(노벨티 근거는 라운드 1·36 검색).
 - 다음: (1) AUDIT.md의 판정을 본다. PASS면 RESULTS '확정'으로 옮기고 CUB stage2(suffdisc, stage2_untouched, final 1·2·3)를 제출한다. FAIL이면 지적 사항을 고친다. (2) H-W24·H-W25를 판정한다.
+
+## [claude] 2026-10-31 01:30 라운드 39
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE, AUDIT, AGENT_PROMPT, AUDIT_PROMPT, harness/evidence.py. analysis_out에는 새 결과가 없다. 실행 중 3개(H-W24 s0 e36, s1 e28, H-W25 e14), 대기 0개.
+- 감사 결과 (AUDIT.md 2026-10-31 01:17, codex): **NEEDS-MORE.** RESULTS_TABLE의 WGA 6승과 suffdisc s1~s3의 수치·digest는 확인됐다. 하지만 비교군 seed 2·3 metrics.json(예: final_tome_k12_s2_1030_212126_9500), 분석 출력 전체, test_eval 미사용 증거가 없다는 지적이다.
+- 원인 진단 (harness/evidence.py를 읽음):
+  1. 지난 요청에서 seed 2·3 id를 `_s2_1030_212126_ad00`처럼 줄여 썼다. 증거 수집 정규식은 `final_`로 시작하는 전체 id만 잡는다. 그래서 seed 1 비교군만 붙었다. 내 실수다.
+  2. metrics.json은 val history만 남겨도 run당 약 6.3k자이고, 묶음 전체 한도는 120k자다. RESULTS_TABLE(17.7k자)과 git log(30.6k자)는 각각 12k자로 잘린다. 비교군 21개 + suffdisc 3개(약 155k자)는 한 번에 들어가지 않는다.
+  3. 분석은 json 파일당 4000자, 절당 12k자로 잘린다. rows.json이 길어 summary가 일부 잘린다.
+- [claude] 결정: 주장을 바꾸지 않고 비교군 기준으로 3부로 나눠 다시 요청한다. 각 부분은 suffdisc final 3개 + 비교군 2개 × seed 3개(전체 id) + 분석 1개로, 묶음 약 100k자 안에서 스스로 검증되게 했다.
+  - 1/3부(이번): maskedkd, rollout + analysis_suffdisc_decomp_1030_202612_878c
+  - 2/3부: tome, grid + analysis_suff_teacher_align_1031_003305_e9b8
+  - 3/3부: center(parent), random + analysis_proxy_validation_1030_170914_4668 + jitdisc 대체 실험
+  - 세 부분이 모두 PASS일 때만 RESULTS '확정'에 전체 주장을 올린다. 한 부분이라도 FAIL이면 전체 주장은 성립하지 않는다.
+  - 이것이 가장 보수적인 선택이다. 주장을 줄이지도 않고, 감사관이 보지 못한 증거로 PASS를 기대하지도 않는다. harness/evidence.py는 잠금 파일이라 고치지 않는다.
+- test_eval 미사용: harness/test_eval.py는 `final/test_*.json`에 쓰는데 저장소에 `final/` 디렉터리가 없다. `-S test_eval`로 찾은 git 커밋은 harness 초기 커밋과 문서·로그뿐이다. 이 내용을 요청에 적었다.
+- 1/3부 수치 확인(metrics.json, 모두 done·epochs_done 100·digest 033df9786a4a): maskedkd s1/s2/s3 84.15/21.05, 84.24/23.31, 84.24/22.56; rollout s1/s2/s3 86.99/51.88, 87.99/51.88, 89.32/48.87 (run id는 AUDIT_REQUEST에 전체 표기).
+- 새 제출: H-W26 suffdisc@49 s0 screen_suffdisc_k49_s0_1031_012539_2b13. 대기 큐가 비어 있어 GPU를 채우고, caveat 5(K=12 한정)를 확인하기 위해서다. 미리 정한 읽기는 PROPOSALS 라운드 39에 적었다. 이 run은 승격하지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+- 다음: (1) 1/3부 판정을 본다. PASS면 2/3부, 이어서 3/3부를 쓴다. 각 부분은 전체 run id를 쓰고, 축약 표기는 쓰지 않는다. (2) H-W24·H-W25·H-W26을 판정한다. (3) 세 부분이 모두 PASS면 CUB stage2를 제출한다.

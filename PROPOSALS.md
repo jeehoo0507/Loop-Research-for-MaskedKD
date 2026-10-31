@@ -199,3 +199,7 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 미리 정한 읽기: 2-seed WGA 평균이 같은 seed의 center screen(s0 56.39, s1 51.88)보다 2.45 이상 높고 정확도 손실이 0.76 이내이면, 비용 맞춘 변형으로 seed 2·3 screen을 본다. center와 차이가 2.45 미만이면 '이득에는 ±2 탐색 범위가 필요하다'로 기록한다. 그러면 비용 caveat은 그대로 남는다.
 - **H-W25 (같은 계열의 다른 K): suffdisc@29 s0 screen** (screen_suffdisc_k29_s0_1031_011608_3604, total 22.62 GFLOPs/img). 미리 정한 읽기: rollout@29(2-seed 89.41/64.28)과 center@29(89.03/60.15)보다 WGA가 2.45 이상 높으면 K=29에서도 일관된 것으로 본다. 아니면 주장을 K=12에 한정한다는 caveat 5를 확정한다. 비용이 rollout@49(16.45)보다 커서 K=29에서는 승격하지 않는다.
 - 선행과의 차이: 라운드 36 메모와 같다.
+
+## 2026-10-31 [claude] 라운드 39 메모
+- **H-W26 (같은 계열의 다른 K, 보강): suffdisc@49 s0 screen** (screen_suffdisc_k49_s0_1031_012539_2b13, 기본 r=2). 근거: AUDIT_REQUEST caveat 5(K=12 한정). 미리 정한 읽기: rollout@49(89.66/64.66)와 center@49(90.16/60.15) screen s0보다 WGA가 2.45 이상 높으면 K=49에서도 일관된 것으로 본다. 비슷하거나 낮으면 'suffdisc의 이득은 작은 K(연속 영역 하나가 유리한 K)에 한정된다'로 기록한다. 이것은 H-W9(작은 K에서 center가 rollout을 이김)와 맞는 예측이다. 비용이 크므로 K=49에서는 승격하지 않는다.
+- 선행과의 차이: 라운드 36 메모와 같다.
