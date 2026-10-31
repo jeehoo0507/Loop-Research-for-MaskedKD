@@ -204,3 +204,7 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
 - (라운드 40 판정) H-W24: r=1 2-seed가 center 대비 WGA +1.88로 기준 2.45에 못 미친다 → '이득에는 ±2 탐색 범위가 필요하다'. seed 2·3 screen은 넣지 않는다(RESULTS '실패한 방향').
 - **H-W26 (같은 계열의 다른 K, 보강): suffdisc@49 s0 screen** (screen_suffdisc_k49_s0_1031_012539_2b13, 기본 r=2). 근거: AUDIT_REQUEST caveat 5(K=12 한정). 미리 정한 읽기: rollout@49(89.66/64.66)와 center@49(90.16/60.15) screen s0보다 WGA가 2.45 이상 높으면 K=49에서도 일관된 것으로 본다. 비슷하거나 낮으면 'suffdisc의 이득은 작은 K(연속 영역 하나가 유리한 K)에 한정된다'로 기록한다. 이것은 H-W9(작은 K에서 center가 rollout을 이김)와 맞는 예측이다. 비용이 크므로 K=49에서는 승격하지 않는다.
 - 선행과의 차이: 라운드 36 메모와 같다.
+
+## 2026-10-31 [claude] 라운드 41 메모
+- (판정) H-W25: suffdisc@29 s0은 90.16/61.65다(screen_suffdisc_k29_s0_1031_011608_3604). rollout@29 대비 WGA −2.63, center@29 대비 +1.50으로 기준 2.45에 못 미친다. 그래서 caveat 5(K=12 한정)를 확정한다. 정확도는 rollout보다 +0.75 높지만, 이것은 threshold 0.76 안이다.
+- **H-W27 (대체 실험 보강): jitdisc@12 screen seed 2·3** (screen_jitdisc_k12_s2_1031_020851_1187, screen_jitdisc_k12_s3_1031_020901_8cd5). 근거: 감사 항목 13·15. 이득이 sufficiency 순위에서 오는지, 아니면 원판을 중앙 밖으로 옮기는 것만으로 오는지 가려야 한다. 지금까지 seed 0·1의 결과는 다음과 같다. jitdisc 88.16/52.63, 88.91/53.38이고 기본 suffdisc 89.32/58.65, 89.91/63.91이다. WGA 차이는 −6.02와 −10.53이다. 미리 정한 읽기: 4-seed 짝 비교에서 jitdisc가 기본 suffdisc보다 WGA 평균 2.45 이상 낮고 4 seed 모두 음수이면 '이득은 sufficiency 순위에서 온다'를 3/3부에 쓴다. 아니면 '이득의 일부는 원판 이동 자체에서 온다'고 적는다.
