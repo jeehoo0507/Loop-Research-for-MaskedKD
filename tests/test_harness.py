@@ -458,7 +458,8 @@ def test_report_cli_accepts_dataset(tmp_path, monkeypatch):
     import subprocess, sys
     r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "cub"],
                        capture_output=True, text=True, cwd=C.ROOT)
-    assert "unrecognized arguments" not in r.stderr and ("gate incomplete" in r.stdout or "[cub final" in r.stdout)
+    # the verdict depends on the runs on this machine (incomplete before the gate, a "[cub screen ..." line after it)
+    assert "unrecognized arguments" not in r.stderr and ("gate incomplete" in r.stdout or "[cub " in r.stdout)
 
 
 def test_timm_can_reach_hf_hub():
