@@ -118,7 +118,7 @@ Total agent screen configs: 14
 | screen | gradrep@fce177 |  | 12 | 12.0 | 0 | 87.99 ± 0.00 | 54.89 ± 0.00 | 12.81 | 2.45 | 2.90 | 233 | screen_gradrep_k12_s0_1030_193817_c83d |
 | screen | gradroll@4f3962 |  | 12 | 12.0 | 0 | 88.16 ± 0.00 | 60.90 ± 0.00 | 12.81 | 2.45 | 2.90 | 204 | screen_gradroll_k12_s0_1030_184259_e2cd |
 | screen | gradroll@4f3962 |  | 29 | 29.0 | 0 | 89.49 ± 0.00 | 63.91 ± 0.00 | 15.73 | 5.36 | 2.90 | 197 | screen_gradroll_k29_s0_1030_184255_9017 |
-| screen | grid |  | 12 | 12.0 | 0 | 83.90 ± 0.00 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 314 | screen_grid_k12_s0_1030_135953_1e84 |
+| screen | grid |  | 12 | 12.0 | 0,4,5,6 | 84.38 ± 0.52 | 35.72 ± 0.97 | 10.09 | 2.45 | 0.00 | 311 | screen_grid_k12_s6_1031_060900_c468 screen_grid_k12_s4_1031_054509_b45f screen_grid_k12_s5_1031_060856_ae60 screen_grid_k12_s0_1030_135953_1e84 |
 | screen | grid |  | 29 | 29.0 | 0 | 81.65 ± 0.00 | 36.84 ± 0.00 | 13.00 | 5.36 | 0.00 | 283 | screen_grid_k29_s0_1030_135953_a69e |
 | screen | grid |  | 49 | 49.0 | 0 | 84.74 ± 0.00 | 35.34 ± 0.00 | 16.46 | 8.82 | 0.00 | 337 | screen_grid_k49_s0_1030_135953_19b7 |
 | screen | jitdisc@8a1e65 |  | 12 | 12.0 | 0,1,2,3 | 88.74 ± 0.54 | 54.32 ± 1.67 | 10.09 | 2.45 | 0.00 | 481 | screen_jitdisc_k12_s2_1031_020851_1187 screen_jitdisc_k12_s0_1030_195912_ead1 screen_jitdisc_k12_s1_1030_195921_48c7 screen_jitdisc_k12_s3_1031_020901_8cd5 |
@@ -141,7 +141,7 @@ Total agent screen configs: 14
 | screen | suffdisc@0f0600 |  | 12 | 12.0 | 0,1,2,3,4,5,6 | 89.79 ± 0.49 | 62.08 ± 3.90 | 15.02 | 2.45 | 4.93 | 187 | screen_suffdisc_k12_s2_1030_233019_98dd screen_suffdisc_k12_s6_1031_040444_bb51 screen_suffdisc_k12_s3_1030_233028_39ad screen_suffdisc_k12_s5_1031_040435_4e00 screen_suffdisc_k12_s0_1030_173118_504a screen_suffdisc_k12_s1_1030_185953_9455 screen_suffdisc_k12_s4_1031_040422_fa2a |
 | screen | suffdisc@0f0600 |  | 29 | 29.0 | 0,1,2,3 | 90.58 ± 0.79 | 65.60 ± 4.18 | 22.62 | 5.36 | 9.62 | 211 | screen_suffdisc_k29_s2_1031_025411_5cac screen_suffdisc_k29_s0_1031_011608_3604 screen_suffdisc_k29_s3_1031_025416_358a screen_suffdisc_k29_s1_1031_022639_643b |
 | screen | suffdisc@0f0600 |  | 49 | 49.0 | 0 | 90.24 ± 0.00 | 60.90 ± 0.00 | 31.75 | 8.82 | 15.29 | 201 | screen_suffdisc_k49_s0_1031_012539_2b13 |
-| screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0,4,5 | 89.66 ± 0.82 | 49.62 ± 1.99 | 12.00 | 4.36 | 0.00 | 313 | screen_tome_k12_s0_1030_135953_84af screen_tome_k12_s4_1031_051120_5c90 screen_tome_k12_s5_1031_051124_f881 |
+| screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0,4,5,6 | 89.57 ± 0.69 | 49.44 ± 1.67 | 12.00 | 4.36 | 0.00 | 311 | screen_tome_k12_s0_1030_135953_84af screen_tome_k12_s4_1031_051120_5c90 screen_tome_k12_s6_1031_054505_d130 screen_tome_k12_s5_1031_051124_f881 |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
 
