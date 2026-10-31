@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_token_novelty_1031_165711_d835",
+ "name": "cub_token_novelty",
+ "source_sha": "d835ed3db4a170bb88a2089c2cd79a4dd35293900a044e3a950c628d032395fd",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does a token's novelty w.r.t. the kept set (student feature cosine) predict the masked teacher's add-one TCKD restoration better than attention scores?",
+  "method": "keep-only occlusion (add-one marginal) on the teacher vs set-aware student-feature novelty and attention / gradient scores; per-image Spearman, top-k overlap, partial on lateroll",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only); Zhao et al. CVPR 2022 (DKD/TCKD); nostalgebraist 2020 (logit lens); Abnar & Zuidema ACL 2020 (rollout); Shrikumar et al. ICML 2017 (gradient x input); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 88.9
+}

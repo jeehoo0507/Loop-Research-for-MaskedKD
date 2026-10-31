@@ -1,0 +1,144 @@
+{
+ "common_student": "cub_final_full_k196_s1_1030_153055_d87b",
+ "n_images": 600,
+ "n_hi": 275,
+ "mean_k_two_level": 28.958333333333332,
+ "gflops_teacher_uniform29": 2.5646,
+ "gflops_teacher_two_level": 2.5673,
+ "uniform": {
+  "tckd12": 1.6844,
+  "tckd29": 0.3642,
+  "tckd49": 0.1071,
+  "kl12": 2.2297,
+  "kl29": 0.6247,
+  "kl49": 0.2299
+ },
+ "signal_spearman": {
+  "ent": {
+   "spearman_vs_tckd12": -0.0316,
+   "spearman_vs_gain12to49": -0.081
+  },
+  "conf": {
+   "spearman_vs_tckd12": 0.0513,
+   "spearman_vs_gain12to49": 0.1034
+  },
+  "conc": {
+   "spearman_vs_tckd12": -0.1156,
+   "spearman_vs_gain12to49": -0.0923
+  },
+  "margin": {
+   "spearman_vs_tckd12": 0.0508,
+   "spearman_vs_gain12to49": 0.1014
+  }
+ },
+ "two_level_vs_uniform29": {
+  "ent": {
+   "tckd": {
+    "policy_mean": 1.0102,
+    "minus_uniform29": [
+     0.6459,
+     0.5281,
+     0.7579
+    ]
+   },
+   "kl": {
+    "policy_mean": 1.1626,
+    "minus_uniform29": [
+     0.5378,
+     0.4098,
+     0.6665
+    ]
+   }
+  },
+  "neg_conf": {
+   "tckd": {
+    "policy_mean": 1.0325,
+    "minus_uniform29": [
+     0.6682,
+     0.549,
+     0.7866
+    ]
+   },
+   "kl": {
+    "policy_mean": 1.1843,
+    "minus_uniform29": [
+     0.5595,
+     0.4229,
+     0.6907
+    ]
+   }
+  },
+  "neg_conc": {
+   "tckd": {
+    "policy_mean": 0.8978,
+    "minus_uniform29": [
+     0.5336,
+     0.4175,
+     0.6533
+    ]
+   },
+   "kl": {
+    "policy_mean": 1.2691,
+    "minus_uniform29": [
+     0.6444,
+     0.5194,
+     0.7831
+    ]
+   }
+  },
+  "neg_margin": {
+   "tckd": {
+    "policy_mean": 1.0578,
+    "minus_uniform29": [
+     0.6935,
+     0.5706,
+     0.8088
+    ]
+   },
+   "kl": {
+    "policy_mean": 1.2104,
+    "minus_uniform29": [
+     0.5856,
+     0.4519,
+     0.7141
+    ]
+   }
+  },
+  "oracle": {
+   "tckd": {
+    "policy_mean": 0.2441,
+    "minus_uniform29": [
+     -0.1201,
+     -0.1796,
+     -0.0601
+    ]
+   },
+   "kl": {
+    "policy_mean": 0.7084,
+    "minus_uniform29": [
+     0.0837,
+     -0.0062,
+     0.1789
+    ]
+   }
+  },
+  "random": {
+   "tckd": {
+    "policy_mean": 0.9748,
+    "minus_uniform29": [
+     0.6106,
+     0.4913,
+     0.7252
+    ]
+   },
+   "kl": {
+    "policy_mean": 1.3228,
+    "minus_uniform29": [
+     0.6981,
+     0.567,
+     0.836
+    ]
+   }
+  }
+ }
+}

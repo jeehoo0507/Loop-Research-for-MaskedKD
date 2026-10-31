@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/coder/Loop-Research-for-MaskedKD/harness/analyze.py", line 39, in main
+    run(AnalysisAPI(out, device, teacher, dataset))
+  File "analysis/cub_token_marginal.py", line 150, in run
+    rl = _rank(sc["lateroll"][i][cand].cpu().numpy())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Got unsupported ScalarType BFloat16

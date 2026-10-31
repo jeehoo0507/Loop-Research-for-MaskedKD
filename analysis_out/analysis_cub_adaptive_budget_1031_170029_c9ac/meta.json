@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_adaptive_budget_1031_170029_c9ac",
+ "name": "cub_adaptive_budget",
+ "source_sha": "c9ace8e9bdadbd51aae3d19353c23938bdb144cacaa06243a38d8c9978bef132",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, at mean K=29, does allocating K in {12,49} per image by a student signal (entropy, confidence, attention concentration, margin) keep the masked teacher's TCKD lower than uniform K=29?",
+  "method": "keep-only masked teacher at several K per image; budget-matched two-level allocation by student uncertainty / attention concentration; paired bootstrap against uniform K",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only); Zhao et al. CVPR 2022 (DKD/TCKD); Yin et al. CVPR 2022 (A-ViT adaptive tokens); Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 5.5
+}

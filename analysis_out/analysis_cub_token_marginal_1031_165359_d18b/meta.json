@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_token_marginal_1031_165359_d18b",
+ "name": "cub_token_marginal",
+ "source_sha": "d18b65b8f3f0ecafa13d5a2f53743320a3a46da6b3484984d2ef653f6f996abb",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, which position-free student token score best predicts the marginal TCKD restoration of the masked teacher when one token is added to a 12-token base set?",
+  "method": "keep-only occlusion (add-one marginal) on the teacher vs student attention, rollout, logit lens, gradient x input and token-geometry scores; per-image Spearman and top-k overlap",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only); Zhao et al. CVPR 2022 (DKD/TCKD); nostalgebraist 2020 (logit lens); Abnar & Zuidema ACL 2020 (rollout); Shrikumar et al. ICML 2017 (gradient x input); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 88.7
+}

@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_proxy_validation_1031_165024_bc29",
+ "name": "cub_proxy_validation",
+ "source_sha": "bc29a78c246a9b4c4203b16ff0d94b28307eb9955f2d8519b12ff00f9260b536",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does the masked teacher's KL / TCKD to the full teacher rank-predict student mean val accuracy across selectors (maskedkd, rollout, lateroll, grid, center, random, tome) at K=12,29,49?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD target-class KD term) under each selector's mask, validated against trained students by within-K Spearman correlation and permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Zhao et al. CVPR 2022 (DKD); Abnar & Zuidema ACL 2020 (rollout); Bolya et al. ICLR 2023 (ToMe); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 37.6
+}

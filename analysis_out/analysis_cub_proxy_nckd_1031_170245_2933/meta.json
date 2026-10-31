@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_proxy_nckd_1031_170245_2933",
+ "name": "cub_proxy_nckd",
+ "source_sha": "293388ac1a6060a5480c9f66bb512ee6e1ad3ac324d3bb3146df8b0ef4b81bcc",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does the masked teacher's non-target fidelity (DKD NCKD, top-5 miss) to the full teacher rank-predict student mean val accuracy across selectors at K=12,29,49, and does it explain ToMe?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD target-class KD term) under each selector's mask, validated against trained students by within-K Spearman correlation and permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Zhao et al. CVPR 2022 (DKD); Abnar & Zuidema ACL 2020 (rollout); Bolya et al. ICLR 2023 (ToMe); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 36.4
+}
