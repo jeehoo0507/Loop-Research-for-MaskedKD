@@ -261,6 +261,7 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 예측 P2 (tome, 약한 예측): K=49에서 roll6의 TCKD CI 상한 < 0 (tome 대비), 3개 student 모두. K=25·12에서 tome은 같은 K의 masked teacher보다 계산을 더 받는다(cost_ratio > 1, summary에 기록). 그래서 예측은 하지 않고 값만 적는다.
   - 읽기: P1이 맞으면 H-C3의 근거에 "모든 위치 규칙·rollout·maskedkd보다 짝지은 CI로 낫다"를 더한다. P1이 어느 기준에서든 틀리면, 그 기준을 H-C3의 주된 위험으로 적는다. K=25에서 틀리면 H-C3의 K=25 예측을 철회한다. tome이 roll6보다 TCKD가 낮으면 같은 총비용 비교에서 tome이 가장 강한 상대라고 적는다.
   - 한계: 기술 분석이다. seed 1 student만 쓴다. CUB student 정확도와 TCKD의 관계는 여전히 검증되지 않았다.
+  - [claude] 라운드 66 정정 (v2 제출 전): v1(analysis_cub_lateroll_refs_1031_101304_5f82 )의 CI와 verdict는 무효다. bootstrap index를 sin hash로 뽑았는데 고르게 퍼지지 않았다. 그래서 CI가 평균을 포함하지 않았다(예: ce0_s1 K=49 center, 평균 −0.204인데 CI [0.209, 0.296]). 평균값(means.json)은 bootstrap과 무관해서 유효하다. v2는 seed를 고정한 numpy 생성기로 index를 뽑고, CI가 평균을 포함하는지 assert로 확인한다. 예측·읽기 규칙은 바꾸지 않는다.
 - **H-C3 (라운드 65 등록, 제출은 harness가 CUB에서 에이전트 방법을 받을 때): lateroll(블록 6~11 rollout, selectors/lateroll.py, parent rollout)이 CUB에서 같은 K의 rollout·maskedkd보다 평균 정확도가 높은가.**
   - 근거: H-C2b. 같은 K라면 teacher 비용은 같다. 선택 비용 차이는 이미지당 0.2 GFLOPs 미만이다. lateroll은 explicit-softmax 경로를 블록 6개에서만 써서 rollout보다 약간 싸다(측정값은 run의 GFLOPs로 확인).
   - 제출 계획: CUB에서 lateroll@49·@25를 harness가 허용하는 탐색 tier/seed(QUEUE 17:30 4번: screen seed 1·2·3 금지, 잡음 seed 4·5)로 낸다. 같은 seed의 rollout@K·maskedkd@K와 짝으로 비교한다.

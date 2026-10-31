@@ -15,6 +15,7 @@ proportional attention and r_for_budget rule.
 """
 import math
 
+import numpy
 import torch
 import torch.nn.functional as F
 
@@ -170,14 +171,17 @@ def _stats(full_lp, mask_lp, y):
 
 
 def _boot_idx(N, dev):
-    i = torch.arange(NBOOT, device=dev, dtype=torch.float64)[:, None]
-    j = torch.arange(N, device=dev, dtype=torch.float64)[None, :]
-    return (_hash(i + 0.5, j + 0.25) * N).long().clamp_(0, N - 1)      # [NBOOT, N], fixed
+    # v1 (analysis_cub_lateroll_refs_1031_101304_5f82) drew these from the sin hash; the indices were not uniform
+    # (CIs did not contain the mean), so its CIs and verdict are void. A seeded numpy generator is used instead.
+    rng = numpy.random.default_rng(20261031)
+    return torch.from_numpy(rng.integers(0, N, size=(NBOOT, N))).to(dev)    # [NBOOT, N], fixed
 
 
 def _ci(d, idx):
     m = d[idx].mean(1).sort().values
-    return [round(d.mean().item(), 4), round(m[int(0.025 * NBOOT)].item(), 4), round(m[int(0.975 * NBOOT) - 1].item(), 4)]
+    lo, hi = m[int(0.025 * NBOOT)].item(), m[int(0.975 * NBOOT) - 1].item()
+    assert lo <= d.mean().item() <= hi, "bootstrap CI does not contain the mean"
+    return [round(d.mean().item(), 4), round(lo, 4), round(hi, 4)]
 
 
 def run(api):

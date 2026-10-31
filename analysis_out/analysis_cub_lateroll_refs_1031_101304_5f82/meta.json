@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lateroll_refs_1031_101304_5f82",
+ "name": "cub_lateroll_refs",
+ "source_sha": "5f829e4c0f897139f84e36b5d2dd5facf4870e45106db5b41aa8567eee02d9da",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does roll6 (late-block rollout) keep the masked teacher's TCKD/KL lower than maskedkd, rollout, grid, center, random and tome at the same K, with paired bootstrap CIs, and how close is it to the teacher-attention oracle?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD TCKD) with paired bootstrap CIs; attention rollout start-block variant; ToMe teacher at matched budget; teacher-attention oracle as upper reference",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Bolya et al. ICLR 2023 (ToMe); Son et al. ECCV 2024 (MaskedKD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 11.8
+}
