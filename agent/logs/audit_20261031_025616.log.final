@@ -1,0 +1,4 @@
+CLAIM: Waterbirds K=12에서 suffdisc는 final seeds 1·2·3의 정확도와 WGA 모두 MaskedKD보다 높으며, 선택 토큰의 MaskedKD와의 겹침은 11~14%다.
+VERDICT: NEEDS-MORE
+REASON: final_suffdisc_k12_s1_1031_002441_5d86, final_suffdisc_k12_s2_1031_002448_664e, final_suffdisc_k12_s3_1031_002453_9ebe 및 대응 MaskedKD 3개 run은 done·100 epochs·동일 digest이며, 정확도 +5.42 [4.18, 6.66], WGA +40.10 [30.88, 49.32]는 확인된다. 그러나 analysis_suffdisc_decomp_1030_202612_878c의 summary.json·students.json이 EVIDENCE에 없어 겹침과 필수 분해를 검증할 수 없다. 요청문 자체도 해당 분석을 screen checkpoint 근거로 한정하므로 final 결과로 일반화할 수 없다.
+전체 suffdisc 탐색 행도 잘려 있다. 필수 baseline 비교를 다음 부로 미루는 것으로는 충족되지 않는다: ToMe 대비 WGA는 +11.53이지만 정확도는 −0.33 [−2.57, +1.91]로 불확실하며, rollout·parent center 대비 정확도 CI도 0을 포함한다. [ERASER](https://aclanthology.org/2020.acl-main.408/)와 [RISE](https://cse.iitkgp.ac.in/~adas/papers/BMVC_2018_RISE.pdf)는 설명 충실도라는 근거를 뒷받침하지만 KD 적용의 신규성까지 입증하지는 않는다.
