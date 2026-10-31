@@ -77,6 +77,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 91.16; CE not run: tolerance 1.00 %p; WGA 67.42, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 ### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
+- suffdisc@0f0600 : 29.0
 - maskedkd : 98.0
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
@@ -138,7 +139,7 @@ Total agent screen configs: 14
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
 | screen | suffdisc@0f0600 | {"r": 1} | 12 | 12.0 | 0,1 | 88.78 ± 0.29 | 56.02 ± 0.53 | 11.86 | 2.45 | 1.78 | 260 | screen_suffdisc_k12_s1_1031_011604_6add screen_suffdisc_k12_s0_1031_011600_6b15 |
 | screen | suffdisc@0f0600 |  | 12 | 12.0 | 0,1,2,3 | 89.87 ± 0.39 | 63.35 ± 4.04 | 15.02 | 2.45 | 4.93 | 177 | screen_suffdisc_k12_s2_1030_233019_98dd screen_suffdisc_k12_s3_1030_233028_39ad screen_suffdisc_k12_s0_1030_173118_504a screen_suffdisc_k12_s1_1030_185953_9455 |
-| screen | suffdisc@0f0600 |  | 29 | 29.0 | 0 | 90.16 ± 0.00 | 61.65 ± 0.00 | 22.62 | 5.36 | 9.62 | 186 | screen_suffdisc_k29_s0_1031_011608_3604 |
+| screen | suffdisc@0f0600 |  | 29 | 29.0 | 0,1 | 90.95 ± 1.12 | 66.54 ± 6.92 | 22.62 | 5.36 | 9.62 | 278 | screen_suffdisc_k29_s0_1031_011608_3604 screen_suffdisc_k29_s1_1031_022639_643b |
 | screen | suffdisc@0f0600 |  | 49 | 49.0 | 0 | 90.24 ± 0.00 | 60.90 ± 0.00 | 31.75 | 8.82 | 15.29 | 201 | screen_suffdisc_k49_s0_1031_012539_2b13 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 88.99 ± 0.00 | 48.12 ± 0.00 | 12.00 | 4.36 | 0.00 | 315 | screen_tome_k12_s0_1030_135953_84af |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
