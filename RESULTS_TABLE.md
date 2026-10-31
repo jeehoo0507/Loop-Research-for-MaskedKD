@@ -53,6 +53,7 @@ Total agent screen configs: 0
 | screen | maskedkd |  | 49 | 49.0 | 0 | 80.50 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 951 | screen_maskedkd_k49_s0_1031_130150_e26e |
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
+| screen | rollout |  | 29 | 29.0 | 0 | 80.83 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 930 | screen_rollout_k29_s0_1031_130150_5726 |
 | screen | rollout |  | 49 | 49.0 | 0 | 81.67 ± 0.00 | - | 16.45 | 8.82 | 0.17 | 877 | screen_rollout_k49_s0_1031_130150_674d |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |
 
