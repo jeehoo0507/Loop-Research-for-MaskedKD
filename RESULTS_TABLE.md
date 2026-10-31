@@ -32,7 +32,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
-- K=29: maskedkd 79.17; rollout 80.83; random 74.00; grid 74.50; center 79.00 (Full KD 82.17)
+- K=29: maskedkd 79.17; rollout 80.83; random 74.00; grid 74.50; center 79.00; tome 79.67 (Full KD 82.17)
 
 ## Search effort (screen)
 Total agent screen configs: 0
@@ -59,6 +59,7 @@ Total agent screen configs: 0
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
 | screen | rollout |  | 29 | 29.0 | 0 | 80.83 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 930 | screen_rollout_k29_s0_1031_130150_5726 |
 | screen | rollout |  | 49 | 49.0 | 0 | 81.67 ± 0.00 | - | 16.45 | 8.82 | 0.17 | 877 | screen_rollout_k49_s0_1031_130150_674d |
+| screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |
 
 # Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
