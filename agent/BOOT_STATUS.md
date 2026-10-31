@@ -33,3 +33,11 @@
 - 2026-10-31 13:01 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
 - 2026-10-31 13:02 [stage2] waterbirds gate submitted (one GPU slot)
 - 2026-10-31 13:26 [stage2] STOPPED: waterbirds gate FAILED: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL (stage 2 stays closed; human decision)
+- 2026-10-31 20:11 [stage2] waterbirds gate submitted (one GPU slot)
+- 2026-10-31 20:11 [stage2] STOPPED: waterbirds gate FAILED: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL (stage 2 stays closed; human decision)
+- 2026-10-31 20:12 [stage2] waterbirds gate submitted (one GPU slot)
+- 2026-10-31 20:12 [stage2] waterbirds gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL
+- 2026-10-31 20:12 [stage2] STOPPED: baselines submit failed
+- 2026-10-31 20:14 [stage2] waterbirds gate submitted (one GPU slot)
+- 2026-10-31 20:14 [stage2] waterbirds gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL
+- 2026-10-31 20:15 [stage2] waterbirds baselines queued at K=29,12 (15 jobs)

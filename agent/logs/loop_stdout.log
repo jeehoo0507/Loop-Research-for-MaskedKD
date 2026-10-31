@@ -285,3 +285,11 @@ OK harness digest cdc42ebe963b vs locked cdc42ebe963b
 [loop] round 32 start 20261031_192720
 [loop] researcher claude model=claude-opus-5-5
 [loop] round 32 end researcher=claude rc=0 20261031_193853
+MISMATCH harness digest fc02d71fe11e vs locked cdc42ebe963b; tests failed: 56 vs Full 82.17 (need >= Full - 0.5): PASS\n', stderr='').stdout
+
+tests/test_harness.py:461: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_harness.py::test_report_cli_accepts_dataset - AssertionErro...
+1 failed, 37 passed in 24.12s
+[loop] harness lock mismatch at start. A human must review the harness and run: bash agent/relock.sh
+OK harness digest 4434a5edc558 vs locked 4434a5edc558
