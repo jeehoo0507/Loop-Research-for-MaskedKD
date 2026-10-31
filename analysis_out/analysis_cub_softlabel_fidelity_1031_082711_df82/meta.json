@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_softlabel_fidelity_1031_082711_df82",
+ "name": "cub_softlabel_fidelity",
+ "source_sha": "df82222f38e2826ed7933bed875e11bdb9e9b207d39075d14b186370f1f2e8bd",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, which position-free per-token student score (CLS attention, rollout, attention x value norm, grad x input of top-1 or of non-target logits) best preserves the full teacher's soft label under masking, and is the loss in the target (TCKD) or non-target (NCKD) part?",
+  "method": "keep-only masked-teacher faithfulness (KL to full teacher, DKD decomposition, top-1/top-5 agreement) under attention, rollout, value-norm-weighted attention and grad x input token scores",
+  "paper": "Hinton et al. 2015 (KD); Zhao et al. CVPR 2022 (DKD); Abnar & Zuidema ACL 2020 (rollout); Kobayashi et al. EMNLP 2020 (attention x value norm); Shrikumar et al. 2016 / Ancona et al. ICLR 2018 (grad x input); Hooker et al. NeurIPS 2019 (keep-only evaluation); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 81.3
+}
