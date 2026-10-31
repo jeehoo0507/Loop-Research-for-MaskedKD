@@ -173,3 +173,11 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 제출: screen_conceptcov_k12_s0_1031_000621_b88e.
   - 미리 정한 읽기: seed 0 WGA가 center s0(56.39)보다 2.45 이상 높고 정확도가 center s0(88.74) −0.76 이상이면 seed 1 screen과 분해(겹침·cdist·배경 개념 비중)를 한다. WGA가 rollout s0(45.11) 이하이면 '개념 커버리지는 배경 개념에도 토큰을 주어 해롭다'로 읽고 계열을 닫는다. 그 사이이면 seed 1 하나만 더 보고 닫을지 정한다.
   - 선행과의 차이: Token Pooling(Marin et al. 2021)·ToMe는 재구성 오차나 유사도로 토큰을 합친다. DFF는 설명용 개념 지도다. 원래 patch를 개념 커버리지로 골라 KD teacher 입력으로 쓰는 예는 찾지 못했다(이번 라운드 검색 미수행; 승격 시 검색).
+
+## 2026-10-31 [claude] 라운드 36 메모
+- H-W22 결과는 통과다. screen 4 seed의 짝지은 차이(suffdisc − center)는 acc +0.58/+1.92/+1.83/+1.08, WGA +2.26/+12.03/+12.79/+13.53이다(screen_suffdisc_k12_s{0..3}_*, screen_center_k12_s{0..3}_*). final_suffdisc_k12_s{1,2,3}를 제출했다.
+- 미리 정한 final 읽기:
+  - Core comparison(seeds 1,2,3)에서 maskedkd·rollout·tome·grid·center·random을 모두 이기면(한 지표 WIN, 다른 지표 LOSS 없음) AUDIT_REQUEST를 쓴다.
+  - center 대비 WGA가 n.s.이면 'student sufficiency 신호'라는 주장은 성립하지 않는다. 이 경우 suffdisc 계열을 실패한 방향으로 옮긴다.
+  - 비용은 suffdisc가 tome보다 비싸다(15.02 대 12.00 GFLOPs/img). 그래서 tome에 이겨도 비용 caveat을 함께 적는다.
+- 문헌(라운드 36 검색 1회): student sufficiency로 KD teacher 입력 영역을 고르는 선행은 찾지 못했다. 가장 가까운 것은 arXiv 2411.17046(데이터 없는 증류, 중앙 편향 patch 합성)과 arXiv 2107.01378(patch manifold 증류)이고, 둘 다 실제 입력 선택이 아니다.

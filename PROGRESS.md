@@ -1,4 +1,5 @@
 # PROGRESS
+- **라운드 36 (승격): H-W22를 통과해 suffdisc@12를 final로 올렸다.** screen 4 seed에서 center와 짝지어 비교했다. 정확도/WGA는 s2 90.24/62.41 대 88.41/49.62, s3 89.99/68.42 대 88.91/54.89다. 짝지은 차이의 평균은 acc +1.35, WGA +10.15이고, 4 seed 모두 양수다. final_suffdisc_k12_s{1,2,3}를 제출했다(비교군은 기존 final run 재사용). 공식 Parent check(seed 0)는 여전히 UNPROVEN이다. conceptcov@12 screen s0은 실행 중이다. 확정 결과는 아직 없다.
 - **라운드 35: gradroll@12 3-seed 비교군이 모두 끝났다.** random s3 84.15/39.10, full s3 91.58/67.67이다. random 대비는 WIN, full 대비 정확도는 LOSS(−3.17)다. CLAIM_REFS 실패 판정은 그대로다. 확정 결과는 없다. 진행 중인 작업은 suffdisc vs center screen s2·s3(H-W22; center s2 88.41/49.62가 먼저 나옴)과 새 계열 conceptcov@12 screen s0(H-W23)이다.
 - **라운드 34 (판정): gradroll@12는 3-seed에서 CLAIM_REFS를 채우지 못한다.** center s3 88.57/51.88, grid s3 82.15/35.34가 나왔다. 3-seed Core comparison에서 WIN은 maskedkd(acc +3.78, WGA +36.84)와 grid(acc +4.89, WGA +23.81)뿐이다. center(−0.70/+5.51), rollout(−0.11/+8.27), tome(−1.97/+8.27)은 모두 n.s.다. random·full s3은 실행 중이다. AUDIT_REQUEST는 쓰지 않는다. 분석 H-W21(analysis_gradroll_seeds_1030_232303_4bd3) 결과: seed 3은 모든 방법에 어려운 seed다. 다음 후보로 suffdisc@12를 screen seed 2·3에서 center와 짝지어 검증한다(4 job 제출).
 - 요약 (2026-10-30 [claude] 라운드 27): 확정 결과 없음. tome@12 s2 89.74/51.13 (final_tome_k12_s2_1030_212126_9500)이 나왔다. gradroll vs tome Core comparison(seeds 1,2)은 정확도 −1.50, WGA +12.78로 둘 다 차이 없음이다(CI가 0을 포함). **final gradroll@12 2-seed 평균 88.20/62.79** (s1 87.99/63.16 final_gradroll_k12_s1_1030_201811_faf0, s2 88.41/62.41 final_gradroll_k12_s2_1030_212126_da50). Significant only(seeds 1,2): maskedkd 대비 acc +4.00·WGA +40.60, rollout 대비 WGA +10.90 WIN(rollout 대비 acc는 차이 없음). seed 1에서 같은 seed의 center(88.32/54.89)보다 WGA +8.27(정확도 −0.33, threshold 안), grid(83.74/35.34)·maskedkd(84.15/21.05)·rollout(86.99/51.88)·random(84.57/37.59)보다 높다. tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다. full@196 s1(91.33/66.92)과 비교하면 −3.34/−3.76이라 주 지표의 허용 오차(1.00/2.45) 밖이다.
@@ -473,3 +474,19 @@
 - 새 계열 (H-W23, Codex IDEA 1): selectors/conceptcov.py. student block-6 feature에 NMF 개념 커버리지를 적용한다. trysel@12 통과(selector 0.029, teacher 2.446, total 10.117 GFLOPs/img, step 1.22 s). screen_conceptcov_k12_s0_1031_000621_b88e를 제출했다. 미리 정한 읽기는 PROPOSALS 라운드 35에 적었다.
 - [claude] 결정: Codex IDEA 2(sparse-residual 기울기 귀속)는 넣지 않는다. 비용이 1~3 GFLOPs/img이고, 이미 닫힌 gradroll 계열(기울기 기반)과 겹친다. IDEA 1은 비용이 거의 없고 지금까지 시험하지 않은 '개념 분해' 계열이라 넓게 보는 규칙 7에 맞는다. suffdisc는 승격 후보가 아니므로(screen 단계) 다른 계열 screen 1개를 넣는 것은 지침 7에 어긋나지 않는다. 대기 1, 실행 3이다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다. Codex 아이디어 안의 링크(DFF arXiv 1806.10206, Token Pooling arXiv 2110.03860)는 자료로만 썼다.
+
+## [claude] 2026-10-31 00:30 라운드 36
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(`harness.report` 재생성), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(새 분석 없음).
+- 새 결과 (screen, K=12, 정확도/WGA, 최악 그룹은 모두 2):
+  - suffdisc s2 90.24/62.41 (screen_suffdisc_k12_s2_1030_233019_98dd), suffdisc s3 89.99/68.42 (screen_suffdisc_k12_s3_1030_233028_39ad).
+  - center s3 88.91/54.89 (screen_center_k12_s3_1030_233032_bf21). center s2는 88.41/49.62 (screen_center_k12_s2_1030_233024_3dcf)다.
+  - suffdisc screen 4-seed 평균은 89.87±0.39 / 63.35±4.04다(RESULTS_TABLE Search effort). 마지막 에폭만 튄 값이 아니다. val WGA는 e85·e90·e95·e100에서 s2가 63.91, 62.41, 63.16, 62.41이고, s3가 67.67, 67.67, 65.41, 68.42다(각 metrics.json history).
+- H-W22 판정 (suffdisc − center, 같은 seed끼리 짝지음):
+  - WGA 차이: s0 +2.26, s1 +12.03, s2 +12.79, s3 +13.53. 평균 +10.15로 기준 2.45 이상이다. 4 seed 모두 양수라 기준(4개 중 3개 이상 양수)을 채운다.
+  - 정확도 차이: s0 +0.58, s1 +1.92, s2 +1.83, s3 +1.08. 평균 +1.35로 기준 −0.76보다 크다.
+  - 미리 정한 세 조건을 모두 통과했다. 특히 seed 3은 gradroll·rollout·center가 모두 무너진 seed인데(H-W21), suffdisc는 이 seed에서 가장 높은 WGA를 냈다. gradroll과 다른 점이다.
+- 작업: final_suffdisc_k12_s1_1031_002441_5d86, final_suffdisc_k12_s2_1031_002448_664e, final_suffdisc_k12_s3_1031_002453_9ebe를 제출했다. K=12 비교군 7개와 parent center의 final s1~s3는 이미 있어서 harness가 재사용했다(duplicate skip).
+- [claude] 결정: final 3 seed를 한꺼번에 넣었다. 이유는 두 가지다. 비교군을 다시 돌리지 않으므로 GPU 부담이 suffdisc 3개뿐이다. 그리고 gradroll 때처럼 seed를 하나씩 넣으면 판정이 늦어진다. 지침 7에 따라 suffdisc final이 끝날 때까지 새 screen 변형은 넣지 않는다. 이미 돌고 있는 conceptcov s0은 그대로 둔다.
+- 주의(AUDIT_REQUEST에 넣을 caveat): (1) 공식 Parent check는 seed 0만 보므로 UNPROVEN(+0.58/+2.26)으로 남는다. 4-seed 근거는 screen 짝 비교다. (2) total 15.02 GFLOPs/img로 maskedkd(10.07)의 약 1.49배, tome(12.00)보다도 비싸다. 비용의 대부분이 selector(4.93)다. (3) screen 시도 횟수가 많다(Search effort 표). 
+- 문헌: 검색 1회("knowledge distillation teacher input patch selection student sufficiency crop region vision transformer"). student의 sufficiency로 teacher 입력 영역을 고르는 KD는 찾지 못했다. 가까운 것으로는 데이터 없는 증류에서 중앙에 치우친 patch 합성(arXiv 2411.17046, 실제 입력 선택이 아님)과 patch 수준 manifold 증류(arXiv 2107.01378)가 있다. 페이지 안에 지시문은 없었다.
+- 다음: suffdisc final s1~s3이 끝나면 Core comparison을 판정한다. CLAIM_REFS를 모두 이기면(특히 center·rollout·tome) AUDIT_REQUEST를 쓴다. conceptcov s0은 PROPOSALS 라운드 35에 미리 정한 읽기대로 판정한다.

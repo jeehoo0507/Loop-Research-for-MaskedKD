@@ -61,10 +61,10 @@ Total agent screen configs: 10
 - priorroll: 2 configs
 - midattn: 2 configs
 - gradroll: 2 configs
+- suffdisc: 1 configs
 - gradrep: 1 configs
 - jitdisc: 1 configs
 - adaroll: 1 configs
-- suffdisc: 1 configs
 
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
@@ -79,7 +79,7 @@ Total agent screen configs: 10
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
-| screen | center |  | 12 | 12.0 | 0,1,2 | 88.38 ± 0.38 | 52.63 ± 3.45 | 10.09 | 2.45 | 0.00 | 289 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
+| screen | center |  | 12 | 12.0 | 0,1,2,3 | 88.51 ± 0.41 | 53.20 ± 3.03 | 10.09 | 2.45 | 0.00 | 315 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s3_1030_233032_bf21 screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
 | screen | center |  | 29 | 29.0 | 0,1 | 89.03 ± 0.06 | 60.15 ± 3.20 | 13.00 | 5.36 | 0.00 | 302 | screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 |
 | screen | center |  | 49 | 49.0 | 0 | 90.16 ± 0.00 | 60.15 ± 0.00 | 16.46 | 8.82 | 0.00 | 332 | screen_center_k49_s0_1030_135953_4476 |
 | screen | full |  | 196 | 196.0 | 0,1,2 | 90.83 ± 0.17 | 66.67 ± 1.57 | 42.77 | 35.13 | 0.00 | 273 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |
@@ -105,7 +105,7 @@ Total agent screen configs: 10
 | screen | rollout |  | 12 | 12.0 | 0 | 87.24 ± 0.00 | 45.11 ± 0.00 | 10.08 | 2.45 | 0.17 | 296 | screen_rollout_k12_s0_1030_135953_489a |
 | screen | rollout |  | 29 | 29.0 | 0,1 | 89.41 ± 0.59 | 64.28 ± 1.59 | 12.99 | 5.36 | 0.17 | 266 | screen_rollout_k29_s0_1030_135953_7320 screen_rollout_k29_s1_1030_182725_2086 |
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
-| screen | suffdisc@0f0600 |  | 12 | 12.0 | 0,1 | 89.62 ± 0.41 | 61.28 ± 3.72 | 15.02 | 2.45 | 4.93 | 189 | screen_suffdisc_k12_s0_1030_173118_504a screen_suffdisc_k12_s1_1030_185953_9455 |
+| screen | suffdisc@0f0600 |  | 12 | 12.0 | 0,1,2,3 | 89.87 ± 0.39 | 63.35 ± 4.04 | 15.02 | 2.45 | 4.93 | 177 | screen_suffdisc_k12_s2_1030_233019_98dd screen_suffdisc_k12_s3_1030_233028_39ad screen_suffdisc_k12_s0_1030_173118_504a screen_suffdisc_k12_s1_1030_185953_9455 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 88.99 ± 0.00 | 48.12 ± 0.00 | 12.00 | 4.36 | 0.00 | 315 | screen_tome_k12_s0_1030_135953_84af |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
