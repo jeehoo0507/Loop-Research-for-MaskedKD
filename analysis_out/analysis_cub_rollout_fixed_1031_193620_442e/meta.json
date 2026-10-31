@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_rollout_fixed_1031_193620_442e",
+ "name": "cub_rollout_fixed",
+ "source_sha": "442eda49a70c534158adc33e94b4256ef42d58393c4a61752d21cbf546f05660",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does full rollout carry an image-independent token ranking from the student's early blocks that late-block rollout drops, and does following it cost masked-teacher fidelity (TCKD)?",
+  "method": "attention rollout split by block range; dataset-mean map as the fixed component; keep-only masked teacher faithfulness (KL, DKD TCKD); image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 10.0
+}
