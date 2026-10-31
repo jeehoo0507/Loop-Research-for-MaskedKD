@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_rollout_depth_1031_100143_a4b6",
+ "name": "cub_rollout_depth",
+ "source_sha": "a4b63941ebf7f989c9ff411fec07cb2085b4cf2bf6a31b359122b936652bd678",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does rollout over late student blocks only keep the masked teacher's TCKD/KL better than full rollout at the same K, on final and mid-training students, without a centre bias?",
+  "method": "keep-only masked-teacher faithfulness (KL to full teacher, DKD TCKD/NCKD split, p_true, top-1 agreement) for rollout start-block sweep, plus centre-distance / centre-overlap of kept tokens",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Chefer et al. CVPR 2021 (late-layer relevance); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 49.6
+}
