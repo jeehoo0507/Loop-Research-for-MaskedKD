@@ -1,0 +1,9 @@
+CLAIM: Waterbirds K=12, final seeds 1·2·3에서 suffdisc는 MaskedKD보다 정확도와 WGA가 높다.
+VERDICT: NEEDS-MORE
+REASON: final_suffdisc_k12_s1_1031_002441_5d86 및 대응 s2·s3, final_maskedkd_k12_s1_1030_201811_e49a 및 대응 s2·s3의 완료 상태·100 epochs·digest·수치는 일치한다. 정확도 +5.42 [4.18, 6.66], WGA +40.10 [30.88, 49.32]는 지지되지만, RESULTS_TABLE의 suffdisc screen 이력이 잘려 전체 설정·예산·승격 순서를 검증할 수 없다.
+ToMe 비교도 명시해야 한다: 정확도 −0.33 [−2.57, 1.91]로 차이 미입증, WGA +11.53 [0.58, 22.47], 총비용 ×1.252이며 표는 teacher 비용 미매칭을 표시한다. [ERASER](https://aclanthology.org/2020.acl-main.408/) 기반이라는 근거는 있으나 KD 적용의 신규성은 확정되지 않는다.
+
+CLAIM: 승격 전 screen student 네 시점에서 suffdisc와 MaskedKD의 토큰 겹침은 K의 약 11~14%다.
+VERDICT: NEEDS-MORE
+REASON: analysis_suffdisc_decomp_1030_202612_878c의 summary.json·students.json은 10.65%, 14.14%, 13.72%, 13.26%와 인용된 teacher 정확도·WGA를 뒷받침한다. 이는 clean-val의 eval-mode 선택 결과이며 훈련 중 선택이나 final-tier student 결과는 아니다.
+다만 screen_suffdisc_k12_s0_1030_173118_504a 및 screen_suffdisc_k12_s1_1030_185953_9455의 metrics.json·job snapshot이 없어 완료 상태·harness digest·final과 동일한 selector_sha라는 주장을 검증할 수 없다. 해당 provenance 증거가 필요하다.

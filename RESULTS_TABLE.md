@@ -111,7 +111,7 @@ Total agent screen configs: 14
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
 | screen | center |  | 12 | 12.0 | 0,1,2,3 | 88.51 ± 0.41 | 53.20 ± 3.03 | 10.09 | 2.45 | 0.00 | 315 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s3_1030_233032_bf21 screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
-| screen | center |  | 29 | 29.0 | 0,1 | 89.03 ± 0.06 | 60.15 ± 3.20 | 13.00 | 5.36 | 0.00 | 302 | screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 |
+| screen | center |  | 29 | 29.0 | 0,1,2,3 | 89.37 ± 0.42 | 60.71 ± 2.16 | 13.00 | 5.36 | 0.00 | 282 | screen_center_k29_s2_1031_025420_4cff screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 screen_center_k29_s3_1031_025424_fc02 |
 | screen | center |  | 49 | 49.0 | 0 | 90.16 ± 0.00 | 60.15 ± 0.00 | 16.46 | 8.82 | 0.00 | 332 | screen_center_k49_s0_1030_135953_4476 |
 | screen | conceptcov@5bd86b |  | 12 | 12.0 | 0 | 81.82 ± 0.00 | 27.07 ± 0.00 | 10.12 | 2.45 | 0.03 | 394 | screen_conceptcov_k12_s0_1031_000621_b88e |
 | screen | full |  | 196 | 196.0 | 0,1,2 | 90.83 ± 0.17 | 66.67 ± 1.57 | 42.77 | 35.13 | 0.00 | 273 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |
