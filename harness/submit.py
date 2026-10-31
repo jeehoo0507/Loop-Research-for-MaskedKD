@@ -203,13 +203,14 @@ def baselines(dataset=C.STAGE1, force=False, keeps=None):
                 ids.append(make_job(m, k, C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
         ids.append(make_job("oracle", keeps[-1], C.SCREEN_SEED, "screen", by="baselines", priority=5, force=force)["id"])
         return ids
+    # job_or_existing: a run already queued or done here (by the loop, or an earlier try) is reused, not a failure
     for s in C.FINAL_SEEDS[1:]:
         for m, k in GATE:
-            ids.append(make_job(m, k, s, "final", by="baselines", force=force, dataset=dataset)["id"])
+            ids.append(job_or_existing(m, k, s, "final", by="baselines", force=force, dataset=dataset))
     for k in keeps:
         for m in ("maskedkd", "rollout", "random", "tome"):
-            ids.append(make_job(m, k, C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset)["id"])
-    ids.append(make_job("oracle", keeps[-1], C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset)["id"])
+            ids.append(job_or_existing(m, k, C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset))
+    ids.append(job_or_existing("oracle", keeps[-1], C.FINAL_SEEDS[0], "final", by="baselines", force=force, dataset=dataset))
     return ids
 
 

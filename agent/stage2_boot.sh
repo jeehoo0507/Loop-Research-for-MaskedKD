@@ -44,6 +44,7 @@ fi
 if [ ! -s "$S/stage2_baseline_ids" ]; then
   [ -s "$S/stage1_baseline_ids" ] && $PY -m harness.submit --wait $(cat "$S/stage1_baseline_ids") >/dev/null
   keeps=$($PY -m harness.boot pick-keeps)
-  $PY -m harness.submit --baselines --dataset "$S2" --keeps "$keeps" > "$S/stage2_baseline_ids" || fail "baselines submit failed"
+  $PY -m harness.submit --baselines --dataset "$S2" --keeps "$keeps" > "$S/stage2_baseline_ids" 2>>"$LOG" ||
+    { rm -f "$S/stage2_baseline_ids"; fail "baselines submit failed: $(tail -1 "$LOG")"; }
   status "$S2 baselines queued at K=$keeps ($(wc -l < "$S/stage2_baseline_ids") jobs)"
 fi
