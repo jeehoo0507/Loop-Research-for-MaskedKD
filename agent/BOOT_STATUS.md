@@ -29,3 +29,5 @@
 - 2026-10-31 13:01 gate: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.83 (need +1.0): PASS; MaskedKD@98 82.56 vs Full 82.17 (need >= Full - 0.5): PASS
 - 2026-10-31 13:01 gate PASSED: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.83 (need +1.0): PASS; MaskedKD@98 82.56 vs Full 82.17 (need >= Full - 0.5): PASS
 - 2026-10-31 13:01 cub baselines queued (23 jobs)
+- 2026-10-31 13:01 stage 2 teacher, gate and baselines started in background (tmux: stage2)
+- 2026-10-31 13:01 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
