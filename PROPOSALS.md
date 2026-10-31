@@ -314,3 +314,9 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 기각: P2가 틀리면(어느 student 신호도 CI < 0이 아님) "샘플별 예산은 student 신호로는 쓸 수 있는 레버가 아니다"고 기록하고 이 계열 선택기는 만들지 않는다. P1부터 틀리면 두 단계 배분 자체가 (볼록성 때문에) 손해라고 적는다.
   - 다음 단계(P2가 맞을 때만): need 신호로 K를 정하는 선택기(토큰 순서는 parent의 점수 그대로)를 별도 사전 등록 뒤 CUB screen 평균 K=29에 낸다. 선행 기법: A-ViT(Yin et al. CVPR 2022, 추론 시 토큰 수를 샘플별로 조절), DynamicViT. 차이: KD teacher 입력 예산을 student 불확실성으로 나눈다는 점과 근거가 soft label 충실도라는 점. 노벨티는 그때 문헌으로 다시 확인한다.
   - 한계: common student 하나, 토큰 순서는 lateroll 고정, K 두 단계만 본다. 기술 분석이고 주장이 아니다.
+  - [claude] 라운드 91 결과 (H-C7, analysis_cub_adaptive_budget_1031_170029_c9ac): **P1은 맞고 P2는 틀렸다.** 균일 K=29 TCKD 0.364 대비 oracle 두 단계 배분 −0.120 [−0.180, −0.060](teacher GFLOPs 근사 2.567 대 2.565). student 신호 배분은 모두 균일보다 나쁘다: 엔트로피 +0.646 [+0.528, +0.758], −최대확률 +0.668, −집중도 +0.534 [+0.418, +0.653], −margin +0.694. random +0.611 [+0.491, +0.725]과 같은 수준이다. 이미지별 신호와 K 12→49 이득의 Spearman은 |ρ| ≤ 0.10이다. KL로 보면 oracle조차 +0.084 [−0.006, +0.179]로 이득이 없다. 기각 규칙대로 "샘플별 예산은 student 신호로는 쓸 수 있는 레버가 아니다"로 기록하고 이 계열 선택기는 만들지 않는다.
+- **H-C8 (라운드 91, 결과 전·제출 전에 등록): 비대상 클래스 부분(DKD NCKD, top-5 누락률)이 H-C4의 TCKD보다 같은 K 안 student 정확도 순위를 더 잘 맞히고 ToMe 예외를 설명하는가.** analysis/cub_proxy_nckd.py (H-C4와 같은 21점·같은 검정, 통계량만 바꿈).
+  - 근거: H-C4에서 tome은 모든 K에서 TCKD가 가장 나쁜데 정확도는 중간 이상이다(K=29 79.67, screen_tome_k29_s0_1031_130150_b286). ToMe는 버리지 않고 합치므로 클래스 관계 정보(NCKD)를 지킬 수 있다. CUB(200종)는 이 정보가 KD에서 중요하다고 사람 지시(QUEUE 18:30)가 적었다.
+  - 예측: P1 nckd_self의 K별 Spearman 평균 ≤ −0.694(H-C4 TCKD 값)보다 더 음수, 순열 p < 0.05. P2 tome이 NCKD로는 각 K에서 7개 중 상위 절반(순위 1~3, 낮을수록 좋음)에 든다.
+  - 기각: 평균 ρ가 −0.694보다 크면(덜 음수) "NCKD는 TCKD보다 낫지 않다"고 적는다. P2가 틀리면 tome 예외는 soft label 충실도로 설명되지 않는다고 적는다(다른 설명: teacher 비용이 K와 무관, 정규화 효과 등).
+  - 한계: H-C4와 같다(seed 0, K마다 7점). 기술 분석이다.
