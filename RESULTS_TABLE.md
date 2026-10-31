@@ -59,6 +59,7 @@ Total agent screen configs: 0
 | screen | maskedkd |  | 29 | 29.0 | 0 | 79.17 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s0_1031_130150_1393 |
 | screen | maskedkd |  | 49 | 49.0 | 0 | 80.50 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 951 | screen_maskedkd_k49_s0_1031_130150_e26e |
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
+| screen | oracle |  | 12 | 12.0 | 0 | 76.33 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 638 | screen_oracle_k12_s0_1031_130151_6802 |
 | screen | random |  | 12 | 12.0 | 0 | 75.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_random_k12_s0_1031_130151_7444 |
 | screen | random |  | 29 | 29.0 | 0 | 74.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1184 | screen_random_k29_s0_1031_130150_a433 |
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
