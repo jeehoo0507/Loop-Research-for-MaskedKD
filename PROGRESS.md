@@ -1,11 +1,18 @@
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
 요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
-진행 중: 없음(GPU 빔).
-다음: lateroll 이득이 "이미지마다 다른 늦은 층 순위"의 어떤 성질에서 오는지 분석으로 먼저 보인다. 근거가 없으면 lateroll final 승격이나 감사는 내지 않는다.
+진행 중(라운드 100, 대기, 스케줄러 꺼짐): analysis_cub_teacher_filter_1031_202037_032d (H-C14), screen_teacher_topk_k29_s0_1031_202120_8e2b (기준선). TrustMask 1회 run(selectors/trustfilt.py, K=29)은 H-C14 결과를 본 뒤 사전 등록 규칙 (a)/(b)/(c)로 정해 낸다.
+다음: H-C14 판독 → 규칙대로 trustfilt 변형 스위치(ADAPTIVE/EARLY_ONLY) 고정 → screen 1개. 그 뒤 lateroll 이득의 메커니즘 분석으로 돌아간다.
 (해제된 STUCK, 기록용) 아래 두 STUCK은 더는 막힌 상태가 아니다. 9c99bba에서 harness/evidence.py가 모든 상태의 job 이력을 붙이게 바뀌었다. 하지만 두 주장 모두 suffdisc 계열이라 QUEUE 지시에 따라 다시 내지 않는다.
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 100 [claude] (QUEUE 20:40 TrustMask 지시 착수: H-C14 사전 등록·제출, 선택기 준비, teacher_topk 기준선 제출): 새 감사 결과 없음.** 새 사람 커밋 3개(c43df77 TrustMask 1회 지시, 38efc2f ctx.teacher_map·teacher_topk, 4a6deb7 MaskedKD@98 조건만 실패하면 부트 진행)를 읽었다. 22:20 지시대로 Waterbirds 2단계 기준선 15개를 harness가 넣었다(BOOT_STATUS 20:15).
+  - H-C14 사전 등록 a7900dc, 제출 analysis_cub_teacher_filter_1031_202037_032d : common student(CUB final full-KD s1, epoch 25·50·final), K=98·49·29·12에서 student만(rollout, lateroll) / teacher 고르기(teacher_topk) / teacher 거르기(허용 = teacher 상위 1.5K 안에서 lateroll·rollout) / 이미지별 개수 거르기 / random의 가린 teacher TCKD·KL. 결과에 따라 단 1개 screen run(K=29, seed 0)의 형태를 고르는 규칙을 결과 전에 적었다.
+  - 선택기 selectors/trustfilt.py (parent lateroll, uses_teacher_cache). trysel K=29: 선택기 0.076, 총 12.99 GFLOPs/img, 오류 없음. 아직 screen에 내지 않았다(H-C14 결과 뒤에 규칙대로 스위치를 정한다).
+  - 기준선 screen_teacher_topk_k29_s0_1031_202120_8e2b 제출(타당성 요건 2번 예외: teacher 지도를 쓰는 방법은 같은 K의 teacher_topk를 이겨야 한다).
+  - **사람 확인 필요(처음 발생): GPU 스케줄러(harness.scheduler)가 돌고 있지 않다.** 20:21 기준 대기 11개(Waterbirds 2단계 9개 + 위 2개), 실행 0개, GPU 0%·84 MiB. 프로세스 목록에 harness.scheduler가 없고, agent/logs/sched.log 마지막 줄은 07:36이다. 루프는 20:17에 round 1로 다시 시작됐다(pod 재시작 추정). 연구자 권한으로는 `bash agent/start.sh sched`를 실행할 수 없다.
+  - [claude] 결정: teacher_topk@29 s0을 TrustMask "1개 run"과 별도로 냈다. 이유: 이것은 harness 기준선이고, 타당성 요건 2번이 같은 K 비교를 요구한다. 방법 run은 여전히 trustfilt 1개뿐이다.
+  - [claude] 결정: 분석 K를 QUEUE의 25 대신 29로 했다. 이유: K=29에 rollout·maskedkd seed 3개 기준선이 있어 run 결과를 바로 비교할 수 있다.
 - **라운드 99 [claude] (H-C12 판정, H-C13 사전 등록·제출·판정): 새 감사 결과도, 사람 커밋도 없다.** QUEUE.md·AUDIT.md 마지막 변경은 eb0e3ff 그대로다. AUDIT_REQUEST.md는 없다.
   - H-C12 (사전 등록 421b782): lateroll@49 s4 = 81.67 (screen_lateroll_k49_s4_1031_184753_4b41 ), s5 = 82.00 (screen_lateroll_k49_s5_1031_184758_5d9f ), 둘 다 총 16.4464 GFLOPs/img. seed 4·5 평균 81.83 ≥ 81.50이므로 P1 맞음. 같은 seed의 rollout@49 81.17·81.00보다 높으므로 P2 맞음. seed 0·4·5 평균은 82.11이다. 같은 seed의 rollout과 짝지은 차이는 +1.00·+0.50·+1.00이다.
   - H-C13 (사전 등록 a48b7f3, analysis_cub_rollout_fixed_1031_193620_442e ): P1·P2 모두 틀렸다. full rollout이 앞쪽 블록에서 이미지 무관 고정 패턴을 끌어온다는 설명은 맞지 않는다. 겹침 차는 0.02~0.05였고, 이미지별 TCKD 손해와 상관이 없었다. 숫자는 PROPOSALS H-C13 결과 줄에 있다.
