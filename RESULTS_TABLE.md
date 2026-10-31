@@ -31,7 +31,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
   - rollout : 49.0 (1 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
-- not measured yet
+- K=49: maskedkd 80.50; rollout 81.67; random 78.83 (Full KD 82.17)
 
 ## Search effort (screen)
 Total agent screen configs: 0
@@ -49,6 +49,7 @@ Total agent screen configs: 0
 | screen | full |  | 196 | 196.0 | 0,4,5 | 82.17 ± 0.17 | - | 42.77 | 35.13 | 0.00 | 708 | screen_full_k196_s4_1031_114911_a837 screen_full_k196_s5_1031_114911_9c0a screen_full_k196_s0_1031_111002_00d5 |
 | screen | maskedkd |  | 49 | 49.0 | 0 | 80.50 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 951 | screen_maskedkd_k49_s0_1031_130150_e26e |
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
+| screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
 | screen | rollout |  | 49 | 49.0 | 0 | 81.67 ± 0.00 | - | 16.45 | 8.82 | 0.17 | 877 | screen_rollout_k49_s0_1031_130150_674d |
 
 # Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
