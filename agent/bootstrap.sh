@@ -68,12 +68,23 @@ if ! done_step smoke; then
   mark smoke; status "GPU smoke passed"
 fi
 
-# ---------- 3. teacher + student lr ----------
-if [ ! -f state/teacher.json ]; then
-  say "teacher (Waterbirds, DeiT-B): import aim-lab-test-5's or fine-tune (about 1 h)"
-  $PY -m harness.finetune_teacher --dataset waterbirds >>"$LOG" 2>&1 || fail "teacher failed (see $LOG)"
+# ---------- 3. teacher + student lr (stage-1 dataset) ----------
+S1=$($PY -c 'from harness import config as C; print(C.STAGE1)')
+TJ=$($PY -c 'from harness.train import teacher_paths; print(teacher_paths()[1])')
+if [ ! -f "$TJ" ]; then
+  say "teacher ($S1, DeiT-B): import aim-lab-test-5's or fine-tune (about 1 h)"
+  $PY -m harness.finetune_teacher --dataset "$S1" >>"$LOG" 2>&1 || fail "teacher failed (see $LOG)"
 fi
-status "teacher: $($PY -c 'import json;d=json.load(open("state/teacher.json"));print(d["source"], "val acc", d["val_acc"], "WGA", d.get("val_wga"))'); recipe: $(tr -d '\n ' < state/recipe.json)"
+status "teacher ($S1): $($PY -c "import json;d=json.load(open('$TJ'));print(d['source'], 'val acc', d['val_acc'])")"
+if ! $PY -c "import json,sys; sys.exit(0 if json.load(open('state/recipe.json')).get('$S1',{}).get('swept') else 1)" 2>/dev/null; then
+  say "student lr sweep on $S1 (CE, lr in config.STUDENT_LRS, screen seed 0)"
+  ids=$($PY -m harness.submit --lr-sweep --dataset "$S1") || fail "lr sweep submit failed"
+  $PY -m harness.submit --wait $ids | tee -a "$LOG" || fail "an lr-sweep run failed: see runs/<id>/error.txt"
+  $PY -m harness.boot lr-pick "$S1" >>"$LOG" 2>&1 || fail "lr pick failed (see $LOG)"
+  status "student lr ($S1): $($PY -c "import json;print(json.load(open('state/recipe.json'))['$S1'])")"
+  git add state/recipe.json agent/BOOT_STATUS.md && git commit -qm "boot: student lr sweep" && git push -q
+  bash agent/relock.sh >>"$LOG" 2>&1 || fail "relock failed"
+fi
 
 # ---------- 4. bench ----------
 if [ ! -f state/epochs.json ]; then
@@ -83,7 +94,7 @@ if [ ! -f state/epochs.json ]; then
   [ $rc -ne 0 ] && fail "bench failed (see $LOG)"
   $PY -m harness.boot jobs-from-bench >>"$LOG" 2>&1 || fail "could not read the bench"
   status "parallel jobs: $(tr -d '\n ' < state/epochs.json)"
-  git add state/bench.json state/teacher.json state/recipe.json state/epochs.json agent/BOOT_STATUS.md
+  git add state/bench.json state/teacher*.json state/recipe.json state/epochs.json agent/BOOT_STATUS.md
   git commit -qm "boot: teacher, recipe, bench" && git push -q
   bash agent/relock.sh >>"$LOG" 2>&1 || fail "relock failed"
   tmux kill-session -t sched 2>/dev/null; bash agent/start.sh sched >>"$LOG" 2>&1   # reload MAX_JOBS
@@ -105,13 +116,13 @@ status "gate PASSED: $($PY -m harness.report --gate)"
 # ---------- 6. baselines, stage 2, loop ----------
 if ! done_step baselines; then
   $PY -m harness.submit --baselines > "$S/stage1_baseline_ids" || fail "baselines submit failed"
-  mark baselines; status "Waterbirds baselines queued ($(wc -l < "$S/stage1_baseline_ids") jobs)"
+  mark baselines; status "$S1 baselines queued ($(wc -l < "$S/stage1_baseline_ids") jobs)"
 fi
 $PY -m harness.report >/dev/null
 git add -A && git commit -qm "boot: gate passed, baselines queued" ; git push -q
 if [ "$STAGE2" = 1 ] && ! tmux has-session -t stage2 2>/dev/null; then
   tmux new -d -s stage2 "bash agent/stage2_boot.sh"
-  status "CUB (stage 2) teacher, gate and baselines started in background (tmux: stage2)"
+  status "stage 2 teacher, gate and baselines started in background (tmux: stage2)"
 fi
 echo "$AUDITOR" > "$S/boot_auditor"
 AUDITOR=$AUDITOR bash agent/start.sh >>"$LOG" 2>&1

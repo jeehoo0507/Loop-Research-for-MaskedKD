@@ -23,8 +23,12 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 # 18.5 %p of worst-group accuracy against Full KD: token choice matters there. Recipe = aim-lab-test-5
 # docs/maskedkd_settings.md section 6, except that augmentation runs on the GPU from stored 256x256 images.
 DATASETS = ("waterbirds", "cub")
-STAGE1 = "waterbirds"        # search
-STAGE2 = "cub"               # generalization check (fixed methods, fresh seeds)
+# 2026-10-31: the search moved to CUB. The aim is FLOPs-efficient KD, not robustness: Waterbirds was picked only because
+# KD > CE there, but with 2 classes the teacher's soft labels carry almost no class-relation information (the thing KD
+# transfers), so a token-selection result there says little about MaskedKD's multi-class setting. CUB (200 classes)
+# has the larger, verified KD gain (aim-lab-test-5 +1.62 %p over 3 seeds; +1.83 here). Waterbirds is the check.
+STAGE1 = "cub"               # search
+STAGE2 = "waterbirds"        # check on a second dataset (fixed methods, fresh seeds)
 NUM_CLASSES = {"waterbirds": 2, "cub": 200}
 NUM_GROUPS = {"waterbirds": 4, "cub": 0}   # Waterbirds group = 2*y + place; evaluation only, never used in training
 DATA_URLS = {
@@ -84,8 +88,8 @@ STAGE2_PRIORITY = -10      # and they start only when nothing else is waiting
 
 # Epochs per dataset and tier: 100 everywhere (the aim-lab-test-5 recipe; a Waterbirds run takes minutes).
 TIER_EPOCHS = {
-    "waterbirds": {"smoke": 1, "screen": 100, "final": 100},
-    "cub": {"smoke": 1, "final": 100},      # stage 2 has no screen tier: fixed methods, fresh seeds
+    "cub": {"smoke": 1, "screen": 100, "final": 100},
+    "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # stage 2: only harness jobs and audited methods
 }
 TIER_MAX_STEPS = {"smoke": 30}   # smoke = a few minutes: catches CUDA/shape errors, nothing else
 SMOKE_VAL_LIMIT = 500
@@ -94,7 +98,8 @@ STAGE2_TIME_LIMIT_H = 6.0
 SCREEN_SEED = 0
 FINAL_SEEDS = (1, 2, 3)      # fresh seeds only: the screen seed never enters a final claim
 NOISE_SEEDS = (4, 5)         # extra screen seeds of maskedkd@98 and full (noise); never the final seeds 1-3
-BASELINE_KEEPS = (49, 29, 12)  # 29 = 15 % of 196, where aim-lab-test-6 saw MaskedKD lose 18.5 %p WGA
+BASELINE_KEEPS = (49, 29, 12)  # 25 %, 15 %, 6 % of the 196 patch tokens
+CLAIM_MIN_SEEDS = 3            # a primary-metric entry or a claim needs the mean of at least this many seeds
 PROMOTE_MIN = 0.5            # promotion threshold = max(PROMOTE_MIN, 2 * seed sigma) %p
 SNAPSHOT_FRACS = (0.25, 0.5) # extra student snapshots (fraction of epochs) for analysis jobs
 

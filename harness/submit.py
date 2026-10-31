@@ -74,7 +74,10 @@ def stage2_rule(method, sha):
     return "stage2_tuned"
 
 
-def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", priority=0, force=False, dataset=C.STAGE1):
+def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", priority=0, force=False, dataset=C.STAGE1,
+             lr=None):
+    if lr is not None and (by != "lr_sweep" or method != "ce"):
+        raise SystemExit("a job lr is only for the bootstrap lr sweep (CE); everything else uses state/recipe.json")
     if dataset not in C.DATASETS:
         raise SystemExit(f"dataset must be one of {C.DATASETS}")
     epochs = C.TIER_EPOCHS[dataset].get(tier)
@@ -111,10 +114,10 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         stage2 = stage2_rule(method, sha)
         priority = min(priority, C.STAGE2_PRIORITY)
     sel_args = sel_args or {}
-    key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True), dataset, epochs)
+    key = (method, sha, float(keep), seed, tier, json.dumps(sel_args, sort_keys=True), dataset, epochs, lr)
     for j in all_jobs():
         jk = (j["method"], j.get("selector_sha"), float(j["keep"]), j["seed"], j["tier"],
-              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", C.STAGE1), j.get("epochs"))
+              json.dumps(j.get("sel_args", {}), sort_keys=True), j.get("dataset", C.STAGE1), j.get("epochs"), j.get("lr"))
         if jk == key and not force and j.get("returncode", 0) == 0:
             raise SystemExit(f"duplicate of {j['id']} ({j['_state']}); use --force to rerun")
     ts = time.strftime("%m%d_%H%M%S")
@@ -124,7 +127,7 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     job = {"id": f"{ds}{tier}_{method}_k{keep_s}_s{seed}_{ts}_{tag}", "kind": "train", "dataset": dataset,
            "stage2": stage2, "method": method, "keep": keep, "seed": seed,
            "tier": tier, "epochs": epochs, "sel_args": sel_args, "selector_src": src, "selector_sha": sha,
-           "note": note, "by": by, "priority": priority, "submitted": time.strftime("%Y-%m-%d %H:%M:%S")}
+           "note": note, "by": by, "priority": priority, "submitted": time.strftime("%Y-%m-%d %H:%M:%S"), "lr": lr}
     path = queue_dirs()["pending"] / f"{job['id']}.json"
     path.write_text(json.dumps(job, indent=1))
     return job
@@ -250,6 +253,7 @@ if __name__ == "__main__":
     ap.add_argument("--keeps", default="", help="comma list of budgets for --baselines on in100")
     ap.add_argument("--seeds", default="", help="comma list of seeds for --gate (stage 1)")
     ap.add_argument("--smoke", action="store_true", help="human: a few-minute GPU check of every path")
+    ap.add_argument("--lr-sweep", action="store_true", help="bootstrap: CE at each config.STUDENT_LRS (screen, seed 0)")
     ap.add_argument("--sel-args", default="{}")
     ap.add_argument("--note", default="")
     ap.add_argument("--by", default="agent")
@@ -265,6 +269,9 @@ if __name__ == "__main__":
         sys.exit(wait(a.wait))
     elif a.status:
         status()
+    elif a.lr_sweep:
+        for lr in C.STUDENT_LRS:
+            print(job_or_existing("ce", 0, C.SCREEN_SEED, "screen", by="lr_sweep", priority=15, dataset=a.dataset, lr=lr))
     elif a.smoke:
         for m, k in (("ce", 0), ("full", 196), ("maskedkd", 49), ("random", 49), ("grid", 49), ("center", 49), ("rollout", 49),
                      ("tome", 49), ("oracle", 49)):

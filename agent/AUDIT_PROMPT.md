@@ -6,13 +6,13 @@ request: lock digest and check, RESULTS_TABLE, git history, the cited runs' metr
 the job snapshot, and the cited analysis outputs. Judge from it; what it does not contain counts as missing.
 
 Context: the agent searches for interpretability-based token selectors (selectors/*.py) that let a
-masked teacher use fewer input tokens than MaskedKD in ViT knowledge distillation (stage 1 Waterbirds, stage 2
-CUB-200-2011; DeiT-B teacher, ImageNet-pretrained DeiT-Ti student). The harness (harness/) is locked and is the only
-thing allowed to produce numbers. Primary metric: the smallest mean kept-token budget whose val accuracy is within
-min(1.0, 0.5 x (Full KD - CE)) %p of Full KD and, on Waterbirds, whose worst-group accuracy (WGA) is within
-max(1.0, 2 x WGA seed sigma) %p of Full KD's (RESULTS_TABLE prints both). A claim that wins on one of accuracy / WGA
-must not lose on the other. Group labels are for evaluation only: a selector that uses them, or a proxy built from
-the labels, is a FAIL. Cost: measured train-step GFLOPs per image, including the selector.
+masked teacher use fewer input tokens than MaskedKD in ViT knowledge distillation (stage 1 CUB-200-2011, stage 2
+Waterbirds; DeiT-B teacher, ImageNet-pretrained DeiT-Ti student). The aim is FLOPs-efficient KD, not robustness.
+The harness (harness/) is locked and is the only thing allowed to produce numbers. Primary metric: the smallest mean
+kept-token budget whose mean val accuracy (>= 3 seeds) is within min(1.0, 0.5 x (Full KD - CE)) %p of Full KD, with
+its measured train-step GFLOPs including the selector. Worst-group accuracy (Waterbirds) is a diagnostic: a claim
+built on it alone is not a claim about this research question. Group labels are for evaluation only: a selector
+that uses them, or a proxy built from the labels, is a FAIL.
 
 For every claim, check:
 1. Every cited run id exists under runs/ with metrics.json status "done", and the numbers quoted in
@@ -39,7 +39,7 @@ For every claim, check:
    A method may still PASS on results with weak novelty; then say "PASS (novelty weak: <reason>)".
 10. Baselines: a claim of beating MaskedKD should also state how the method compares with `tome` (teacher-side
     Token Merging matched to the same budget). If tome is as good, say so; the claim must not hide it.
-11. Stage 2 (dataset cub): the first CUB run must be `stage2_untouched` (same source as the Waterbirds
+11. Stage 2 (dataset waterbirds): the first Waterbirds run must be `stage2_untouched` (same source as the CUB
     PASS); `stage2_tuned` results are reported separately and never as the generalization evidence.
 12. Grounding: the method is an interpretability technique (as declared in META) and its design cites an
     analysis_out/ result or a paper; check that the cited analysis exists and says what is claimed.

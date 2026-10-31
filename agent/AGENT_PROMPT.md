@@ -4,7 +4,7 @@
 ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론**을 **해석가능성(interpretability) 기법의 범위 안에서** 스스로 설계하고 검증한다.
 기준선은 MaskedKD(ECCV 2024, student 마지막 블록 CLS attention top-K)다.
 
-- **주 지표:** 평균 정확도와 **최악 그룹 정확도(WGA)**가 둘 다 Full KD 대비 허용 오차 이내인 **최소 평균 teacher 토큰 수**. 정확도 허용 오차 = min(1%p, 0.5 × (Full KD − CE)), WGA 허용 오차 = max(1%p, 2 × WGA 시드 σ). RESULTS_TABLE "Primary metric"에 지금 값이 나온다. Waterbirds는 새 종류(물새/육지새)와 배경(물/육지)이 학습 데이터에서 강하게 상관돼 있어서, 평균 정확도만 보면 배경 지름길에 기댄 실패가 보이지 않는다.
+- **주 지표:** 평균 정확도가 Full KD 대비 허용 오차(= min(1%p, 0.5 × (Full KD − CE))) 이내인 **최소 평균 teacher 토큰 수**, 그리고 그때의 학습 1스텝 총 GFLOPs. 주장에 쓸 수 있는 값은 **시드 3개 이상 평균**뿐이다 (RESULTS_TABLE "Primary metric"의 claim-grade 줄). 최악 그룹 정확도(WGA, Waterbirds)는 표에 보이는 진단값일 뿐, 판정에 쓰지 않는다. 이 연구의 목표는 강건성이 아니라 **KD의 FLOPs 효율**이다.
 - **비용:** 학습 1스텝 전체 GFLOPs/img (student 순·역전파 + 선택기 + teacher). harness가 실측한다.
 - **원하는 산출물:** 점수가 좋은 선택기 하나가 아니다. **분석으로 근거를 세우고 → 방법을 설계하고 → 검증한 방법론**이다. 왜 그 토큰이 student에게 가르치기 좋은지(teachability)를 설명할 수 있어야 한다.
 - **노벨티:** 기존 기법의 이름만 바꾼 것은 노벨티가 아니다. 선행 연구(웹 검색 가능)와 무엇이 다른지 근거와 함께 기록한다.
@@ -13,11 +13,11 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 방향은 정해 주지 않는다. 어떤 해석가능성 기법을 볼지, 무엇을 분석할지는 네가 문헌과 분석 결과로 정한다.
 
 ## 고정된 것 (harness/, 잠금. 바꾸면 라운드 전체가 되돌려지고 무효 처리된다)
-- **1단계 (탐색): Waterbirds** (train 4,795 / val 1,199 / test 5,794, 2클래스, 그룹 4개 = 새 종류 × 배경). **2단계: CUB-200-2011** (200클래스). teacher DeiT-B(ImageNet → 데이터셋 fine-tune, 라벨 스무딩 0, 고정), student DeiT-Ti(ImageNet-1k 사전학습에서 시작, 분류 head만 새로). 레시피는 aim-lab-test-5와 같다(100 에폭, student lr은 sweep으로 고정). 학습 1회가 몇 분~십여 분이라 실험을 많이 할 수 있다.
-- 그룹 라벨은 평가에만 쓴다. 선택기와 학습은 그룹을 볼 수 없다. 분석(`api.val_groups()`)에서는 볼 수 있다.
+- **1단계 (탐색): CUB-200-2011** (200종 새, train 5,394 / val 600 / test 5,794). **2단계 (확인): Waterbirds** (2클래스). 두 데이터셋 모두 aim-lab-test-5에서 KD > CE가 확인된 레시피를 쓴다: teacher DeiT-B(데이터셋 fine-tune, 라벨 스무딩 0, 고정), student DeiT-Ti(ImageNet-1k 사전학습, head만 새로), 100 에폭, student lr은 CE sweep으로 고정. 학습 1회가 십여 분이다. (2026-10-31에 탐색을 Waterbirds에서 CUB로 옮겼다: 2클래스는 teacher soft label에 클래스 관계 정보가 거의 없어 KD 연구로 약하다. 이전 Waterbirds 결과와 분석은 근거로 계속 쓸 수 있다.)
+- Waterbirds 그룹 라벨은 평가 진단에만 쓴다. 선택기와 학습은 그룹을 볼 수 없다.
 - DeiT 증강(RandAugment, mixup/cutmix, erasing), AdamW, α=0.5, τ=1, 100 에폭, FLOPs 측정, 평가(마지막 에폭).
 - 기준 방법: `ce`, `full`, `maskedkd`, `random`, `rollout`(student 전체 층 attention rollout, Abnar & Zuidema 2020), `grid`(래스터 순서로 고르게 K개, 모든 이미지 같음), `center`(중앙에서 가까운 K개), `tome`(teacher 안에서 비슷한 토큰을 합치는 ToMe, 같은 teacher 비용에 맞춤), 그리고 분석 전용 상한 `oracle`(teacher 자신의 attention으로 고름, 주장에 사용 금지).
-- **주장하려면 같은 K에서 `maskedkd`, `rollout`, `tome`, `grid`, `center`, `random`을 모두 이겨야 한다** (정확도 또는 WGA에서 이기고, 다른 쪽에서 지지 않을 것) (`config.CLAIM_REFS`). `grid`·`center`는 해석가능성 신호가 전혀 없는 공간 규칙이다. 이것들과 비슷하면 이득은 신호가 아니라 "토큰을 넓게/가운데 고른 것"에서 온 것이다.
+- **주장하려면 같은 K에서 `maskedkd`, `rollout`, `tome`, `grid`, `center`, `random`을 정확도로 모두 이겨야 한다** (`config.CLAIM_REFS`, 시드 3개 이상의 짝지은 비교). `grid`·`center`는 해석가능성 신호가 전혀 없는 공간 규칙이다. 이것들과 비슷하면 이득은 신호가 아니라 "토큰을 넓게/가운데 고른 것"에서 온 것이다.
 - "student 관점으로 고르는 것"이 "teacher를 그냥 가볍게 하는 것(`tome`)"보다 나은지가 핵심 질문 중 하나다. 작은 K(25, 12)에서는 ToMe가 예산까지 줄이지 못해 teacher 연산을 더 쓴다 (결과 표에 "not matched"로 표시). 그 K에서 ToMe와의 비교는 ToMe에 유리하다.
 
 ## 네가 할 수 있는 것
@@ -54,12 +54,13 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 8. RESULTS_TABLE의 "Core comparison"과 "Significant only"를 본다 (final 시드가 2개 이상 모이면 자동 계산). 다른 K끼리 비교할 때만 `python -m harness.compare --a <이름>:<K> --b maskedkd:<K'> --tier final`을 쓴다.
 9. 주장할 결과가 생기면 `agent/AUDIT_REQUEST.md`에 적는다: 주장 1줄, run id 목록, compare 출력, 근거 분석 id, 노벨티 1~2줄(선행 연구 대비). 감사관이 PASS를 준 것만 RESULTS.md의 "확정" 절에 올린다.
 
-## 2단계: CUB-200-2011 (`--dataset cub`)
-- Waterbirds에서 만든 방법이 다른 데이터셋(200종 새, 배경 지름길 없음)에서도 같은 순위를 유지하는지 보는 단계다. screen이 없고 final(시드 1·2·3)만 있다. 주 지표는 평균 정확도.
-- **제출 조건 (harness가 검사):** CUB 관문 통과 + 그 방법이 Waterbirds final 시드 1·2·3을 마침 + AUDIT.md에 그 방법의 PASS.
-- 첫 제출은 Waterbirds에서 PASS 받은 소스 그대로다(`stage2_untouched`). 그 뒤 CUB에 맞춘 변형은 `stage2_tuned`로 따로 기록된다. 둘을 섞어 주장하지 마라.
-- 기준선(관문, maskedkd·rollout·random·tome 격자, oracle)은 harness가 넣는다. 같은 시드의 기준선과 `harness.compare --dataset cub`으로 비교한다.
+## 2단계: Waterbirds (`--dataset waterbirds`)
+- CUB에서 만든 방법이 다른 데이터셋(클래스 2개, 배경이 다른 새 사진)에서도 같은 순위를 유지하는지 보는 단계다. 주 지표는 평균 정확도.
+- **제출 조건 (harness가 검사):** Waterbirds 관문 통과 + 그 방법이 CUB final 시드 1·2·3을 마침 + AUDIT.md에 그 방법의 PASS.
+- 첫 제출은 CUB에서 PASS 받은 소스 그대로다(`stage2_untouched`). 그 뒤 Waterbirds에 맞춘 변형은 `stage2_tuned`로 따로 기록된다. 둘을 섞어 주장하지 마라.
+- 기준선(관문, maskedkd·rollout·random·tome 격자, oracle)은 harness가 넣는다. `harness.compare --dataset waterbirds`로 비교한다.
 - 2단계 작업은 GPU 한 칸에서만 돈다.
+- 한계: 두 데이터셋 모두 새가 대체로 가운데 있다. "물체 위치가 다양한 이미지"로의 일반화는 이 실험으로 말할 수 없다.
 
 ## 승격 전 분해 (screen → final 전에 반드시)
 이긴 이유가 해석가능성 신호인지, 다른 우연한 요인인지 분석 채널로 확인한다. 분석 id를 PROGRESS와 AUDIT_REQUEST에 적는다.
@@ -69,7 +70,7 @@ ViT 지식 증류에서 teacher 입력 토큰을 줄이는 **새로운 방법론
 
 ## 승격 기준 (screen → final)
 - 기준값은 RESULTS_TABLE의 "Noise" 줄에 있는 promotion threshold다 (= max(0.5%p, 2×시드 σ)).
-- 같은 K에서 MaskedKD보다 정확도가 threshold 이상 높거나 WGA가 WGA threshold 이상 높거나, MaskedKD가 허용 오차 이내를 유지하는 최소 K보다 더 작은 K에서 허용 오차 이내를 만족할 때.
+- 같은 K에서 MaskedKD보다 정확도가 threshold 이상 높거나, MaskedKD가 허용 오차 이내를 유지하는 최소 K보다 더 작은 K에서 허용 오차 이내를 만족할 때.
 - 그리고 같은 K의 `rollout`·`grid`·`center`·`tome`보다 낮지 않을 때. `parent`가 있으면 부모보다 threshold 이상 높을 때.
 - screen 시도 횟수는 표의 "Search effort"에 자동으로 기록된다. 많이 시도할수록 우연한 승리가 섞인다는 것을 감안하고, 승격 전에 같은 계열의 다른 K 결과와 일관된지 확인하라.
 
