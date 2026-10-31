@@ -18,3 +18,5 @@
 - 2026-10-30 18:19 [stage2] STOPPED: CUB gate FAILED: [cub final, 100 epochs, mean of seeds [1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL (stage 2 stays closed; human decision)
 
 - 2026-10-31 10:39 SWITCH: stage 1 is now waterbirds (decisions on mean accuracy; WGA diagnostic only)
+- 2026-10-31 10:39 Codex works without a shell here (container blocks its sandbox): GPT audits and adds ideas from files the harness attaches; no emergency researcher
+- 2026-10-31 10:39 STOPPED: tests failed during relock (see agent/logs/boot.log)
