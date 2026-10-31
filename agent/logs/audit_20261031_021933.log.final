@@ -1,0 +1,4 @@
+CLAIM: suffdisc의 탐색은 4 configs·screen 8 runs가 전부이며, 다른 config 실행 전에 K=12 기본 설정만 final로 승격했고 screen/final 평균이 일관된다.
+VERDICT: NEEDS-MORE
+REASON: 제공된 11개 run의 완료 상태·100 epochs·digest·SHA·반올림 수치는 일치한다. final_suffdisc_k12_s1_1031_002441_5d86 등 final 3개의 평균 89.63/62.40과 screen 평균 89.87/63.35는 확인되며, run ID의 시각도 주장한 순서와 맞는다. 그러나 RESULTS_TABLE의 suffdisc screen 이력이 여전히 잘려 있어 “8개가 전부”인지 확인할 전체 run 목록이 필요하다.
+screen_suffdisc_k12_s2_1030_233019_98dd 등을 통해 seeds 1–3을 승격 전에 이미 평가했으므로 독립적인 fresh-seed 검증으로 볼 근거도 부족하다. [ERASER](https://aclanthology.org/2020.acl-main.408/)라는 해석가능성 근거는 있으나, 인용된 analysis_out 결과와 필수 decomposition은 누락되어 있다.
