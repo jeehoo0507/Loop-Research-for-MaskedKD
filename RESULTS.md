@@ -47,6 +47,7 @@
 - (seed 1, 관찰, H-W28, 라운드 44 갱신) suffdisc@29 s1은 91.74 / 71.43이다 (screen_suffdisc_k29_s1_1031_022639_643b). 같은 seed의 center@29(89.07/57.89, screen_center_k29_s1_1030_182732_85c3) 대비 WGA +13.54, rollout@29(88.99/63.16, screen_rollout_k29_s1_1030_182725_2086) 대비 +8.27이다. seed 0과 방향이 반대다. 그래서 위 문장의 'K=12에서만'은 'K=29는 seed마다 엇갈려 미정(seed 2·3 진행 중, H-W29), K=49는 seed 0 기준 미달'로 고친다.
 
 ## 실패한 방향
+- **[claude] 2026-10-31 라운드 91, H-C3 lateroll(블록 6~11 rollout, parent rollout)은 CUB screen seed 0에서 parent rollout을 넘지 못했다 (기각, 승격 안 함).** 사전 등록한 주 비교 K=12: lateroll 78.33 (screen_lateroll_k12_s0_1031_130339_f599) = rollout 78.33 (screen_rollout_k12_s0_1031_130151_9b9e), 차이 0.00 %p. K=29 +0.50 (screen_lateroll_k29_s0_1031_130348_fd19 81.33), K=49 +1.00 (screen_lateroll_k49_s0_1031_130352_adc5 82.67)로 문턱 2.69 아래다. maskedkd 대비도 +2.16~+2.33으로 문턱 아래다. teacher 쪽 TCKD 우위(H-C2c)가 student 정확도 우위로 이어진다는 근거는 이 seed에서 보이지 않았다(seed 하나라 차이 크기는 불확실).
 - **[claude] 2026-10-30 gradroll@12 final (3-seed, 주장 불가).** 정확도/WGA는 s1 87.99/63.16 (final_gradroll_k12_s1_1030_201811_faf0), s2 88.41/62.41 (final_gradroll_k12_s2_1030_212126_da50), s3 87.57/51.88 (final_gradroll_k12_s3_1030_220958_176b)이다. RESULTS_TABLE Core comparison(seeds 1,2,3) 결과는 다음과 같다.
   - WIN: maskedkd 대비 acc +3.78 [+2.74, +4.82], WGA +36.84 [+20.23, +53.46]. grid 대비 acc +4.89 [+3.42, +6.36], WGA +23.81 [+8.14, +39.48].
   - 차이 없음: center 대비 acc −0.70 [−1.53, +0.14], WGA +5.51 [−6.35, +17.38]. rollout 대비 acc −0.11 [−3.71, +3.49], WGA +8.27 [−3.09, +19.64]. tome 대비 acc −1.97 [−4.05, +0.10], WGA +8.27 [−11.50, +28.04].
