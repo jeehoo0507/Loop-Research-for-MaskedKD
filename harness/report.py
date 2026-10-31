@@ -27,6 +27,10 @@ def load_runs(dataset=None):
         want = C.TIER_EPOCHS.get(r["dataset"], {}).get(r["tier"])
         if want is not None and "epochs" in r and r["epochs"] != want:
             continue
+        if r.get("lr_override") is not None:                      # lr-sweep runs: read only by harness.boot
+            continue
+        if r.get("student_lr") is not None and abs(r["student_lr"] - C.student_lr(r["dataset"])) > 1e-12:
+            continue                                               # trained at an lr the recipe no longer uses
         if r.get("status") == "done" and r["tier"] != "smoke" and dataset in (None, r["dataset"]):
             rs.append(r)
     return rs
@@ -35,10 +39,8 @@ def load_runs(dataset=None):
 def gate(runs, tier="screen", dataset=C.STAGE1, seed=None):
     """Stage 1 gate: screen tier, mean over every seed that has all three runs (seed 0 first; agent/bootstrap.sh
     adds seeds 1, 2 when one seed misses). Stage 2 gate: final seed 1. `seed` pins a single seed.
-    KD must beat CE by GATE_KD_OVER_CE on accuracy, or (datasets with groups) by GATE_KD_WGA_OVER_CE on
-    worst-group accuracy; MaskedKD@98 must stay within GATE_MASKEDKD98_GAP of Full KD on accuracy."""
-    if seed is None and dataset != C.STAGE1:
-        seed = C.FINAL_SEEDS[0]
+    KD must beat CE by GATE_KD_OVER_CE on accuracy; MaskedKD@98 must not fall more than GATE_MASKEDKD98_GAP below
+    Full KD. (Worst-group accuracy is a diagnostic only: the aim is FLOPs-efficient KD, not robustness.)"""
 
     def vals(method, keep, key):
         """{seed: latest value}"""
@@ -55,19 +57,12 @@ def gate(runs, tier="screen", dataset=C.STAGE1, seed=None):
         return None, "gate incomplete: " + ", ".join(f"{m} seeds {sorted(v)}" for m, v in a.items())
     ce, full, mk = (statistics.mean(a[m][s] for s in seeds) for m in ("ce", "full", "maskedkd"))
     ok_acc = full >= ce + C.GATE_KD_OVER_CE
-    ok2 = abs(mk - full) <= C.GATE_MASKEDKD98_GAP
+    ok2 = mk >= full - C.GATE_MASKEDKD98_GAP      # MaskedKD@98 reproduces Full KD (being better is fine)
     msg = (f"[{dataset} {tier}, {C.TIER_EPOCHS.get(dataset, {}).get(tier)} epochs, mean of seeds {seeds}] "
            f"Full KD {full:.2f} vs CE {ce:.2f} (need +{C.GATE_KD_OVER_CE})")
-    ok_wga = False
-    if C.NUM_GROUPS.get(dataset):
-        w = {m: vals(m, k, "val_wga_last") for m, k in trio}
-        if all(s in w["ce"] and s in w["full"] for s in seeds):
-            cew, fullw = (statistics.mean(w[m][s] for s in seeds) for m in ("ce", "full"))
-            ok_wga = fullw >= cew + C.GATE_KD_WGA_OVER_CE
-            msg += f", WGA {fullw:.2f} vs {cew:.2f} (or need +{C.GATE_KD_WGA_OVER_CE})"
-    ok1 = ok_acc or ok_wga
+    ok1 = ok_acc
     msg += (f": {'PASS' if ok1 else 'FAIL'}; MaskedKD@98 {mk:.2f} vs Full {full:.2f} "
-            f"(need within {C.GATE_MASKEDKD98_GAP}): {'PASS' if ok2 else 'FAIL'}")
+            f"(need >= Full - {C.GATE_MASKEDKD98_GAP}): {'PASS' if ok2 else 'FAIL'}")
     return ok1 and ok2, msg
 
 
@@ -191,8 +186,7 @@ def core(runs, tier="final"):
             continue
         parent = parent_of(A[max(A)])
         refs = [(ref, k) for ref in C.CLAIM_REFS] + [("full", 196.0)] + ([(parent, k)] if parent != "none" else [])
-        keys = [("val_acc_last", "acc")] + ([("val_wga_last", "WGA")] if any(r.get("val_wga_last") is not None
-                                                                          for r in A.values()) else [])
+        keys = [("val_acc_last", "acc")]   # worst-group accuracy is a diagnostic, shown in the run table only
         for ref, rk in refs:
             B = by_seed(runs, ref, rk, tier)
             label = f"{m}@{k:g} vs {ref}@{rk:g}" + (" (parent)" if ref == parent and ref not in C.BASELINES else "")
@@ -233,8 +227,9 @@ def parent_check(runs, thr, tier="screen", thr_wga=None):
 
 
 def primary(rows, tol_wga=None):
-    """Smallest mean kept tokens with accuracy within tolerance(Full, CE) of Full KD and, where groups exist,
-    worst-group accuracy within tol_wga of Full KD's."""
+    """Smallest mean kept tokens whose mean accuracy is within tolerance(Full, CE) of Full KD. Entries backed by
+    >= CLAIM_MIN_SEEDS seeds can support a claim; the others are screening only and listed apart. (tol_wga is
+    unused: worst-group accuracy is a diagnostic, not part of the metric.)"""
     out = []
     for tier in sorted({r["tier"] for r in rows}):
         full = [r for r in rows if r["tier"] == tier and r["method"] == "full"]
@@ -243,22 +238,23 @@ def primary(rows, tol_wga=None):
         ref = full[0]["acc"]
         ce = [r["acc"] for r in rows if r["tier"] == tier and r["method"] == "ce"]
         tol = C.tolerance(ref, ce[0] if ce else None)
-        best = defaultdict(lambda: None)
+        best = {True: defaultdict(lambda: None), False: defaultdict(lambda: None)}
         for r in rows:
             if r["tier"] != tier or r["method"] in ("ce", "full") + C.ANALYSIS_ONLY or r["kept"] is None:
                 continue
-            refw = full[0].get("wga")
-            ok_w = refw is None or tol_wga is None or (r.get("wga") is not None and r["wga"] >= refw - tol_wga)
-            if r["acc"] >= ref - tol and ok_w:
+            if r["acc"] >= ref - tol:
+                grade = len(r["seeds"]) >= C.CLAIM_MIN_SEEDS
                 k = (r["method"], r["sha"], r["args"])
-                if best[k] is None or r["kept"] < best[k]:
-                    best[k] = r["kept"]
+                if best[grade][k] is None or r["kept"] < best[grade][k][0]:
+                    best[grade][k] = (r["kept"], len(r["seeds"]))
         gain = f"KD gain {ref - ce[0]:+.2f}, " if ce else "CE not run: "
-        wtxt = (f"; WGA {full[0]['wga']:.2f}, WGA tolerance {tol_wga:.2f} %p" if full[0].get("wga") is not None
-                and tol_wga is not None else "")
-        out.append(f"### {tier}: Full KD val {ref:.2f}; {gain}tolerance {tol:.2f} %p{wtxt}; smallest mean kept tokens within it")
-        for (m, sha, args), kept in sorted(best.items(), key=lambda t: t[1]):
-            out.append(f"- {m}{'@' + sha[:6] if sha and sha != 'builtin' else ''} {args if args != '{}' else ''}: {kept:.1f}")
+        out.append(f"### {tier}: Full KD val {ref:.2f} (seeds {','.join(map(str, full[0]['seeds']))}); {gain}"
+                   f"tolerance {tol:.2f} %p; smallest mean kept tokens within it")
+        for grade, title in ((True, f"claim-grade (>= {C.CLAIM_MIN_SEEDS} seeds)"), (False, "screening only (fewer seeds)")):
+            out.append(f"- {title}:" + ("" if best[grade] else " none"))
+            for (m, sha, args), (kept, n) in sorted(best[grade].items(), key=lambda t: t[1][0]):
+                out.append(f"  - {m}{'@' + sha[:6] if sha and sha != 'builtin' else ''} {args if args != '{}' else ''}: "
+                           f"{kept:.1f} ({n} seeds)")
     return out
 
 
@@ -270,14 +266,14 @@ def stage_section(runs, dataset, tier):
     sw, thr_w, wmsg = noise(runs, "screen", "val_wga_last", C.WGA_TOL_MIN)
     groups = bool(C.NUM_GROUPS.get(dataset))
     core_lines, sig = core(runs, "final")
-    return [f"Gate: {msg}", "", f"Noise: {nmsg}" + (f"; {wmsg}" if groups else ""), "",
+    return [f"Gate: {msg}", "", f"Noise: {nmsg}" + (f" (diagnostic: {wmsg})" if groups else ""), "",
             "## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)", *(sig or ["- none yet"]), "",
             "## Core comparison (final tier: every agent method vs " + ", ".join(C.CLAIM_REFS) + ", full, parent)",
             *(core_lines or ["- no agent method has >= 2 final seeds yet"]), "",
             "## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)",
-            *(parent_check(runs, thr, "screen", thr_w if groups else None) or ["- no child selectors yet"]), "",
+            *(parent_check(runs, thr, "screen") or ["- no child selectors yet"]), "",
             "## Primary metric (analysis-only methods excluded: " + ", ".join(C.ANALYSIS_ONLY) + ")",
-            *primary(rows, thr_w if groups else None), "",
+            *primary(rows), "",
             "## Where token choice matters (screen seed 0, each baseline vs Full KD)",
             *(discriminative(runs, "screen") or ["- not measured yet"]), "",
             "## Search effort (screen)", *tries(runs, "screen"), "",
@@ -297,7 +293,8 @@ def main():
         sys.exit(0 if ok else 1)
     body = ["# RESULTS_TABLE (written by harness/report.py; do not edit by hand)", "",
             "*img/s: training throughput averaged over epochs; depends on how many jobs shared the GPU.",
-            "Worst-group acc: Waterbirds groups (y x place) on the val split; never used in training.", "",
+            "Worst-group acc (Waterbirds groups y x place, val split): a diagnostic column only, never used in training or",
+            "in any decision here. Decisions use mean accuracy and measured train-step GFLOPs.", "",
             f"# Stage 1: {C.STAGE1} (search)", ""]
     body += stage_section(load_runs(C.STAGE1), C.STAGE1, "screen")
     body += [f"# Stage 2: {C.STAGE2} (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)", ""]

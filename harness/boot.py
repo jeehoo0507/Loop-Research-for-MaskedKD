@@ -2,11 +2,14 @@
 
     python -m harness.boot jobs-from-bench   # MAX_JOBS from state/bench.json (epochs are fixed by the recipe: 100)
     python -m harness.boot pick-keeps        # stage-2 baseline budgets from the stage-1 baselines
+    python -m harness.boot lr-pick <dataset> # student lr from the CE sweep (submit --lr-sweep) -> state/recipe.json
 
 Rules (agreed in planning):
   jobs-from-bench: the parallelism bench found best (aggregate img/s), written to state/epochs.json (locked).
   pick-keeps: the two budgets where MaskedKD falls furthest below Full KD on stage-1 screen seed 0 (accuracy),
   i.e. where token choice matters; default 49, 29.
+  lr-pick: the CE run (screen, seed 0, 100 epochs) with the best final val accuracy among config.STUDENT_LRS
+  (aim-lab-test-5's rule; ties -> smaller lr). CE and every KD method then use it.
 """
 import json
 import sys
@@ -32,6 +35,23 @@ def jobs_from_bench():
     print(json.dumps(d))
 
 
+def lr_pick(dataset):
+    scores = {}
+    for m in C.RUNS.glob("*/metrics.json"):
+        r = json.loads(m.read_text())
+        if (r.get("status") == "done" and r.get("dataset") == dataset and r["method"] == "ce"
+                and r.get("lr_override") is not None and r["tier"] == "screen"):
+            scores[float(r["lr_override"])] = r["val_acc_last"]
+    if set(scores) != set(C.STUDENT_LRS):
+        raise SystemExit(f"lr sweep incomplete for {dataset}: have {sorted(scores)}, need {C.STUDENT_LRS}")
+    lr = max(sorted(scores), key=lambda l: (scores[l], -l))
+    d = json.loads(C.RECIPE_FILE.read_text()) if C.RECIPE_FILE.exists() else {}
+    d[dataset] = {"student_lr": lr, "swept": True, "scores": {f"{k:g}": v for k, v in sorted(scores.items())},
+                  "source": "CE sweep here (screen seed 0, final val acc; ties -> smaller lr)"}
+    C.RECIPE_FILE.write_text(json.dumps(d, indent=1) + "\n")
+    print(json.dumps(d[dataset]))
+
+
 def pick_keeps():
     from .report import load_runs
     runs = load_runs(C.STAGE1)
@@ -51,6 +71,8 @@ if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "jobs-from-bench":
         jobs_from_bench()
+    elif cmd == "lr-pick":
+        lr_pick(sys.argv[2])
     elif cmd == "pick-keeps":
         pick_keeps()
     else:
