@@ -1,0 +1,4 @@
+CLAIM: Waterbirds K=12에서 suffdisc는 승격 판단에 쓰지 않은 새 seed 4·5·6(screen tier, 100 에폭) 모두에서 maskedkd보다 정확도와 WGA가 높다.
+VERDICT: NEEDS-MORE
+REASON: screen_suffdisc_k12_s4_1031_040422_fa2a / screen_maskedkd_k12_s4_1031_040431_c049 및 s5·s6의 총 6개 run은 done이며, 수치·평균 차이(+5.03/+39.60)·비용·digest가 일치한다. 그러나 analysis_seed_ledger_1031_054457_4e01은 done만 조회하므로, 이전 실패·중단 run의 평가 결과가 승격에 사용되지 않았는지는 확인할 수 없다. 신규성 확인에는 모든 상태의 제출·평가 이력이 필요하다.
+또한 analysis_suffdisc_decomp_1030_202612_878c의 낮은 겹침과 teacher 성능은 비중첩 토큰이 학습 이득의 원인임을 입증하지 않는다. 해당 인과 표현을 제한하거나 토큰 교환 실험이 필요하다. 해석 기법 자체는 [ERASER](https://aclanthology.org/2020.acl-main.408/)·[Sufficient Input Subsets](https://arxiv.org/abs/1810.03805)의 연장이므로, 독창성은 KD 적용 범위로 제한해야 한다.

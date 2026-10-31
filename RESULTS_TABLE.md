@@ -110,7 +110,7 @@ Total agent screen configs: 14
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
-| screen | center |  | 12 | 12.0 | 0,1,2,3 | 88.51 ± 0.41 | 53.20 ± 3.03 | 10.09 | 2.45 | 0.00 | 315 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s3_1030_233032_bf21 screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
+| screen | center |  | 12 | 12.0 | 0,1,2,3,4,5,6 | 88.54 ± 0.42 | 54.03 ± 2.47 | 10.09 | 2.45 | 0.00 | 308 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s6_1031_051116_3b33 screen_center_k12_s3_1030_233032_bf21 screen_center_k12_s5_1031_051111_594a screen_center_k12_s4_1031_051107_b568 screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
 | screen | center |  | 29 | 29.0 | 0,1,2,3 | 89.37 ± 0.42 | 60.71 ± 2.16 | 13.00 | 5.36 | 0.00 | 282 | screen_center_k29_s2_1031_025420_4cff screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 screen_center_k29_s3_1031_025424_fc02 |
 | screen | center |  | 49 | 49.0 | 0 | 90.16 ± 0.00 | 60.15 ± 0.00 | 16.46 | 8.82 | 0.00 | 332 | screen_center_k49_s0_1030_135953_4476 |
 | screen | conceptcov@5bd86b |  | 12 | 12.0 | 0 | 81.82 ± 0.00 | 27.07 ± 0.00 | 10.12 | 2.45 | 0.03 | 394 | screen_conceptcov_k12_s0_1031_000621_b88e |
@@ -134,7 +134,7 @@ Total agent screen configs: 14
 | screen | random |  | 12 | 12.0 | 0 | 83.49 ± 0.00 | 33.83 ± 0.00 | 10.09 | 2.45 | 0.00 | 331 | screen_random_k12_s0_1030_135953_bc03 |
 | screen | random |  | 29 | 29.0 | 0 | 82.49 ± 0.00 | 27.82 ± 0.00 | 13.00 | 5.36 | 0.00 | 285 | screen_random_k29_s0_1030_135953_8780 |
 | screen | random |  | 49 | 49.0 | 0 | 85.40 ± 0.00 | 36.09 ± 0.00 | 16.46 | 8.82 | 0.00 | 333 | screen_random_k49_s0_1030_135953_14e9 |
-| screen | rollout |  | 12 | 12.0 | 0 | 87.24 ± 0.00 | 45.11 ± 0.00 | 10.08 | 2.45 | 0.17 | 296 | screen_rollout_k12_s0_1030_135953_489a |
+| screen | rollout |  | 12 | 12.0 | 0,4,5,6 | 87.78 ± 0.72 | 48.69 ± 4.32 | 10.08 | 2.45 | 0.17 | 284 | screen_rollout_k12_s5_1031_051059_49f9 screen_rollout_k12_s0_1030_135953_489a screen_rollout_k12_s6_1031_051103_40bf screen_rollout_k12_s4_1031_051050_86f8 |
 | screen | rollout |  | 29 | 29.0 | 0,1,2,3 | 89.20 ± 0.46 | 63.16 ± 1.84 | 12.99 | 5.36 | 0.17 | 282 | screen_rollout_k29_s3_1031_025433_3854 screen_rollout_k29_s0_1030_135953_7320 screen_rollout_k29_s1_1030_182725_2086 screen_rollout_k29_s2_1031_025429_73a1 |
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
 | screen | suffdisc@0f0600 | {"r": 1} | 12 | 12.0 | 0,1 | 88.78 ± 0.29 | 56.02 ± 0.53 | 11.86 | 2.45 | 1.78 | 260 | screen_suffdisc_k12_s1_1031_011604_6add screen_suffdisc_k12_s0_1031_011600_6b15 |
