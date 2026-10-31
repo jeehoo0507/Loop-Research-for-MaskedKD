@@ -1,3 +1,4 @@
+STUCK: GPU 스케줄러(harness.scheduler)가 두 라운드째(라운드 100 20:21, 라운드 101 21:23 UTC) 돌지 않는다. 대기 11개, 실행 0개, GPU 0%·84 MiB, agent/logs/sched.log 마지막 줄은 07:36. 연구자는 `bash agent/start.sh sched`를 실행할 수 없다(AGENT_PROMPT 4항: 직접 실행 금지). 사람이 스케줄러를 다시 켜야 한다.
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
 요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
 진행 중(라운드 100, 대기, 스케줄러 꺼짐): analysis_cub_teacher_filter_1031_202037_032d (H-C14), screen_teacher_topk_k29_s0_1031_202120_8e2b (기준선). TrustMask 1회 run(selectors/trustfilt.py, K=29)은 H-C14 결과를 본 뒤 사전 등록 규칙 (a)/(b)/(c)로 정해 낸다.
@@ -6,6 +7,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 101 [claude] (스케줄러 두 번째 정지 → STUCK, 새 작업 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md 마지막 변경은 4a6deb7이고, AUDIT_REQUEST.md는 없다. analysis_out/에 새 결과 없음(H-C14 analysis_cub_teacher_filter_1031_202037_032d 는 아직 대기).
+  - 21:23 UTC 기준 queue/running 0개, queue/pending 11개(H-C14, teacher_topk@29 s0, Waterbirds 2단계 기준선 9개). harness.scheduler 프로세스가 없고 GPU 0%다. 라운드 100에 이어 같은 문제로 두 번째 막혀서 PROGRESS 첫 줄에 STUCK을 적었다.
+  - [claude] 결정: 새 분석·screen을 제출하지 않았다. 이유: 스케줄러가 꺼져 있어 제출해도 돌지 않는다. 또 다음 단계(trustfilt 스위치 고정)는 사전 등록 규칙상 H-C14 결과에 달려 있다. 결과 전에 조건부 작업을 내면 결과를 보고 고르게 된다. 대기열을 더 늘리지 않는 것이 보수적이다.
+  - [claude] 결정: 학습·분석을 직접 실행하지 않았다(AGENT_PROMPT 4항). 스케줄러가 다시 켜지면 대기 순서대로 H-C14가 먼저 돌아야 한다.
+  - 다음: 스케줄러 재개 → H-C14 판독 → PROPOSALS H-C14 규칙 (a)/(b)/(c)로 trustfilt 스위치 고정 → screen 1개(K=29, seed 0) → lateroll 메커니즘 분석.
 - **라운드 100 [claude] (QUEUE 20:40 TrustMask 지시 착수: H-C14 사전 등록·제출, 선택기 준비, teacher_topk 기준선 제출): 새 감사 결과 없음.** 새 사람 커밋 3개(c43df77 TrustMask 1회 지시, 38efc2f ctx.teacher_map·teacher_topk, 4a6deb7 MaskedKD@98 조건만 실패하면 부트 진행)를 읽었다. 22:20 지시대로 Waterbirds 2단계 기준선 15개를 harness가 넣었다(BOOT_STATUS 20:15).
   - H-C14 사전 등록 a7900dc, 제출 analysis_cub_teacher_filter_1031_202037_032d : common student(CUB final full-KD s1, epoch 25·50·final), K=98·49·29·12에서 student만(rollout, lateroll) / teacher 고르기(teacher_topk) / teacher 거르기(허용 = teacher 상위 1.5K 안에서 lateroll·rollout) / 이미지별 개수 거르기 / random의 가린 teacher TCKD·KL. 결과에 따라 단 1개 screen run(K=29, seed 0)의 형태를 고르는 규칙을 결과 전에 적었다.
   - 선택기 selectors/trustfilt.py (parent lateroll, uses_teacher_cache). trysel K=29: 선택기 0.076, 총 12.99 GFLOPs/img, 오류 없음. 아직 screen에 내지 않았다(H-C14 결과 뒤에 규칙대로 스위치를 정한다).
