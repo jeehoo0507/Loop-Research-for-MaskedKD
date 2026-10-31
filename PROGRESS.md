@@ -1,11 +1,16 @@
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
-요약 (라운드 98, [claude]): 감사된 최선 결과는 없다. 주 지표(허용 오차 안의 최소 K)로 보면, seed 0에서 98보다 작은 K에 든 에이전트 방법은 lateroll@49 하나다(82.67, screen_lateroll_k49_s0_1031_130352_adc5 ). 이 값이 잡음인지 새 seed 4·5로 확인한다(H-C12, 사전 등록 421b782). seed 0·4·5 평균 기준선: K=49 rollout 81.28, maskedkd 80.78; K=29 rollout 80.94, maskedkd 79.67 (모두 문턱 81.50 밖).
-진행 중: H-C12: screen_lateroll_k49_s4_1031_184753_4b41 (실행, e22), screen_lateroll_k49_s5_1031_184758_5d9f (대기).
-다음: (1) K=29 기준선과 H-C12를 사전 등록 규칙대로 판정한다(seed 4·5만 쓴다. seed 0은 보고 고른 값이라 증거가 아니다). (2) P1이 틀리면 lateroll 계열을 멈춘다. 맞으면 블록 6부터의 rollout이 왜 teachability에 맞는지 보는 분석을 사전 등록한다(Parent check 실패와 약한 노벨티는 그대로 남는다).
+요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
+진행 중: 없음(GPU 빔).
+다음: lateroll 이득이 "이미지마다 다른 늦은 층 순위"의 어떤 성질에서 오는지 분석으로 먼저 보인다. 근거가 없으면 lateroll final 승격이나 감사는 내지 않는다.
 (해제된 STUCK, 기록용) 아래 두 STUCK은 더는 막힌 상태가 아니다. 9c99bba에서 harness/evidence.py가 모든 상태의 job 이력을 붙이게 바뀌었다. 하지만 두 주장 모두 suffdisc 계열이라 QUEUE 지시에 따라 다시 내지 않는다.
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 99 [claude] (H-C12 판정, H-C13 사전 등록·제출·판정): 새 감사 결과도, 사람 커밋도 없다.** QUEUE.md·AUDIT.md 마지막 변경은 eb0e3ff 그대로다. AUDIT_REQUEST.md는 없다.
+  - H-C12 (사전 등록 421b782): lateroll@49 s4 = 81.67 (screen_lateroll_k49_s4_1031_184753_4b41 ), s5 = 82.00 (screen_lateroll_k49_s5_1031_184758_5d9f ), 둘 다 총 16.4464 GFLOPs/img. seed 4·5 평균 81.83 ≥ 81.50이므로 P1 맞음. 같은 seed의 rollout@49 81.17·81.00보다 높으므로 P2 맞음. seed 0·4·5 평균은 82.11이다. 같은 seed의 rollout과 짝지은 차이는 +1.00·+0.50·+1.00이다.
+  - H-C13 (사전 등록 a48b7f3, analysis_cub_rollout_fixed_1031_193620_442e ): P1·P2 모두 틀렸다. full rollout이 앞쪽 블록에서 이미지 무관 고정 패턴을 끌어온다는 설명은 맞지 않는다. 겹침 차는 0.02~0.05였고, 이미지별 TCKD 손해와 상관이 없었다. 숫자는 PROPOSALS H-C13 결과 줄에 있다.
+  - [claude] 결정: lateroll@49를 final로 승격하지 않았다. 이유: AGENT_PROMPT 승격 기준의 "parent보다 threshold 이상" 조건이 깨진다(seed 0 +1.00, 짝 평균 +0.83 < 2.69). 규칙끼리 부딪히는 점은 적어 둔다. 규칙은 "덧붙인 부분을 빼라"고 하지만, 빼면 rollout@49가 되고 이것은 허용 오차 밖이다(81.28). 이 충돌은 사람 판단이 필요할 수 있다. 하지만 보수적으로 규칙을 그대로 따른다. 메커니즘 근거도 아직 없다(타당성 요건 3항).
+  - [claude] 결정: 라운드 끝에 GPU를 비워 두었다. 이유: 사전 등록한 근거를 갖춘 다음 작업이 없다. 근거 없이 screen을 내면 사후 설명이 된다. 다음 라운드에 분석을 먼저 설계한다.
 - **라운드 98 [claude] (K=29 기준선 seed 3개 완료, 대기): 새 감사 결과도, 사람 커밋도 없다.** QUEUE.md·AUDIT.md 마지막 변경은 eb0e3ff 그대로다. analysis_out/에 새 결과 없음. AUDIT_REQUEST.md는 없다(주장할 결과 없음). GPU 97%, 실행 1개(lateroll@49 s4, e22), 대기 1개(lateroll@49 s5).
   - 기록: CUB screen maskedkd@29 s5 = 80.17 (screen_maskedkd_k29_s5_1031_183528_bfe5 , 총 12.9881 GFLOPs/img). maskedkd@29 seed 0·4·5 = 79.17·79.67·80.17, 평균 79.67. 같은 seed의 rollout@29 평균 80.94보다 1.27 %p 낮다(seed별 차이 1.66·1.66·0.50, 세 seed 모두 rollout이 높다). 둘 다 문턱 81.50 밖이다. 기준선 등록일 뿐 가설 판정이 아니다. seed 3개뿐이라 차이의 크기는 불확실하다.
   - [claude] 결정: 새 분석·screen을 내지 않았다. 이유는 라운드 96·97과 같다. GPU가 H-C12로 차 있고, 다음 단계는 H-C12 결과(seed 4·5만 사용)에 달려 있다. 결과 전에 조건부 작업을 내면 결과를 보고 고르게 된다.
