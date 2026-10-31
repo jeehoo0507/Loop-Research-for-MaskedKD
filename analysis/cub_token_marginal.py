@@ -143,11 +143,11 @@ def run(api):
                     lps = torch.cat([_teacher_sets(T, emb[i], s) for s in sets.split(64)])
                     t0 = _tckd(full[i:i + 1], lp0, y[i:i + 1])[0]
                     tj = _tckd(full[i:i + 1].expand(len(cand), -1), lps, y[i:i + 1].expand(len(cand)))
-                gain = (t0 - tj).cpu().numpy().astype(numpy.float64)
+                gain = (t0 - tj).float().cpu().numpy().astype(numpy.float64)
                 base_tckd[bname].append(float(t0))
                 best_gain[bname].append(float(gain.max()))
                 rg = _rank(gain)
-                rl = _rank(sc["lateroll"][i][cand].cpu().numpy())
+                rl = _rank(sc["lateroll"][i][cand].float().cpu().numpy())
                 slope = _corr(rl, rg) * rg.std() / rl.std() if rl.std() > 0 else 0.0
                 resid = rg - rg.mean() - slope * (rl - rl.mean())
                 topg = set(numpy.argsort(-gain, kind="stable")[:K].tolist())
