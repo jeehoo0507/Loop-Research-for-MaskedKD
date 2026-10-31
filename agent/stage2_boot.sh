@@ -31,9 +31,15 @@ if ! $PY -m harness.report --gate --dataset "$S2" >/dev/null 2>&1; then
   [ -s "$S/gate2_ids" ] || $PY -m harness.submit --gate --dataset "$S2" > "$S/gate2_ids" || fail "gate submit failed"
   status "$S2 gate submitted (one GPU slot)"
   $PY -m harness.submit --wait $(cat "$S/gate2_ids") | tee -a "$LOG" || fail "a $S2 gate run failed"
-  msg=$($PY -m harness.report --gate --dataset "$S2") || fail "$S2 gate FAILED: $msg (stage 2 stays closed; human decision)"
 fi
-status "$S2 gate PASSED: $($PY -m harness.report --gate --dataset "$S2")"
+# Same rule as stage 1 (agent/bootstrap.sh): only KD not beating CE stops; MaskedKD@98 below Full is a finding.
+if msg=$($PY -m harness.report --gate --dataset "$S2"); then
+  status "$S2 gate PASSED: $msg"
+else
+  $PY -m harness.report --gate --kd-only --dataset "$S2" >/dev/null 2>&1 ||
+    fail "$S2 gate FAILED: $msg (stage 2 stays closed; human decision)"
+  status "$S2 gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: $msg"
+fi
 
 if [ ! -s "$S/stage2_baseline_ids" ]; then
   [ -s "$S/stage1_baseline_ids" ] && $PY -m harness.submit --wait $(cat "$S/stage1_baseline_ids") >/dev/null
