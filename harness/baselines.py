@@ -82,4 +82,17 @@ def oracle_keep(teacher, x, k):
     return topk_mask(attn.float().mean(dim=1)[:, 0, 1:], int(k))
 
 
-BUILTIN = {"full": Full, "maskedkd": MaskedKD, "random": Random, "grid": Grid, "center": Center, "rollout": Rollout}
+class TeacherTopK(SelectorBase):
+    """Reference for selectors that use the cached teacher map: the K patches the teacher's own rollout of the
+    whole image ranks highest (harness/teacher_cache.py), moved with this batch's crop. A cache-using method must
+    beat this at the same K, or the student-side part adds nothing over the teacher signal itself. MaskedKD
+    (Son et al.) found choosing by teacher attention worse than by student attention; this checks it here."""
+    NEEDS = {"attn": [], "tokens": []}
+    USES_TEACHER_CACHE = True
+
+    def select(self, ctx: Context):
+        return topk_mask(ctx.teacher_map, int(ctx.budget))
+
+
+BUILTIN = {"full": Full, "maskedkd": MaskedKD, "random": Random, "grid": Grid, "center": Center, "rollout": Rollout,
+           "teacher_topk": TeacherTopK}

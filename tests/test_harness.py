@@ -596,3 +596,80 @@ def test_lr_sweep_pick_and_superseded_runs(tmp_path, monkeypatch):
     assert [r["method"] for r in runs] == ["full"]                 # sweep runs never enter the tables
     (tmp_path / "recipe.json").write_text(json.dumps({C.STAGE1: {"student_lr": 5e-5}}))
     assert report.load_runs(C.STAGE1) == []                        # runs at a superseded lr drop out
+
+
+# ---- cached teacher map (harness/teacher_cache.py) and lock adoption ----
+
+def test_augment_moves_an_extra_map_without_changing_the_images():
+    import random
+    import numpy as np
+    aug = GpuAugment(torch.device("cpu"), C.NUM_CLASSES[C.STAGE1])
+    x0 = torch.randint(0, 256, (8, 3, 64, 64), dtype=torch.uint8)
+    y0 = torch.arange(8) % C.NUM_CLASSES[C.STAGE1]
+    torch.manual_seed(0); np.random.seed(0); random.seed(0)
+    x1, y1 = aug(x0, y0)
+    torch.manual_seed(0); np.random.seed(0); random.seed(0)
+    x2, y2, tm = aug(x0, y0, extra=torch.ones(8, 1, 14, 14))
+    assert torch.equal(x1, x2) and torch.equal(y1, y2)          # same draws, same images and targets
+    assert tm.shape == (x2.shape[0], 196) and float(tm.min()) >= 0 and float(tm.max()) <= 1 + 1e-5
+
+
+def test_teacher_map_only_for_selectors_that_declare_it():
+    from harness.train import uses_teacher_cache
+    from harness.baselines import TeacherTopK, Rollout
+    assert uses_teacher_cache(TeacherTopK(), None) and not uses_teacher_cache(Rollout(), None)
+    src = '''
+import torch
+from harness.selector_api import SelectorBase, topk_mask
+META = {"method": "mmm", "paper": "ppp", "why": "www", "vs_maskedkd": "vvv", "prior_art": "aaa", "parent": "none",
+        "uses_teacher_cache": True}
+class Selector(SelectorBase):
+    def select(self, ctx):
+        return topk_mask(ctx.teacher_map, int(ctx.budget))
+'''
+    meta = check_source(src, "tm")
+    assert meta["uses_teacher_cache"] is True
+    sel, meta, _ = load_selector("tm", src=src)
+    assert uses_teacher_cache(sel, meta)
+
+
+def test_teacher_topk_run_builds_cache_and_charges_it(tmp_path, monkeypatch):
+    from harness import submit, train, teacher_cache
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setattr(C, "STATE", tmp_path / "state")
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    monkeypatch.setattr(C, "FLOP_WARMUP", 0)
+    monkeypatch.setattr(C, "FLOP_STEPS", 1)
+    job = submit.make_job("teacher_topk", 29, 0, "smoke", force=True)
+    jp = tmp_path / "job.json"
+    jp.write_text(json.dumps(job))
+    assert train.run(str(jp)) == 0
+    m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
+    assert m["mean_kept"] == 29.0 and teacher_cache.cache_path(C.STAGE1).exists()
+    f = m["flops"]
+    assert f["teacher_cache_gflops_per_img"] > 0
+    assert f["selector_gflops_per_img"] >= f["teacher_cache_gflops_per_img"]
+    assert teacher_cache.amortized_gflops(35.0, 1000, 100, 7, 128) == pytest.approx(35.0 * 1000 / (100 * 7 * 128))
+
+
+def test_lock_adopts_only_what_upstream_has(tmp_path, monkeypatch):
+    from harness import lock
+    monkeypatch.setattr(lock, "LOCK_FILE", tmp_path / "lock")
+    calls = {"diff_up": 1}
+    def fake_git(*args):
+        if args[0] == "rev-parse":
+            return 0, "origin/main\n"
+        if args[:2] == ("diff", "--quiet"):
+            return (calls["diff_up"] if args[2] != "HEAD" else 0), ""
+        return 0, ""
+    monkeypatch.setattr(lock, "_git", fake_git)
+    ok, why = lock.adopt_upstream()
+    assert not ok and "differ" in why                       # a local commit or edit is never adopted
+    calls["diff_up"] = 0
+    class R:
+        returncode, stdout, stderr = 0, "ok", ""
+    monkeypatch.setattr(lock.subprocess, "run", lambda *a, **k: R())
+    ok, why = lock.adopt_upstream()
+    assert ok and (tmp_path / "lock").read_text().strip() == lock.harness_digest()

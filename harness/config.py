@@ -130,7 +130,7 @@ def tolerance(full_acc, ce_acc):
     return max(0.0, min(TOLERANCE, TOLERANCE_FRAC * (full_acc - ce_acc)))
 KEEP_GRID = (196, 98, 49, 25, 12)
 ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric
-BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "rollout", "tome", "oracle")   # harness-owned reference methods
+BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "rollout", "tome", "oracle", "teacher_topk")   # harness-owned reference methods
 # A claim at budget K must beat every one of these at the same K (spatial ones: no interpretability signal at all)
 CLAIM_REFS = ("maskedkd", "rollout", "tome", "grid", "center", "random")
 FINAL_PRIORITY = 3           # agent final-seed jobs run before agent screen jobs (default priority 0)

@@ -56,7 +56,9 @@ For every claim, check:
 16. Validity: the method must not rely on a fixed spatial prior (centre, a disc or window around a fixed point, a
     search restricted to a fixed region). Waterbirds and CUB birds are mostly centred, so such a rule exploits the
     dataset, not a mechanism: FAIL. Each token's score must come from the student's internal computation and apply
-    wherever the object is. The mechanism ("why these tokens teach the student") must be shown by a cited analysis
+    wherever the object is. One exception: the cached teacher map (META "uses_teacher_cache": True, ctx.teacher_map,
+    harness/teacher_cache.py, cost charged in the GFLOPs). A method using it must also beat `teacher_topk` at the
+    same K, or FAIL. The mechanism ("why these tokens teach the student") must be shown by a cited analysis
     or paper that came before the method (check PROPOSALS and git history for the order), not explained afterwards.
 17. Cost: a FLOPs claim compares against baselines at the same total train-step cost (including the selector),
     e.g. maskedkd or center at a larger K, not only at the same K.

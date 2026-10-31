@@ -24,4 +24,6 @@
 - 읽을 만한 이론: Allen-Zhu & Li, ICLR 2023 (arXiv 2012.09816), KD의 multi-view 가설. 가린 teacher가 무엇을 잃는지 설명하는 근거로 쓸 수 있으면 써라.
 - 사람의 이전 실험 (TrustMask, Waterbirds, 이 harness 밖이라 근거로는 약함): rollout 선택에서 "중요하지 않은 토큰을 빼는 필터"와 "이미지마다 남길 개수를 다르게 하는 것"(배치 평균은 K 유지)을 해 봤다. 분석이 부족했던 저단계 시도다.
 
-**지시 (이것 하나만):** CUB 기준선이 나온 뒤, screen run **딱 1개**를 TrustMask를 발전시킨 선택기에 쓴다. 그대로 옮기지 말고, 아이디어 기반만 가져와 네 분석으로 다듬어라 (student 쪽 신호만, 사전 등록, 같은 K의 rollout·maskedkd와 비교). 결과가 어떻든 그 1개로 끝내고 원래 탐색으로 돌아간다. 이기면 다른 후보와 똑같은 규칙(seed 추가, 같은 총비용 비교, 감사)으로만 이어 간다.
+**지시 (이것 하나만):** CUB 기준선이 나온 뒤, screen run **딱 1개**를 TrustMask를 발전시킨 선택기에 쓴다. 그대로 옮기지 말고, 아이디어 기반만 가져와 네 분석으로 다듬어라 (사전 등록, 같은 K의 rollout·maskedkd와 비교). 결과가 어떻든 그 1개로 끝내고 원래 탐색으로 돌아간다. 이기면 다른 후보와 똑같은 규칙(seed 추가, 같은 총비용 비교, 감사)으로만 이어 간다.
+- 그 run 전에 분석 하나를 먼저 해 볼 만하다 (선택): CUB에서 K = 98·49·25·12마다 "student만 (rollout)", "teacher가 고르기 (teacher rollout 상위 K)", "teacher가 거르기 (teacher 지도의 허용 영역 안에서 student가 고르기)"의 TCKD 보존. MaskedKD 논문은 teacher로 고르기가 나빴다고 했고, TrustMask에서는 teacher로 거르기가 나았다. 작은 K에서만 거르기가 앞서는 교차점이 보이면 그 run에 teacher 지도를 써도 된다. 학습 초반에만 강제하고 student와 teacher 지도가 충분히 겹치면 student에게 넘기는 방식도 후보다.
+- harness 변경 (이번 커밋, 서버가 스스로 받아들임): `ctx.teacher_map` (META `"uses_teacher_cache": True`)과 기준선 `teacher_topk`가 생겼다. 규칙은 AGENT_PROMPT 타당성 요건 2번의 예외 항목을 읽어라. 쓰지 않아도 된다.

@@ -16,7 +16,7 @@ from torch.utils.flop_counter import FlopCounterMode
 from . import config as C
 from .data import GpuAugment
 from .models import make_student, make_teacher
-from .train import Segments, train_step
+from .train import Segments, train_step, uses_teacher_cache
 from .validate import load_selector
 
 
@@ -32,12 +32,18 @@ def main():
     t = make_teacher(C.STAGE1, pretrained=False).to(device).eval()
     opt = torch.optim.AdamW(s.parameters(), lr=1e-4)
     aug = GpuAugment(device, C.NUM_CLASSES[C.STAGE1])
-    x, y = aug(torch.randint(0, 256, (8, 3, C.RESIZE, C.RESIZE), dtype=torch.uint8),
-               torch.arange(8) % C.NUM_CLASSES[C.STAGE1])
+    xb, yb = torch.randint(0, 256, (8, 3, C.RESIZE, C.RESIZE), dtype=torch.uint8), torch.arange(8) % C.NUM_CLASSES[C.STAGE1]
+    tm = None
+    if uses_teacher_cache(sel, meta):   # a random stand-in map; the real one comes from harness/teacher_cache.py
+        g = C.IMG_SIZE // C.PATCH
+        x, y, tm = aug(xb, yb, extra=torch.rand(8, 1, g, g).softmax(-1))
+    else:
+        x, y = aug(xb, yb)
     segs = Segments(True)
     t0 = time.time()
     with FlopCounterMode(display=False) as fc:
-        loss, kept = train_step(s, t, sel, a.method, a.keep, x, y, opt, SoftTargetCrossEntropy(), 0, 0.0, segs)
+        loss, kept = train_step(s, t, sel, a.method, a.keep, x, y, opt, SoftTargetCrossEntropy(), 0, 0.0, segs,
+                                teacher_map=tm)
     n = x.shape[0]
     print(json.dumps({"ok": True, "meta": meta, "sha": sha[:12], "loss": round(loss, 4), "mean_kept": kept,
                       "gflops_per_img": {k: round(v / n / 1e9, 3) for k, v in segs.flops.items()} |

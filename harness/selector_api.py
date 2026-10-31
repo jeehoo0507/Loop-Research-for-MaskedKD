@@ -17,13 +17,17 @@ A selector file `selectors/<name>.py` must define:
         def select(self, ctx: Context) -> torch.Tensor: ...   # bool [B,196] or long [B,K]
 
 Rules enforced by harness/validate.py and the training step:
-  * no labels, no teacher, no files, no test data: ctx only holds the student side
+  * no labels, no teacher, no files, no test data: ctx only holds the student side, with one exception:
+    a selector whose META has "uses_teacher_cache": True also gets ctx.teacher_map [B,196], the teacher's attention
+    rollout of the whole un-augmented image, computed once per training image before training and moved with
+    this batch's crop/flip/Mixup (harness/teacher_cache.py). Its build cost is charged to every step.
   * mean kept tokens per batch <= ctx.budget
   * the selector may compute gradients with torch.autograd.grad, but must not call .backward()
     (any parameter .grad left behind aborts the run)
   * every FLOP spent inside select() is measured and added to the step cost
 """
 from dataclasses import dataclass
+from typing import Optional
 
 import torch
 
@@ -39,6 +43,7 @@ class Context:
     num_patches: int          # 196
     epoch: int
     progress: float           # fraction of training done, in [0,1)
+    teacher_map: Optional[torch.Tensor] = None   # [B,196] cached teacher rollout (sums to ~1 per image), or None
 
 
 class SelectorBase:

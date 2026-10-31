@@ -97,7 +97,10 @@ class GpuAugment:
         m = (C.RAND_AUG_M + 0.5 * torch.randn(n, device=self.device)).clamp(0, 10) / 10.0
         return m
 
-    def __call__(self, x_uint8, y):
+    def __call__(self, x_uint8, y, extra=None):
+        """extra: optional float map [B,1,h,w] over the same (un-augmented) images, e.g. a cached teacher
+        attribution. It gets the same crop/flip/affine warp, and the same Mixup/CutMix (as a 4th channel, which
+        leaves the image math and the random draws unchanged); returned as patch-grid means [B,196] after (x, y)."""
         B = x_uint8.shape[0]
         dev = self.device
         x = x_uint8.to(dev, non_blocking=True).float() / 255.0
@@ -183,13 +186,20 @@ class GpuAugment:
         x = (x - MEAN.to(dev)) / STD.to(dev)
         if self.erase is not None:
             x = self.erase(x)
+        if extra is not None:   # same warp; outside the source image the map is 0
+            e = F.grid_sample(extra.to(dev).float(), grid, mode="bilinear", padding_mode="zeros", align_corners=False)
+            x = torch.cat([x, e], dim=1)
         if self.mixup is not None:
             if B % 2 == 1:
                 x, y = x[:-1], y[:-1]
             x, y = self.mixup(x, y)
         else:
             y = F.one_hot(y, self.num_classes).float() * (1 - self.smoothing) + self.smoothing / self.num_classes
-        return x, y
+        if extra is None:
+            return x, y
+        g = C.IMG_SIZE // C.PATCH
+        tokens = F.adaptive_avg_pool2d(x[:, 3:4], g).flatten(1)
+        return x[:, :3].contiguous(), y, tokens
 
 
 class GpuLoader:
@@ -212,6 +222,7 @@ class GpuLoader:
         perm = torch.randperm(n, generator=self.g).to(self.x.device) if self.shuffle else torch.arange(n, device=self.x.device)
         for i in range(len(self)):
             idx = perm[i * self.batch:(i + 1) * self.batch]
+            self.last_idx = idx            # dataset rows of the batch just yielded (cached teacher maps)
             yield self.x[idx], self.y[idx]
 
 
@@ -239,12 +250,13 @@ class DiskLoader:
                 xb = torch.from_numpy(np.ascontiguousarray(self.x[idx]))
                 if self.device.type == "cuda":
                     xb = xb.pin_memory()
-                q.put((xb, self.y[idx]))
+                q.put((xb, self.y[idx], idx))
             q.put(None)
 
         threading.Thread(target=work, daemon=True).start()
         while (item := q.get()) is not None:
-            xb, yb = item
+            xb, yb, idx = item
+            self.last_idx = torch.from_numpy(idx)
             yield xb.to(self.device, non_blocking=True), yb.to(self.device, non_blocking=True)
 
 

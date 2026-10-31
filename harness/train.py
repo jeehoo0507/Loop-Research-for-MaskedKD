@@ -23,6 +23,7 @@ from . import config as C
 from .data import GpuAugment, as_tensor, load_groups, load_split, make_loader, normalize_resize
 from .lock import harness_digest
 from .models import make_student, make_teacher, student_forward, teacher_forward_keepmask
+from . import teacher_cache
 from .selector_api import Context
 from .baselines import oracle_keep
 from .tome import r_for_budget, teacher_forward_tome
@@ -120,8 +121,9 @@ class Segments:
         self.flops[name] = self.flops.get(name, 0) + fc.get_total_flops()
 
 
-def train_step(student, teacher, selector, method, budget, x, y, opt, criterion, epoch, progress, segs):
-    """One optimizer step. Returns (loss, mean kept tokens or None)."""
+def train_step(student, teacher, selector, method, budget, x, y, opt, criterion, epoch, progress, segs, teacher_map=None):
+    """One optimizer step. Returns (loss, mean kept tokens or None). teacher_map: [B,196] cached teacher
+    attribution for selectors that declare it (harness/teacher_cache.py), else None."""
     device = x.device
     needs = getattr(selector, "NEEDS", {}) if selector is not None else {}
     opt.zero_grad(set_to_none=True)
@@ -132,7 +134,7 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
             loss, kept = base, None
         else:
             ctx = Context(images=x, student=student, out=out, budget=float(budget),
-                          num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress)
+                          num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress, teacher_map=teacher_map)
             with segs.seg("selector"):
                 if method == "oracle":
                     keep = oracle_keep(teacher, x, budget)
@@ -157,6 +159,14 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
     loss.backward()
     opt.step()
     return loss.item(), kept
+
+
+def uses_teacher_cache(selector, meta):
+    """A selector gets ctx.teacher_map only if it says so: META "uses_teacher_cache": True, or a builtin class
+    attribute USES_TEACHER_CACHE."""
+    if selector is None:
+        return False
+    return bool(getattr(type(selector), "USES_TEACHER_CACHE", False) or (meta or {}).get("uses_teacher_cache") is True)
 
 
 def to_keep_mask(keep, B):
@@ -209,6 +219,11 @@ def run(job_path):
     student = make_student(dataset).to(device)
     lr = float(job.get("lr") or C.student_lr(dataset))   # job lr: only the bootstrap lr sweep sets it
     teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset, job["tier"] == "smoke")
+    tmaps, cache_gflops = None, 0.0
+    if uses_teacher_cache(selector, meta):
+        tmaps, per_image = teacher_cache.load_or_build(dataset, teacher, teacher_sha, device)
+        cache_gflops = teacher_cache.amortized_gflops(per_image, len(ytr), epochs, len(loader), C.BATCH)
+        say(f"teacher cache: {per_image:.2f} GFLOPs/image once -> {cache_gflops:.4f} GFLOPs per image-step")
     criterion = SoftTargetCrossEntropy()
     decay, no_decay = [], []
     for n, p in student.named_parameters():
@@ -244,13 +259,17 @@ def run(job_path):
             g = epoch * steps_per_epoch + step
             for pg in opt.param_groups:
                 pg["lr"] = lr_at(g / steps_per_epoch, epochs, lr)
-            x, y = aug(xb, yb)
+            if tmaps is None:
+                x, y = aug(xb, yb)
+                tm = None
+            else:
+                x, y, tm = aug(xb, yb, extra=tmaps[loader.last_idx.to(tmaps.device)])
             measure = state["flops"] is None and C.FLOP_WARMUP <= g < C.FLOP_WARMUP + C.FLOP_STEPS
             segs = Segments(measure)
             if measure:
                 with FlopCounterMode(display=False) as fc:
                     loss, kept = train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
-                                            epoch, g / (epochs * steps_per_epoch), segs)
+                                            epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm)
                 segs.flops["total"] = segs.flops.get("total", 0) + fc.get_total_flops()
                 segs.flops["images"] = x.shape[0]
                 acc = state.setdefault("_flop_acc", [])
@@ -259,12 +278,16 @@ def run(job_path):
                     n = sum(a["images"] for a in acc)
                     tot = {k: sum(a.get(k, 0) for a in acc) / n / 1e9 for k in ("total", "selector", "teacher")}
                     tot["student"] = tot["total"] - tot["selector"] - tot["teacher"]
+                    if tmaps is not None:   # the cache build, spread over the run, is part of the selector's cost
+                        tot["teacher_cache"] = cache_gflops
+                        tot["selector"] += cache_gflops
+                        tot["total"] += cache_gflops
                     state["flops"] = {f"{k}_gflops_per_img": round(v, 4) for k, v in tot.items()}
                     state.pop("_flop_acc")
                     say(f"flops per image (train step): {state['flops']}")
             else:
                 loss, kept = train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
-                                        epoch, g / (epochs * steps_per_epoch), segs)
+                                        epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm)
             if not math.isfinite(loss):
                 raise HarnessViolation(f"non-finite loss at epoch {epoch} step {step}")
             loss_sum += loss
