@@ -33,7 +33,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
 - K=29: maskedkd 79.17; rollout 80.83; random 74.00; grid 74.50; center 79.00; tome 79.67 (Full KD 82.17)
-- K=12: maskedkd 76.00; rollout 78.33; random 75.33 (Full KD 82.17)
+- K=12: maskedkd 76.00; rollout 78.33; random 75.33; grid 74.33 (Full KD 82.17)
 
 ## Search effort (screen)
 Total agent screen configs: 0
@@ -51,6 +51,7 @@ Total agent screen configs: 0
 | screen | center |  | 29 | 29.0 | 0 | 79.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1181 | screen_center_k29_s0_1031_130150_cbde |
 | screen | center |  | 49 | 49.0 | 0 | 80.17 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1093 | screen_center_k49_s0_1031_130150_3629 |
 | screen | full |  | 196 | 196.0 | 0,4,5 | 82.17 ± 0.17 | - | 42.77 | 35.13 | 0.00 | 708 | screen_full_k196_s4_1031_114911_a837 screen_full_k196_s5_1031_114911_9c0a screen_full_k196_s0_1031_111002_00d5 |
+| screen | grid |  | 12 | 12.0 | 0 | 74.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_grid_k12_s0_1031_130151_33bd |
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
 | screen | maskedkd |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_maskedkd_k12_s0_1031_130150_a887 |
