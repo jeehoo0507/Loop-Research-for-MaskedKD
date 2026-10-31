@@ -122,7 +122,7 @@ Total agent screen configs: 14
 | screen | grid |  | 29 | 29.0 | 0 | 81.65 ± 0.00 | 36.84 ± 0.00 | 13.00 | 5.36 | 0.00 | 283 | screen_grid_k29_s0_1030_135953_a69e |
 | screen | grid |  | 49 | 49.0 | 0 | 84.74 ± 0.00 | 35.34 ± 0.00 | 16.46 | 8.82 | 0.00 | 337 | screen_grid_k49_s0_1030_135953_19b7 |
 | screen | jitdisc@8a1e65 |  | 12 | 12.0 | 0,1,2,3 | 88.74 ± 0.54 | 54.32 ± 1.67 | 10.09 | 2.45 | 0.00 | 481 | screen_jitdisc_k12_s2_1031_020851_1187 screen_jitdisc_k12_s0_1030_195912_ead1 screen_jitdisc_k12_s1_1030_195921_48c7 screen_jitdisc_k12_s3_1031_020901_8cd5 |
-| screen | maskedkd |  | 12 | 12.0 | 0 | 85.15 ± 0.00 | 23.31 ± 0.00 | 10.07 | 2.45 | 0.00 | 296 | screen_maskedkd_k12_s0_1030_135953_ba8e |
+| screen | maskedkd |  | 12 | 12.0 | 0,4,5 | 84.79 ± 0.34 | 20.80 ± 2.30 | 10.07 | 2.45 | 0.00 | 294 | screen_maskedkd_k12_s5_1031_040439_3cc2 screen_maskedkd_k12_s0_1030_135953_ba8e screen_maskedkd_k12_s4_1031_040431_c049 |
 | screen | maskedkd |  | 29 | 29.0 | 0 | 87.66 ± 0.00 | 43.61 ± 0.00 | 12.99 | 5.36 | 0.00 | 357 | screen_maskedkd_k29_s0_1030_135953_764a |
 | screen | maskedkd |  | 49 | 49.0 | 0 | 89.24 ± 0.00 | 51.88 ± 0.00 | 16.44 | 8.82 | 0.00 | 328 | screen_maskedkd_k49_s0_1030_135953_3e16 |
 | screen | maskedkd |  | 98 | 98.0 | 0,1,2 | 90.69 ± 0.51 | 64.66 ± 0.75 | 25.04 | 17.41 | 0.00 | 313 | screen_maskedkd_k98_s2_1030_130545_f22a screen_maskedkd_k98_s1_1030_130545_ce0a screen_maskedkd_k98_s0_1030_123806_3217 |
