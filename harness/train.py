@@ -50,7 +50,7 @@ def sha256_file(path):
 
 
 def teacher_paths(dataset=C.STAGE1):
-    tag = "" if dataset == "waterbirds" else f"_{dataset}"   # file names fixed when Waterbirds was stage 1
+    tag = "" if dataset == C.STAGE1 else f"_{dataset}"
     return C.STATE / f"teacher{tag}.pt", C.STATE / f"teacher{tag}.json"
 
 
@@ -207,7 +207,7 @@ def run(job_path):
     loader = make_loader(xtr, ytr, C.BATCH, device, job["seed"], dataset)
     aug = GpuAugment(device, C.NUM_CLASSES[dataset])
     student = make_student(dataset).to(device)
-    lr = float(job.get("lr") or C.student_lr(dataset))   # job lr: only the bootstrap lr sweep sets it
+    lr = C.student_lr(dataset)
     teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset, job["tier"] == "smoke")
     criterion = SoftTargetCrossEntropy()
     decay, no_decay = [], []
@@ -314,8 +314,7 @@ def write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status):
         "tier": job["tier"], "epochs": job["epochs"], "epochs_done": state["epoch"],
         "val_acc_last": last_val,
         "val_wga_last": last.get("val_wga"), "val_group_acc_last": last.get("val_group_acc"),
-        "student_lr": float(job.get("lr") or C.student_lr(job.get("dataset", C.STAGE1))),
-        "lr_override": job.get("lr"),
+        "student_lr": C.student_lr(job.get("dataset", C.STAGE1)),
         "mean_kept": (sum(state["kept"]) / len(state["kept"])) if state["kept"] else None,
         "dataset": job.get("dataset", C.STAGE1),
         "tome_r": r_for_budget(job["keep"]) if job["method"] == "tome" else None,
