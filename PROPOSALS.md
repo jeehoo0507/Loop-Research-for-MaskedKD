@@ -190,3 +190,12 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 미리 정한 읽기: final에서 최악 그룹 rho가 같은 seed의 center student보다 0.05 이상 높은 seed가 4개 중 3개 이상이고, suffdisc s0~s3 평균 rho가 e25→final로 오르면 H-W20을 지지한다. 둘 다 아니면 'student sufficiency가 teacher 충실도를 따라간다'는 설명을 AUDIT_REQUEST에서 빼고, 이득의 기제를 미해결로 적는다.
   - 선행과의 차이: ERASER·RISE의 sufficiency는 주어진 설명을 평가하는 지표다. 여기서는 그것을 student 쪽에서 재서 teacher 입력 위치를 정하고, 그 순위가 teacher 쪽 순위와 학습 중 정렬되는지를 본다.
 - H-W20 판정: **지지** (analysis_suff_teacher_align_1031_003305_e9b8). 최악 그룹 rho가 같은 seed의 center student보다 +0.030/+0.052/+0.092/+0.066 높고(3/4 seed ≥ 0.05), suffdisc 평균이 e25 0.235 → final 0.315로 오른다. 전체 그룹 rho에서는 차이가 없다. 한계는 PROGRESS 라운드 37을 볼 것.
+
+## 2026-10-31 [claude] 라운드 38 메모
+- suffdisc@12 final 판정: 라운드 36에 미리 정한 읽기를 충족한다(CLAIM_REFS 6개 모두 WGA WIN, 정확도 LOSS 없음, center 대비 WGA +8.77 [+4.06, +13.47]). AUDIT_REQUEST를 썼다.
+- **H-W24 (비용 맞춤): suffdisc r=1.** 후보를 25개(±2)에서 9개(±1)로 줄인다. trysel K=12: selector 1.776, total 11.864 GFLOPs/img로 tome@12(12.00)보다 싸다.
+  - 근거: AUDIT_REQUEST caveat 2·3(비용 1.49배). analysis_suffdisc_decomp_1030_202612_878c의 mean_shift가 2.03~2.06이라 ±2 끝까지 쓰는 픽이 많다. 그래서 r=1에서는 이득이 줄 수 있다.
+  - 제출: screen_suffdisc_k12_s0_1031_011600_6b15, screen_suffdisc_k12_s1_1031_011604_6add (sel_args r=1).
+  - 미리 정한 읽기: 2-seed WGA 평균이 같은 seed의 center screen(s0 56.39, s1 51.88)보다 2.45 이상 높고 정확도 손실이 0.76 이내이면, 비용 맞춘 변형으로 seed 2·3 screen을 본다. center와 차이가 2.45 미만이면 '이득에는 ±2 탐색 범위가 필요하다'로 기록한다. 그러면 비용 caveat은 그대로 남는다.
+- **H-W25 (같은 계열의 다른 K): suffdisc@29 s0 screen** (screen_suffdisc_k29_s0_1031_011608_3604, total 22.62 GFLOPs/img). 미리 정한 읽기: rollout@29(2-seed 89.41/64.28)과 center@29(89.03/60.15)보다 WGA가 2.45 이상 높으면 K=29에서도 일관된 것으로 본다. 아니면 주장을 K=12에 한정한다는 caveat 5를 확정한다. 비용이 rollout@49(16.45)보다 커서 K=29에서는 승격하지 않는다.
+- 선행과의 차이: 라운드 36 메모와 같다.

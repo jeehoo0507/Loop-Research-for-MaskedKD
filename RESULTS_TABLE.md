@@ -17,6 +17,16 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
+- suffdisc@12 vs maskedkd@12 [acc]: +5.42 %p, 95% CI [+4.18, +6.66], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
+- suffdisc@12 vs maskedkd@12 [WGA]: +40.10 %p, 95% CI [+30.88, +49.32], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
+- suffdisc@12 vs rollout@12 [WGA]: +11.53 %p, 95% CI [+5.82, +17.23], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
+- suffdisc@12 vs tome@12 [WGA]: +11.53 %p, 95% CI [+0.58, +22.47], seeds 1,2,3, GFLOPs ratio 1.252 -> WIN
+- suffdisc@12 vs grid@12 [acc]: +6.53 %p, 95% CI [+5.51, +7.56], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs grid@12 [WGA]: +27.06 %p, 95% CI [+20.59, +33.53], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs random@12 [acc]: +5.78 %p, 95% CI [+3.43, +8.14], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs random@12 [WGA]: +25.06 %p, 95% CI [+17.51, +32.61], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
@@ -35,6 +45,22 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs full@196 [WGA]: -8.27 %p, 95% CI [-24.56, +8.02], seeds 1,2,3, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 - gradroll@12 vs rollout@12 [WGA]: +8.27 %p, 95% CI [-3.09, +19.64], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
+- suffdisc@12 vs maskedkd@12 [acc]: +5.42 %p, 95% CI [+4.18, +6.66], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
+- suffdisc@12 vs maskedkd@12 [WGA]: +40.10 %p, 95% CI [+30.88, +49.32], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
+- suffdisc@12 vs rollout@12 [acc]: +1.53 %p, 95% CI [-2.52, +5.58], seeds 1,2,3, GFLOPs ratio 1.491 -> no difference
+- suffdisc@12 vs rollout@12 [WGA]: +11.53 %p, 95% CI [+5.82, +17.23], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
+- suffdisc@12 vs tome@12 [acc]: -0.33 %p, 95% CI [-2.57, +1.91], seeds 1,2,3, GFLOPs ratio 1.252 -> no difference
+- suffdisc@12 vs tome@12 [WGA]: +11.53 %p, 95% CI [+0.58, +22.47], seeds 1,2,3, GFLOPs ratio 1.252 -> WIN
+- suffdisc@12 vs grid@12 [acc]: +6.53 %p, 95% CI [+5.51, +7.56], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs grid@12 [WGA]: +27.06 %p, 95% CI [+20.59, +33.53], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs center@12 [acc]: +0.95 %p, 95% CI [-0.79, +2.68], seeds 1,2,3, GFLOPs ratio 1.489 -> no difference
+- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs random@12 [acc]: +5.78 %p, 95% CI [+3.43, +8.14], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs random@12 [WGA]: +25.06 %p, 95% CI [+17.51, +32.61], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
+- suffdisc@12 vs full@196 [acc]: -1.53 %p, 95% CI [-3.49, +0.43], seeds 1,2,3, GFLOPs ratio 0.351 -> no difference
+- suffdisc@12 vs full@196 [WGA]: -5.02 %p, 95% CI [-12.56, +2.53], seeds 1,2,3, GFLOPs ratio 0.351 -> no difference
+- suffdisc@12 vs center@12 [acc]: +0.95 %p, 95% CI [-0.79, +2.68], seeds 1,2,3, GFLOPs ratio 1.489 -> no difference
+- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.76), WGA -0.75 %p (threshold 2.45) -> added part UNPROVEN
@@ -77,6 +103,7 @@ Total agent screen configs: 11
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
 | final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 88.10 ± 1.17 | 50.88 ± 1.74 | 10.08 | 2.45 | 0.17 | 237 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s3_1030_220958_d961 final_rollout_k12_s2_1030_212126_33d1 |
+| final | suffdisc@0f0600 |  | 12 | 12.0 | 1,2,3 | 89.63 ± 0.46 | 62.40 ± 2.60 | 15.02 | 2.45 | 4.93 | 192 | final_suffdisc_k12_s3_1031_002453_9ebe final_suffdisc_k12_s1_1031_002441_5d86 final_suffdisc_k12_s2_1031_002448_664e |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |

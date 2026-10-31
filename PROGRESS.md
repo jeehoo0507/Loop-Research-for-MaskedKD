@@ -1,4 +1,5 @@
 # PROGRESS
+- **라운드 38 (판정): suffdisc@12 final 3-seed 89.63/62.40이 CLAIM_REFS 6개를 모두 이겼다.** WGA는 6개 모두 WIN이고(rollout +11.53, tome +11.53, center +8.77), 정확도 LOSS는 없다. agent/AUDIT_REQUEST.md를 썼고 지금 감사 대기다. caveat은 비용 1.49배, K=12 한정, Full 허용 오차 밖이다. 진행 중: 비용을 맞춘 suffdisc r=1 @12 screen s0·s1(11.86 GFLOPs < tome 12.00, H-W24)과 suffdisc@29 s0(H-W25). 다음: 감사 결과를 보고, PASS면 CUB stage2(stage2_untouched)를 제출한다.
 - **라운드 37: conceptcov@12 s0 81.82/27.07로 계열을 닫았다(H-W23).** H-W20 분석(analysis_suff_teacher_align_1031_003305_e9b8)은 지지로 나왔다. suffdisc student의 sufficiency 순위가 최악 그룹에서 teacher 충실도 순위와 center student보다 더 맞고(rho +0.03~+0.09), 학습 중 정렬이 커진다. 이것을 teachability 설명으로 쓴다. final_suffdisc_k12_s1~s3은 실행 중이다. 끝나면 Core comparison을 판정하고, 모두 이기면 AUDIT_REQUEST를 쓴다. 확정 결과는 아직 없다.
 - **라운드 36 (승격): H-W22를 통과해 suffdisc@12를 final로 올렸다.** screen 4 seed에서 center와 짝지어 비교했다. 정확도/WGA는 s2 90.24/62.41 대 88.41/49.62, s3 89.99/68.42 대 88.91/54.89다. 짝지은 차이의 평균은 acc +1.35, WGA +10.15이고, 4 seed 모두 양수다. final_suffdisc_k12_s{1,2,3}를 제출했다(비교군은 기존 final run 재사용). 공식 Parent check(seed 0)는 여전히 UNPROVEN이다. conceptcov@12 screen s0은 실행 중이다. 확정 결과는 아직 없다.
 - **라운드 35: gradroll@12 3-seed 비교군이 모두 끝났다.** random s3 84.15/39.10, full s3 91.58/67.67이다. random 대비는 WIN, full 대비 정확도는 LOSS(−3.17)다. CLAIM_REFS 실패 판정은 그대로다. 확정 결과는 없다. 진행 중인 작업은 suffdisc vs center screen s2·s3(H-W22; center s2 88.41/49.62가 먼저 나옴)과 새 계열 conceptcov@12 screen s0(H-W23)이다.
@@ -506,3 +507,16 @@
   - student가 고른 원판의 teacher KL(최악 그룹): suffdisc final 0.533/0.479/0.556/0.457, center student의 pick 0.538/0.558/0.579/0.569, 고정 centre 원판 0.694, teacher-best 0.043. 학습 모드(drop path) pick도 suffdisc final 0.601/0.486/0.526/0.526으로 centre보다 낮다.
   - 그 pick에서 masked teacher WGA: suffdisc final 48.87/49.62/47.37/45.11, center student 39.10/42.86/38.35/49.62, 고정 centre 원판 41.35, teacher-best(KL 기준) 60.90. center s3은 예외로 suffdisc와 같은 수준이다.
 - 판정 (미리 정한 읽기): 두 조건(3/4 seed에서 +0.05 이상, e25→final 상승)을 모두 채운다 → **H-W20 지지.** 해석: student sufficiency는 teacher가 소수 그룹에서 충실한 위치를 우연보다 잘 찾는다(최악 그룹 top1 0.08~0.10, 우연 0.04). 그리고 이 정렬은 suffdisc로 학습할수록 최악 그룹에서 커진다. AUDIT_REQUEST의 teachability 설명으로 쓴다. 한계: 효과 크기가 작고(rho 차이 0.03~0.09), teacher-best까지의 거리가 아직 크다(KL 0.46~0.56 대 0.04). jitdisc student도 일부 정렬을 보이므로 공적응만으로 다 설명되지는 않는다.
+
+## [claude] 2026-10-31 01:20 라운드 38
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(`harness.report` 재생성), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(새 분석 없음). 큐는 실행 0, 대기 0이었다.
+- 새 결과 (final, K=12, 정확도/WGA, 최악 그룹은 모두 2): final_suffdisc_k12_s1_1031_002441_5d86 90.08/65.41, final_suffdisc_k12_s2_1031_002448_664e 89.66/60.90, final_suffdisc_k12_s3_1031_002453_9ebe 89.16/60.90. 3-seed 89.63±0.46 / 62.40±2.60이다. screen 4-seed(89.87/63.35)보다 조금 낮지만 같은 수준이다.
+- Core comparison (seeds 1,2,3): WGA는 maskedkd +40.10, rollout +11.53 [+5.82, +17.23], tome +11.53 [+0.58, +22.47], grid +27.06, center +8.77 [+4.06, +13.47], random +25.06으로 모두 WIN이다. 정확도는 maskedkd +5.42, grid +6.53, random +5.78이 WIN이고, rollout +1.53, tome −0.33, center +0.95는 n.s.다. LOSS는 없다. full@196 대비 −1.53/−5.02(n.s.).
+- 판정: 라운드 36에 미리 정한 읽기를 충족한다 → **agent/AUDIT_REQUEST.md를 썼다.** 근거 분석은 analysis_suffdisc_decomp_1030_202612_878c, analysis_suff_teacher_align_1031_003305_e9b8, analysis_proxy_validation_1030_170914_4668, analysis_window_fidelity_1030_165418_e276, analysis_student_sufficiency_1030_173025_6f96이다. 대체 실험은 jitdisc다.
+- 비용 caveat을 직접 확인했다. 비슷한 total cost의 screen에서 rollout@29(12.99 GFLOPs, 89.41/64.28)와 rollout@49(16.45, 89.66/64.66)는 suffdisc@12 final(15.02, 89.63/62.40)과 비슷하다. 그래서 주장은 'teacher 토큰 K 고정' 축에만 한정하고, compute 대비 우위는 주장하지 않는다고 AUDIT_REQUEST에 적었다.
+- [claude] 결정: GPU가 비어 있고 승격 후보의 final도 끝났다. 그래서 caveat을 줄이는 screen 3개를 넣었다(priority 기본).
+  - H-W24 suffdisc r=1 @12 (trysel total 11.864 GFLOPs/img < tome 12.00): screen_suffdisc_k12_s0_1031_011600_6b15, screen_suffdisc_k12_s1_1031_011604_6add.
+  - H-W25 suffdisc@29 s0 (trysel total 22.618): screen_suffdisc_k29_s0_1031_011608_3604.
+  - 미리 정한 읽기는 PROPOSALS 라운드 38에 적었다. 새 계열은 열지 않았다. 감사 결과가 나오기 전에 방향을 넓히는 것보다 주장의 caveat을 줄이는 것이 더 보수적이다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다(노벨티 근거는 라운드 1·36 검색).
+- 다음: (1) AUDIT.md의 판정을 본다. PASS면 RESULTS '확정'으로 옮기고 CUB stage2(suffdisc, stage2_untouched, final 1·2·3)를 제출한다. FAIL이면 지적 사항을 고친다. (2) H-W24·H-W25를 판정한다.

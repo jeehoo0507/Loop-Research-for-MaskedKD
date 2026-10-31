@@ -1,18 +1,18 @@
 {
- "id": "final_suffdisc_k12_s2_1031_002448_664e",
+ "id": "screen_suffdisc_k29_s0_1031_011608_3604",
  "kind": "train",
  "dataset": "waterbirds",
  "stage2": null,
  "method": "suffdisc",
- "keep": 12.0,
- "seed": 2,
- "tier": "final",
+ "keep": 29.0,
+ "seed": 0,
+ "tier": "screen",
  "epochs": 100,
  "sel_args": {},
  "selector_src": "\"\"\"H-W11: student-sufficiency disc. The teacher gets a disc of K patches; its position is the one, among the centre\ndisc and its shifts by up to `r` patches, whose kept tokens best preserve the *student's own* prediction\n(smallest KL(student full || student on the disc only)).\n\nBasis: analysis_proxy_validation_1030_170914_4668 (masked-teacher KL to the full teacher on the worst group ranks\nstudent WGA, |Spearman| 0.94 over 16 runs) and analysis_window_fidelity_1030_165418_e276 (moving the centre disc by\n<= 2 patches to the teacher-best position cuts that KL at K=12 from 0.694 to 0.049; attention centroids did not\nfind those positions). The sufficiency search is the student-side, label-free stand-in for that teacher search.\nVerified first by analysis_student_sufficiency_1030_173025_6f96.\n\nCost: (2r+1)^2 student forwards on K tokens per image, no grad. ctx.student stays in train mode (drop path),\nwhich the selection inherits as noise.\n\nsel_args: r = max shift in patches (default 2).\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase\n\nMETA = {\n    \"method\": \"keep-only sufficiency faithfulness of a token subset (ERASER sufficiency / RISE insertion), \"\n              \"evaluated on the student to place the teacher's input window\",\n    \"paper\": \"DeYoung et al. ACL 2020 (ERASER); Petsiuk, Das & Saenko BMVC 2018 (RISE); Hooker et al. NeurIPS 2019 \"\n             \"(ROAR)\",\n    \"why\": \"the teacher is most faithful on the minority groups when it sees one compact region on the object; the \"\n           \"region where the student's own prediction is sufficient is a label-free estimate of where that is\",\n    \"vs_maskedkd\": \"no attention ranking: a contiguous disc placed by the student's output sufficiency, not the \"\n                   \"last block's scattered CLS-attention top-K\",\n    \"prior_art\": \"center (fixed disc, no signal); MaskedKD/rollout rank tokens by attention; RISE/ERASER score a \"\n                 \"given mask for explanation only; none use sufficiency to choose a KD teacher's input\",\n    \"parent\": \"center\",\n}\n\nSIDE = 14\n\n\ndef _masked_logits(model, x, idx):\n    h = model.patch_embed(x)\n    h = model._pos_embed(h)\n    cls, patches = h[:, :1], h[:, 1:]\n    D = patches.shape[-1]\n    patches = torch.gather(patches, 1, idx.unsqueeze(-1).expand(-1, -1, D))\n    h = torch.cat([cls, patches], dim=1)\n    h = model.norm_pre(h)\n    h = model.blocks(h)\n    h = model.norm(h)\n    return model.forward_head(h)\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [], \"tokens\": []}\n\n    def __init__(self, **kwargs):\n        super().__init__(**kwargs)\n        self.r = int(kwargs.get(\"r\", 2))\n\n    def select(self, ctx):\n        x = ctx.images\n        B, dev = x.shape[0], x.device\n        k = int(ctx.budget)\n        n = ctx.num_patches\n        rr = torch.arange(n, device=dev)\n        rows, cols = (rr // SIDE).float(), (rr % SIDE).float()\n        c = (SIDE - 1) / 2\n        tie = rr.float() * 1e-6\n        with torch.no_grad():\n            full = ctx.out.logits.detach().float().log_softmax(-1)\n            best_kl = torch.full((B,), float(\"inf\"), device=dev)\n            best_idx = None\n            for dy in range(-self.r, self.r + 1):\n                for dx in range(-self.r, self.r + 1):\n                    d = (rows - (c + dy)) ** 2 + (cols - (c + dx)) ** 2 + tie\n                    idx = (-d).topk(k).indices.sort().values.expand(B, -1)\n                    lp = _masked_logits(ctx.student, x, idx).float().log_softmax(-1)\n                    kl = (full.exp() * (full - lp)).sum(-1)\n                    better = kl < best_kl\n                    best_kl = torch.where(better, kl, best_kl)\n                    best_idx = idx.clone() if best_idx is None else torch.where(better[:, None], idx, best_idx)\n        return torch.zeros(B, n, dtype=torch.bool, device=dev).scatter_(1, best_idx, True)\n",
  "selector_sha": "0f060023d021985099793ff743a82ff28771f12bc8dd9bc03c314d858a592a71",
- "note": "R36 H-W22 pass: suffdisc final s2",
+ "note": "H-W25 suffdisc K=29 consistency",
  "by": "claude",
  "priority": 0,
- "submitted": "2026-10-31 00:24:48"
+ "submitted": "2026-10-31 01:16:08"
 }

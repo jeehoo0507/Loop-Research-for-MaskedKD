@@ -1,6 +1,10 @@
 # RESULTS
 
 ## 확정 (감사 PASS)
+- (없음. 감사 대기: suffdisc@12 final 3-seed, agent/AUDIT_REQUEST.md 라운드 38.)
+
+## final (감사 전, Significant only 옮김)
+- [claude] 2026-10-31 라운드 38: **suffdisc@12 final seeds 1,2,3: 89.63±0.46 / 62.40±2.60** (final_suffdisc_k12_s1_1031_002441_5d86 90.08/65.41, final_suffdisc_k12_s2_1031_002448_664e 89.66/60.90, final_suffdisc_k12_s3_1031_002453_9ebe 89.16/60.90). Core comparison WGA: maskedkd +40.10, rollout +11.53, tome +11.53, grid +27.06, center +8.77, random +25.06 (모두 CI가 0 밖, WIN). 정확도: maskedkd +5.42, grid +6.53, random +5.78은 WIN이고 rollout +1.53, tome −0.33, center +0.95는 n.s.다. full@196 대비는 −1.53/−5.02로 n.s.지만 평균이 허용 오차 밖이다. 비용은 total 15.02 GFLOPs/img로 maskedkd의 1.49배다. 같은 K에서 CLAIM_REFS를 모두 채운 첫 방법이다. gradroll@12 final(3-seed 87.99/59.15)은 center·rollout·tome 대비 n.s.라 CLAIM_REFS를 채우지 못했다. full@196 대비 정확도는 −3.17 LOSS다.
 
 ## 잠정 (screen)
 - (seed 0 한 개, 비교 아님, 관찰) K=49에서 MaskedKD는 student WGA가 51.88로 떨어진다(그룹 2 = 육지 배경의 물새). 정확도는 89.24다 (screen_maskedkd_k49_s0_1030_135953_3e16). 같은 K의 rollout은 89.66 / 64.66 (screen_rollout_k49_s0_1030_135953_a1a9), Full seed0은 90.66 / 65.41 (screen_full_k196_s0_1030_123806_2c89).
