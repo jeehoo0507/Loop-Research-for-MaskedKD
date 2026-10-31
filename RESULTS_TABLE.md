@@ -58,6 +58,7 @@ Total agent screen configs: 0
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
 | screen | random |  | 29 | 29.0 | 0 | 74.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1184 | screen_random_k29_s0_1031_130150_a433 |
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
+| screen | rollout |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.17 | 983 | screen_rollout_k12_s0_1031_130151_9b9e |
 | screen | rollout |  | 29 | 29.0 | 0 | 80.83 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 930 | screen_rollout_k29_s0_1031_130150_5726 |
 | screen | rollout |  | 49 | 49.0 | 0 | 81.67 ± 0.00 | - | 16.45 | 8.82 | 0.17 | 877 | screen_rollout_k49_s0_1031_130150_674d |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
