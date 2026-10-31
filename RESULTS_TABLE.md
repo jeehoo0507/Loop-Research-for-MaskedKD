@@ -20,6 +20,9 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - lateroll@12 vs parent rollout: acc +0.00 %p (threshold 2.69) -> added part UNPROVEN
 - lateroll@29 vs parent rollout: acc +0.50 %p (threshold 2.69) -> added part UNPROVEN
 - lateroll@49 vs parent rollout: acc +1.00 %p (threshold 2.69) -> added part UNPROVEN
+- sinkfree@12 vs parent maskedkd: acc +1.50 %p (threshold 2.69) -> added part UNPROVEN
+- sinkfree@29 vs parent maskedkd: acc -0.33 %p (threshold 2.69) -> added part UNPROVEN
+- sinkfree@49 vs parent maskedkd: acc +0.33 %p (threshold 2.69) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 82.83 (seeds 1); KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
@@ -38,7 +41,8 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - K=12: maskedkd 76.00; rollout 78.33; random 75.33; grid 74.33; center 76.00; tome 78.17 (Full KD 82.17)
 
 ## Search effort (screen)
-Total agent screen configs: 3
+Total agent screen configs: 6
+- sinkfree: 3 configs
 - lateroll: 3 configs
 
 ## All finished runs
@@ -72,6 +76,9 @@ Total agent screen configs: 3
 | screen | rollout |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.17 | 983 | screen_rollout_k12_s0_1031_130151_9b9e |
 | screen | rollout |  | 29 | 29.0 | 0 | 80.83 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 930 | screen_rollout_k29_s0_1031_130150_5726 |
 | screen | rollout |  | 49 | 49.0 | 0,4,5 | 81.28 ± 0.35 | - | 16.45 | 8.82 | 0.17 | 878 | screen_rollout_k49_s4_1031_172246_23ee screen_rollout_k49_s0_1031_130150_674d screen_rollout_k49_s5_1031_172253_99b6 |
+| screen | sinkfree@60bc72 |  | 12 | 12.0 | 0 | 77.50 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_sinkfree_k12_s0_1031_180704_f0b3 |
+| screen | sinkfree@60bc72 |  | 29 | 29.0 | 0 | 78.83 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_sinkfree_k29_s0_1031_180708_1cb6 |
+| screen | sinkfree@60bc72 |  | 49 | 49.0 | 0 | 80.83 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 1076 | screen_sinkfree_k49_s0_1031_180713_dba8 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 78.17 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1183 | screen_tome_k12_s0_1031_130151_473d |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |

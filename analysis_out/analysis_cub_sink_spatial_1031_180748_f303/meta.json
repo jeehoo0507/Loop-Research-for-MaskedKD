@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_sink_spatial_1031_180748_f303",
+ "name": "cub_sink_spatial",
+ "source_sha": "f303f8108b898695dee5d13f7325f6af61c32254a3a540ea55d90ed42ea5bd1a",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, are the student's high-norm tokens at the border, so that sinkfree's selection is just more central than MaskedKD's?",
+  "method": "spatial distribution and centre@K overlap of selected tokens; high-norm artifact detection (per-image median+3MAD of block-10 token norms)",
+  "paper": "Darcet et al. ICLR 2024 (ViTs need registers); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout)"
+ },
+ "seconds": 4.6
+}
