@@ -59,7 +59,7 @@ def stage2_rule(method, sha):
         return "baseline"
     from .report import gate, load_runs
     runs = load_runs()
-    ok, msg = gate(runs, "final", C.STAGE2, seed=C.FINAL_SEEDS[0])
+    ok, msg = gate(runs, "final", C.STAGE2)
     if not ok:
         raise SystemExit(f"stage 2 is closed until the stage-2 gate passes: {msg}")
     s1 = [r for r in runs if r.get("dataset", C.STAGE1) == C.STAGE1 and r["tier"] == "final" and r["method"] == method]
@@ -80,6 +80,9 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
     epochs = C.TIER_EPOCHS[dataset].get(tier)
     if epochs is None:
         raise SystemExit(f"{dataset} tier '{tier}' has no epoch budget (a human sets it after harness.bench)")
+    if tier == "screen" and seed in C.FINAL_SEEDS:
+        raise SystemExit(f"seeds {C.FINAL_SEEDS} are reserved for final: a screen run on them is the same run as its "
+                         f"final (same seed, same data order), so the final would not be fresh. Use seed 0 or >= 4")
     if tier == "final" and seed not in C.FINAL_SEEDS:
         raise SystemExit(f"final runs use fresh seeds {C.FINAL_SEEDS} only (screen seed {C.SCREEN_SEED} never enters a claim)")
     if method in C.ANALYSIS_ONLY and tier == "final" and dataset == C.STAGE1:
@@ -164,7 +167,7 @@ GATE = (("ce", 0), ("full", 196), ("maskedkd", 98))
 
 
 def gate_jobs(dataset=C.STAGE1, force=False, seeds=None):
-    """Stage 1: screen, seed 0 unless `seeds` (bootstrap adds 1, 2 when one seed misses). Stage 2: final seed 1.
+    """Stage 1: screen, seed 0 unless `seeds` (bootstrap adds 4, 5 when one seed misses). Stage 2: final seed 1.
     Runs that already exist at the current epochs are reused (their ids are returned)."""
     tier = "screen" if dataset == C.STAGE1 else "final"
     seeds = seeds or ([C.SCREEN_SEED] if dataset == C.STAGE1 else [C.FINAL_SEEDS[0]])

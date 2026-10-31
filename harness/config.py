@@ -93,7 +93,7 @@ TIER_TIME_LIMIT_H = {"smoke": 0.5, "screen": 3.0, "final": 3.0, "analysis": 1.0}
 STAGE2_TIME_LIMIT_H = 6.0
 SCREEN_SEED = 0
 FINAL_SEEDS = (1, 2, 3)      # fresh seeds only: the screen seed never enters a final claim
-NOISE_SEEDS = (1, 2)         # extra screen seeds of maskedkd@98 and full, to measure seed noise
+NOISE_SEEDS = (4, 5)         # extra screen seeds of maskedkd@98 and full (noise); never the final seeds 1-3
 BASELINE_KEEPS = (49, 29, 12)  # 29 = 15 % of 196, where aim-lab-test-6 saw MaskedKD lose 18.5 %p WGA
 PROMOTE_MIN = 0.5            # promotion threshold = max(PROMOTE_MIN, 2 * seed sigma) %p
 SNAPSHOT_FRACS = (0.25, 0.5) # extra student snapshots (fraction of epochs) for analysis jobs

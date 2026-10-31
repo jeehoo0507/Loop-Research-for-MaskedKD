@@ -89,7 +89,7 @@ if [ ! -f state/epochs.json ]; then
   tmux kill-session -t sched 2>/dev/null; bash agent/start.sh sched >>"$LOG" 2>&1   # reload MAX_JOBS
 fi
 
-# ---------- 5. gate: seed 0, then seeds 1-2 judged on the mean (one seed can miss by noise) ----------
+# ---------- 5. gate: seed 0, then seeds 4-5 judged on the mean (one seed can miss by noise) ----------
 gate_ok() { $PY -m harness.report --gate >/dev/null 2>&1; }
 run_gate() {  # $1 = id file name, rest = submit args; reuses runs that already exist
   local f="$S/$1"; shift
@@ -98,8 +98,8 @@ run_gate() {  # $1 = id file name, rest = submit args; reuses runs that already 
   status "gate: $($PY -m harness.report --gate)"
 }
 gate_ok || run_gate gate_ids --seeds 0
-gate_ok || run_gate gate_ids_s12 --seeds 1,2
-gate_ok || fail "gate FAILED on seeds 0-2: $($PY -m harness.report --gate). Human decision (recipe, dataset)"
+gate_ok || run_gate gate_ids_s45 --seeds 4,5
+gate_ok || fail "gate FAILED on seeds 0, 4, 5: $($PY -m harness.report --gate). Human decision (recipe, dataset)"
 status "gate PASSED: $($PY -m harness.report --gate)"
 
 # ---------- 6. baselines, stage 2, loop ----------

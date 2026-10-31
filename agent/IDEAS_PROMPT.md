@@ -6,7 +6,9 @@ Research question: in ViT knowledge distillation the teacher sees only K of the 
 the student learn as well as from the full image with fewer teacher tokens than MaskedKD (student last-block CLS
 attention top-K)? Dataset: Waterbirds (bird type spuriously correlated with background); quality = accuracy AND
 worst-group accuracy, both close to Full KD. The selector's own FLOPs count, and it cannot use group labels. It must
-beat maskedkd, rollout, tome, grid, center and random at the same K.
+beat maskedkd, rollout, tome, grid, center and random at the same K. No fixed spatial prior (centre, a disc or window
+around a fixed point): the birds are mostly centred, so such rules exploit the dataset. Each token's score must come
+from the student's internal computation, and the idea must state the mechanism and the evidence for it.
 
 Task: propose exactly 2 token-selection methods, each made a different way.
 

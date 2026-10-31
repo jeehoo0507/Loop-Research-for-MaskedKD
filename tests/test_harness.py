@@ -458,7 +458,7 @@ def test_report_cli_accepts_dataset(tmp_path, monkeypatch):
     import subprocess, sys
     r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "cub"],
                        capture_output=True, text=True, cwd=C.ROOT)
-    assert "unrecognized arguments" not in r.stderr and "gate incomplete" in r.stdout
+    assert "unrecognized arguments" not in r.stderr and ("gate incomplete" in r.stdout or "[cub final" in r.stdout)
 
 
 def test_timm_can_reach_hf_hub():
@@ -488,8 +488,10 @@ def test_gate_mean_over_seeds_and_epoch_filter(tmp_path, monkeypatch):
     assert [r["val_acc_last"] for r in report.load_runs("waterbirds")] == [62.0]
     # the gate's extra seeds are reused by --baselines instead of failing as duplicates
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
-    ids = submit.gate_jobs(seeds=[1, 2])
-    assert submit.gate_jobs(seeds=[1, 2]) == ids
+    ids = submit.gate_jobs(seeds=[4, 5])
+    assert submit.gate_jobs(seeds=[4, 5]) == ids
+    with pytest.raises(SystemExit):
+        submit.gate_jobs(seeds=[1])        # final seeds never at screen
     base = submit.baselines()
     assert all(i in base for i in ids if "_ce_" not in i)
 
@@ -517,6 +519,7 @@ def test_evidence_bundle_attaches_cited_runs(tmp_path, monkeypatch):
     text = evidence.audit()
     assert f"runs/{rid}/metrics.json" in text and '"val_acc": 80.1' in text and '"loss"' not in text
     assert "selector source mysel" in text and "META = {'parent': 'none'}" in text
+    assert "complete job history" in text and f"{rid} | done" in text and "total 1 jobs" in text
     assert "selector_api" in evidence.ideas() or "missing: harness/selector_api.py" in evidence.ideas()
 
 

@@ -53,6 +53,14 @@ For every claim, check:
 15. Decomposition: the claim cites an analysis_out/ result that explains where the gain comes from (overlap with
     maskedkd's tokens, a swap test of the non-overlapping tokens, spatial spread). No decomposition: NEEDS-MORE.
 
+16. Validity: the method must not rely on a fixed spatial prior (centre, a disc or window around a fixed point, a
+    search restricted to a fixed region). Waterbirds and CUB birds are mostly centred, so such a rule exploits the
+    dataset, not a mechanism: FAIL. Each token's score must come from the student's internal computation and apply
+    wherever the object is. The mechanism ("why these tokens teach the student") must be shown by a cited analysis
+    or paper that came before the method (check PROPOSALS and git history for the order), not explained afterwards.
+17. Cost: a FLOPs claim compares against baselines at the same total train-step cost (including the selector),
+    e.g. maskedkd or center at a larger K, not only at the same K.
+
 Output, one block per claim, these exact line prefixes:
 CLAIM: <the claim, one line>
 VERDICT: PASS | FAIL | NEEDS-MORE

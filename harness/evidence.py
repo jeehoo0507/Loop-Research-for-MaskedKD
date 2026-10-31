@@ -13,12 +13,12 @@ import sys
 
 from . import config as C
 
-LIMIT = 120_000      # characters per bundle
-FILE_LIMIT = 12_000  # characters per attached file
+LIMIT = 180_000      # characters per bundle
+FILE_LIMIT = 12_000  # characters per attached file (the job history gets more: it must be complete)
 
 
-def section(title, text):
-    text = text if len(text) <= FILE_LIMIT else text[:FILE_LIMIT] + f"\n... [truncated, {len(text)} chars]"
+def section(title, text, limit=FILE_LIMIT):
+    text = text if len(text) <= limit else text[:limit] + f"\n... [truncated, {len(text)} chars]"
     return f"\n===== {title} =====\n{text.rstrip()}\n"
 
 
@@ -44,6 +44,25 @@ def run_metrics(rid):
     return json.dumps(d, indent=1)
 
 
+def history():
+    """Every job ever queued, in submission order, whatever happened to it: the auditor can see that no run of a
+    cited method (failed, timed out, killed, still running) was left out."""
+    rows = []
+    for state in ("done", "running", "pending"):
+        for f in (C.QUEUE / state).glob("*.json"):
+            j = json.loads(f.read_text())
+            jid = j.get("id", f.stem)
+            m = C.RUNS / jid / "metrics.json"
+            st = json.loads(m.read_text()).get("status") if m.exists() else "-"
+            rows.append((str(j.get("submitted", "")), jid, state, str(j.get("returncode", "-")), str(st), str(j.get("by", ""))))
+    rows.sort()
+    lines = ["submitted | id | queue state | returncode | metrics status | by"]
+    lines += [" | ".join(r) for r in rows]
+    bad = [r for r in rows if r[2] == "done" and r[3] not in ("0", "-")]
+    lines.append(f"total {len(rows)} jobs; done with non-zero returncode: {len(bad)}")
+    return "\n".join(lines)
+
+
 def audit():
     req = read("agent/AUDIT_REQUEST.md")
     py = sys.executable   # the loop runs this module with the project's .venv python
@@ -54,7 +73,8 @@ def audit():
            section("git log -25 --stat (who changed what)", run("git", "log", "-25", "--stat", "--format=%h %ci %s")),
            section("git log -- harness tests (must show no agent commits)",
                    run("git", "log", "-10", "--format=%h %ci %s", "--", "harness", "tests")),
-           section("agent/INVALID.md", read("agent/INVALID.md"))]
+           section("agent/INVALID.md", read("agent/INVALID.md")),
+           section("complete job history (all states)", history(), limit=60_000)]
     run_ids = sorted(set(re.findall(r"\b(?:in100_)?(?:screen|final)_[A-Za-z0-9_.-]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req)))
     shas = {}
     for rid in run_ids:
