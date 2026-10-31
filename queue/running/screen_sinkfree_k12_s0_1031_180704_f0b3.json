@@ -1,0 +1,19 @@
+{
+ "id": "screen_sinkfree_k12_s0_1031_180704_f0b3",
+ "kind": "train",
+ "dataset": "cub",
+ "stage2": null,
+ "method": "sinkfree",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-C11: MaskedKD's last-block CLS attention with the student's high-norm \"sink\" tokens excluded, top-K patches.\n\nBasis (CUB, no position prior): analysis_cub_sink_check_1031_174301_0b30 (H-C10). In the student, ~25 of 196 patch\ntokens per image have a block-10 output norm above median + 3*MAD; they take 0.39 of the last-block CLS attention\nand fill 0.38-0.57 of MaskedKD's top-K (rollout's top-K: ~0.05). Scoring them out and taking the next tokens by the\nsame attention closes 0.90 / 0.79 / 0.60 of the masked teacher's TCKD gap between MaskedKD and rollout at\nK = 12 / 29 / 49 (common student, image-bootstrap CIs above 0). Darcet et al. (ICLR 2024) describe such high-norm\ntokens as global-information stores that draw late CLS attention but carry little local content.\n\"\"\"\nfrom harness.selector_api import SelectorBase, topk_mask\n\nBLOCK = 10      # output of block 10 = input of the last block, whose attention MaskedKD reads\nMAD_K = 3.0\n\nMETA = {\n    \"method\": \"last-block CLS attention (MaskedKD) with high-norm artifact tokens (per-image median+3MAD of the \"\n              \"block-10 token norms) excluded\",\n    \"paper\": \"Darcet et al. ICLR 2024 (Vision Transformers Need Registers: high-norm artifact tokens); Son et al. \"\n             \"ECCV 2024 (MaskedKD)\",\n    \"why\": \"the student's high-norm tokens absorb last-block CLS attention but are not informative inputs for the \"\n           \"teacher; skipping them keeps the masked teacher's soft label closer to the full one (H-C10)\",\n    \"vs_maskedkd\": \"same attention score, but tokens whose block-10 norm is an outlier within the image get the \"\n                   \"lowest score, so the next-attended tokens fill the budget\",\n    \"prior_art\": \"registers (Darcet 2024) retrain with extra tokens to remove artifacts; here the artifacts are \"\n                 \"detected per image at no training cost and only used to steer which tokens the teacher sees\",\n    \"parent\": \"maskedkd\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [-1], \"tokens\": [BLOCK]}\n\n    def select(self, ctx):\n        a = ctx.out.attn[-1].detach().float().mean(dim=1)[:, 0, 1:]\n        nrm = ctx.out.tokens[BLOCK].detach()[:, 1:].float().norm(dim=-1)\n        med = nrm.median(dim=1, keepdim=True).values\n        mad = (nrm - med).abs().median(dim=1, keepdim=True).values\n        sink = nrm > med + MAD_K * mad\n        return topk_mask(a.masked_fill(sink, -1.0), int(ctx.budget))\n",
+ "selector_sha": "60bc728064aab0a3e5702e26b748dbcc880db814bb42c844b82ba68e8742a9b5",
+ "note": "",
+ "by": "agent",
+ "priority": 0,
+ "submitted": "2026-10-31 18:07:04",
+ "lr": null
+}

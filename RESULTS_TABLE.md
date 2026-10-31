@@ -31,7 +31,6 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
   - maskedkd : 98.0 (3 seeds)
 - screening only (fewer seeds):
   - lateroll@69541b : 49.0 (1 seeds)
-  - rollout : 49.0 (1 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
@@ -64,7 +63,7 @@ Total agent screen configs: 3
 | screen | lateroll@69541b |  | 49 | 49.0 | 0 | 82.67 ± 0.00 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s0_1031_130352_adc5 |
 | screen | maskedkd |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 29 | 29.0 | 0 | 79.17 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s0_1031_130150_1393 |
-| screen | maskedkd |  | 49 | 49.0 | 0 | 80.50 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 951 | screen_maskedkd_k49_s0_1031_130150_e26e |
+| screen | maskedkd |  | 49 | 49.0 | 0,4,5 | 80.78 ± 0.48 | - | 16.44 | 8.82 | 0.00 | 1035 | screen_maskedkd_k49_s5_1031_172301_3f83 screen_maskedkd_k49_s0_1031_130150_e26e screen_maskedkd_k49_s4_1031_172257_73af |
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
 | screen | oracle |  | 12 | 12.0 | 0 | 76.33 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 638 | screen_oracle_k12_s0_1031_130151_6802 |
 | screen | random |  | 12 | 12.0 | 0 | 75.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_random_k12_s0_1031_130151_7444 |
@@ -72,7 +71,7 @@ Total agent screen configs: 3
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
 | screen | rollout |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.17 | 983 | screen_rollout_k12_s0_1031_130151_9b9e |
 | screen | rollout |  | 29 | 29.0 | 0 | 80.83 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 930 | screen_rollout_k29_s0_1031_130150_5726 |
-| screen | rollout |  | 49 | 49.0 | 0 | 81.67 ± 0.00 | - | 16.45 | 8.82 | 0.17 | 877 | screen_rollout_k49_s0_1031_130150_674d |
+| screen | rollout |  | 49 | 49.0 | 0,4,5 | 81.28 ± 0.35 | - | 16.45 | 8.82 | 0.17 | 878 | screen_rollout_k49_s4_1031_172246_23ee screen_rollout_k49_s0_1031_130150_674d screen_rollout_k49_s5_1031_172253_99b6 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 78.17 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1183 | screen_tome_k12_s0_1031_130151_473d |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |

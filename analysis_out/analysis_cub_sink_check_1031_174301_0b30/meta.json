@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_sink_check_1031_174301_0b30",
+ "name": "cub_sink_check",
+ "source_sha": "0b301a53b913dcba2d727c6dd5e8101ad4e1d1f2e38b3c008a2bcaad2c8d121b",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does MaskedKD's last-block CLS attention put its top-K on high-norm sink tokens of the student, and does excluding them close the masked-teacher TCKD gap to rollout?",
+  "method": "high-norm artifact token detection (per-image median+3MAD of token norms), attention mass on artifacts, keep-only masked-teacher faithfulness (KL, DKD TCKD); ToMe r=0 sanity check",
+  "paper": "Darcet et al. ICLR 2024 (ViTs need registers); Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD); Bolya et al. ICLR 2023 (ToMe)"
+ },
+ "seconds": 12.7
+}
