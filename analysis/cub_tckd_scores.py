@@ -88,7 +88,7 @@ def run(api):
     for rid, r in sorted(runs.items()):
         if r.get("dataset") != "cub" or r["seed"] != 1 or r["tier"] != "final":
             continue
-        studs[f"{r['method']}{int(r['keep'])}_s1"] = rid
+        studs[f"{r['method']}{int(r.get('keep') or 0)}_s1"] = rid
     api.write_json("students", {k: [v, runs[v]["val_acc_last"]] for k, v in studs.items()})
 
     T = api.teacher.eval()
