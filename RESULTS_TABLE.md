@@ -135,7 +135,7 @@ Total agent screen configs: 14
 | screen | random |  | 29 | 29.0 | 0 | 82.49 ± 0.00 | 27.82 ± 0.00 | 13.00 | 5.36 | 0.00 | 285 | screen_random_k29_s0_1030_135953_8780 |
 | screen | random |  | 49 | 49.0 | 0 | 85.40 ± 0.00 | 36.09 ± 0.00 | 16.46 | 8.82 | 0.00 | 333 | screen_random_k49_s0_1030_135953_14e9 |
 | screen | rollout |  | 12 | 12.0 | 0 | 87.24 ± 0.00 | 45.11 ± 0.00 | 10.08 | 2.45 | 0.17 | 296 | screen_rollout_k12_s0_1030_135953_489a |
-| screen | rollout |  | 29 | 29.0 | 0,1 | 89.41 ± 0.59 | 64.28 ± 1.59 | 12.99 | 5.36 | 0.17 | 266 | screen_rollout_k29_s0_1030_135953_7320 screen_rollout_k29_s1_1030_182725_2086 |
+| screen | rollout |  | 29 | 29.0 | 0,1,2,3 | 89.20 ± 0.46 | 63.16 ± 1.84 | 12.99 | 5.36 | 0.17 | 282 | screen_rollout_k29_s3_1031_025433_3854 screen_rollout_k29_s0_1030_135953_7320 screen_rollout_k29_s1_1030_182725_2086 screen_rollout_k29_s2_1031_025429_73a1 |
 | screen | rollout |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 64.66 ± 0.00 | 16.45 | 8.82 | 0.17 | 274 | screen_rollout_k49_s0_1030_135953_a1a9 |
 | screen | suffdisc@0f0600 | {"r": 1} | 12 | 12.0 | 0,1 | 88.78 ± 0.29 | 56.02 ± 0.53 | 11.86 | 2.45 | 1.78 | 260 | screen_suffdisc_k12_s1_1031_011604_6add screen_suffdisc_k12_s0_1031_011600_6b15 |
 | screen | suffdisc@0f0600 |  | 12 | 12.0 | 0,1,2,3 | 89.87 ± 0.39 | 63.35 ± 4.04 | 15.02 | 2.45 | 4.93 | 177 | screen_suffdisc_k12_s2_1030_233019_98dd screen_suffdisc_k12_s3_1030_233028_39ad screen_suffdisc_k12_s0_1030_173118_504a screen_suffdisc_k12_s1_1030_185953_9455 |
