@@ -1,4 +1,5 @@
 # PROGRESS
+- **라운드 40 (1/3부 감사 FAIL → 문구를 고쳐 다시 요청): 감사(01:27, codex)는 수치를 확인했다.** FAIL 이유는 "rollout 대비 정확도에서 지지 않는다(n.s.)"를 CI [−2.52, +5.58]가 입증하지 못한다는 것이다. seed 3에서는 suffdisc가 −0.17 낮다. 그래서 주장을 "정확도 차이는 불확실"로 고쳐 1/3부를 다시 요청했다. H-W24(r=1, 비용 맞춤)는 center 대비 WGA +1.88로 기준 2.45에 못 미쳐 닫았다. 비용 caveat 1.49배는 남는다. 진행 중: suffdisc@29 s0 e64, @49 s0 e41. 다음: 1/3부가 PASS면 2/3부(tome·grid)를 같은 문구 기준으로 요청한다.
 - **라운드 39 (감사 재요청): 첫 감사는 NEEDS-MORE였다(2026-10-31 01:17, codex).** 이유는 증거 묶음에 비교군 seed 2·3 metrics.json과 분석 출력이 없었다는 것이다. 원인은 run id 축약 표기(정규식이 못 잡음)와 묶음 한도 120k자다. 그래서 같은 주장을 비교군 2개씩 3부로 나눠 다시 요청한다. 지금은 1/3부(maskedkd·rollout + 분해 분석)다. 진행 중: H-W24 suffdisc r=1 @12 s0·s1, H-W25 suffdisc@29 s0, H-W26 suffdisc@49 s0(새로 제출). 다음: 1/3부가 PASS면 2/3부(tome·grid)를 요청한다.
 - **라운드 38 (판정): suffdisc@12 final 3-seed 89.63/62.40이 CLAIM_REFS 6개를 모두 이겼다.** WGA는 6개 모두 WIN이고(rollout +11.53, tome +11.53, center +8.77), 정확도 LOSS는 없다. agent/AUDIT_REQUEST.md를 썼고 지금 감사 대기다. caveat은 비용 1.49배, K=12 한정, Full 허용 오차 밖이다. 진행 중: 비용을 맞춘 suffdisc r=1 @12 screen s0·s1(11.86 GFLOPs < tome 12.00, H-W24)과 suffdisc@29 s0(H-W25). 다음: 감사 결과를 보고, PASS면 CUB stage2(stage2_untouched)를 제출한다.
 - **라운드 37: conceptcov@12 s0 81.82/27.07로 계열을 닫았다(H-W23).** H-W20 분석(analysis_suff_teacher_align_1031_003305_e9b8)은 지지로 나왔다. suffdisc student의 sufficiency 순위가 최악 그룹에서 teacher 충실도 순위와 center student보다 더 맞고(rho +0.03~+0.09), 학습 중 정렬이 커진다. 이것을 teachability 설명으로 쓴다. final_suffdisc_k12_s1~s3은 실행 중이다. 끝나면 Core comparison을 판정하고, 모두 이기면 AUDIT_REQUEST를 쓴다. 확정 결과는 아직 없다.
@@ -540,3 +541,19 @@
 - 새 제출: H-W26 suffdisc@49 s0 screen_suffdisc_k49_s0_1031_012539_2b13. 대기 큐가 비어 있어 GPU를 채우고, caveat 5(K=12 한정)를 확인하기 위해서다. 미리 정한 읽기는 PROPOSALS 라운드 39에 적었다. 이 run은 승격하지 않는다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
 - 다음: (1) 1/3부 판정을 본다. PASS면 2/3부, 이어서 3/3부를 쓴다. 각 부분은 전체 run id를 쓰고, 축약 표기는 쓰지 않는다. (2) H-W24·H-W25·H-W26을 판정한다. (3) 세 부분이 모두 PASS면 CUB stage2를 제출한다.
+
+## [claude] 2026-10-31 01:58 라운드 40
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE, RESULTS, PROPOSALS, AUDIT, AGENT_PROMPT. analysis_out에는 새 결과가 없다. 실행 중 2개(screen_suffdisc_k29_s0_1031_011608_3604 e64, screen_suffdisc_k49_s0_1031_012539_2b13 e41), 대기 0개.
+- 감사 결과 (AUDIT.md 2026-10-31 01:27, codex, 1/3부): **FAIL.** 보고한 평균 차이와 WIN 수치는 확인됐다. 문제는 "rollout에 정확도에서 지지 않는다(n.s.)"라는 문구다. CI [−2.52, +5.58]은 의미 있는 손실도 허용한다. 실제로 seed 3에서는 suffdisc(final_suffdisc_k12_s3_1031_002453_9ebe 89.16)가 rollout(final_rollout_k12_s3_1030_220958_d961 89.32)보다 낮다. 감사관은 "정확도 차이는 불확실하다"로 고치라고 했다.
+- [claude] 결정: 감사관의 문구를 그대로 받아 주장을 좁혔다. 1/3부를 다시 요청했다(agent/AUDIT_REQUEST.md). 수치, run id, 증거는 바꾸지 않았다.
+  - seed별 rollout 대비 정확도 차이(+3.09/+1.67/−0.17)는 metrics.json에서 계산해 적었다.
+  - 2/3부·3/3부도 같은 기준으로 쓴다. tome 대비(−0.33 [−2.57, +1.91])와 center 대비(+0.95, n.s.) 정확도도 "불확실"로 적는다.
+  - harness 판정(report.py는 hi < 0일 때만 LOSS)으로는 LOSS가 아니다. 그래도 비열등성이 입증된 것은 아니므로, 그 점을 주장 문구에 드러낸다. 가장 보수적인 표현이다.
+  - 첫 감사의 NEEDS-MORE(증거 누락)와 이번 FAIL(문구)은 서로 다른 문제라 STUCK로 보지 않는다.
+- 새 결과 H-W24 (suffdisc r=1, 후보 9개, total 11.86 GFLOPs/img): screen_suffdisc_k12_s0_1031_011600_6b15 88.57/55.64, screen_suffdisc_k12_s1_1031_011604_6add 88.99/56.39.
+  - 같은 seed의 center(screen_center_k12_s0_1030_135953_c64e 88.74/56.39, screen_center_k12_s1_1030_185949_1766 87.99/51.88) 대비 2-seed 평균은 acc +0.42, WGA +1.88이다.
+  - 같은 seed의 r=2(screen_suffdisc_k12_s0_1030_173118_504a 89.32/58.65, screen_suffdisc_k12_s1_1030_185953_9455 89.91/63.91) 대비로는 −0.83/−5.26이다.
+- 판정 (PROPOSALS 라운드 38에 미리 정한 읽기): center 대비 WGA +1.88 < 2.45 → **'이득에는 ±2 탐색 범위가 필요하다'.** seed 2·3은 넣지 않는다. 비용 caveat(1.49배)은 그대로 남는다. analysis_suffdisc_decomp_1030_202612_878c의 mean_shift가 2.03~2.06이었다. ±2 끝까지 가는 pick이 많다는 뜻이고, 이번 결과와 맞는다. RESULTS '실패한 방향'에 적었다.
+- [claude] 결정: 새 screen은 넣지 않는다. GPU에는 H-W25·H-W26 두 개가 돌고 있다. 감사가 진행 중일 때 새 계열을 여는 것보다, 지금 주장의 caveat(K=12 한정)을 판정하는 것이 우선이다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.
+- 다음: (1) 1/3부 재판정을 본다. PASS면 2/3부(tome·grid + analysis_suff_teacher_align_1031_003305_e9b8)를 같은 문구 기준과 전체 run id로 쓴다. (2) H-W25·H-W26을 미리 정한 읽기대로 판정한다. (3) 세 부분이 모두 PASS면 CUB stage2를 제출한다.
