@@ -50,7 +50,7 @@ Total agent screen configs: 0
 
 # Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [1], full seeds [1, 2, 3], maskedkd seeds []
+Gate: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL
 
 Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: WGA seed sigma 2.78 %p (pooled, dof 7) -> threshold 5.56 %p)
 
@@ -133,6 +133,7 @@ Total agent screen configs: 15
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
+| final | maskedkd |  | 98 | 98.0 | 1 | 90.33 ± 0.00 | 66.92 ± 0.00 | 25.04 | 17.41 | 0.00 | 387 | waterbirds_final_maskedkd_k98_s1_1031_130203_5bef |
 | final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 88.10 ± 1.17 | 50.88 ± 1.74 | 10.08 | 2.45 | 0.17 | 237 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s3_1030_220958_d961 final_rollout_k12_s2_1030_212126_33d1 |
 | final | suffdisc@0f0600 |  | 12 | 12.0 | 1,2,3 | 89.63 ± 0.46 | 62.40 ± 2.60 | 15.02 | 2.45 | 4.93 | 192 | final_suffdisc_k12_s3_1031_002453_9ebe final_suffdisc_k12_s1_1031_002441_5d86 final_suffdisc_k12_s2_1031_002448_664e |

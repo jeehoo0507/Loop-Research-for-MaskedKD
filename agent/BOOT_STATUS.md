@@ -32,3 +32,4 @@
 - 2026-10-31 13:01 stage 2 teacher, gate and baselines started in background (tmux: stage2)
 - 2026-10-31 13:01 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
 - 2026-10-31 13:02 [stage2] waterbirds gate submitted (one GPU slot)
+- 2026-10-31 13:26 [stage2] STOPPED: waterbirds gate FAILED: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL (stage 2 stays closed; human decision)
