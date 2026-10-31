@@ -490,3 +490,12 @@
 - 주의(AUDIT_REQUEST에 넣을 caveat): (1) 공식 Parent check는 seed 0만 보므로 UNPROVEN(+0.58/+2.26)으로 남는다. 4-seed 근거는 screen 짝 비교다. (2) total 15.02 GFLOPs/img로 maskedkd(10.07)의 약 1.49배, tome(12.00)보다도 비싸다. 비용의 대부분이 selector(4.93)다. (3) screen 시도 횟수가 많다(Search effort 표). 
 - 문헌: 검색 1회("knowledge distillation teacher input patch selection student sufficiency crop region vision transformer"). student의 sufficiency로 teacher 입력 영역을 고르는 KD는 찾지 못했다. 가까운 것으로는 데이터 없는 증류에서 중앙에 치우친 patch 합성(arXiv 2411.17046, 실제 입력 선택이 아님)과 patch 수준 manifold 증류(arXiv 2107.01378)가 있다. 페이지 안에 지시문은 없었다.
 - 다음: suffdisc final s1~s3이 끝나면 Core comparison을 판정한다. CLAIM_REFS를 모두 이기면(특히 center·rollout·tome) AUDIT_REQUEST를 쓴다. conceptcov s0은 PROPOSALS 라운드 35에 미리 정한 읽기대로 판정한다.
+
+## [claude] 2026-10-31 00:40 라운드 37
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(`harness.report` 재생성), RESULTS, PROPOSALS, AUDIT(비어 있음), analysis_out(새 분석 없음).
+- 새 결과: screen conceptcov@12 s0 81.82/27.07 (screen_conceptcov_k12_s0_1031_000621_b88e, total 10.12 GFLOPs/img, 최악 그룹 2). e75~e100 평가 WGA는 25.56~29.32로 안정적으로 낮다. 같은 seed 기준선은 maskedkd 85.15/23.31, random 83.49/33.83, grid 83.90/35.34, rollout 87.24/45.11, center 88.74/56.39다.
+- 판정 (H-W23, 미리 정한 읽기): WGA 27.07 ≤ rollout s0 45.11 → **conceptcov 계열을 닫는다.** maskedkd만 겨우 넘고 random·grid보다도 낮다. 개념 단위로 퍼뜨리는 것도 K=12에서는 공간 퍼뜨리기처럼 소수 그룹을 해친다. RESULTS.md '실패한 방향'에 옮겼다.
+- 진행 중: final_suffdisc_k12_s1~s3(e15/e12/e9 시점에 확인, 각 에폭 약 30 s라 약 45분 남음). s1 e15 val 87.57/46.62는 학습 초반이라 판정에 쓰지 않는다.
+- 새 분석: analysis/suff_teacher_align.py → analysis_suff_teacher_align_1031_003305_e9b8 (H-W20, priority 6). AUDIT_REQUEST에 넣을 teachability 설명(왜 그 원판이 가르치기 좋은가)을 검증한다. 미리 정한 읽기는 PROPOSALS 라운드 37에 적었다.
+- [claude] 결정: 지침 7에 따라 suffdisc final이 끝날 때까지 새 screen 변형은 넣지 않는다. GPU는 final 3개와 분석 1개로 차 있다. 분석은 학습 비용에 들어가지 않으므로 규칙에 어긋나지 않는다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다.

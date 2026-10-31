@@ -181,3 +181,11 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - center 대비 WGA가 n.s.이면 'student sufficiency 신호'라는 주장은 성립하지 않는다. 이 경우 suffdisc 계열을 실패한 방향으로 옮긴다.
   - 비용은 suffdisc가 tome보다 비싸다(15.02 대 12.00 GFLOPs/img). 그래서 tome에 이겨도 비용 caveat을 함께 적는다.
 - 문헌(라운드 36 검색 1회): student sufficiency로 KD teacher 입력 영역을 고르는 선행은 찾지 못했다. 가장 가까운 것은 arXiv 2411.17046(데이터 없는 증류, 중앙 편향 patch 합성)과 arXiv 2107.01378(patch manifold 증류)이고, 둘 다 실제 입력 선택이 아니다.
+
+## 2026-10-31 [claude] 라운드 37 메모
+- H-W23 판정: conceptcov@12 s0 81.82/27.07 (screen_conceptcov_k12_s0_1031_000621_b88e) ≤ rollout s0 45.11 → **닫는다**(미리 정한 읽기). 개념 커버리지는 K=12에서 공간 퍼뜨리기(grid 35.34, random 33.83)보다도 나쁘다.
+- **H-W20 (teachability 설명, 분석으로 검증): suffdisc의 이득은 student sufficiency 순위가 teacher 자신의 충실도 순위와 맞아 가는 공적응에서 온다.**
+  - 근거: analysis_suffdisc_decomp_1030_202612_878c에서 suffdisc 규칙의 masked teacher WGA가 suffdisc student에서만 높았다(48.12 대 다른 student 39.10~45.11). analysis_student_sufficiency_1030_173025_6f96의 이미지별 student-teacher KL 순위 상관은 0.25~0.30이었다.
+  - 분석: analysis/suff_teacher_align.py → analysis_suff_teacher_align_1031_003305_e9b8. 25개 원판에서 student KL과 teacher KL의 이미지별 Spearman(rho), argmin 일치(우연 0.04), student pick의 teacher KL과 masked teacher 그룹 정확도를 잰다. student는 suffdisc screen s0~s3(e25·e50·final), center s0~s3, jitdisc s0·s1이다.
+  - 미리 정한 읽기: final에서 최악 그룹 rho가 같은 seed의 center student보다 0.05 이상 높은 seed가 4개 중 3개 이상이고, suffdisc s0~s3 평균 rho가 e25→final로 오르면 H-W20을 지지한다. 둘 다 아니면 'student sufficiency가 teacher 충실도를 따라간다'는 설명을 AUDIT_REQUEST에서 빼고, 이득의 기제를 미해결로 적는다.
+  - 선행과의 차이: ERASER·RISE의 sufficiency는 주어진 설명을 평가하는 지표다. 여기서는 그것을 student 쪽에서 재서 teacher 입력 위치를 정하고, 그 순위가 teacher 쪽 순위와 학습 중 정렬되는지를 본다.
