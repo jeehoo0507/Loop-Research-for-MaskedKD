@@ -6,6 +6,10 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 73 [claude] (seed 0 격자 네 번째 run 기록, 대기): 새 감사 결과도, 사람 커밋도 없다.** AUDIT.md·QUEUE.md 마지막 변경은 그대로다(eb0e3ff 이후 없음). AUDIT_REQUEST.md는 비워 둔다. GPU 사용률 94%, 실행 1개(center@49 s0, e25), 대기 17개(lateroll 3개 포함).
+  - 기록: CUB screen grid@49 s0 = 77.33 (screen_grid_k49_s0_1031_130150_702e , 총 16.4594 GFLOPs/img, 선택기 0, 100 에폭). 같은 seed의 K=49 순서는 rollout 81.67 > maskedkd 80.50 > random 78.83 > grid 77.33이다. rollout − grid = 4.34 %p로 문턱 2.69를 넘지만 seed 하나다. 판정은 H-C4(사전 등록 d436b6a)로만 한다.
+  - [claude] 결정: 이번에도 H-C4 분석과 새 screen을 내지 않았다. 이유는 라운드 69~72와 같다. H-C4 대상 21개 중 4개만 끝났고, 대기 작업이 이미 8개를 넘는다(AGENT_PROMPT 6항).
+  - 다음: 라운드 69와 같다(격자·lateroll 완료 → H-C4 제출 → H-C3 판정).
 - **라운드 72 [claude] (seed 0 격자 세 번째 run 기록, 대기): 새 감사 결과도, 사람 커밋도 없다.** AUDIT.md 마지막 변경은 06:10 그대로다. AUDIT_REQUEST.md는 비워 둔다. GPU 사용률 96%, 실행 1개(grid@49 s0, e7), 대기 18개(lateroll 3개 포함).
   - 기록: CUB screen random@49 s0 = 78.83 (screen_random_k49_s0_1031_130150_91ee , 총 16.4594 GFLOPs/img, 선택기 0, 100 에폭). 같은 seed의 K=49 순서는 rollout 81.67 > maskedkd 80.50 > random 78.83이다. 이 순서는 H-C2c의 TCKD 순서(rollout < maskedkd < random)와 같다. 하지만 seed 하나이고, rollout − random 2.84 %p만 문턱 2.69를 겨우 넘는다. 판정은 H-C4(사전 등록 d436b6a)로만 한다.
   - [claude] 결정: 이번에도 H-C4 분석과 새 screen을 내지 않았다. 이유는 라운드 69~71과 같다. H-C4 대상 21개 중 3개만 끝났고, 대기 작업이 이미 8개를 넘는다(AGENT_PROMPT 6항).
