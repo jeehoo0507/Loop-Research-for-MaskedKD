@@ -6,6 +6,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 61 [claude] (full@196 s5 기록, 대기): 새 감사 결과도, 사람 커밋도 없다.** 원격은 HEAD와 같다(git fetch 기준). AUDIT.md 마지막 변경은 06:10 그대로다. 잠금 파일은 여전히 c5753fd가 되돌린 판이라 맨 위 "사람 확인 필요" 줄을 그대로 둔다. loop.log에서 라운드 55 뒤로 TAMPER는 없다. AUDIT_REQUEST.md는 비워 둔다.
+  - 기록(H-W33, 주장 아님): full@196 s5는 val 89.99 / WGA 61.65다(screen_full_k196_s5_1031_073620_9291 , 42.7681 GFLOPs/img). 짝인 suffdisc@29 s5(screen_suffdisc_k29_s5_1031_071442_6492 , 90.08 / 62.41)와의 차이는 +0.09 / +0.76이다. s4는 −0.17 / −6.02였다. seed 둘이 반대 방향이고 s6이 남아서 판정하지 않는다. suffdisc 계열은 QUEUE 지시에 따라 주장하지 않는다.
+  - H-C1a(analysis_cub_softlabel_fidelity_1031_082711_df82 )는 실행 중이다. 지금 나온 것은 reference.json(CUB teacher full acc 84.67, p_true 0.8008, 비목표 질량 0.1992)과 students.json(full@196 s1 82.83, maskedkd@98 s1 83.50)뿐이다. 선택기별 TCKD·NCKD 결과가 아직 없어 P1·P2를 판정하지 않는다. 참고로 비목표 질량이 약 0.20이라, CUB teacher soft label에는 NCKD로 옮길 정보가 Waterbirds보다 많을 것으로 본다(추정, 판정 아님).
+  - 상태: 실행 중 full@196 s6 (e39), suffdisc@29 s6 (e52), suffstride@12 s0 (e24), 분석 H-C1a. 대기 0.
+  - [claude] 결정: 이번에도 새 job을 내지 않았다. 이유는 라운드 59·60과 같다. 다음 방법의 근거인 H-C1a가 아직 끝나지 않았고, 새 Waterbirds 실험은 2단계 규칙 뒤로 미뤄져 있다(QUEUE 18:30 5번).
+  - 다음: H-C1a가 끝나면 PROPOSALS의 P1·P2로 판정한다. 남은 H-W33 s6 짝과 suffstride@12 s0을 기록한다.
 - **라운드 60 [claude] (suffdisc@29 s5 기록, 대기): 새 감사 결과도, 사람 커밋도 없다.** 원격은 HEAD와 같다(git fetch 기준). 잠금 파일은 여전히 c5753fd가 되돌린 판이라 맨 위 "사람 확인 필요" 줄을 그대로 둔다. loop.log에서 라운드 56 뒤로 TAMPER는 없다. AUDIT_REQUEST.md는 비워 둔다.
   - 기록(H-W33, 주장 아님): suffdisc@29 s5는 val 90.08 / WGA 62.41이다(screen_suffdisc_k29_s5_1031_071442_6492 , 22.6175 GFLOPs/img, sel_args `{}`). 짝인 full@196 s5(screen_full_k196_s5_1031_073620_9291 )는 아직 실행 중이라 차이를 계산하지 않았다.
   - 상태: 실행 중 full@196 s5·s6, suffdisc@29 s6, suffstride@12 s0. 대기 분석 H-C1a(analysis_cub_softlabel_fidelity_1031_082711_df82 ).
