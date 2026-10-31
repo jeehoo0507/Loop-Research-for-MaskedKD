@@ -1,0 +1,9 @@
+CLAIM: Waterbirds K=12에서 final seeds 1·2·3의 suffdisc는 maskedkd보다 정확도와 WGA가 모두 높다.
+VERDICT: NEEDS-MORE
+REASON: The six final metrics support both reported CIs and the 1.491× cost. However, analysis_run_ledger_1031_035326_a927 shows seeds 1–3 were screened before promotion; evidence establishing independent final randomness is missing.
+The required ToMe comparison cannot simply be deferred: accuracy −0.33 pp [−2.57,+1.91], WGA +11.53 pp [+0.58,+22.47], with teacher cost explicitly marked unmatched. Novelty is limited by existing [sufficient-input-subset methods](https://arxiv.org/abs/1810.03805); the specific KD application remains unverified.
+
+CLAIM: 승격 전 네 screen-student 시점에서 clean-val eval-mode suffdisc/MaskedKD 토큰 겹침은 K의 10.65–14.14%다.
+VERDICT: NEEDS-MORE
+REASON: analysis_suffdisc_decomp_1030_202612_878c explicitly supports the stated scope and values: 10.65%, 14.14%, 13.72%, 13.26%.
+However, source-run metrics and selector snapshots for screen_suffdisc_k12_s0_1030_173118_504a and screen_suffdisc_k12_s1_1030_185953_9455 are absent; the ledger establishes completion but cannot establish their harness-digest and selector-SHA integrity.
