@@ -18,6 +18,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - lateroll@12 vs parent rollout: acc +0.00 %p (threshold 2.69) -> added part UNPROVEN
+- lateroll@29 vs parent rollout: acc +0.50 %p (threshold 2.69) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 82.83 (seeds 1); KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
@@ -36,8 +37,8 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - K=12: maskedkd 76.00; rollout 78.33; random 75.33; grid 74.33; center 76.00; tome 78.17 (Full KD 82.17)
 
 ## Search effort (screen)
-Total agent screen configs: 1
-- lateroll: 1 configs
+Total agent screen configs: 2
+- lateroll: 2 configs
 
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
@@ -57,6 +58,7 @@ Total agent screen configs: 1
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
 | screen | lateroll@69541b |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.08 | 1108 | screen_lateroll_k12_s0_1031_130339_f599 |
+| screen | lateroll@69541b |  | 29 | 29.0 | 0 | 81.33 ± 0.00 | - | 12.99 | 5.36 | 0.08 | 1043 | screen_lateroll_k29_s0_1031_130348_fd19 |
 | screen | maskedkd |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 29 | 29.0 | 0 | 79.17 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s0_1031_130150_1393 |
 | screen | maskedkd |  | 49 | 49.0 | 0 | 80.50 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 951 | screen_maskedkd_k49_s0_1031_130150_e26e |
