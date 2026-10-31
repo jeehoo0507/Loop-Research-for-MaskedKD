@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_proxy_cwrong_1031_172236_1141",
+ "name": "cub_proxy_cwrong",
+ "source_sha": "11414ec95af54fa05ee453de0acfa15bd18bb80636dd0507bde69ebc508966ad",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does how confidently wrong the masked teacher's soft label is (max prob when its argmax differs from the full teacher's) rank-predict student val accuracy at K=12,29,49, incl. ToMe?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD target-class KD term) under each selector's mask, validated against trained students by within-K Spearman correlation and permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Zhao et al. CVPR 2022 (DKD); Abnar & Zuidema ACL 2020 (rollout); Bolya et al. ICLR 2023 (ToMe); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 37.4
+}
