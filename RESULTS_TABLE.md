@@ -131,7 +131,7 @@ Total agent screen configs: 14
 | screen | oracle |  | 12 | 12.0 | 0 | 87.49 ± 0.00 | 50.38 ± 0.00 | 45.21 | 2.45 | 35.13 | 248 | screen_oracle_k12_s0_1030_135953_d16c |
 | screen | priorroll@6e20f5 |  | 12 | 12.0 | 0,1 | 88.91 ± 0.24 | 54.14 ± 1.07 | 10.08 | 2.45 | 0.17 | 272 | screen_priorroll_k12_s0_1030_175140_405f screen_priorroll_k12_s1_1030_185957_7cf9 |
 | screen | priorroll@6e20f5 |  | 29 | 29.0 | 0,1 | 89.62 ± 0.29 | 60.52 ± 0.53 | 12.99 | 5.36 | 0.17 | 338 | screen_priorroll_k29_s0_1030_175144_018d screen_priorroll_k29_s1_1030_182720_dbfd |
-| screen | random |  | 12 | 12.0 | 0 | 83.49 ± 0.00 | 33.83 ± 0.00 | 10.09 | 2.45 | 0.00 | 331 | screen_random_k12_s0_1030_135953_bc03 |
+| screen | random |  | 12 | 12.0 | 0,4,5,6 | 84.11 ± 1.17 | 33.27 ± 1.67 | 10.09 | 2.45 | 0.00 | 320 | screen_random_k12_s0_1030_135953_bc03 screen_random_k12_s4_1031_060904_b8db screen_random_k12_s5_1031_061741_3967 screen_random_k12_s6_1031_061745_8dca |
 | screen | random |  | 29 | 29.0 | 0 | 82.49 ± 0.00 | 27.82 ± 0.00 | 13.00 | 5.36 | 0.00 | 285 | screen_random_k29_s0_1030_135953_8780 |
 | screen | random |  | 49 | 49.0 | 0 | 85.40 ± 0.00 | 36.09 ± 0.00 | 16.46 | 8.82 | 0.00 | 333 | screen_random_k49_s0_1030_135953_14e9 |
 | screen | rollout |  | 12 | 12.0 | 0,4,5,6 | 87.78 ± 0.72 | 48.69 ± 4.32 | 10.08 | 2.45 | 0.17 | 284 | screen_rollout_k12_s5_1031_051059_49f9 screen_rollout_k12_s0_1030_135953_489a screen_rollout_k12_s6_1031_051103_40bf screen_rollout_k12_s4_1031_051050_86f8 |
