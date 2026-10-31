@@ -7,7 +7,7 @@ Worst-group acc: Waterbirds groups (y x place) on the val split; never used in t
 
 Gate: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs CE 89.32 (need +1.0), WGA 66.67 vs 66.42 (or need +2.0): PASS; MaskedKD@98 90.69 vs Full 90.83 (need within 0.5): PASS
 
-Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sigma 1.23 %p (pooled, dof 4) -> threshold 2.45 %p
+Noise: acc seed sigma 0.36 %p (pooled, dof 5) -> threshold 0.73 %p; WGA seed sigma 2.15 %p (pooled, dof 5) -> threshold 4.29 %p
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
@@ -63,20 +63,20 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
-- adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.76), WGA -0.75 %p (threshold 2.45) -> added part UNPROVEN
-- gradrep@12 vs parent gradroll: acc -0.17 %p (threshold 0.76), WGA -6.01 %p (threshold 2.45) -> added part UNPROVEN
-- gradroll@12 vs parent rollout: acc +0.92 %p (threshold 0.76), WGA +15.79 %p (threshold 2.45) -> added part helps
-- gradroll@29 vs parent rollout: acc -0.33 %p (threshold 0.76), WGA -1.50 %p (threshold 2.45) -> added part UNPROVEN
-- jitdisc@12 vs parent suffdisc: acc -0.42 %p (threshold 0.76), WGA -3.01 %p (threshold 2.45) -> added part UNPROVEN
-- priorroll@12 vs parent rollout: acc +1.83 %p (threshold 0.76), WGA +9.78 %p (threshold 2.45) -> added part helps
-- priorroll@29 vs parent rollout: acc +0.00 %p (threshold 0.76), WGA -5.26 %p (threshold 2.45) -> added part UNPROVEN
-- suffdisc@12 vs parent center: acc -0.17 %p (threshold 0.76), WGA -0.75 %p (threshold 2.45) -> added part UNPROVEN
-- suffdisc@29 vs parent center: acc +1.17 %p (threshold 0.76), WGA -0.76 %p (threshold 2.45) -> added part helps
-- suffdisc@49 vs parent center: acc +0.08 %p (threshold 0.76), WGA +0.75 %p (threshold 2.45) -> added part UNPROVEN
+- adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.73), WGA -0.75 %p (threshold 4.29) -> added part UNPROVEN
+- gradrep@12 vs parent gradroll: acc -0.17 %p (threshold 0.73), WGA -6.01 %p (threshold 4.29) -> added part UNPROVEN
+- gradroll@12 vs parent rollout: acc +0.92 %p (threshold 0.73), WGA +15.79 %p (threshold 4.29) -> added part helps
+- gradroll@29 vs parent rollout: acc -0.33 %p (threshold 0.73), WGA -1.50 %p (threshold 4.29) -> added part UNPROVEN
+- jitdisc@12 vs parent suffdisc: acc -0.42 %p (threshold 0.73), WGA -3.01 %p (threshold 4.29) -> added part UNPROVEN
+- priorroll@12 vs parent rollout: acc +1.83 %p (threshold 0.73), WGA +9.78 %p (threshold 4.29) -> added part helps
+- priorroll@29 vs parent rollout: acc +0.00 %p (threshold 0.73), WGA -5.26 %p (threshold 4.29) -> added part UNPROVEN
+- suffdisc@12 vs parent center: acc -0.17 %p (threshold 0.73), WGA -0.75 %p (threshold 4.29) -> added part UNPROVEN
+- suffdisc@29 vs parent center: acc +1.17 %p (threshold 0.73), WGA -0.76 %p (threshold 4.29) -> added part helps
+- suffdisc@49 vs parent center: acc +0.08 %p (threshold 0.73), WGA +0.75 %p (threshold 4.29) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 91.16; CE not run: tolerance 1.00 %p; WGA 67.42, WGA tolerance 2.45 %p; smallest mean kept tokens within it
-### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
+### final: Full KD val 91.16; CE not run: tolerance 1.00 %p; WGA 67.42, WGA tolerance 4.29 %p; smallest mean kept tokens within it
+### screen: Full KD val 90.91; KD gain +1.58, tolerance 0.79 %p; WGA 67.86, WGA tolerance 4.29 %p; smallest mean kept tokens within it
 - suffdisc@0f0600 : 29.0
 - center : 49.0
 - maskedkd : 98.0
@@ -115,7 +115,7 @@ Total agent screen configs: 14
 | screen | center |  | 29 | 29.0 | 0,1,2,3 | 89.37 ± 0.42 | 60.71 ± 2.16 | 13.00 | 5.36 | 0.00 | 282 | screen_center_k29_s2_1031_025420_4cff screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 screen_center_k29_s3_1031_025424_fc02 |
 | screen | center |  | 49 | 49.0 | 0,4,5,6 | 90.62 ± 0.36 | 64.28 ± 4.18 | 16.46 | 8.82 | 0.00 | 275 | screen_center_k49_s0_1030_135953_4476 screen_center_k49_s4_1031_064043_463c screen_center_k49_s6_1031_064052_a909 screen_center_k49_s5_1031_064047_c731 |
 | screen | conceptcov@5bd86b |  | 12 | 12.0 | 0 | 81.82 ± 0.00 | 27.07 ± 0.00 | 10.12 | 2.45 | 0.03 | 394 | screen_conceptcov_k12_s0_1031_000621_b88e |
-| screen | full |  | 196 | 196.0 | 0,1,2 | 90.83 ± 0.17 | 66.67 ± 1.57 | 42.77 | 35.13 | 0.00 | 273 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |
+| screen | full |  | 196 | 196.0 | 0,1,2,4 | 90.91 ± 0.22 | 67.86 ± 2.70 | 42.77 | 35.13 | 0.00 | 248 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s4_1031_071437_e327 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |
 | screen | gradrep@fce177 |  | 12 | 12.0 | 0 | 87.99 ± 0.00 | 54.89 ± 0.00 | 12.81 | 2.45 | 2.90 | 233 | screen_gradrep_k12_s0_1030_193817_c83d |
 | screen | gradroll@4f3962 |  | 12 | 12.0 | 0 | 88.16 ± 0.00 | 60.90 ± 0.00 | 12.81 | 2.45 | 2.90 | 204 | screen_gradroll_k12_s0_1030_184259_e2cd |
 | screen | gradroll@4f3962 |  | 29 | 29.0 | 0 | 89.49 ± 0.00 | 63.91 ± 0.00 | 15.73 | 5.36 | 2.90 | 197 | screen_gradroll_k29_s0_1030_184255_9017 |
