@@ -1,0 +1,18 @@
+{
+ "id": "analysis_run_ledger_1031_035326_a927",
+ "kind": "analysis",
+ "dataset": "waterbirds",
+ "method": "run_ledger",
+ "keep": 0,
+ "seed": 0,
+ "tier": "analysis",
+ "epochs": 0,
+ "selector_src": "\"\"\"Complete ledger of finished runs, so the audit bundle can show the whole suffdisc search history.\n\nThe audit bundle cuts RESULTS_TABLE at 12k characters, which hides the \"All finished runs\" rows of suffdisc\n(PROGRESS STUCK line). This analysis only lists what api.runs() returns (status done), no model is run.\nRun ids end in MMDD_HHMMSS_xxxx = submit time, so the list also shows the submit order.\n  suffdisc_runs   every finished suffdisc run: id, tier, K, seed, val acc / WGA (last epoch)\n  agent_runs      every finished run of the other agent methods, same columns\n  summary         run counts per (method, tier) for all Waterbirds runs, and the counts above\n\"\"\"\nfrom collections import Counter\n\nMETA = {\n    \"question\": \"which suffdisc runs exist at all (every tier, K, seed) and in which order were they submitted?\",\n    \"method\": \"none (bookkeeping of finished runs via api.runs(); no interpretability method is applied)\",\n    \"paper\": \"none\",\n}\n\nBUILTIN = {\"ce\", \"full\", \"maskedkd\", \"random\", \"grid\", \"center\", \"rollout\", \"tome\", \"oracle\"}\n\n\ndef row(rid, r):\n    wga = r.get(\"val_wga_last\")\n    wga = \"-\" if wga is None else f\"{wga:.2f}\"\n    return f\"{rid} | {r['tier']} | K={r['keep']} | s{r['seed']} | {r['val_acc_last']:.2f} / {wga}\"\n\n\ndef run(api):\n    runs = {k: v for k, v in api.runs().items() if v.get(\"dataset\") in (None, api.dataset)}\n    order = sorted(runs, key=lambda k: k.rsplit(\"_\", 3)[-3] + k.rsplit(\"_\", 3)[-2])\n    suff = [row(k, runs[k]) for k in order if runs[k][\"method\"] == \"suffdisc\"]\n    agent = [f\"{runs[k]['method']}: \" + row(k, runs[k]) for k in order if runs[k][\"method\"] not in BUILTIN | {\"suffdisc\"}]\n    counts = Counter(f\"{v['method']}/{v['tier']}\" for v in runs.values())\n    api.write_json(\"suffdisc_runs\", {\"n\": len(suff), \"rows (submit order)\": suff})\n    api.write_json(\"agent_runs\", {\"n\": len(agent), \"rows (submit order)\": agent})\n    api.write_json(\"summary\", {\"waterbirds_done_runs\": len(runs), \"suffdisc_done\": len(suff),\n                               \"other_agent_done\": len(agent), \"per_method_tier\": dict(sorted(counts.items()))})\n",
+ "selector_sha": "a92732ac557726af0d7af25900d64ed6cad5d45fd3ec68758a91fec94e00c7c2",
+ "note": "",
+ "by": "agent",
+ "priority": 0,
+ "submitted": "2026-10-31 03:53:26",
+ "returncode": 0,
+ "finished": "2026-10-31 03:54:37"
+}
