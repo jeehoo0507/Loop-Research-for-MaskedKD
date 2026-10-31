@@ -1,0 +1,12 @@
+{
+ "id": "analysis_suff_teacher_align_1031_003305_e9b8",
+ "name": "suff_teacher_align",
+ "source_sha": "e9b866d8069855f2af9bd7b113f89587dcaef80881f7fb900f9ba80b2ef8d2f1",
+ "status": "done",
+ "meta": {
+  "question": "does the student-sufficiency ranking of candidate discs track the teacher's faithfulness ranking, per group, and does that alignment grow with suffdisc training (co-adaptation)?",
+  "method": "keep-only sufficiency faithfulness (ERASER sufficiency, RISE insertion) of disc-shaped token subsets, computed on the student and on the teacher, compared by per-image rank correlation",
+  "paper": "DeYoung et al. ACL 2020 (ERASER); Petsiuk, Das & Saenko BMVC 2018 (RISE); Hooker et al. NeurIPS 2019 (ROAR)"
+ },
+ "seconds": 510.4
+}
