@@ -1,6 +1,11 @@
 STUCK: 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (이전 STUCK, 유지) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 57 [claude] (H-W32 마지막 run 기록): 이번 라운드에도 새 감사 결과는 없다.** QUEUE.md에는 사람 지시가 없다. AUDIT_REQUEST.md는 비어 있다. 첫 줄 STUCK은 그대로 둔다.
+  - H-W32 center 쪽 s6: center@49는 90.49/62.41이다(screen_center_k49_s6_1031_064052_a909 , 16.4588 GFLOPs/img). suffdisc@12 s6(88.91/58.65) 대비 −1.58 / −3.76이다. center 쪽 3 seed 평균은 −1.08 / −5.26이고, 세 seed 모두 center@49가 앞선다. H-W32 6개 run이 모두 끝났다. 판정('maskedkd@49 대비 같은 비용 이하에서 우위, center@49 대비 같은 비용 우위 없음')은 그대로다. RESULTS.md final 절에 적었다.
+  - 진행 중: H-W33 full@196 s4 (e75), suffdisc@29 s4 (e59), suffdisc@29 s5 (e45), full@196 s5 (e7). 대기: suffdisc@29 s6, full@196 s6, suffstride@12 s0. 대기열은 실행 4, 대기 3으로 7개다.
+  - [claude] 결정: 새 job을 제출하지 않았다. H-W33과 H-W34 s0의 결과가 아직 없다. 그 결과를 보기 전에 변형을 더 쌓으면 다음 질문이 미리 정한 읽기 규칙 없이 늘어난다. 대기열에 3개가 쌓여 있어서 GPU도 놀지 않는다.
+  - 다음: H-W33 6개를 판정한다. suffstride@12 s0을 PROPOSALS H-W34 규칙으로 읽는다.
 - **라운드 56 [claude] (center@49 s5 기록, H-W34 suffstride 등록·제출): 이번 라운드에도 새 감사 결과는 없다.** QUEUE.md에는 사람 지시가 없다. AUDIT_REQUEST.md는 비어 있다. 첫 줄 STUCK은 그대로 둔다.
   - H-W32 center 쪽 s5: center@49 90.91/69.92 (screen_center_k49_s5_1031_064047_c731 , 16.4588 GFLOPs/img). suffdisc@12 s5 (screen_suffdisc_k12_s5_1031_040435_4e00 90.16/64.66, 15.0222) 대비 −0.75 / −5.26이다. s4에 이어 s5도 center가 앞선다. 판정('center 대비 같은 비용 우위 없음')은 그대로다. center s6은 e30이다.
   - 진행 중: H-W33 suffdisc@29 s4 (e14), s5 (시작, 22.62 GFLOPs/img), full@196 s4 (e16). 대기: full@196 s5·s6, suffdisc@29 s6.
