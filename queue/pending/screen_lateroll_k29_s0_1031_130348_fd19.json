@@ -1,0 +1,19 @@
+{
+ "id": "screen_lateroll_k29_s0_1031_130348_fd19",
+ "kind": "train",
+ "dataset": "cub",
+ "stage2": null,
+ "method": "lateroll",
+ "keep": 29.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-C2b: attention rollout over the student's late blocks only (blocks 6..11 of 12), top-K patches.\n\nBasis (CUB, no position prior): analysis_cub_rollout_depth_1031_100143_a4b6. Over start blocks 0/3/6/8/9/10/11,\nrollout from block 6 kept the masked teacher's TCKD lowest (mean over K=25, 12 and three final students 1.092 vs\n1.309 for full rollout and 1.126 from block 3); it beat full rollout at K=25 and 12 on every final student and on\nevery epoch-25/50 snapshot, beat centre@K, and picked tokens slightly *less* central than full rollout\n(centre-overlap -0.03..-0.07). Late-only (start 9..11) was worse: the last blocks alone are too peaked.\n\"\"\"\nfrom harness.selector_api import SelectorBase, topk_mask\nimport torch\n\nSTART = 6\n\nMETA = {\n    \"method\": \"attention rollout (CLS row) over the student's blocks 6..11 only\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Chefer et al. CVPR 2021 (relevance from late layers)\",\n    \"why\": \"on CUB the late-half rollout keeps the masked teacher's target probability better than full rollout or \"\n           \"last-block attention at the same K (H-C2b), so the teacher's soft label for the student changes less\",\n    \"vs_maskedkd\": \"multiplies the head-averaged attention of six blocks instead of reading the last block's CLS row\",\n    \"prior_art\": \"full rollout (harness baseline) multiplies all 12 blocks; early blocks mostly add diffuse mixing\",\n    \"parent\": \"rollout\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(START, 12)), \"tokens\": []}\n\n    def select(self, ctx):\n        r = None\n        for a in ctx.out.attn[START:]:            # list over all 12 blocks; earlier entries are None\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        return topk_mask(r[:, 0, 1:], int(ctx.budget))\n",
+ "selector_sha": "69541b27aca962538312c9c4f221d688d03452c729338693de08dbcb2add7c79",
+ "note": "",
+ "by": "agent",
+ "priority": 0,
+ "submitted": "2026-10-31 13:03:48",
+ "lr": null
+}

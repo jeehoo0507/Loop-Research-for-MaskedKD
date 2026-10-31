@@ -31,3 +31,4 @@
 - 2026-10-31 13:01 cub baselines queued (23 jobs)
 - 2026-10-31 13:01 stage 2 teacher, gate and baselines started in background (tmux: stage2)
 - 2026-10-31 13:01 research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
+- 2026-10-31 13:02 [stage2] waterbirds gate submitted (one GPU slot)
