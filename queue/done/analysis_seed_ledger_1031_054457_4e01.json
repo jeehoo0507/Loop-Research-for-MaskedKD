@@ -1,0 +1,18 @@
+{
+ "id": "analysis_seed_ledger_1031_054457_4e01",
+ "kind": "analysis",
+ "dataset": "waterbirds",
+ "method": "seed_ledger",
+ "keep": 0,
+ "seed": 0,
+ "tier": "analysis",
+ "epochs": 0,
+ "selector_src": "\"\"\"Which seeds each Waterbirds run used, so the audit bundle can check that seeds 4-6 were fresh and that no run is left out.\n\nThe 05:13 audit could not confirm from the truncated RESULTS_TABLE and the older run_ledger (finished before seeds 4-6\nexisted) that the new seeds were unused before and that every suffdisc/maskedkd run on them is reported.\nThis analysis only lists what api.runs() returns (status done), no model is run.\nRun ids end in MMDD_HHMMSS_xxxx = submit time.\n  fresh_seed_runs   every finished run with seed >= 4, any method, submit order\n  suff_mkd_runs     every finished suffdisc and maskedkd run, every tier / K / seed, submit order\n  summary           per method: the set of seeds used; and which methods ever used seed >= 4\n\"\"\"\nfrom collections import defaultdict\n\nMETA = {\n    \"question\": \"were seeds 4-6 used by any run before the H-W30 replication, and is every suffdisc/maskedkd run on them reported?\",\n    \"method\": \"none (bookkeeping of finished runs via api.runs(); no interpretability method is applied)\",\n    \"paper\": \"none\",\n}\n\n\ndef row(rid, r):\n    wga = r.get(\"val_wga_last\")\n    wga = \"-\" if wga is None else f\"{wga:.2f}\"\n    return f\"{rid} | {r['tier']} | K={r['keep']} | s{r['seed']} | {r['val_acc_last']:.2f} / {wga}\"\n\n\ndef run(api):\n    runs = {k: v for k, v in api.runs().items() if v.get(\"dataset\") in (None, api.dataset)}\n    order = sorted(runs, key=lambda k: k.rsplit(\"_\", 3)[-3] + k.rsplit(\"_\", 3)[-2])\n    fresh = [f\"{runs[k]['method']}: \" + row(k, runs[k]) for k in order if (runs[k][\"seed\"] or 0) >= 4]\n    sm = [f\"{runs[k]['method']}: \" + row(k, runs[k]) for k in order if runs[k][\"method\"] in (\"suffdisc\", \"maskedkd\")]\n    seeds = defaultdict(set)\n    for v in runs.values():\n        seeds[v[\"method\"]].add(v[\"seed\"])\n    api.write_json(\"fresh_seed_runs\", {\"n\": len(fresh), \"rows (submit order)\": fresh})\n    api.write_json(\"suff_mkd_runs\", {\"n\": len(sm), \"rows (submit order)\": sm})\n    api.write_json(\"summary\", {\"waterbirds_done_runs\": len(runs),\n                               \"seeds_per_method\": {m: sorted(s) for m, s in sorted(seeds.items())},\n                               \"methods_with_seed_ge4\": sorted(m for m, s in seeds.items() if max(s) >= 4),\n                               \"first_seed_ge4_submit\": order and next((k for k in order if (runs[k][\"seed\"] or 0) >= 4), None)})\n",
+ "selector_sha": "4e01007252c2391746d45f86af14b992eb6d62664f01c0351525e8392d1ff38e",
+ "note": "",
+ "by": "agent",
+ "priority": 0,
+ "submitted": "2026-10-31 05:44:57",
+ "returncode": 0,
+ "finished": "2026-10-31 06:09:20"
+}
