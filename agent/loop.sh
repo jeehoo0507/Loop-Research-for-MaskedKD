@@ -144,7 +144,9 @@ round=0
 while true; do
   if [ -f agent/STOP ]; then echo "[loop] STOP file found, exiting"; break; fi
   if [[ ! "$(date +%F)" < "$END_DATE" ]]; then echo "[loop] reached $END_DATE, exiting"; break; fi
-  git pull --rebase "$REMOTE" main >>agent/logs/pull.log 2>&1 || true
+  # --autostash: job results land in the tree between rounds, and a plain rebase pull refused them (2026-10-31: no
+  # push reached GitHub for hours because the local branch kept diverging)
+  git pull --rebase --autostash "$REMOTE" main >>agent/logs/pull.log 2>&1 || true
   if ! $PY -m harness.lock --check >/dev/null 2>&1; then
     echo "[loop] lock mismatch after pull; pausing until a human runs agent/relock.sh" | tee -a agent/logs/loop.log
     sleep "$POLL"; continue
