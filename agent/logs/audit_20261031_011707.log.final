@@ -1,0 +1,4 @@
+CLAIM: Waterbirds K=12에서 suffdisc가 final seeds 1·2·3으로 6개 비교군 모두에 WGA 우위를 보이며 정확도에서는 지지 않는다.
+VERDICT: NEEDS-MORE
+REASON: RESULTS_TABLE은 WGA 6승을 뒷받침하며 final_suffdisc_k12_s1_1031_002441_5d86 및 s2·s3의 수치·digest도 일치한다. 그러나 비교군 전체의 seed 2·3 metrics.json(예: final_tome_k12_s2_1030_212126_9500)이 빠져 완료·epoch·무결성을 검증할 수 없고, 전체 selector 실행 목록과 analysis_suffdisc_decomp_1030_202612_878c 등 설계·분해 분석 출력도 잘려 있다. 이 자료와 harness.test_eval 미사용 증거가 필요하다.
+seeds 1–3은 승격 전 screen에도 사용되어 독립적인 확인 실험인지 입증되지 않았다. ToMe 대비 정확도 −0.33, CI [−2.57,+1.91]은 ‘유의한 손실 미검출’이며 비열등성 증거가 아니다. 선행 [MaskedKD](https://maskedkd.github.io/)의 student-guided teacher masking과 [ERASER](https://aclanthology.org/2020.acl-main.408/)의 설명 충실도 평가를 결합한 응용으로 보이며, 검색만으로 최초성을 확정할 수 없다.
