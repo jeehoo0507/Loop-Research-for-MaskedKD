@@ -1,87 +1,111 @@
 # RESULTS_TABLE (written by harness/report.py; do not edit by hand)
 
 *img/s: training throughput averaged over epochs; depends on how many jobs shared the GPU.
-Worst-group acc: Waterbirds groups (y x place) on the val split; never used in training.
+Worst-group acc (Waterbirds groups y x place, val split): a diagnostic column only, never used in training or
+in any decision here. Decisions use mean accuracy and measured train-step GFLOPs.
 
-# Stage 1: waterbirds (search)
+# Stage 1: cub (search)
 
-Gate: [waterbirds screen, 100 epochs, mean of seeds [0, 1, 2]] Full KD 90.83 vs CE 89.32 (need +1.0), WGA 66.67 vs 66.42 (or need +2.0): PASS; MaskedKD@98 90.69 vs Full 90.83 (need within 0.5): PASS
+Gate: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.83 (need +1.0): PASS; MaskedKD@98 82.56 vs Full 82.17 (need >= Full - 0.5): PASS
 
-Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p; WGA seed sigma 2.78 %p (pooled, dof 7) -> threshold 5.56 %p
+Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
+
+## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- none yet
+
+## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
+- no agent method has >= 2 final seeds yet
+
+## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
+- no child selectors yet
+
+## Primary metric (analysis-only methods excluded: oracle)
+### final: Full KD val 82.83 (seeds 1); KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
+- claim-grade (>= 3 seeds): none
+- screening only (fewer seeds):
+  - maskedkd : 98.0 (1 seeds)
+### screen: Full KD val 82.17 (seeds 0,4,5); KD gain +1.33, tolerance 0.67 %p; smallest mean kept tokens within it
+- claim-grade (>= 3 seeds):
+  - maskedkd : 98.0 (3 seeds)
+- screening only (fewer seeds): none
+
+## Where token choice matters (screen seed 0, each baseline vs Full KD)
+- not measured yet
+
+## Search effort (screen)
+Total agent screen configs: 0
+
+## All finished runs
+| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
+| final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
+| final | maskedkd |  | 12 | 12.0 | 2 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1230 | cub_final_maskedkd_k12_s2_1031_103004_2d8c |
+| final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
+| final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
+| final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
+| screen | ce |  | 0 | None | 0,4,5 | 80.83 ± 1.96 | - | 7.64 | 0.00 | 0.00 | 1482 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 |
+| screen | full |  | 196 | 196.0 | 0,4,5 | 82.17 ± 0.17 | - | 42.77 | 35.13 | 0.00 | 708 | screen_full_k196_s4_1031_114911_a837 screen_full_k196_s5_1031_114911_9c0a screen_full_k196_s0_1031_111002_00d5 |
+| screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
+
+# Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
+
+Gate: gate incomplete: ce seeds [], full seeds [1, 2, 3], maskedkd seeds []
+
+Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: WGA seed sigma 2.78 %p (pooled, dof 7) -> threshold 5.56 %p)
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
-- gradroll@12 vs maskedkd@12 [WGA]: +36.84 %p, 95% CI [+20.23, +53.46], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
 - suffdisc@12 vs maskedkd@12 [acc]: +5.42 %p, 95% CI [+4.18, +6.66], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
-- suffdisc@12 vs maskedkd@12 [WGA]: +40.10 %p, 95% CI [+30.88, +49.32], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
-- suffdisc@12 vs rollout@12 [WGA]: +11.53 %p, 95% CI [+5.82, +17.23], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
-- suffdisc@12 vs tome@12 [WGA]: +11.53 %p, 95% CI [+0.58, +22.47], seeds 1,2,3, GFLOPs ratio 1.252 -> WIN
 - suffdisc@12 vs grid@12 [acc]: +6.53 %p, 95% CI [+5.51, +7.56], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
-- suffdisc@12 vs grid@12 [WGA]: +27.06 %p, 95% CI [+20.59, +33.53], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
-- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 - suffdisc@12 vs random@12 [acc]: +5.78 %p, 95% CI [+3.43, +8.14], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
-- suffdisc@12 vs random@12 [WGA]: +25.06 %p, 95% CI [+17.51, +32.61], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
-- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
-- gradroll@12 vs maskedkd@12 [WGA]: +36.84 %p, 95% CI [+20.23, +53.46], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
-- gradroll@12 vs rollout@12 [WGA]: +8.27 %p, 95% CI [-3.09, +19.64], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 - gradroll@12 vs tome@12 [acc]: -1.97 %p, 95% CI [-4.05, +0.10], seeds 1,2,3, GFLOPs ratio 1.068 -> no difference
-- gradroll@12 vs tome@12 [WGA]: +8.27 %p, 95% CI [-11.50, +28.04], seeds 1,2,3, GFLOPs ratio 1.068 -> no difference
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs center@12 [acc]: -0.70 %p, 95% CI [-1.53, +0.14], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
-- gradroll@12 vs center@12 [WGA]: +5.51 %p, 95% CI [-6.35, +17.38], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
-- gradroll@12 vs full@196 [WGA]: -8.27 %p, 95% CI [-24.56, +8.02], seeds 1,2,3, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
-- gradroll@12 vs rollout@12 [WGA]: +8.27 %p, 95% CI [-3.09, +19.64], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 - suffdisc@12 vs maskedkd@12 [acc]: +5.42 %p, 95% CI [+4.18, +6.66], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
-- suffdisc@12 vs maskedkd@12 [WGA]: +40.10 %p, 95% CI [+30.88, +49.32], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
 - suffdisc@12 vs rollout@12 [acc]: +1.53 %p, 95% CI [-2.52, +5.58], seeds 1,2,3, GFLOPs ratio 1.491 -> no difference
-- suffdisc@12 vs rollout@12 [WGA]: +11.53 %p, 95% CI [+5.82, +17.23], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
 - suffdisc@12 vs tome@12 [acc]: -0.33 %p, 95% CI [-2.57, +1.91], seeds 1,2,3, GFLOPs ratio 1.252 -> no difference
-- suffdisc@12 vs tome@12 [WGA]: +11.53 %p, 95% CI [+0.58, +22.47], seeds 1,2,3, GFLOPs ratio 1.252 -> WIN
 - suffdisc@12 vs grid@12 [acc]: +6.53 %p, 95% CI [+5.51, +7.56], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
-- suffdisc@12 vs grid@12 [WGA]: +27.06 %p, 95% CI [+20.59, +33.53], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 - suffdisc@12 vs center@12 [acc]: +0.95 %p, 95% CI [-0.79, +2.68], seeds 1,2,3, GFLOPs ratio 1.489 -> no difference
-- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 - suffdisc@12 vs random@12 [acc]: +5.78 %p, 95% CI [+3.43, +8.14], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
-- suffdisc@12 vs random@12 [WGA]: +25.06 %p, 95% CI [+17.51, +32.61], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 - suffdisc@12 vs full@196 [acc]: -1.53 %p, 95% CI [-3.49, +0.43], seeds 1,2,3, GFLOPs ratio 0.351 -> no difference
-- suffdisc@12 vs full@196 [WGA]: -5.02 %p, 95% CI [-12.56, +2.53], seeds 1,2,3, GFLOPs ratio 0.351 -> no difference
 - suffdisc@12 vs center@12 [acc]: +0.95 %p, 95% CI [-0.79, +2.68], seeds 1,2,3, GFLOPs ratio 1.489 -> no difference
-- suffdisc@12 vs center@12 [WGA]: +8.77 %p, 95% CI [+4.06, +13.47], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
-- adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.88), WGA -0.75 %p (threshold 5.56) -> added part UNPROVEN
-- gradrep@12 vs parent gradroll: acc -0.17 %p (threshold 0.88), WGA -6.01 %p (threshold 5.56) -> added part UNPROVEN
-- gradroll@12 vs parent rollout: acc +0.92 %p (threshold 0.88), WGA +15.79 %p (threshold 5.56) -> added part helps
-- gradroll@29 vs parent rollout: acc -0.33 %p (threshold 0.88), WGA -1.50 %p (threshold 5.56) -> added part UNPROVEN
-- jitdisc@12 vs parent suffdisc: acc -0.42 %p (threshold 0.88), WGA -3.01 %p (threshold 5.56) -> added part UNPROVEN
-- priorroll@12 vs parent rollout: acc +1.83 %p (threshold 0.88), WGA +9.78 %p (threshold 5.56) -> added part helps
-- priorroll@29 vs parent rollout: acc +0.00 %p (threshold 0.88), WGA -5.26 %p (threshold 5.56) -> added part UNPROVEN
-- suffdisc@12 vs parent center: acc -0.17 %p (threshold 0.88), WGA -0.75 %p (threshold 5.56) -> added part UNPROVEN
-- suffdisc@29 vs parent center: acc +1.17 %p (threshold 0.88), WGA -0.76 %p (threshold 5.56) -> added part helps
-- suffdisc@49 vs parent center: acc +0.08 %p (threshold 0.88), WGA +0.75 %p (threshold 5.56) -> added part UNPROVEN
-- suffstride@12 vs parent suffdisc: acc +0.67 %p (threshold 0.88), WGA +5.26 %p (threshold 5.56) -> added part UNPROVEN
+- adaroll@49 vs parent rollout: acc +0.42 %p (threshold 0.88) -> added part UNPROVEN
+- gradrep@12 vs parent gradroll: acc -0.17 %p (threshold 0.88) -> added part UNPROVEN
+- gradroll@12 vs parent rollout: acc +0.92 %p (threshold 0.88) -> added part helps
+- gradroll@29 vs parent rollout: acc -0.33 %p (threshold 0.88) -> added part UNPROVEN
+- jitdisc@12 vs parent suffdisc: acc -0.42 %p (threshold 0.88) -> added part UNPROVEN
+- priorroll@12 vs parent rollout: acc +1.83 %p (threshold 0.88) -> added part helps
+- priorroll@29 vs parent rollout: acc +0.00 %p (threshold 0.88) -> added part UNPROVEN
+- suffdisc@12 vs parent center: acc -0.17 %p (threshold 0.88) -> added part UNPROVEN
+- suffdisc@29 vs parent center: acc +1.17 %p (threshold 0.88) -> added part helps
+- suffdisc@49 vs parent center: acc +0.08 %p (threshold 0.88) -> added part UNPROVEN
+- suffstride@12 vs parent suffdisc: acc +0.67 %p (threshold 0.88) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 91.16; CE not run: tolerance 1.00 %p; WGA 67.42, WGA tolerance 5.56 %p; smallest mean kept tokens within it
-### screen: Full KD val 90.74; KD gain +1.42, tolerance 0.71 %p; WGA 66.54, WGA tolerance 5.56 %p; smallest mean kept tokens within it
-- suffdisc@0f0600 : 29.0
-- adaroll@069f50 : 48.5
-- center : 49.0
-- maskedkd : 98.0
+### final: Full KD val 91.16 (seeds 1,2,3); CE not run: tolerance 1.00 %p; smallest mean kept tokens within it
+- claim-grade (>= 3 seeds): none
+- screening only (fewer seeds): none
+### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
+- claim-grade (>= 3 seeds):
+  - suffdisc@0f0600 : 29.0 (7 seeds)
+  - center : 49.0 (4 seeds)
+  - maskedkd : 98.0 (3 seeds)
+- screening only (fewer seeds):
+  - adaroll@069f50 : 48.5 (1 seeds)
+  - suffdisc@0f0600 : 49.0 (1 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 89.24 / WGA 51.9; rollout 89.66 / WGA 64.7; random 85.40 / WGA 36.1; grid 84.74 / WGA 35.3; center 90.16 / WGA 60.1; tome 89.66 / WGA 51.1 (Full KD 90.66 / WGA 65.4)
@@ -149,36 +173,4 @@ Total agent screen configs: 15
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0,4,5,6 | 89.57 ± 0.69 | 49.44 ± 1.67 | 12.00 | 4.36 | 0.00 | 311 | screen_tome_k12_s0_1030_135953_84af screen_tome_k12_s4_1031_051120_5c90 screen_tome_k12_s6_1031_054505_d130 screen_tome_k12_s5_1031_051124_f881 |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
-
-# Stage 2: cub (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
-
-Gate: [cub final, 100 epochs, mean of seeds [1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL
-
-Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
-
-## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
-- none yet
-
-## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- no agent method has >= 2 final seeds yet
-
-## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
-- no child selectors yet
-
-## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 82.83; KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
-- maskedkd : 98.0
-
-## Where token choice matters (screen seed 0, each baseline vs Full KD)
-- not measured yet
-
-## Search effort (screen)
-Total agent screen configs: 0
-
-## All finished runs
-| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
-| final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
-| final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 

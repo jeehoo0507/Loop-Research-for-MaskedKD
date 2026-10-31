@@ -25,3 +25,7 @@
 - 2026-10-31 10:46 Codex works without a shell here (container blocks its sandbox): GPT audits and adds ideas from files the harness attaches; no emergency researcher
 - 2026-10-31 10:46 teacher (cub): fine-tuned here val acc 84.67
 - 2026-10-31 11:09 student lr (cub): {'student_lr': 0.0001, 'swept': True, 'scores': {'5e-05': 77.66666412353516, '0.0001': 80.83333373069763, '0.0003': 78.66666913032532}, 'source': 'CE sweep here (screen seed 0, final val acc; ties -> smaller lr)'}
+- 2026-10-31 11:49 gate: [cub screen, 100 epochs, mean of seeds [0]] Full KD 82.17 vs CE 78.67 (need +1.0): PASS; MaskedKD@98 81.00 vs Full 82.17 (need >= Full - 0.5): FAIL
+- 2026-10-31 13:01 gate: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.83 (need +1.0): PASS; MaskedKD@98 82.56 vs Full 82.17 (need >= Full - 0.5): PASS
+- 2026-10-31 13:01 gate PASSED: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.83 (need +1.0): PASS; MaskedKD@98 82.56 vs Full 82.17 (need >= Full - 0.5): PASS
+- 2026-10-31 13:01 cub baselines queued (23 jobs)
