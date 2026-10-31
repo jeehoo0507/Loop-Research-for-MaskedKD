@@ -40,7 +40,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 | final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
-| final | maskedkd |  | 12 | 12.0 | 2 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1230 | cub_final_maskedkd_k12_s2_1031_103004_2d8c |
+| final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
@@ -50,7 +50,7 @@ Total agent screen configs: 0
 
 # Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [], full seeds [1, 2, 3], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1], full seeds [1, 2, 3], maskedkd seeds []
 
 Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: WGA seed sigma 2.78 %p (pooled, dof 7) -> threshold 5.56 %p)
 
@@ -95,7 +95,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - suffstride@12 vs parent suffdisc: acc +0.67 %p (threshold 0.88) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 91.16 (seeds 1,2,3); CE not run: tolerance 1.00 %p; smallest mean kept tokens within it
+### final: Full KD val 91.16 (seeds 1,2,3); KD gain +1.08, tolerance 0.54 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds): none
 - screening only (fewer seeds): none
 ### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
@@ -127,6 +127,7 @@ Total agent screen configs: 15
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | ce |  | 0 | None | 1 | 90.08 ± 0.00 | 68.42 ± 0.00 | 7.64 | 0.00 | 0.00 | 488 | waterbirds_final_ce_k0_s1_1031_130203_4b89 |
 | final | center |  | 12 | 12.0 | 1,2,3 | 88.69 ± 0.43 | 53.64 ± 1.57 | 10.09 | 2.45 | 0.00 | 304 | final_center_k12_s1_1030_201811_341b final_center_k12_s3_1030_220958_413c final_center_k12_s2_1030_212126_5486 |
 | final | full |  | 196 | 196.0 | 1,2,3 | 91.16 ± 0.52 | 67.42 ± 0.43 | 42.77 | 35.13 | 0.00 | 196 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc final_full_k196_s3_1030_220958_8d7e |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
