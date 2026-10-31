@@ -35,6 +35,8 @@
 - (분해, analysis_suffdisc_decomp_1030_202612_878c) suffdisc는 원판을 거의 항상 중앙에서 옮긴다(centre_frac 0.03). MaskedKD 토큰과의 겹침은 0.11~0.14이고, drop-path 픽과 eval 픽의 일치율은 0.34~0.43이다. masked teacher WGA는 suffdisc student에서 48.12로 center 41.35보다 높지만, 다른 student(jitdisc, center)에서 읽으면 39.10~45.11로 center 수준이다. 미리 정한 읽기 (a)·(b)를 모두 통과했다.
 - **[claude] 2026-10-31 (seed 2·3 재현, H-W22 통과, 승격) suffdisc@12 s2 90.24 / 62.41 (screen_suffdisc_k12_s2_1030_233019_98dd), s3 89.99 / 68.42 (screen_suffdisc_k12_s3_1030_233028_39ad).** 같은 seed의 center는 s2 88.41 / 49.62 (screen_center_k12_s2_1030_233024_3dcf), s3 88.91 / 54.89 (screen_center_k12_s3_1030_233032_bf21)다. 4 seed 짝지은 차이의 평균은 acc +1.35, WGA +10.15이고, 4 seed 모두 두 지표에서 suffdisc가 높다. screen 4-seed 평균은 89.87±0.39 / 63.35±4.04다. 공식 Parent check(seed 0)는 UNPROVEN이다. final s1~s3를 제출했다(final_suffdisc_k12_s1_1031_002441_5d86, final_suffdisc_k12_s2_1031_002448_664e, final_suffdisc_k12_s3_1031_002453_9ebe).
 
+- (seed 0, 관찰, H-W26) suffdisc@49는 90.24 / 60.90이다 (screen_suffdisc_k49_s0_1031_012539_2b13, 31.75 GFLOPs/img). 같은 seed의 rollout@49(64.66)보다 WGA가 3.76 낮고, center@49(60.15)보다는 0.75 높다. suffdisc@29(90.16/61.65, screen_suffdisc_k29_s0_1031_011608_3604)와 함께 보면, suffdisc의 WGA 이득은 K=12에서만 나타난다.
+
 ## 실패한 방향
 - **[claude] 2026-10-30 gradroll@12 final (3-seed, 주장 불가).** 정확도/WGA는 s1 87.99/63.16 (final_gradroll_k12_s1_1030_201811_faf0), s2 88.41/62.41 (final_gradroll_k12_s2_1030_212126_da50), s3 87.57/51.88 (final_gradroll_k12_s3_1030_220958_176b)이다. RESULTS_TABLE Core comparison(seeds 1,2,3) 결과는 다음과 같다.
   - WIN: maskedkd 대비 acc +3.78 [+2.74, +4.82], WGA +36.84 [+20.23, +53.46]. grid 대비 acc +4.89 [+3.42, +6.36], WGA +23.81 [+8.14, +39.48].
