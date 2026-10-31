@@ -36,11 +36,13 @@ def load_runs(dataset=None):
     return rs
 
 
-def gate(runs, tier="screen", dataset=C.STAGE1, seed=None):
+def gate(runs, tier="screen", dataset=C.STAGE1, seed=None, kd_only=False):
     """Stage 1 gate: screen tier, mean over every seed that has all three runs (seed 0 first; agent/bootstrap.sh
     adds seeds 1, 2 when one seed misses). Stage 2 gate: final seed 1. `seed` pins a single seed.
     KD must beat CE by GATE_KD_OVER_CE on accuracy; MaskedKD@98 must not fall more than GATE_MASKEDKD98_GAP below
-    Full KD. (Worst-group accuracy is a diagnostic only: the aim is FLOPs-efficient KD, not robustness.)"""
+    Full KD. (Worst-group accuracy is a diagnostic only: the aim is FLOPs-efficient KD, not robustness.)
+    kd_only: verdict on the KD-over-CE part alone (agent/bootstrap.sh: a MaskedKD@98 shortfall on the seed mean is
+    recorded as a finding about MaskedKD on this dataset and the search goes on; KD not beating CE still stops it)."""
 
     def vals(method, keep, key):
         """{seed: latest value}"""
@@ -63,7 +65,7 @@ def gate(runs, tier="screen", dataset=C.STAGE1, seed=None):
     ok1 = ok_acc
     msg += (f": {'PASS' if ok1 else 'FAIL'}; MaskedKD@98 {mk:.2f} vs Full {full:.2f} "
             f"(need >= Full - {C.GATE_MASKEDKD98_GAP}): {'PASS' if ok2 else 'FAIL'}")
-    return ok1 and ok2, msg
+    return (ok1 if kd_only else ok1 and ok2), msg
 
 
 def table(runs):
@@ -285,10 +287,11 @@ def main():
     ap.add_argument("--gate", action="store_true")
     ap.add_argument("--tier", default="screen")
     ap.add_argument("--dataset", default=C.STAGE1, choices=list(C.DATASETS))
+    ap.add_argument("--kd-only", action="store_true", help="with --gate: exit status from the KD-over-CE part only")
     a = ap.parse_args()
     if a.gate:
         tier = a.tier if a.dataset == C.STAGE1 else "final"
-        ok, msg = gate(load_runs(a.dataset), tier, a.dataset)
+        ok, msg = gate(load_runs(a.dataset), tier, a.dataset, kd_only=a.kd_only)
         print(msg)
         sys.exit(0 if ok else 1)
     body = ["# RESULTS_TABLE (written by harness/report.py; do not edit by hand)", "",

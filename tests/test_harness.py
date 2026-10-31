@@ -673,3 +673,13 @@ def test_lock_adopts_only_what_upstream_has(tmp_path, monkeypatch):
     monkeypatch.setattr(lock.subprocess, "run", lambda *a, **k: R())
     ok, why = lock.adopt_upstream()
     assert ok and (tmp_path / "lock").read_text().strip() == lock.harness_digest()
+
+
+def test_gate_kd_only_ignores_the_maskedkd_clause():
+    from harness.report import gate
+    g = lambda m, k, s, a: {"id": f"{m}{s}", "tier": "screen", "method": m, "keep": k, "seed": s,
+                            "val_acc_last": a, "dataset": C.STAGE1}
+    runs = [g("ce", 0, 0, 78.7), g("full", 196, 0, 82.2), g("maskedkd", 98, 0, 81.0)]
+    assert gate(runs)[0] is False and gate(runs, kd_only=True)[0] is True
+    runs = [g("ce", 0, 0, 82.0), g("full", 196, 0, 82.2), g("maskedkd", 98, 0, 82.2)]
+    assert gate(runs, kd_only=True)[0] is False          # no KD gain still stops
