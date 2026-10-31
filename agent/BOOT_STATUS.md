@@ -22,3 +22,6 @@
 - 2026-10-31 10:39 STOPPED: tests failed during relock (see agent/logs/boot.log)
 
 - 2026-10-31 10:46 SWITCH: stage 1 is now cub (decisions on mean accuracy; WGA diagnostic only)
+- 2026-10-31 10:46 Codex works without a shell here (container blocks its sandbox): GPT audits and adds ideas from files the harness attaches; no emergency researcher
+- 2026-10-31 10:46 teacher (cub): fine-tuned here val acc 84.67
+- 2026-10-31 11:09 student lr (cub): {'student_lr': 0.0001, 'swept': True, 'scores': {'5e-05': 77.66666412353516, '0.0001': 80.83333373069763, '0.0003': 78.66666913032532}, 'source': 'CE sweep here (screen seed 0, final val acc; ties -> smaller lr)'}
