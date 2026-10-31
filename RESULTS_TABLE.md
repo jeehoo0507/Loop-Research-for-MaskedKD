@@ -16,6 +16,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs grid@12 [WGA]: +23.81 %p, 95% CI [+8.14, +39.48], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
+- gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - gradroll@12 vs maskedkd@12 [acc]: +3.78 %p, 95% CI [+2.74, +4.82], seeds 1,2,3, GFLOPs ratio 1.272 -> WIN
@@ -30,8 +31,8 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - gradroll@12 vs center@12 [WGA]: +5.51 %p, 95% CI [-6.35, +17.38], seeds 1,2,3, GFLOPs ratio 1.270 -> no difference
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [WGA]: +21.81 %p, 95% CI [+2.30, +41.32], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
-- gradroll@12 vs full@196 [acc]: -2.75 %p, 95% CI [-10.17, +4.67], seeds 1,2, GFLOPs ratio 0.300 -> no difference
-- gradroll@12 vs full@196 [WGA]: -4.51 %p, 95% CI [-14.04, +5.02], seeds 1,2, GFLOPs ratio 0.300 -> no difference
+- gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
+- gradroll@12 vs full@196 [WGA]: -8.27 %p, 95% CI [-24.56, +8.02], seeds 1,2,3, GFLOPs ratio 0.300 -> no difference
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 - gradroll@12 vs rollout@12 [WGA]: +8.27 %p, 95% CI [-3.09, +19.64], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 
@@ -46,7 +47,7 @@ Noise: acc seed sigma 0.38 %p (pooled, dof 4) -> threshold 0.76 %p; WGA seed sig
 - suffdisc@12 vs parent center: acc +0.58 %p (threshold 0.76), WGA +2.26 %p (threshold 2.45) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 90.95; CE not run: tolerance 1.00 %p; WGA 67.30, WGA tolerance 2.45 %p; smallest mean kept tokens within it
+### final: Full KD val 91.16; CE not run: tolerance 1.00 %p; WGA 67.42, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 ### screen: Full KD val 90.83; KD gain +1.50, tolerance 0.75 %p; WGA 66.67, WGA tolerance 2.45 %p; smallest mean kept tokens within it
 - maskedkd : 98.0
 
@@ -69,7 +70,7 @@ Total agent screen configs: 10
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | center |  | 12 | 12.0 | 1,2,3 | 88.69 ± 0.43 | 53.64 ± 1.57 | 10.09 | 2.45 | 0.00 | 304 | final_center_k12_s1_1030_201811_341b final_center_k12_s3_1030_220958_413c final_center_k12_s2_1030_212126_5486 |
-| final | full |  | 196 | 196.0 | 1,2 | 90.95 ± 0.53 | 67.30 ± 0.53 | 42.77 | 35.13 | 0.00 | 191 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc |
+| final | full |  | 196 | 196.0 | 1,2,3 | 91.16 ± 0.52 | 67.42 ± 0.43 | 42.77 | 35.13 | 0.00 | 196 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc final_full_k196_s3_1030_220958_8d7e |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
@@ -78,7 +79,7 @@ Total agent screen configs: 10
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
-| screen | center |  | 12 | 12.0 | 0,1 | 88.37 ± 0.53 | 54.14 ± 3.19 | 10.09 | 2.45 | 0.00 | 296 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s1_1030_185949_1766 |
+| screen | center |  | 12 | 12.0 | 0,1,2 | 88.38 ± 0.38 | 52.63 ± 3.45 | 10.09 | 2.45 | 0.00 | 289 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
 | screen | center |  | 29 | 29.0 | 0,1 | 89.03 ± 0.06 | 60.15 ± 3.20 | 13.00 | 5.36 | 0.00 | 302 | screen_center_k29_s1_1030_182732_85c3 screen_center_k29_s0_1030_135953_2878 |
 | screen | center |  | 49 | 49.0 | 0 | 90.16 ± 0.00 | 60.15 ± 0.00 | 16.46 | 8.82 | 0.00 | 332 | screen_center_k49_s0_1030_135953_4476 |
 | screen | full |  | 196 | 196.0 | 0,1,2 | 90.83 ± 0.17 | 66.67 ± 1.57 | 42.77 | 35.13 | 0.00 | 273 | screen_full_k196_s0_1030_123806_2c89 screen_full_k196_s1_1030_130545_2b61 screen_full_k196_s2_1030_130545_5a4a |

@@ -162,3 +162,14 @@ IDEA 2: Preserve the Outliers — Using detached, row-normalized block-8 patch o
   - 제출: screen_suffdisc_k12_s2_1030_233019_98dd, screen_center_k12_s2_1030_233024_3dcf, screen_suffdisc_k12_s3_1030_233028_39ad, screen_center_k12_s3_1030_233032_bf21.
   - 미리 정한 읽기: 승격하려면 세 조건을 모두 채워야 한다. (1) 4 seed의 짝지은 WGA 차이(suffdisc − center) 평균이 2.45 이상이다. (2) 4 seed 중 3개 이상에서 그 차이가 양수다. (3) 정확도 차이 평균이 −0.76보다 크다. 이 경우 공식 Parent check(seed 0)가 UNPROVEN이라는 사실을 함께 적고 final s1을 제출한다. 셋 중 하나라도 어기면 suffdisc 계열을 닫는다.
   - 선행과의 차이: 라운드 17·18 메모와 같다. student 자신의 sufficiency(원판만 받았을 때의 예측 유지)로 teacher 입력 위치를 고른다. RISE·Extremal Perturbation은 설명용이고, MaskedKD는 attention 순위를 쓴다.
+
+## 2026-10-31 ideas from Codex (independent)
+IDEA 1: Concept Coverage (untested) — From cached student block-6 patch outputs \(Z\), form signed channels \(X=[\max(Z,0),\max(-Z,0)]\); fit rank-6 nonnegative matrix factorization \(X\approx HW\) using 15 updates, and normalize each concept map: \(u_{ic}=H_{ic}/(\sum_jH_{jc}+\epsilon)\).  
+IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached block-6 patch features \(Z\) by their median norm \(a\), giving \(X\); approximately minimize \(\frac12\|X-L-E\|_F^2+0.1\sum_i\|E_i\|_2\), with \(\operatorname{rank}(L)\le4\), using 10 alternating randomized rank-4 approximations and rowwise soft-thresholding.  
+
+## 2026-10-31 [claude] 라운드 35 메모
+- **H-W23 (Codex IDEA 1을 채택): concept coverage.** student block-6 patch feature를 부호 분리 후 rank-6 NMF로 개념 지도로 나누고, 개념마다 log 체감 이득으로 K개를 탐욕적으로 고른다 (selectors/conceptcov.py, parent none, selector 0.029 GFLOPs/img, trysel 통과).
+  - 근거: Collins, Achanta & Süsstrunk ECCV 2018 (DFF). 프로젝트 반대 근거도 있다: K=12에서 퍼뜨리는 규칙(nms·half_grid·grid·random)은 WGA를 잃었고(analysis_group_fidelity_1030_143842_1ea0, screen_grid/random_k12), 배경 정보를 teacher에 넘기면 WGA가 떨어진다(analysis_shortcut_probe_1030_160112_bfc0). 이 screen은 '개념 단위 커버리지'가 '공간 퍼뜨리기'와 다른지를 묻는다.
+  - 제출: screen_conceptcov_k12_s0_1031_000621_b88e.
+  - 미리 정한 읽기: seed 0 WGA가 center s0(56.39)보다 2.45 이상 높고 정확도가 center s0(88.74) −0.76 이상이면 seed 1 screen과 분해(겹침·cdist·배경 개념 비중)를 한다. WGA가 rollout s0(45.11) 이하이면 '개념 커버리지는 배경 개념에도 토큰을 주어 해롭다'로 읽고 계열을 닫는다. 그 사이이면 seed 1 하나만 더 보고 닫을지 정한다.
+  - 선행과의 차이: Token Pooling(Marin et al. 2021)·ToMe는 재구성 오차나 유사도로 토큰을 합친다. DFF는 설명용 개념 지도다. 원래 patch를 개념 커버리지로 골라 KD teacher 입력으로 쓰는 예는 찾지 못했다(이번 라운드 검색 미수행; 승격 시 검색).

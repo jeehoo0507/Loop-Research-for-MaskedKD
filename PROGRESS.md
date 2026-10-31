@@ -1,4 +1,5 @@
 # PROGRESS
+- **라운드 35: gradroll@12 3-seed 비교군이 모두 끝났다.** random s3 84.15/39.10, full s3 91.58/67.67이다. random 대비는 WIN, full 대비 정확도는 LOSS(−3.17)다. CLAIM_REFS 실패 판정은 그대로다. 확정 결과는 없다. 진행 중인 작업은 suffdisc vs center screen s2·s3(H-W22; center s2 88.41/49.62가 먼저 나옴)과 새 계열 conceptcov@12 screen s0(H-W23)이다.
 - **라운드 34 (판정): gradroll@12는 3-seed에서 CLAIM_REFS를 채우지 못한다.** center s3 88.57/51.88, grid s3 82.15/35.34가 나왔다. 3-seed Core comparison에서 WIN은 maskedkd(acc +3.78, WGA +36.84)와 grid(acc +4.89, WGA +23.81)뿐이다. center(−0.70/+5.51), rollout(−0.11/+8.27), tome(−1.97/+8.27)은 모두 n.s.다. random·full s3은 실행 중이다. AUDIT_REQUEST는 쓰지 않는다. 분석 H-W21(analysis_gradroll_seeds_1030_232303_4bd3) 결과: seed 3은 모든 방법에 어려운 seed다. 다음 후보로 suffdisc@12를 screen seed 2·3에서 center와 짝지어 검증한다(4 job 제출).
 - 요약 (2026-10-30 [claude] 라운드 27): 확정 결과 없음. tome@12 s2 89.74/51.13 (final_tome_k12_s2_1030_212126_9500)이 나왔다. gradroll vs tome Core comparison(seeds 1,2)은 정확도 −1.50, WGA +12.78로 둘 다 차이 없음이다(CI가 0을 포함). **final gradroll@12 2-seed 평균 88.20/62.79** (s1 87.99/63.16 final_gradroll_k12_s1_1030_201811_faf0, s2 88.41/62.41 final_gradroll_k12_s2_1030_212126_da50). Significant only(seeds 1,2): maskedkd 대비 acc +4.00·WGA +40.60, rollout 대비 WGA +10.90 WIN(rollout 대비 acc는 차이 없음). seed 1에서 같은 seed의 center(88.32/54.89)보다 WGA +8.27(정확도 −0.33, threshold 안), grid(83.74/35.34)·maskedkd(84.15/21.05)·rollout(86.99/51.88)·random(84.57/37.59)보다 높다. tome(89.66/48.87, not matched)보다 WGA는 +14.29 높지만 정확도는 −1.67 낮다. full@196 s1(91.33/66.92)과 비교하면 −3.34/−3.76이라 주 지표의 허용 오차(1.00/2.45) 밖이다.
 - 핵심: K=12에서 center를 넘는 후보는 gradroll(final s1이 center 통과, seed 2 실행 중)과 suffdisc(분해 a·b 통과, 공식 Parent check는 seed 0 기준 UNPROVEN) 둘이다. K=29·49 최고는 여전히 rollout이다. 주장할 수 있는 형태는 '같은 K에서 기준선 대비 WGA 우위'이고, 'Full 허용 오차 안의 최소 K'는 아니다.
@@ -461,3 +462,14 @@
 - 작업: suffdisc@12의 다중 seed 검증 screen을 4개 넣었다. screen_suffdisc_k12_s2_1030_233019_98dd, screen_center_k12_s2_1030_233024_3dcf, screen_suffdisc_k12_s3_1030_233028_39ad, screen_center_k12_s3_1030_233032_bf21이다. 미리 정한 읽기는 PROPOSALS 라운드 34에 적었다.
 - [claude] 결정: suffdisc를 바로 final로 올리지 않는다. 공식 Parent check(seed 0)가 UNPROVEN(+0.58/+2.26)이기 때문이다. 대신 screen seed 2·3에서 center와 짝지어 4-seed 근거를 먼저 모은다. gradroll에서 2 seed 우위가 3번째 seed에서 사라진 것을 방금 봤다. 그래서 final 비교군 7개를 띄우기 전에 싼 screen으로 seed 분산부터 확인하는 것이 보수적이다. 대기 4개, 실행 2개다.
 - 문헌: 이번 라운드에는 새로 검색하지 않았다.
+
+## [claude] 2026-10-31 00:10 라운드 35
+- 읽은 것: QUEUE(지시 없음), git log -15, PROGRESS, RESULTS_TABLE(`harness.report` 재생성), RESULTS, PROPOSALS(Codex 2026-10-31 IDEA 1·2 추가됨), AUDIT(비어 있음), analysis_out(새 분석 없음), agent/logs/ideas_20261031.log.final.
+- 새 결과:
+  - final random@12 s3 84.15/39.10 (final_random_k12_s3_1030_220958_e1db). full@196 s3 91.58/67.67 (final_full_k196_s3_1030_220958_8d7e).
+  - screen center@12 s2 88.41/49.62 (screen_center_k12_s2_1030_233024_3dcf, 최악 그룹 2). screen center@12 3-seed(s0,1,2)는 88.38/52.63이다.
+- Core comparison (gradroll@12, seeds 1,2,3, 완결): random 대비 acc +4.14 [+1.03, +7.25], WGA +21.81 [+2.30, +41.32] WIN. full@196 대비 acc −3.17 [−5.48, −0.86] LOSS, WGA −8.27 [−24.56, +8.02] n.s. center·rollout·tome 대비는 n.s.이다(라운드 34와 같음). 판정은 바뀌지 않는다. RESULTS.md '실패한 방향'에 random·full 결과를 더했다(진 비교 포함).
+- H-W22 중간 상황: suffdisc s2는 e68이고, suffdisc s3과 center s3은 학습 중이다. center s2 WGA 49.62는 center s0·s1(56.39 screen_center_k12_s0_1030_135953_c64e, 51.88 screen_center_k12_s1_1030_185949_1766)보다 낮다. 짝지은 차이는 suffdisc s2가 끝나야 계산한다. 판정은 라운드 34에 미리 정한 세 조건으로 한다.
+- 새 계열 (H-W23, Codex IDEA 1): selectors/conceptcov.py. student block-6 feature에 NMF 개념 커버리지를 적용한다. trysel@12 통과(selector 0.029, teacher 2.446, total 10.117 GFLOPs/img, step 1.22 s). screen_conceptcov_k12_s0_1031_000621_b88e를 제출했다. 미리 정한 읽기는 PROPOSALS 라운드 35에 적었다.
+- [claude] 결정: Codex IDEA 2(sparse-residual 기울기 귀속)는 넣지 않는다. 비용이 1~3 GFLOPs/img이고, 이미 닫힌 gradroll 계열(기울기 기반)과 겹친다. IDEA 1은 비용이 거의 없고 지금까지 시험하지 않은 '개념 분해' 계열이라 넓게 보는 규칙 7에 맞는다. suffdisc는 승격 후보가 아니므로(screen 단계) 다른 계열 screen 1개를 넣는 것은 지침 7에 어긋나지 않는다. 대기 1, 실행 3이다.
+- 문헌: 이번 라운드에는 새로 검색하지 않았다. Codex 아이디어 안의 링크(DFF arXiv 1806.10206, Token Pooling arXiv 2110.03860)는 자료로만 썼다.
