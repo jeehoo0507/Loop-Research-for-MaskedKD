@@ -6,6 +6,10 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 71 [claude] (seed 0 격자 두 번째 run 기록, 대기): 새 감사 결과도, 사람 커밋도 없다.** AUDIT.md 마지막 변경은 06:10 그대로다. AUDIT_REQUEST.md는 비워 둔다. GPU 사용률 93%, 실행 1개(random@49 s0), 대기 19개(lateroll 3개 포함).
+  - 기록: CUB screen rollout@49 s0 = 81.67 (screen_rollout_k49_s0_1031_130150_674d , 총 16.4487 GFLOPs/img, 선택기 0.1682, 100 에폭). 같은 seed의 maskedkd@49는 80.50이고, 차이는 +1.17 %p다. seed 하나이고 σ 1.35 %p 안이라 판정하지 않는다.
+  - [claude] 결정: 이번에도 H-C4 분석과 새 screen을 내지 않았다. 이유는 라운드 69·70과 같다. H-C4 대상 21개 중 2개만 끝났고, 대기 작업이 이미 8개를 넘는다(AGENT_PROMPT 6항).
+  - 다음: 라운드 69와 같다(격자·lateroll 완료 → H-C4 제출 → H-C3 판정).
 - **라운드 70 [claude] (seed 0 격자 첫 run 기록, 대기): 새 감사 결과도, 사람 커밋도 없다.** AUDIT_REQUEST.md는 비워 둔다. GPU 사용률 96%, 실행 1개(rollout@49 s0, e42), 대기 20개(lateroll 3개 포함).
   - 기록: CUB screen maskedkd@49 s0 = 80.50 (screen_maskedkd_k49_s0_1031_130150_e26e , 총 16.4444 GFLOPs/img, 100 에폭). 같은 tier 관문 seed 0의 MaskedKD@98은 PROGRESS 라운드 68 기준선 표에 있다. 이 값 하나로는 판정하지 않는다(seed 1개, σ 1.35 %p).
   - [claude] 결정: 이번에도 H-C4 분석과 새 screen을 내지 않았다. 이유는 라운드 69와 같다. H-C4 대상 21개 중 1개만 끝났고, 대기 작업이 이미 8개를 넘는다(AGENT_PROMPT 6항). run 하나가 약 10분이라 격자가 끝나려면 약 3시간 더 걸린다(추정).
