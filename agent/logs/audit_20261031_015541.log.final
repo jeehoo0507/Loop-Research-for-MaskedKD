@@ -1,0 +1,4 @@
+CLAIM: Waterbirds K=12에서 suffdisc는 final seeds 1·2·3의 maskedkd 대비 정확도·WGA, rollout 대비 WGA에서 이기며, rollout 대비 정확도 차이는 불확실하다.
+VERDICT: NEEDS-MORE
+REASON: final_suffdisc_k12_s1_1031_002441_5d86, final_suffdisc_k12_s2_1031_002448_664e, final_suffdisc_k12_s3_1031_002453_9ebe와 maskedkd·rollout 비교군의 완료 상태·수치·digest는 일치한다. 그러나 필수 분해 분석 analysis_suffdisc_decomp_1030_202612_878c의 실제 출력이 누락됐고, RESULTS_TABLE이 잘려 전체 suffdisc 탐색 이력을 검증할 수 없다.
+screen_suffdisc_k12_s2_1030_233019_98dd와 screen_suffdisc_k12_s3_1030_233028_39ad를 승격에 사용했으므로 final seeds의 독립성을 입증하는 harness seed 매핑도 필요하다. 신규성은 제한적이다: 고정 면적 영역의 예측 보존 최적화는 [Extremal Perturbations](https://www.robots.ox.ac.uk/~vgg/publications/2019/Fong19a/)에 선행하며, KD teacher 입력 선택이라는 적용의 신규성은 별도 입증이 필요하다.
