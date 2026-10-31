@@ -270,3 +270,11 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 예측: K=25에서 lateroll − rollout 평균 정확도 차이 > 0, 그리고 K=49에서 ≥ −0.3. 시드 평균으로 본다. 판정 규칙: K=25에서 시드 평균 차이가 PROMOTE 문턱(max(0.5, 2σ)) 이상이면 final(seed 1·2·3)로 올린다. 0 이하면 기각하고 "teacher soft label 충실도 ≠ student 정확도"로 기록한다(이것도 중요한 결과다).
   - 지금 막힌 이유: 되돌아간 harness는 CUB를 2단계로 두므로(config.STAGE2 = "cub"), 에이전트 방법은 Waterbirds final + 감사 PASS 뒤에만 CUB에 낼 수 있다. 새 Waterbirds 실험은 QUEUE 18:30 5번이 막는다. 사람이 relock하면 바로 낸다.
   - [claude] 라운드 66 갱신 (H-C2c 결과 뒤, 제출 전): K=25 예측은 H-C2c 읽기 규칙에 따라 철회한다. 제출할 때 주 비교는 **K=12**로 바꾼다. K=12는 rollout 대비 TCKD CI가 3개 student 모두에서 0을 넘지 않은 유일한 K다. 이 변경은 H-C2c 결과를 본 뒤에 한 것이라서 "결과 뒤 변경"이라고 적는다. 새 예측: K=12에서 lateroll − rollout 평균 정확도의 시드 평균 차이가 0보다 크다. K=25·49는 기술값으로 낸다. 판정 문턱(PROMOTE max(0.5, 2σ))은 그대로다.
+- **H-C2d (라운드 67, 결과 전·제출 전에 등록): CUB에서 가린 teacher의 TCKD 충실도가 student 평균 정확도의 순서를 맞히는가 (K=12, harness 기준선만).**
+  - 이유: H-C1a·H-C2a~c는 모두 teacher 쪽 충실도(KL·TCKD)만 쟀다. "충실도가 높으면 student 정확도가 높다"는 CUB에서 아직 한 번도 확인하지 않았다. 이것이 H-C3(lateroll)의 근거 사슬에서 빠진 고리다. 되돌아간 harness도 CUB final tier의 harness 기준선은 받는다(stage2_rule → "baseline").
+  - job (CUB, final tier, 100 에폭, 기준선만): rollout@12 s2·s3, maskedkd@12 s2·s3, random@12 s2. 5개.
+  - seed 선택: stage2_boot.sh 의 `--baselines --dataset cub`(--force 없음)가 만드는 job과 겹치지 않게 했다. 그 함수는 s2·s3에서는 ce·full@196·maskedkd@98만, K별 기준선은 s1에서만 만든다. 그래서 위 5개는 duplicate SystemExit를 일으키지 않는다(메모리 cub-baseline-duplicate-hazard). seed 1~3은 final seed이지만 이것은 에이전트 방법의 screen이 아니라 harness 기준선이고, 나중에 final_refs가 같은 job을 그대로 재사용한다.
+  - 근거값 (H-C2c means, analysis_cub_lateroll_refs_1031_101436_7dce): K=12 teacher TCKD는 rollout(roll0) 약 2.08, maskedkd(roll11) 약 3.32, random 3.59 (ce0_s1 student 기준; 다른 student도 순서 같음).
+  - 예측 P1: K=12에서 rollout − maskedkd 평균 정확도의 시드 평균(s2·s3) 차이 > 0. P2: s2에서 random@12 ≤ rollout@12.
+  - 읽기: P1이 맞으면 "TCKD 충실도가 CUB student 정확도 순서를 맞힌다"를 screening 근거(2 seed, 주장 아님)로 적고 H-C3을 그대로 둔다. 차이가 0 이하면 충실도 대리지표가 CUB에서 정확도로 이어지지 않는다고 기록하고, H-C3의 근거를 약하다고 고친다(H-C3 제출 전에 다시 판단). |차이| < 0.3이면 "구분 안 됨"으로 적는다. 차이의 크기는 seed 2개라 불확실하다고 적는다.
+  - 주의: 이 run은 되돌아간 harness의 student lr(기본값 1e-4)로 돈다. 사람의 새 harness가 CUB lr을 다시 고르면 표에서 빠질 수 있다. 그래도 같은 lr끼리의 순서 비교는 유효하다.
