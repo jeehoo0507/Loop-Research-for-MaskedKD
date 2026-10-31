@@ -364,3 +364,28 @@ boot: 1 windows (created Fri Oct 30 11:57:04 2026)
 sched: 1 windows (created Fri Oct 30 12:38:02 2026)
 stage2: 1 windows (created Fri Oct 30 13:59:59 2026)
 [boot 10-30 13:59] research loop started (auditor: codex). Your part from here: agent/QUEUE.md, agent/STOP
+[boot 10-31 10:39] checking tools
+NVIDIA RTX A5000, 24564 MiB
+[boot 10-31 10:39] Codex works without a shell here (container blocks its sandbox): GPT audits and adds ideas from files the harness attaches; no emergency researcher
+.......................F........                                         [100%]
+=================================== FAILURES ===================================
+_______________________ test_report_cli_accepts_dataset ________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-coder/pytest-13/test_report_cli_accepts_datase0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f43fe0b5850>
+
+    def test_report_cli_accepts_dataset(tmp_path, monkeypatch):
+        import subprocess, sys
+        r = subprocess.run([sys.executable, "-m", "harness.report", "--gate", "--dataset", "cub"],
+                           capture_output=True, text=True, cwd=C.ROOT)
+>       assert "unrecognized arguments" not in r.stderr and "gate incomplete" in r.stdout
+E       AssertionError: assert ('unrecognized arguments' not in ''
+E         
+E         'unrecognized arguments' is contained here: and 'gate incomplete' in '[cub final, 100 epochs, mean of seeds [1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL\n')
+E        +  where '[cub final, 100 epochs, mean of seeds [1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL\n' = CompletedProcess(args=['/home/coder/Loop-Research-for-MaskedKD/.venv/bin/python', '-m', 'harness.report', '--gate', '-...1]] Full KD 82.83 vs CE 81.00 (need +1.0): PASS; MaskedKD@98 83.50 vs Full 82.83 (need within 0.5): FAIL\n', stderr='').stdout
+
+tests/test_harness.py:461: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_harness.py::test_report_cli_accepts_dataset - AssertionErro...
+1 failed, 31 passed in 22.89s
+[boot 10-31 10:39] STOPPED: tests failed during relock (see agent/logs/boot.log)
