@@ -1,0 +1,4 @@
+CLAIM: Waterbirds K=12에서 suffdisc는 final seeds 1·2·3의 maskedkd를 정확도·WGA 모두에서 이기고, rollout을 WGA에서 이기며 정확도에서는 지지 않는다(n.s.).
+VERDICT: FAIL
+REASON: 보고된 평균 차이와 WIN 수치는 일치하지만, rollout 정확도 CI [−2.52, +5.58]은 의미 있는 손실도 허용하므로 “지지 않는다”를 입증하지 못한다. 실제 final_suffdisc_k12_s3_1031_002453_9ebe의 정확도는 final_rollout_k12_s3_1030_220958_d961보다 낮다. “정확도 차이는 불확실하다”로 수정해야 한다.
+또한 screen_suffdisc_k12_s1_1030_185953_9455, screen_suffdisc_k12_s2_1030_233019_98dd, screen_suffdisc_k12_s3_1030_233028_39ad의 결과를 승격 판단에 사용했으므로 동일 seeds 1·2·3의 final은 독립적인 fresh-seed 확인이 아니다. 신규성도 고정 면적의 보존 마스크를 최적화하는 [Extremal Perturbations](https://arxiv.org/abs/1910.08485)과 구분해야 하며, KD 적용의 신규성은 아직 확인되지 않았다.
