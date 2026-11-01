@@ -58,7 +58,7 @@ Total agent screen configs: 7
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
 | screen | ce |  | 0 | None | 0,4,5 | 80.83 ± 1.96 | - | 7.64 | 0.00 | 0.00 | 1482 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
-| screen | center |  | 29 | 29.0 | 0 | 79.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1181 | screen_center_k29_s0_1031_130150_cbde |
+| screen | center |  | 29 | 29.0 | 0,4,5 | 79.61 ± 0.67 | - | 13.00 | 5.36 | 0.00 | 639 | screen_center_k29_s4_1101_074021_b6e4 screen_center_k29_s5_1101_074025_d5c6 screen_center_k29_s0_1031_130150_cbde |
 | screen | center |  | 49 | 49.0 | 0 | 80.17 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1093 | screen_center_k49_s0_1031_130150_3629 |
 | screen | full |  | 196 | 196.0 | 0,4,5 | 82.17 ± 0.17 | - | 42.77 | 35.13 | 0.00 | 708 | screen_full_k196_s4_1031_114911_a837 screen_full_k196_s5_1031_114911_9c0a screen_full_k196_s0_1031_111002_00d5 |
 | screen | grid |  | 12 | 12.0 | 0 | 74.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_grid_k12_s0_1031_130151_33bd |
@@ -83,7 +83,7 @@ Total agent screen configs: 7
 | screen | sinkfree@60bc72 |  | 49 | 49.0 | 0 | 80.83 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 1076 | screen_sinkfree_k49_s0_1031_180713_dba8 |
 | screen | teacher_topk |  | 29 | 29.0 | 0,4,5 | 80.00 ± 1.01 | - | 13.36 | 5.36 | 0.35 | 436 | screen_teacher_topk_k29_s4_1101_055819_fa5a screen_teacher_topk_k29_s0_1031_202120_8e2b screen_teacher_topk_k29_s5_1101_055826_eae2 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 78.17 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1183 | screen_tome_k12_s0_1031_130151_473d |
-| screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
+| screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0,4,5 | 80.39 ± 0.67 | - | 12.00 | 4.36 | 0.00 | 617 | screen_tome_k29_s0_1031_130150_b286 screen_tome_k29_s4_1101_074029_5765 screen_tome_k29_s5_1101_074033_0da0 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |
 | screen | trustfilt@27da28 |  | 29 | 29.0 | 0,4,5 | 81.33 ± 0.50 | - | 13.34 | 5.36 | 0.43 | 372 | screen_trustfilt_k29_s5_1101_054141_7ad5 screen_trustfilt_k29_s4_1101_054136_636e screen_trustfilt_k29_s0_1101_052028_1577 |
 
