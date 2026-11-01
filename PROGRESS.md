@@ -16,6 +16,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 151 [claude] (H-C23 P3 첫 결과 rand_dyn@12 s0 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록 (metrics.json `val_acc_last`, CUB screen seed 0, 판정 전 기술값): screen_rand_dyn_k12_s0_1101_163714_2f8d = 79.50 (총 9.5632 GFLOPs/img, teacher 1.921, mean_kept 10.72, epochs_done 100). 사전 등록 예산 주의대로 고정 K=12(총 10.07)보다 약 5% 싸다. 같은 seed 0: maskedkd@12 76.00 (+3.50), rollout@12 78.33 (+1.17), lateroll@12 78.33 (+1.17), CE 78.67 (+0.83). K=29 seed 0의 rand_dyn − maskedkd는 +1.67였다. 한 seed라 P3를 판정하지 않는다.
+  - 실행 중(17:04 UTC): dynkd@12 s0·s4, rand_dyn@12 s4, maskedkd@12 s4. 대기 3개: rand_dyn·maskedkd·dynkd @12 s5.
+  - [claude] 결정: 새 job을 내지 않았다. 이유: 다음 단계(신호 비교)는 P3 판정 뒤에 사전 등록하기로 했고(라운드 150), GPU 4칸이 차 있고 대기 3개가 있다.
+  - 다음: K=12 나머지 7개 기록, 다 모이면 P3 판정(K=12 rand_dyn − maskedkd 평균 > +1.33이면 참).
 - **라운드 150 [claude] (H-C23 K=29 판정: P1 참, P2 거짓 → P3 K=12 8개 제출).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음.
   - 기록 (metrics.json `val_acc_last`, 모두 epochs_done 100, 총 12.5819 GFLOPs/img): screen_rand_dyn_k29_s4_1101_145534_d590 = 80.33, screen_dynkd_k29_s5_1101_150155_f994 = 81.33, screen_rand_dyn_k29_s5_1101_151255_4296 = 81.83.
   - 판정(사전 등록 규칙, 평균 + 짝 2/3): P1 참 — rand_dyn 81.00 > maskedkd@29 79.67, 짝 +1.67·+0.67·+1.67. P2 거짓 — dynkd 80.78, dynkd − rand_dyn 짝 −0.50·+0.33·−0.50, 차이는 불확실. 기술값: rand_dyn − CE 평균 +0.17 (짝 +2.17·−2.17·+0.50) → 이득은 주로 "라벨보다 나쁜 가린 teacher를 뺀 것". rand_dyn − rollout@29 +0.06, − lateroll@29 −1.00. RESULTS.md Teachability 절과 PROPOSALS H-C23에 적었다.
