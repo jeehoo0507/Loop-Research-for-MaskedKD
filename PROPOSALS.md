@@ -392,6 +392,16 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 셋 다 맞으면 이어질 방향(아직 방법 아님): student 점수의 이웃 억제 선택(덩어리 대신 여러 부분 덮기)을 별도로 사전 등록한다. 선행 기법 확인 필요: 다양성 기반 토큰 가지치기(DivPrune 등 VLM 문헌), 검출의 NMS. 그때 노벨티를 문헌으로 다시 확인한다. roll6_nms가 roll6보다 나쁘면(이미 충분히 흩어진 지도에 억제가 해롭다) 그 방향의 이득 한계로 적는다.
   - 한계: common student 하나, 기술 분석이고 주장이 아니다. 4-이웃 억제는 한 가지 분산 방식일 뿐이다. 이웃 억제는 K=49에서 196/5 < 49라 중간에 억제가 풀린다(코드에 규칙 고정).
   - 제출 시점: 스케줄러가 꺼져 있고 대기 11개(8개 초과)라 이번 라운드에는 내지 않는다. 스케줄러가 돌아오고 H-C14가 끝난 뒤 낸다.
+  - [claude] 라운드 110 결과 (H-C15, analysis_cub_rollout_cluster_1101_052312_4f10 , common student cub_final_full_k196_s1_1030_153055_d87b , final): **P1 맞음, P2·P3 틀림.** P1: autocorr(roll0) − autocorr(roll6) = 0.065 [0.061, 0.070], comps(roll6) − comps(roll0)는 K=29 0.63 [0.43, 0.84], K=49 1.13 [0.87, 1.41]. 즉 full rollout 지도는 더 번지고 상위 K가 더 적은 덩어리로 뭉친다. P2: Spearman(d_tckd, d_comps)는 K=29 −0.020 [−0.100, 0.069], K=49 0.013 [−0.063, 0.102]로 0 근처다. P3: 이웃 억제는 TCKD를 오히려 크게 나쁘게 한다. TCKD(roll0_nms) − TCKD(roll0)는 K=29 +0.386 [0.293, 0.485], K=49 +0.213 [0.149, 0.285]이고, roll6_nms − roll6도 K=29 +0.406, K=49 +0.243으로 양수다(회복 비율 음수). epoch 50도 같은 방향이다.
+  - 기각 규칙 적용: P1이 맞고 P3가 틀렸으므로 "뭉침은 있지만 충실도 손해의 원인이 아니다"로 적는다. lateroll 메커니즘은 미해결로 남는다. 사전 등록한 한계 문장대로, 이웃 억제(덩어리 대신 흩어 덮기)는 roll6에도 해롭다 → 이웃 억제 선택 방향은 만들지 않는다. 기술값: K=12 TCKD roll0 2.057, roll6 1.678, roll0_nms 2.408. roll6은 teacher rollout 질량(tmass)을 roll0보다 덜 담는데(K=29 0.194 대 0.211) TCKD는 더 좋다. H-C14(teacher 지도 고르기·거르기가 나쁨)와 같은 방향이다. Waterbirds의 nms 결과(위 RESULTS 2026-10-30, H-W2 기각)와도 같은 방향이다.
+- [claude] 라운드 110 결과 (H-C14 단 1개 run): trustfilt@29 s0 = 81.83 (screen_trustfilt_k29_s0_1101_052028_1577 , 총 13.3425 GFLOPs/img, 선택기 0.4289 중 teacher 캐시 0.3524). 같은 seed 0의 lateroll@29 81.33 (screen_lateroll_k29_s0_1031_130348_fd19 ), teacher_topk@29 80.50 (screen_teacher_topk_k29_s0_1031_202120_8e2b , 13.3554)보다 높고 문턱 81.50을 넘는다. 기각 규칙에 걸리지 않는다. lateroll 대비 +0.50으로 문턱 2.69 미만이라 승격은 하지 않는다. 사전 등록대로 새 seed 4·5로 이어 간다(H-C16). H-C14 분석(common student TCKD)은 이 거르기가 lateroll보다 나쁠 것으로 봤으므로, seed 0 결과는 분석 예측과 반대다. seed 1개 차이(0.50)는 seed σ 범위 안이다.
+
+- **H-C16 (라운드 110, 결과 전·제출 전에 등록): trustfilt@29(H-C14 기본형, 소스 그대로)의 seed 0 결과(81.83)는 새 seed에서 재현되는가.**
+  - 근거: 위 seed 0 결과. QUEUE 20:40 "이기면 다른 후보와 똑같은 규칙(seed 추가, 같은 총비용 비교, 감사)으로만 이어 간다". 메커니즘 근거는 없다: H-C14 분석은 반대를 예측했다. 그래서 이것은 재현 확인이지 방법 근거가 아니다.
+  - 측정: screen seed 4·5 (seed 1·2·3 금지). 비교: 같은 seed의 rollout@29 (81.33·80.67), maskedkd@29 (79.67·80.17). lateroll@29·teacher_topk@29 seed 4·5는 대기가 8개를 넘지 않게 다음 라운드에 낸다(소스·기준선 그대로).
+  - 예측: P1 seed 4·5 평균 ≥ 81.50. P2 seed 4·5 각각에서 trustfilt > rollout@29 같은 seed. P3(다음 라운드 기준선 뒤 판정) seed 0·4·5 평균이 같은 seed의 lateroll@29·teacher_topk@29 평균보다 높다.
+  - 기각: P1이 틀리면 "seed 0 결과는 잡음이었다"로 적고 TrustMask 계열을 끝낸다. P1이 맞아도 P3가 틀리면 "teacher 거르기는 lateroll과 구분되지 않는다"로 적는다(Parent check 실패). 셋 다 맞아도 lateroll 대비 차이가 문턱 2.69 미만이면 승격하지 않고, 왜 TCKD 예측과 어긋나는지 분석을 먼저 사전 등록한다.
+  - 비용: 총 13.3425 GFLOPs/img로 rollout@29 12.9923보다 0.35 높다. 같은 총비용 비교는 rollout·maskedkd의 K≈31로 해야 하며, 승격 논의 때 따로 낸다.
 
 ## 2026-11-01 ideas from Codex (independent)
 IDEA 1: Contrastive token-gate attribution — From student logits \(z\), take predicted class \(c\), detached rival weights \(q=\mathrm{softmax}(z_{\neg c})\), and margin \(m=z_c-\sum_{j\ne c}q_jz_j\); request penultimate-block outputs \(H\) (`tokens=[-2]`).  
