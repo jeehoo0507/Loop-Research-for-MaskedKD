@@ -135,7 +135,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - suffstride@12 vs parent suffdisc: acc +0.67 %p (threshold 0.88) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 91.16 (seeds 1,2,3); KD gain +1.54, tolerance 0.77 %p; smallest mean kept tokens within it
+### final: Full KD val 91.16 (seeds 1,2,3); KD gain +1.36, tolerance 0.68 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds): none
 - screening only (fewer seeds): none
 ### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
@@ -167,7 +167,7 @@ Total agent screen configs: 15
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1,2 | 89.62 ± 0.65 | 68.80 ± 0.53 | 7.64 | 0.00 | 0.00 | 606 | waterbirds_final_ce_k0_s1_1031_130203_4b89 waterbirds_final_ce_k0_s2_1031_201229_603c |
+| final | ce |  | 0 | None | 1,2,3 | 89.80 ± 0.56 | 68.42 ± 0.75 | 7.64 | 0.00 | 0.00 | 653 | waterbirds_final_ce_k0_s1_1031_130203_4b89 waterbirds_final_ce_k0_s3_1031_201502_f7a9 waterbirds_final_ce_k0_s2_1031_201229_603c |
 | final | center |  | 12 | 12.0 | 1,2,3 | 88.69 ± 0.43 | 53.64 ± 1.57 | 10.09 | 2.45 | 0.00 | 304 | final_center_k12_s1_1030_201811_341b final_center_k12_s3_1030_220958_413c final_center_k12_s2_1030_212126_5486 |
 | final | full |  | 196 | 196.0 | 1,2,3 | 91.16 ± 0.52 | 67.42 ± 0.43 | 42.77 | 35.13 | 0.00 | 196 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc final_full_k196_s3_1030_220958_8d7e |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
