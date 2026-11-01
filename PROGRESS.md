@@ -7,6 +7,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 113 [claude] (대기 라운드, 새 판정 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음(최신은 analysis_cub_rollout_cluster_1101_052312_4f10 ).
+  - 06:29 UTC 기준 실행 4개: lateroll@29 s4 epoch 84, s5 epoch 45 (val 78.50), teacher_topk@29 s4 epoch 43, s5 epoch 4. 대기 6개(H-C17 analysis_cub_mask_average_1101_061802_efa4 와 Waterbirds 2단계 기준선 5개). 스케줄러는 돌고 있다.
+  - waterbirds_final_maskedkd_k98_s3_1031_201502_0f31 가 끝났다(harness 자동 2단계 기준선, val 평균 90.91, 총 25.04 GFLOPs/img). 2단계 표 기록용이고 주장에 쓰지 않는다.
+  - [claude] 결정: 새 분석·선택기를 쓰거나 내지 않았다. 이유: 다음 단계(lateroll Gumbel 선택기 사전 등록)는 H-C17 P1·P3 결과에 달려 있다. 결과 전에 만들면 결과를 보고 고르게 된다. 대기열도 늘리지 않는다.
+  - 다음: H-C17 판정, lateroll·teacher_topk@29 seed 4·5 기록(seed 0·4·5 평균).
 - **라운드 112 [claude] (H-C16 판정 → TrustMask 계열 종료, H-C17 사전 등록·제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음.
   - H-C16 (사전 등록 819adba): trustfilt@29 s4 = 81.33 (screen_trustfilt_k29_s4_1101_054136_636e ), s5 = 80.83 (screen_trustfilt_k29_s5_1101_054141_7ad5 ). seed 4·5 평균 81.08 < 81.50 → P1 틀림. s4는 같은 seed rollout@29(81.33)와 같아 P2도 틀림. 기각 규칙대로 "seed 0 결과(81.83)는 잡음이었다"로 적고 TrustMask 계열을 끝낸다. seed 0·4·5 평균 81.33.
   - [claude] 결정: 이미 낸 lateroll@29·teacher_topk@29 seed 4·5(실행·대기 중)는 취소하지 않고 기준선 기록으로 둔다. 이유: 대기 파일을 직접 지우는 것은 harness 밖 조작이고, 두 기준선은 K=29 비교의 seed 수를 3개로 채운다.
