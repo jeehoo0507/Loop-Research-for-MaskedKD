@@ -481,3 +481,14 @@ IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), includi
     - H2: 사전 등록 규칙으로는 모든 신호가 aon 형태에서 "통과"(5/5)하지만 random_aon도 5/5라 신호의 정보로 볼 수 없다. lin 형태(6~52)는 random 포함 모든 신호가 고정29보다 나쁘다(+0.069 ~ +0.099, G가 K에 대해 볼록해서 퍼뜨리면 손해). 오라클 K와의 Spearman: ent 0.41~0.55, kd29 0.37~0.44, sal_last 0.09~0.19, spread 0.02~0.07, align 0.02~0.06, drift −0.04~0.00, random 0.00~0.05. 갈래 비교(align_lin − kd29_lin, K=29) 5개 모두 CI가 0을 포함한다 → 차이는 불확실. (기술값) K=49에서는 5개 모두 CI 하한 > 0 (+0.054 ~ +0.072)이라 비해석 신호가 낫다.
     - H4: 뒤집힌 U자 아님. KD 이득(full 4 − CE 4, 이미지 평균 +1.38%p)의 일치도 5분위별 값 [0.83, 0.00, 2.29, 2.08, 1.67]%p, 가운데 − 1분위 +0.63 [−1.69, +2.94], 가운데 − 5분위 −0.21 [−2.78, +2.15], Spearman(일치도, KD 이득) 0.08.
     - 학습 결과와의 정합(기술): CUB screen seed 0·4·5에서 CE 80.83, maskedkd@29 79.67, rollout@29 80.94, lateroll@29 82.00, Full 82.17이다. 고정 K=29의 maskedkd가 CE보다 낮다는 것은 "K=29 가린 teacher는 대부분의 이미지에서 라벨보다 나은 신호가 아니다"라는 H1 측정과 맞는다.
+
+- **H-C23 (라운드 138, 결과 전·제출 전에 등록, 사람 지시 QUEUE 2026-11-01 22:40): 전부/없음 집중을 학습 정확도로 확인.** 새 선택기가 아니라 harness 기준선 `dynkd`·`rand_dyn`(builtin)만 낸다.
+  - 측정: CUB screen, 평균 K = 29, seed 0·4·5. dynkd·rand_dyn 각 3개(6 job). 비교 대상은 이미 있는 같은 seed의 maskedkd@29 (79.67), rollout@29 (80.94), lateroll@29 (82.00), CE (80.83), Full (82.17) screen run(RESULTS_TABLE 3-seed 평균). 값은 metrics.json `val_acc_last`.
+  - 예산 주의(결과 전에 적음): batch 128에서 m = int(29·128 // 196) = 18장만 teacher 전체를 받는다 → 이미지당 평균 27.6 토큰으로 고정 K=29보다 teacher 비용이 약 5% 적다. 이 차이는 dynkd·rand_dyn에 불리한 방향이라 비교를 그대로 둔다. 나머지 110장(86%)은 CE만 쓴다.
+  - 예측:
+    - P1 (주): rand_dyn의 3-seed 평균 > maskedkd@29의 3-seed 평균. **판정: 평균이 높고 같은 seed 짝 3개 중 2개 이상에서 rand_dyn > maskedkd면 참.** 예측: 참(H-C22 random_aon이 오프라인 G에서 5/5 고정29보다 나음, 학습에서도 CE > maskedkd@29).
+    - P2: dynkd의 3-seed 평균 > rand_dyn의 3-seed 평균, 같은 판정(평균 + 짝 2/3). 예측: 참(H-C22에서 ent의 오라클 K와의 Spearman 0.41~0.55). 차이가 CUB val 1~2장(0.17~0.33 %p) 수준이면 "차이는 불확실"로 적는다.
+    - 기술값(판정 아님): rand_dyn·dynkd − CE, − lateroll@29, − rollout@29의 3-seed 평균과 짝 차이. rand_dyn ≈ CE이면 이득은 "teacher 신호를 얹은 것"이 아니라 "나쁜 가린 teacher를 뺀 것"으로 적는다.
+    - P3 (K=12 예측, P1이 참일 때만 시험): K=12에서 (rand_dyn − maskedkd)의 3-seed 평균 차이가 K=29의 같은 차이보다 크다. K=12에서는 m = int(12·128 // 196) = 7장. 이유: 예산이 작을수록 가린 teacher가 라벨보다 나쁜 이미지 비율이 커진다(H-C22: K=29 61~64%, K=49 39~42%).
+  - 규칙: P1이 틀리면 "대리 지표(TCKD·G)와 정확도가 어긋났다"로 기록하고 이 방향을 닫는다(Teachability 정리에 반영). P1이 맞으면 K=12에서 dynkd·rand_dyn·maskedkd(seed 0·4·5 중 없는 것)를 내서 P3를 본다. P2가 틀려도 P1이 맞으면 "이득은 집중 자체"로 적는다. 감사 요청은 하지 않는다(기준선 비교, 주장 아님). screen seed만 쓴다(1·2·3 금지).
+  - 한계: seed 3개, CUB val 600장(1장 = 0.17 %p). CE의 3-seed 표준편차가 1.96으로 커서, CE와의 비교는 기술값이다.
