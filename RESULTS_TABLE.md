@@ -32,10 +32,9 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
   - maskedkd : 98.0 (1 seeds)
 ### screen: Full KD val 82.17 (seeds 0,4,5); KD gain +1.33, tolerance 0.67 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
-  - lateroll@69541b : 49.0 (3 seeds)
+  - lateroll@69541b : 29.0 (3 seeds)
   - maskedkd : 98.0 (3 seeds)
-- screening only (fewer seeds):
-  - lateroll@69541b : 29.0 (2 seeds)
+- screening only (fewer seeds): none
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
@@ -66,7 +65,7 @@ Total agent screen configs: 7
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
 | screen | lateroll@69541b |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.08 | 1108 | screen_lateroll_k12_s0_1031_130339_f599 |
-| screen | lateroll@69541b |  | 29 | 29.0 | 0,4 | 81.83 ± 0.71 | - | 12.99 | 5.36 | 0.08 | 647 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s0_1031_130348_fd19 |
+| screen | lateroll@69541b |  | 29 | 29.0 | 0,4,5 | 82.00 ± 0.58 | - | 12.99 | 5.36 | 0.08 | 518 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s5_1101_055814_a9a4 screen_lateroll_k29_s0_1031_130348_fd19 |
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
 | screen | maskedkd |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 29 | 29.0 | 0,4,5 | 79.67 ± 0.50 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s0_1031_130150_1393 |
@@ -82,7 +81,7 @@ Total agent screen configs: 7
 | screen | sinkfree@60bc72 |  | 12 | 12.0 | 0 | 77.50 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_sinkfree_k12_s0_1031_180704_f0b3 |
 | screen | sinkfree@60bc72 |  | 29 | 29.0 | 0 | 78.83 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_sinkfree_k29_s0_1031_180708_1cb6 |
 | screen | sinkfree@60bc72 |  | 49 | 49.0 | 0 | 80.83 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 1076 | screen_sinkfree_k49_s0_1031_180713_dba8 |
-| screen | teacher_topk |  | 29 | 29.0 | 0 | 80.50 ± 0.00 | - | 13.36 | 5.36 | 0.35 | 649 | screen_teacher_topk_k29_s0_1031_202120_8e2b |
+| screen | teacher_topk |  | 29 | 29.0 | 0,4 | 79.67 ± 1.18 | - | 13.36 | 5.36 | 0.35 | 466 | screen_teacher_topk_k29_s4_1101_055819_fa5a screen_teacher_topk_k29_s0_1031_202120_8e2b |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 78.17 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1183 | screen_tome_k12_s0_1031_130151_473d |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |
