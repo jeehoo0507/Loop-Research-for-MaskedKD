@@ -428,6 +428,7 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 예측 (K=29 student 3개 모두): P1 TCKD(swapRL_rand) − TCKD(R) CI 위 끝 < 0 (R∖L이 random보다 나쁘다). P2 R∖L 토큰의 앞쪽 rollout 순위 평균 < 뒤쪽 순위 평균 (앞쪽 블록이 그 토큰을 끌어올린다). K=49와 swapLR_rand는 기술값.
   - 기각·해석: P1이 틀리면 "rollout만 고르는 토큰도 random과 구별되지 않는다 → R − L 차이는 토큰 하나하나가 아니라 조합 효과이거나 잡음"으로 적고 이 방향을 끝낸다. P1이 맞아도 H-C18 P3 판정(rollout 대비 메커니즘 미주장)을 뒤집지 않는다. 사후 방향 전환이므로 기술 결과로만 쓴다. 승격은 Parent check 규칙(PROGRESS STUCK)에 따른다.
   - 한계: clean val, eval mode 선택, 분석 쪽 swap. 기술 분석이고 주장이 아니다.
+  - **결과 (라운드 118, analysis_cub_rollout_only_1101_071727_7bcc ): P1 틀림, P2 맞음 → 기각, 이 방향을 끝낸다.** K=29 TCKD(swapRL_rand) − TCKD(R): s0 −0.012 [−0.062, 0.040], s4 −0.015 [−0.062, 0.036], s5 −0.022 [−0.076, 0.032]로 세 CI 모두 0을 포함한다. R∖L은 이미지당 약 7.6개이고, 앞쪽 rollout 순위 평균 19.6~20.1 < 뒤쪽 48.9~49.2 (P2 맞음, 다만 R∖L의 정의상 거의 자명하다). 같은 student에서 R − L은 +0.066~+0.080 (CI > 0)이다. K=49(기술값): swapRL_rand − R은 −0.010·−0.023·−0.011이고 s4만 CI [−0.041, −0.006]이 0 아래다. 규칙대로 "rollout만 고르는 토큰도 random과 구별되지 않는다 → R − L 차이는 토큰 하나하나가 아니라 조합 효과이거나 잡음"으로 적는다. H-C18 P3 판정은 그대로다.
 
 ## 2026-11-01 ideas from Codex (independent)
 IDEA 1: Contrastive token-gate attribution — From student logits \(z\), take predicted class \(c\), detached rival weights \(q=\mathrm{softmax}(z_{\neg c})\), and margin \(m=z_c-\sum_{j\ne c}q_jz_j\); request penultimate-block outputs \(H\) (`tokens=[-2]`).  
