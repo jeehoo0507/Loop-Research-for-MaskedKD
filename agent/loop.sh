@@ -151,6 +151,8 @@ while true; do
     echo "[loop] lock mismatch after pull; pausing until a human runs agent/relock.sh" | tee -a agent/logs/loop.log
     sleep "$POLL"; continue
   fi
+  # the researcher may not start the scheduler (AGENT_PROMPT 4); the loop brings it back if its session is gone
+  tmux has-session -t sched 2>/dev/null || { echo "[loop] scheduler session gone, restarting it" | tee -a agent/logs/loop.log; bash agent/start.sh sched >/dev/null 2>&1; }
   [ -s "$HOME/.maskedkd_auditor" ] && AUDITOR="$(tr -d '[:space:]' < "$HOME/.maskedkd_auditor")"
 
   # --- should this be a round? ---

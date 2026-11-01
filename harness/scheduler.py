@@ -42,7 +42,13 @@ def alive(pid):
         return False
 
 
+def code_changed(since):
+    """True when a harness file changed after this process started (a pull, then the lock adopted it)."""
+    return any(f.stat().st_mtime > since for f in (C.ROOT / "harness").glob("*.py"))
+
+
 def main():
+    t0 = time.time()
     q = queue_dirs()
     procs = {}
     started = {}
@@ -78,6 +84,11 @@ def main():
             print(f"[sched] {jid} finished rc={rc}", flush=True)
 
         ok, msg = check()
+        if code_changed(t0):
+            # a scheduler kept running on old code compares the new lock with its old rule and never starts a job
+            # again (2026-10-31 20:15 UTC: 9 h idle). Re-exec loads the new code; running jobs are kept (recover).
+            print("[sched] harness changed on disk, restarting on the new code", flush=True)
+            os.execv(sys.executable, [sys.executable, "-m", "harness.scheduler"])
         pending = sorted(q["pending"].glob("*.json"),
                          key=lambda f: (-json.loads(f.read_text()).get("priority", 0), f.stat().st_mtime))
         if not ok:
