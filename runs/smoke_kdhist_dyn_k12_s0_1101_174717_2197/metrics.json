@@ -1,0 +1,55 @@
+{
+ "id": "smoke_kdhist_dyn_k12_s0_1101_174717_2197",
+ "status": "done",
+ "method": "kdhist_dyn",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "smoke",
+ "epochs": 1,
+ "epochs_done": 1,
+ "val_acc_last": 0.0,
+ "val_wga_last": null,
+ "val_group_acc_last": null,
+ "student_lr": 0.0001,
+ "lr_override": null,
+ "mean_kept": 10.71875,
+ "dataset": "cub",
+ "tome_r": null,
+ "img_per_s_mean": 255.9,
+ "flops": {
+  "total_gflops_per_img": 9.5632,
+  "selector_gflops_per_img": 0.0,
+  "teacher_gflops_per_img": 1.921,
+  "student_gflops_per_img": 7.6422,
+  "windows": 3
+ },
+ "train_time_s": 15.0,
+ "peak_vram_gib": 3.59,
+ "history": [
+  {
+   "epoch": 1,
+   "loss": 5.359053405125936,
+   "epoch_s": 15.0,
+   "img_per_s": 255.9,
+   "mean_kept": 10.71875,
+   "val_acc": 0.0
+  }
+ ],
+ "selector_meta": {
+  "method": "per-image KD loss history (last observed KL to the whole teacher), no attribution",
+  "paper": "Li et al. EMNLP 2021 (Dynamic KD, sample-level teacher use); loss-based sample selection (e.g. OHEM)",
+  "why": "an image whose student was far from the teacher last time is where the teacher's soft label still carries most the student has not learned, so it gets the whole teacher (H-C22 non-interp primary)",
+  "vs_maskedkd": "chooses which images get the whole teacher, not which tokens; MaskedKD gives every image K tokens",
+  "prior_art": "Dynamic KD picks images by student entropy (builtin dynkd); here by the observed KD loss history",
+  "parent": "rand_dyn",
+  "per_image_budget": true
+ },
+ "selector_sha": "cca0d32790e569d8e0dc683a883e8ae633d4630c2779b51ea3d0ecad01f275f2",
+ "sel_args": {},
+ "teacher_sha": "59b864387ba5d333842ac95289e0bd90e86922133af1acca7c42b5821768bc45",
+ "harness_digest": "8ac8a710a4ae1eb73e07317397bc5bef4ed96ac8fc7a5499c3f2024dbe322e0f",
+ "git": "dff24192a752d6abf078427380f22ac039b7f737",
+ "submitted_by": "claude",
+ "note": "H-C24 smoke",
+ "analysis_only": false
+}
