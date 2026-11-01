@@ -21,8 +21,8 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - lateroll@29 vs rollout@29 [acc]: +1.00 %p, 95% CI [+1.00, +1.00], seeds 1,2, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs tome@29 [acc]: +1.67 %p, 95% CI [+1.67, +1.67], seeds 1,2, GFLOPs ratio 1.083 -> WIN
 - lateroll@29 vs grid@29 [acc]: +5.67 %p, 95% CI [-9.16, +20.49], seeds 1,2, GFLOPs ratio 0.999 -> no difference
-- lateroll@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
-- lateroll@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@29 vs center@29 [acc]: +3.58 %p, 95% CI [-1.71, +8.88], seeds 1,2, GFLOPs ratio 0.999 -> no difference
+- lateroll@29 vs random@29 [acc]: +6.50 %p, 95% CI [-8.32, +21.32], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@29 vs full@196 [acc]: missing (needs >= 2 shared seeds)
 - lateroll@29 vs rollout@29 [acc]: +1.00 %p, 95% CI [+1.00, +1.00], seeds 1,2, GFLOPs ratio 1.000 -> WIN
 
@@ -64,15 +64,15 @@ Total agent screen configs: 8
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
-| final | center |  | 29 | 29.0 | 1 | 78.33 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 286 | final_center_k29_s1_1101_104303_c1f7 |
+| final | center |  | 29 | 29.0 | 1,2 | 77.75 ± 0.82 | - | 13.00 | 5.36 | 0.00 | 280 | final_center_k29_s1_1101_104303_c1f7 final_center_k29_s2_1101_125958_d08b |
 | final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
 | final | grid |  | 29 | 29.0 | 1,2 | 75.67 ± 0.24 | - | 13.00 | 5.36 | 0.00 | 283 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 |
-| final | lateroll@69541b |  | 29 | 29.0 | 1,2 | 81.33 ± 1.41 | - | 12.99 | 5.36 | 0.08 | 304 | final_lateroll_k29_s2_1101_125958_6470 final_lateroll_k29_s1_1101_104303_ef38 |
+| final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 81.39 ± 1.00 | - | 12.99 | 5.36 | 0.08 | 284 | final_lateroll_k29_s2_1101_125958_6470 final_lateroll_k29_s1_1101_104303_ef38 final_lateroll_k29_s3_1101_140937_ec98 |
 | final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
 | final | maskedkd |  | 29 | 29.0 | 1,2 | 80.25 ± 1.53 | - | 12.99 | 5.36 | 0.00 | 281 | final_maskedkd_k29_s2_1101_125958_5b02 final_maskedkd_k29_s1_1101_104303_b676 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
-| final | random |  | 29 | 29.0 | 1 | 74.67 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 288 | final_random_k29_s1_1101_104303_9664 |
+| final | random |  | 29 | 29.0 | 1,2 | 74.83 ± 0.24 | - | 13.00 | 5.36 | 0.00 | 280 | final_random_k29_s1_1101_104303_9664 final_random_k29_s2_1101_125958_9495 |
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
 | final | rollout |  | 29 | 29.0 | 1,2 | 80.33 ± 1.41 | - | 12.99 | 5.36 | 0.17 | 235 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2 | 79.67 ± 1.41 | - | 12.00 | 4.36 | 0.00 | 290 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s2_1101_125958_ab06 |
