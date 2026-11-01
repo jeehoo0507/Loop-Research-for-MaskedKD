@@ -48,7 +48,7 @@ Noise: acc seed sigma 1.11 %p (pooled, dof 6) -> threshold 2.21 %p
   - lateroll@69541b : 29.0 (3 seeds)
 - screening only (fewer seeds):
   - maskedkd : 98.0 (1 seeds)
-### screen: Full KD val 82.17 (seeds 0,4,5); KD gain +1.33, tolerance 0.67 %p; smallest mean kept tokens within it
+### screen: Full KD val 82.17 (seeds 0,4,5); KD gain +1.37, tolerance 0.68 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 29.0 (3 seeds)
   - maskedkd : 98.0 (5 seeds)
@@ -88,7 +88,7 @@ Total agent screen configs: 11
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 80.44 ± 1.02 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 final_rollout_k29_s3_1101_140937_8573 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 79.78 ± 1.02 | - | 12.00 | 4.36 | 0.00 | 292 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s3_1101_140937_cdbb final_tome_k29_s2_1101_125958_ab06 |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
-| screen | ce |  | 0 | None | 0,4,5 | 80.83 ± 1.96 | - | 7.64 | 0.00 | 0.00 | 1482 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 |
+| screen | ce |  | 0 | None | 0,4,5,6,7 | 80.80 ± 1.45 | - | 7.64 | 0.00 | 0.00 | 1041 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 screen_ce_k0_s7_1101_230304_50d4 screen_ce_k0_s6_1101_230256_cb6e |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
 | screen | center |  | 29 | 29.0 | 0,4,5 | 79.61 ± 0.67 | - | 13.00 | 5.36 | 0.00 | 639 | screen_center_k29_s4_1101_074021_b6e4 screen_center_k29_s5_1101_074025_d5c6 screen_center_k29_s0_1031_130150_cbde |
 | screen | center |  | 49 | 49.0 | 0,4,5 | 80.44 ± 0.35 | - | 16.46 | 8.82 | 0.00 | 588 | screen_center_k49_s5_1101_085152_c3b1 screen_center_k49_s0_1031_130150_3629 screen_center_k49_s4_1101_085148_3a5e |
