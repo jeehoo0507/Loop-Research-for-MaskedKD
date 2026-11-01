@@ -42,6 +42,23 @@ def alive(pid):
         return False
 
 
+def job_rc(pid):
+    """None while job `pid` runs, else its exit code. A job started by this process before an os.execv restart is
+    still our child but has no Popen: when it ends it stays a zombie, which os.kill(pid, 0) calls alive, so the
+    slot looked busy forever (2026-11-01 round 129). waitpid reaps it and gives the real exit code."""
+    try:
+        wpid, status = os.waitpid(pid, os.WNOHANG)
+    except ChildProcessError:   # not our child (scheduler restarted from a new shell): best effort
+        try:
+            with open(f"/proc/{pid}/stat") as f:
+                if f.read().rsplit(")", 1)[1].split()[0] == "Z":
+                    return -1
+        except (OSError, IndexError):
+            pass
+        return None if alive(pid) else -1
+    return None if wpid == 0 else os.waitstatus_to_exitcode(status)
+
+
 def code_changed(since):
     """True when a harness file changed after this process started (a pull, then the lock adopted it)."""
     return any(f.stat().st_mtime > since for f in (C.ROOT / "harness").glob("*.py"))
@@ -87,8 +104,16 @@ def main():
     for f in q["running"].glob("*.json"):
         pidf = f.with_suffix(".pid")
         pid = int(pidf.read_text()) if pidf.exists() else -1
-        if pid > 0 and alive(pid):
+        rc = job_rc(pid) if pid > 0 else -1
+        if rc is None:
             procs[f.stem] = (None, pid)
+        elif rc == 0:   # it finished while we were restarting (a reaped zombie): record it, do not run it again
+            j = json.loads(f.read_text())
+            j["returncode"], j["finished"] = 0, time.strftime("%Y-%m-%d %H:%M:%S")
+            (q["done"] / f.name).write_text(json.dumps(j, indent=1))
+            f.unlink()
+            pidf.unlink(missing_ok=True)
+            print(f"[sched] {f.stem} finished rc=0 (found after restart)", flush=True)
         else:
             f.rename(q["pending"] / f.name)
             pidf.unlink(missing_ok=True)
@@ -96,7 +121,7 @@ def main():
     last_msg = ""
     while True:
         for jid, (p, pid) in list(procs.items()):
-            rc = p.poll() if p is not None else (None if alive(pid) else -1)
+            rc = p.poll() if p is not None else job_rc(pid)
             if rc is None:
                 jj = json.loads((q["running"] / f"{jid}.json").read_text())
                 limit = C.time_limit_h(jj.get("dataset", C.STAGE1), jj.get("tier", "screen"))

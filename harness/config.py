@@ -132,9 +132,9 @@ def tolerance(full_acc, ce_acc):
 KEEP_GRID = (196, 98, 49, 25, 12)
 ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric
 BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "rollout", "tome", "oracle", "teacher_topk",
-             "rand_alloc", "dynkd", "sal_ratio", "kd_sched", "ent_weight")   # harness-owned reference methods
+             "rand_alloc", "dynkd", "rand_dyn", "sal_ratio", "kd_sched", "ent_weight")   # harness-owned reference methods
 # A per-image budget method (QUEUE 2026-11-01) must also beat each of these at the same mean budget
-ALLOC_REFS = ("rand_alloc", "dynkd", "sal_ratio", "kd_sched", "ent_weight")
+ALLOC_REFS = ("rand_alloc", "dynkd", "rand_dyn", "sal_ratio", "kd_sched", "ent_weight")
 # A claim at budget K must beat every one of these at the same K (spatial ones: no interpretability signal at all)
 CLAIM_REFS = ("maskedkd", "rollout", "tome", "grid", "center", "random")
 FINAL_PRIORITY = 3           # agent final-seed jobs run before agent screen jobs (default priority 0)

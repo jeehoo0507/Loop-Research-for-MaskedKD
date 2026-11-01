@@ -702,12 +702,12 @@ def test_allocate_and_keep_by_counts():
 
 
 def test_per_image_budget_skips_teacher_and_matches_old_loss(models):
-    from harness.baselines import DynKD, SalRatio, EntWeight, KDSched, RandAlloc
+    from harness.baselines import DynKD, SalRatio, EntWeight, KDSched, RandAlloc, RandDyn
     # all-or-nothing: images without tokens get no teacher, so the teacher costs a fraction of Full KD
     _, kept_full, f_full = _step("full", Full(), 196, models)
     loss, kept, f = _step("dynkd", DynKD(), 98, models)
     assert kept <= 98 and torch.isfinite(torch.tensor(loss)) and f["teacher"] < 0.6 * f_full["teacher"]
-    for sel in (SalRatio(), RandAlloc(), KDSched(), EntWeight()):
+    for sel in (SalRatio(), RandAlloc(), KDSched(), EntWeight(), RandDyn()):
         loss, kept, _ = _step("x", sel, 29, models)
         assert kept <= 29 + 1e-6 and torch.isfinite(torch.tensor(loss))
     # a fixed-K selector gives the same loss as the old batch formula
@@ -769,3 +769,20 @@ def test_per_image_run_measures_flops_over_the_run(tmp_path, monkeypatch):
     assert train.run(str(jp)) == 0
     m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
     assert m["status"] == "done" and m["mean_kept"] <= 29 + 1e-6 and m["flops"]["windows"] >= 1
+
+
+def test_scheduler_reaps_jobs_it_lost_the_popen_of():
+    import subprocess, time
+    from harness.scheduler import job_rc
+    p = subprocess.Popen(["sh", "-c", "exit 3"])
+    pid = p.pid
+    del p                                   # like after os.execv: only the pid is left
+    for _ in range(50):
+        rc = job_rc(pid)
+        if rc is not None:
+            break
+        time.sleep(0.05)
+    assert rc == 3
+    q = subprocess.Popen(["sleep", "5"])
+    assert job_rc(q.pid) is None
+    q.kill(); q.wait()

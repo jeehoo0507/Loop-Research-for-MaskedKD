@@ -132,6 +132,21 @@ class DynKD(SelectorBase):
         return keep
 
 
+class RandDyn(SelectorBase):
+    """Control for dynkd: the same all-or-nothing split (whole teacher for as many images as the budget pays for,
+    none for the rest), images drawn at random. If dynkd does not beat this, the uncertainty signal adds nothing
+    and the gain is the concentration itself (H-C22, 2026-11-01)."""
+    NEEDS = {"attn": [], "tokens": []}
+
+    def select(self, ctx: Context):
+        B, n = ctx.images.shape[0], ctx.num_patches
+        m = int(ctx.budget * B // n)
+        keep = torch.zeros(B, n, dtype=torch.bool, device=ctx.images.device)
+        if m:
+            keep[torch.randperm(B, device=ctx.images.device)[:m]] = True
+        return keep
+
+
 class SalRatio(SelectorBase):
     """Per-image ratio from the image's own saliency, in the spirit of Salience-Based Adaptive Masking (SBAM,
     ECCV 2024): an image whose student attention is spread (high entropy, many tokens matter) gets more tokens.
@@ -169,5 +184,5 @@ class EntWeight(SelectorBase):
 
 
 BUILTIN = {"full": Full, "maskedkd": MaskedKD, "random": Random, "grid": Grid, "center": Center, "rollout": Rollout,
-           "teacher_topk": TeacherTopK, "rand_alloc": RandAlloc, "dynkd": DynKD, "sal_ratio": SalRatio,
+           "teacher_topk": TeacherTopK, "rand_alloc": RandAlloc, "dynkd": DynKD, "rand_dyn": RandDyn, "sal_ratio": SalRatio,
            "kd_sched": KDSched, "ent_weight": EntWeight}
