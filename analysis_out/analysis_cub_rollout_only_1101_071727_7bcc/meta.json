@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_rollout_only_1101_071727_7bcc",
+ "name": "cub_rollout_only",
+ "source_sha": "7bcc6e52fc4a52138a933762ee1d4a18310f3377149929a6afa7afe94f052a36",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, are the tokens chosen by full-depth rollout but not by lateroll (blocks 6..11) worse than random unselected tokens for the keep-only masked teacher's soft label?",
+  "method": "attention rollout (blocks 0..11, 0..5, 6..11), token swap test, keep-only masked teacher faithfulness (DKD TCKD, KL); image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); DeYoung et al. ACL 2020 (ERASER sufficiency, keep-only)"
+ },
+ "seconds": 17.8
+}
