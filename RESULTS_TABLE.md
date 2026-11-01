@@ -18,6 +18,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - lateroll@12 vs parent rollout: acc +0.00 %p (threshold 2.69) -> added part UNPROVEN
+- lateroll@20 vs parent rollout: acc +2.17 %p (threshold 2.69) -> added part UNPROVEN
 - lateroll@29 vs parent rollout: acc +0.50 %p (threshold 2.69) -> added part UNPROVEN
 - lateroll@49 vs parent rollout: acc +1.00 %p (threshold 2.69) -> added part UNPROVEN
 - sinkfree@12 vs parent maskedkd: acc +1.50 %p (threshold 2.69) -> added part UNPROVEN
@@ -34,17 +35,19 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 29.0 (3 seeds)
   - maskedkd : 98.0 (3 seeds)
-- screening only (fewer seeds): none
+- screening only (fewer seeds):
+  - lateroll@69541b : 20.0 (1 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
 - K=29: maskedkd 79.17; rollout 80.83; random 74.00; grid 74.50; center 79.00; tome 79.67 (Full KD 82.17)
+- K=20: maskedkd 78.00; rollout 79.83; random 73.33 (Full KD 82.17)
 - K=12: maskedkd 76.00; rollout 78.33; random 75.33; grid 74.33; center 76.00; tome 78.17 (Full KD 82.17)
 
 ## Search effort (screen)
-Total agent screen configs: 7
+Total agent screen configs: 8
+- lateroll: 4 configs
 - sinkfree: 3 configs
-- lateroll: 3 configs
 - trustfilt: 1 configs
 
 ## All finished runs
@@ -65,17 +68,21 @@ Total agent screen configs: 7
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
 | screen | lateroll@69541b |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.08 | 1108 | screen_lateroll_k12_s0_1031_130339_f599 |
+| screen | lateroll@69541b |  | 20 | 20.0 | 0 | 82.00 ± 0.00 | - | 11.44 | 3.81 | 0.08 | 377 | screen_lateroll_k20_s0_1101_100242_f95e |
 | screen | lateroll@69541b |  | 29 | 29.0 | 0,4,5 | 82.00 ± 0.58 | - | 12.99 | 5.36 | 0.08 | 518 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s5_1101_055814_a9a4 screen_lateroll_k29_s0_1031_130348_fd19 |
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
 | screen | maskedkd |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_maskedkd_k12_s0_1031_130150_a887 |
+| screen | maskedkd |  | 20 | 20.0 | 0 | 78.00 ± 0.00 | - | 11.44 | 3.81 | 0.00 | 312 | screen_maskedkd_k20_s0_1101_100251_336a |
 | screen | maskedkd |  | 29 | 29.0 | 0,4,5 | 79.67 ± 0.50 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s0_1031_130150_1393 |
 | screen | maskedkd |  | 49 | 49.0 | 0,4,5 | 80.78 ± 0.48 | - | 16.44 | 8.82 | 0.00 | 1035 | screen_maskedkd_k49_s5_1031_172301_3f83 screen_maskedkd_k49_s0_1031_130150_e26e screen_maskedkd_k49_s4_1031_172257_73af |
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
 | screen | oracle |  | 12 | 12.0 | 0 | 76.33 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 638 | screen_oracle_k12_s0_1031_130151_6802 |
 | screen | random |  | 12 | 12.0 | 0 | 75.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_random_k12_s0_1031_130151_7444 |
+| screen | random |  | 20 | 20.0 | 0 | 73.33 ± 0.00 | - | 11.46 | 3.81 | 0.00 | 320 | screen_random_k20_s0_1101_100259_6430 |
 | screen | random |  | 29 | 29.0 | 0 | 74.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1184 | screen_random_k29_s0_1031_130150_a433 |
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
 | screen | rollout |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.17 | 983 | screen_rollout_k12_s0_1031_130151_9b9e |
+| screen | rollout |  | 20 | 20.0 | 0 | 79.83 ± 0.00 | - | 11.45 | 3.81 | 0.17 | 353 | screen_rollout_k20_s0_1101_100255_f59b |
 | screen | rollout |  | 29 | 29.0 | 0,4,5 | 80.94 ± 0.35 | - | 12.99 | 5.36 | 0.17 | 931 | screen_rollout_k29_s4_1031_183515_ff99 screen_rollout_k29_s0_1031_130150_5726 screen_rollout_k29_s5_1031_183519_47eb |
 | screen | rollout |  | 49 | 49.0 | 0,4,5 | 81.28 ± 0.35 | - | 16.45 | 8.82 | 0.17 | 878 | screen_rollout_k49_s4_1031_172246_23ee screen_rollout_k49_s0_1031_130150_674d screen_rollout_k49_s5_1031_172253_99b6 |
 | screen | sinkfree@60bc72 |  | 12 | 12.0 | 0 | 77.50 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_sinkfree_k12_s0_1031_180704_f0b3 |
