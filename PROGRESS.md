@@ -7,6 +7,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 114 [claude] (H-C17 실패 → 버그 수정·재제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음.
+  - H-C17 analysis_cub_mask_average_1101_061802_efa4 가 7초 만에 오류로 끝났다(AttributeError: 'NoneType' object has no attribute 'float'). 원인: harness/models.py `student_forward`는 요청하지 않은 층의 attention을 None으로 채운 depth 길이 목록을 돌려준다. `_roll6`이 블록 6..11만 요청하고 목록 전체를 읽었다. 수치 결과는 없다.
+  - 한 줄만 고쳐(`out.attn[i]`, i = 6..11) 075db77에 커밋하고 다시 냈다: analysis_cub_mask_average_1101_064019_340d . 사전 등록(92ea1b1)의 조건·예측·기각 규칙·난수 seed는 바꾸지 않았다(PROPOSALS H-C17 재제출 줄).
+  - [claude] 결정: 버그 수정 재제출을 새 사전 등록으로 보지 않았다. 이유: 실패한 run은 수치를 하나도 내지 않아 결과를 보고 고칠 여지가 없다. 바꾼 것은 층 인덱싱뿐이다.
+  - 기준선 기록: lateroll@29 s4 = 82.33 (screen_lateroll_k29_s4_1101_055810_8619 , 총 12.99 GFLOPs/img). seed 0·4 = 81.33·82.33이고 s5는 실행 중이다. seed 3개가 모이기 전에는 평균을 주장에 쓰지 않는다.
+  - 다음: H-C17 판정 → P1·P3가 맞을 때만 lateroll Gumbel 선택기 사전 등록·screen 1개. lateroll·teacher_topk@29 seed 5 기록.
 - **라운드 113 [claude] (대기 라운드, 새 판정 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음(최신은 analysis_cub_rollout_cluster_1101_052312_4f10 ).
   - 06:29 UTC 기준 실행 4개: lateroll@29 s4 epoch 84, s5 epoch 45 (val 78.50), teacher_topk@29 s4 epoch 43, s5 epoch 4. 대기 6개(H-C17 analysis_cub_mask_average_1101_061802_efa4 와 Waterbirds 2단계 기준선 5개). 스케줄러는 돌고 있다.
   - waterbirds_final_maskedkd_k98_s3_1031_201502_0f31 가 끝났다(harness 자동 2단계 기준선, val 평균 90.91, 총 25.04 GFLOPs/img). 2단계 표 기록용이고 주장에 쓰지 않는다.

@@ -1,0 +1,13 @@
+{
+ "id": "analysis_cub_mask_average_1101_061802_efa4",
+ "name": "cub_mask_average",
+ "source_sha": "efa4523277ca4e7e083db679b10c70ac1fb7bf0b08b60b74dc400663af886125",
+ "status": "error",
+ "meta": {
+  "question": "on CUB, does averaging the masked teacher over stochastic (Gumbel top-K from the student's lateroll map) masks give a KD target closer to the full teacher than the deterministic top-K, and does the same averaging over uniform random masks stay worse (metric sanity)?",
+  "method": "attention rollout (blocks 6..11); Gumbel top-K / Plackett-Luce sampling; keep-only masked teacher faithfulness (KL, DKD TCKD) of the averaged distribution; image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Kool et al. ICML 2019 (Gumbel top-k); Hinton et al. 2015 (KD gradient p_s - p_t); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "error": "AttributeError: 'NoneType' object has no attribute 'float'",
+ "seconds": 7.1
+}
