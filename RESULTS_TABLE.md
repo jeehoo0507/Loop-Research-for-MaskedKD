@@ -30,6 +30,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 ### final: Full KD val 82.83 (seeds 1); KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds): none
 - screening only (fewer seeds):
+  - lateroll@69541b : 29.0 (1 seeds)
   - maskedkd : 98.0 (1 seeds)
 ### screen: Full KD val 82.17 (seeds 0,4,5); KD gain +1.33, tolerance 0.67 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
@@ -55,10 +56,13 @@ Total agent screen configs: 8
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 | final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
+| final | lateroll@69541b |  | 29 | 29.0 | 1 | 82.33 ± 0.00 | - | 12.99 | 5.36 | 0.08 | 347 | final_lateroll_k29_s1_1101_104303_ef38 |
 | final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
+| final | maskedkd |  | 29 | 29.0 | 1 | 81.33 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 288 | final_maskedkd_k29_s1_1101_104303_b676 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
+| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1 | 80.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 290 | final_tome_k29_s1_1101_104303_ff82 |
 | screen | ce |  | 0 | None | 0,4,5 | 80.83 ± 1.96 | - | 7.64 | 0.00 | 0.00 | 1482 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
 | screen | center |  | 29 | 29.0 | 0,4,5 | 79.61 ± 0.67 | - | 13.00 | 5.36 | 0.00 | 639 | screen_center_k29_s4_1101_074021_b6e4 screen_center_k29_s5_1101_074025_d5c6 screen_center_k29_s0_1031_130150_cbde |
