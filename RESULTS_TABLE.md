@@ -180,6 +180,7 @@ Total agent screen configs: 15
 | final | rollout |  | 29 | 29.0 | 1 | 89.91 ± 0.00 | 63.16 ± 0.00 | 12.99 | 5.36 | 0.17 | 913 | waterbirds_final_rollout_k29_s1_1031_201502_e135 |
 | final | suffdisc@0f0600 |  | 12 | 12.0 | 1,2,3 | 89.63 ± 0.46 | 62.40 ± 2.60 | 15.02 | 2.45 | 4.93 | 192 | final_suffdisc_k12_s3_1031_002453_9ebe final_suffdisc_k12_s1_1031_002441_5d86 final_suffdisc_k12_s2_1031_002448_664e |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
+| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1 | 89.74 ± 0.00 | 48.87 ± 0.00 | 12.00 | 4.36 | 0.00 | 1171 | waterbirds_final_tome_k29_s1_1031_201502_610a |
 | screen | adaroll@069f50 |  | 49 | 48.5 | 0 | 90.08 ± 0.00 | 63.91 ± 0.00 | 16.36 | 8.73 | 0.17 | 206 | screen_adaroll_k49_s0_1030_192757_7edc |
 | screen | ce |  | 0 | None | 0,1,2 | 89.32 ± 0.71 | 66.42 ± 1.89 | 7.64 | 0.00 | 0.00 | 513 | screen_ce_k0_s0_1030_123806_4f57 screen_ce_k0_s2_1030_130545_295c screen_ce_k0_s1_1030_130545_c89b |
 | screen | center |  | 12 | 12.0 | 0,1,2,3,4,5,6 | 88.54 ± 0.42 | 54.03 ± 2.47 | 10.09 | 2.45 | 0.00 | 308 | screen_center_k12_s0_1030_135953_c64e screen_center_k12_s6_1031_051116_3b33 screen_center_k12_s3_1030_233032_bf21 screen_center_k12_s5_1031_051111_594a screen_center_k12_s4_1031_051107_b568 screen_center_k12_s1_1030_185949_1766 screen_center_k12_s2_1030_233024_3dcf |
