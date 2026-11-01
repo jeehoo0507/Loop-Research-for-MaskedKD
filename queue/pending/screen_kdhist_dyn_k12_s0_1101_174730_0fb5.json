@@ -1,0 +1,19 @@
+{
+ "id": "screen_kdhist_dyn_k12_s0_1101_174730_0fb5",
+ "kind": "train",
+ "dataset": "cub",
+ "stage2": null,
+ "method": "kdhist_dyn",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-C24 (QUEUE 2026-11-01 22:40 + '\ubcf4\ucda9'): all-or-nothing teacher concentration, learning-state signal.\n\nSame split as rand_dyn/dynkd (whole teacher for m = int(budget * B // 196) images of the batch, CE only for the rest).\nThe m images are the ones with the largest KD loss the last time they got the teacher (observe()); images never\ntaught yet come first, in random order. The non-interpretability branch's primary signal pre-registered in H-C22\n(\"kd29\", the student's KL to the masked teacher), here measured on the whole teacher at no extra teacher cost.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase\n\nMETA = {\n    \"method\": \"per-image KD loss history (last observed KL to the whole teacher), no attribution\",\n    \"paper\": \"Li et al. EMNLP 2021 (Dynamic KD, sample-level teacher use); loss-based sample selection (e.g. OHEM)\",\n    \"why\": \"an image whose student was far from the teacher last time is where the teacher's soft label still \"\n           \"carries most the student has not learned, so it gets the whole teacher (H-C22 non-interp primary)\",\n    \"vs_maskedkd\": \"chooses which images get the whole teacher, not which tokens; MaskedKD gives every image K tokens\",\n    \"prior_art\": \"Dynamic KD picks images by student entropy (builtin dynkd); here by the observed KD loss history\",\n    \"parent\": \"rand_dyn\",\n    \"per_image_budget\": True,\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [], \"tokens\": []}\n\n    def __init__(self, **kwargs):\n        super().__init__(**kwargs)\n        self.last = None   # [N] last observed KD loss per training row, +inf = never taught\n\n    def _grow(self, idx):\n        need = int(idx.max().item()) + 1\n        if self.last is None or self.last.numel() < need:\n            new = torch.full((max(need, 6000),), float(\"inf\"), device=idx.device)\n            if self.last is not None:\n                new[: self.last.numel()] = self.last\n            self.last = new\n\n    def select(self, ctx):\n        B, n = ctx.images.shape[0], ctx.num_patches\n        m = int(ctx.budget * B // n)\n        keep = torch.zeros(B, n, dtype=torch.bool, device=ctx.images.device)\n        if not m:\n            return keep\n        tie = torch.rand(B, device=ctx.images.device)\n        if ctx.sample_idx is None:\n            score = tie\n        else:\n            idx = ctx.sample_idx.to(ctx.images.device).long()\n            self._grow(idx)\n            s = self.last[idx]\n            score = torch.where(torch.isinf(s), 1e9 + tie, s + 1e-6 * tie)\n        keep[score.topk(m).indices] = True\n        return keep\n\n    def observe(self, fb):\n        if fb.sample_idx is None:\n            return\n        idx = fb.sample_idx.long().to(fb.kd.device)\n        self._grow(idx)\n        ok = ~torch.isnan(fb.kd)\n        self.last[idx[ok]] = fb.kd[ok].float()\n",
+ "selector_sha": "cca0d32790e569d8e0dc683a883e8ae633d4630c2779b51ea3d0ecad01f275f2",
+ "note": "H-C24 prereg bf15ed2",
+ "by": "claude",
+ "priority": 0,
+ "submitted": "2026-11-01 17:47:30",
+ "lr": null
+}

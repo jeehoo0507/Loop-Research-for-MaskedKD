@@ -1,0 +1,19 @@
+{
+ "id": "smoke_align_dyn_k12_s0_1101_174711_95af",
+ "kind": "train",
+ "dataset": "cub",
+ "stage2": null,
+ "method": "align_dyn",
+ "keep": 12.0,
+ "seed": 0,
+ "tier": "smoke",
+ "epochs": 1,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-C24 (QUEUE 2026-11-01 22:40 + '\ubcf4\ucda9'): all-or-nothing teacher concentration, interpretability signal.\n\nSame split as rand_dyn/dynkd (whole teacher for m images of the batch, CE only for the rest). The m images are the\nones whose student attention rollout (all 12 blocks) agrees least with the teacher's cached rollout of the whole\nimage (row Spearman). The interpretability branch's primary signal pre-registered in H-C22 (\"align\", need = -align).\nThe cache build cost (0.35 GFLOPs/img-step at CUB, about 2 full-teacher tokens per image) is paid out of the budget:\nm = int((budget - CACHE_TOK) * B // 196).\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase\n\nCACHE_TOK = 2.0\n\nMETA = {\n    \"method\": \"student attention rollout vs cached teacher attention rollout, per-image rank agreement\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Li et al. EMNLP 2021 (Dynamic KD, sample-level teacher use)\",\n    \"why\": \"an image where the student attends to different evidence than the teacher is where the teacher's soft \"\n           \"label carries what the student lacks, so it gets the whole teacher (H-C22 interpretability primary)\",\n    \"vs_maskedkd\": \"chooses which images get the whole teacher, not which tokens; MaskedKD gives every image K tokens\",\n    \"prior_art\": \"Dynamic KD picks images by student entropy (builtin dynkd); here by student-teacher attribution agreement\",\n    \"parent\": \"rand_dyn\",\n    \"uses_teacher_cache\": True,\n    \"per_image_budget\": True,\n}\n\n\ndef _rank(x):\n    return x.argsort(dim=1).argsort(dim=1).float()\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(12)), \"tokens\": []}\n\n    def select(self, ctx):\n        B, n = ctx.images.shape[0], ctx.num_patches\n        m = int(max(ctx.budget - CACHE_TOK, 0.0) * B // n)\n        keep = torch.zeros(B, n, dtype=torch.bool, device=ctx.images.device)\n        if not m:\n            return keep\n        r = None\n        for a in ctx.out.attn:\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        ra, rb = _rank(r[:, 0, 1:]), _rank(ctx.teacher_map.float())\n        ra = ra - ra.mean(1, keepdim=True)\n        rb = rb - rb.mean(1, keepdim=True)\n        align = (ra * rb).sum(1) / (ra.norm(dim=1) * rb.norm(dim=1) + 1e-12)\n        keep[(-align).topk(m).indices] = True\n        return keep\n",
+ "selector_sha": "a5a4989edfaf3ef0ab2ff802c1f78a9438a93a89bca5bf44f63482a1200b7deb",
+ "note": "H-C24 smoke",
+ "by": "claude",
+ "priority": 5,
+ "submitted": "2026-11-01 17:47:11",
+ "lr": null
+}
