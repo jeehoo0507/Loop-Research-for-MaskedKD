@@ -390,3 +390,7 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 셋 다 맞으면 이어질 방향(아직 방법 아님): student 점수의 이웃 억제 선택(덩어리 대신 여러 부분 덮기)을 별도로 사전 등록한다. 선행 기법 확인 필요: 다양성 기반 토큰 가지치기(DivPrune 등 VLM 문헌), 검출의 NMS. 그때 노벨티를 문헌으로 다시 확인한다. roll6_nms가 roll6보다 나쁘면(이미 충분히 흩어진 지도에 억제가 해롭다) 그 방향의 이득 한계로 적는다.
   - 한계: common student 하나, 기술 분석이고 주장이 아니다. 4-이웃 억제는 한 가지 분산 방식일 뿐이다. 이웃 억제는 K=49에서 196/5 < 49라 중간에 억제가 풀린다(코드에 규칙 고정).
   - 제출 시점: 스케줄러가 꺼져 있고 대기 11개(8개 초과)라 이번 라운드에는 내지 않는다. 스케줄러가 돌아오고 H-C14가 끝난 뒤 낸다.
+
+## 2026-11-01 ideas from Codex (independent)
+IDEA 1: Contrastive token-gate attribution — From student logits \(z\), take predicted class \(c\), detached rival weights \(q=\mathrm{softmax}(z_{\neg c})\), and margin \(m=z_c-\sum_{j\ne c}q_jz_j\); request penultimate-block outputs \(H\) (`tokens=[-2]`).  
+IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), including CLS; factorize their signed split \(X=[\max(H,0),\max(-H,0)]\approx UV\) using rank-6 NMF, ten multiplicative updates, and content-based initialization; normalize rows of \(V\) to unit norm while rescaling \(U\).  
