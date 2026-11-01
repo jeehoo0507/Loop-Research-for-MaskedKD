@@ -55,12 +55,15 @@ Total agent screen configs: 8
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
+| final | center |  | 29 | 29.0 | 1 | 78.33 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 286 | final_center_k29_s1_1101_104303_c1f7 |
 | final | full |  | 196 | 196.0 | 1 | 82.83 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 294 | cub_final_full_k196_s1_1030_153055_d87b |
+| final | grid |  | 29 | 29.0 | 1 | 75.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 286 | final_grid_k29_s1_1101_104303_0ce5 |
 | final | lateroll@69541b |  | 29 | 29.0 | 1 | 82.33 ± 0.00 | - | 12.99 | 5.36 | 0.08 | 347 | final_lateroll_k29_s1_1101_104303_ef38 |
 | final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
 | final | maskedkd |  | 29 | 29.0 | 1 | 81.33 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 288 | final_maskedkd_k29_s1_1101_104303_b676 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
+| final | random |  | 29 | 29.0 | 1 | 74.67 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 288 | final_random_k29_s1_1101_104303_9664 |
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
 | final | rollout |  | 29 | 29.0 | 1 | 81.33 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1 | 80.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 290 | final_tome_k29_s1_1101_104303_ff82 |
