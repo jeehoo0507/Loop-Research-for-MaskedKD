@@ -1,0 +1,54 @@
+{
+ "id": "smoke_mk_halfkd_k98_s0_1101_203947_428e",
+ "status": "done",
+ "method": "mk_halfkd",
+ "keep": 98.0,
+ "seed": 0,
+ "tier": "smoke",
+ "epochs": 1,
+ "epochs_done": 1,
+ "val_acc_last": 0.20000000949949026,
+ "val_wga_last": null,
+ "val_group_acc_last": null,
+ "student_lr": 0.0001,
+ "lr_override": null,
+ "mean_kept": 98.0,
+ "dataset": "cub",
+ "tome_r": null,
+ "img_per_s_mean": 631.8,
+ "flops": {
+  "total_gflops_per_img": 25.0372,
+  "selector_gflops_per_img": 0.0,
+  "teacher_gflops_per_img": 17.4099,
+  "student_gflops_per_img": 7.6273,
+  "windows": 3
+ },
+ "train_time_s": 6.1,
+ "peak_vram_gib": 4.13,
+ "history": [
+  {
+   "epoch": 1,
+   "loss": 3.7567168792088825,
+   "epoch_s": 6.1,
+   "img_per_s": 631.8,
+   "mean_kept": 98.0,
+   "val_acc": 0.20000000949949026
+  }
+ ],
+ "selector_meta": {
+  "method": "MaskedKD top-K (last student block CLS attention) with kd_weight 0.5 on every image",
+  "paper": "Son et al. 2023 (MaskedKD); diagnostic control for H-C25 rand_dyn",
+  "why": "separates KD-weight dilution from per-image coverage as the reason all-or-nothing rand_dyn@98 stays at CE level while maskedkd@98 reaches Full",
+  "vs_maskedkd": "same tokens and teacher cost; only the KD term is weighted 0.5",
+  "prior_art": "none claimed; this is a loss-weight ablation, not a selector",
+  "parent": "maskedkd"
+ },
+ "selector_sha": "1b2cf88ee537ce0ad1735a6a3922639ea2049af12f8a97c136b13c94d1450a4e",
+ "sel_args": {},
+ "teacher_sha": "59b864387ba5d333842ac95289e0bd90e86922133af1acca7c42b5821768bc45",
+ "harness_digest": "8ac8a710a4ae1eb73e07317397bc5bef4ed96ac8fc7a5499c3f2024dbe322e0f",
+ "git": "1a2c68294fa3979bb5167c5204aff88255d9852e",
+ "submitted_by": "claude",
+ "note": "H-C26 smoke",
+ "analysis_only": false
+}

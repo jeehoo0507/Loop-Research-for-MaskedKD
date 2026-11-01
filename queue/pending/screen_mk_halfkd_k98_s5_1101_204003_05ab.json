@@ -1,0 +1,19 @@
+{
+ "id": "screen_mk_halfkd_k98_s5_1101_204003_05ab",
+ "kind": "train",
+ "dataset": "cub",
+ "stage2": null,
+ "method": "mk_halfkd",
+ "keep": 98.0,
+ "seed": 5,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-C26 (diagnostic, not a method): official MaskedKD top-K with every image's KD term weighted 0.5.\n\nrand_dyn@98 gives the whole teacher to half the batch and CE only to the rest, so the batch loss is\n0.75 CE + 0.25 KD, against 0.5 CE + 0.5 KD for maskedkd@98 / Full. This keeps MaskedKD's token choice and\ncoverage (every image, K tokens) but halves the KD weight (0.5 CE + 0.25 KD), at the same teacher cost as\nmaskedkd@K. It asks whether rand_dyn lost the KD gain because of the smaller KD weight or because of coverage.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, topk_mask\n\nMETA = {\n    \"method\": \"MaskedKD top-K (last student block CLS attention) with kd_weight 0.5 on every image\",\n    \"paper\": \"Son et al. 2023 (MaskedKD); diagnostic control for H-C25 rand_dyn\",\n    \"why\": \"separates KD-weight dilution from per-image coverage as the reason all-or-nothing rand_dyn@98 \"\n           \"stays at CE level while maskedkd@98 reaches Full\",\n    \"vs_maskedkd\": \"same tokens and teacher cost; only the KD term is weighted 0.5\",\n    \"prior_art\": \"none claimed; this is a loss-weight ablation, not a selector\",\n    \"parent\": \"maskedkd\",\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [-1], \"tokens\": []}\n\n    def select(self, ctx):\n        scores = ctx.out.attn[-1].detach().float().mean(dim=1)[:, 0, 1:]\n        keep = topk_mask(scores, int(ctx.budget))\n        w = torch.full((keep.shape[0],), 0.5, device=keep.device)\n        return keep, w\n",
+ "selector_sha": "1b2cf88ee537ce0ad1735a6a3922639ea2049af12f8a97c136b13c94d1450a4e",
+ "note": "H-C26 KD-weight dilution vs coverage",
+ "by": "claude",
+ "priority": 0,
+ "submitted": "2026-11-01 20:40:03",
+ "lr": null
+}
