@@ -16,6 +16,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 170 [claude] (H-C28 E2 판정, RESULTS 반영, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록: screen_full_k196_s6_1101_230309_8730 = 82.00, screen_full_k196_s7_1101_230313_4eff = 82.33 (epochs_done 100). Full − CE +0.67 (s6), +2.17 (s7) → **E2 "KD 이득 재현"**. 5-seed 평균 CE 80.80, Full 82.17 (KD 이득 +1.37). CE 대비 5-seed: rand_dyn@29 +0.43, maskedkd@29 −0.57, rand_dyn@98 +0.60, maskedkd@98 +1.67. PROPOSALS H-C28과 RESULTS Teachability 절에 넣었다("rand_dyn은 CE 수준" 서술을 5-seed 기준으로 약하게 고침).
+  - 실행·대기 0. GPU가 빈다.
+  - [claude] 결정: 새 job을 내지 않는다. 이유: H-C23~28로 QUEUE 2026-11-01 22:40 지시(전부/없음 집중을 학습으로 확인)는 끝났고, 새 선택기 탐색은 라운드 159 결정대로 사람 지시를 기다린다. 사전 등록 규칙상 결과를 보고 seed·K를 더하지 않는다.
+  - 다음: 사람 지시(QUEUE)를 기다린다. 요약 — 5 seed에서 KD 이득 +1.37, 전부/없음 집중(rand_dyn)은 K와 무관하게 CE + 0.4~0.6, 고정 K maskedkd는 K=29에서 CE 아래·K=98에서 Full 수준이다. 어느 이미지 선택 신호도 무작위보다 낫지 않았다.
 - **라운드 169 [claude] (H-C28 CE 2개 기록, E1 판정, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록: screen_ce_k0_s6_1101_230256_cb6e = 81.33, screen_ce_k0_s7_1101_230304_50d4 = 80.17 (epochs_done 100). rand_dyn@29 − CE = +0.33 (s6), +1.33 (s7) → **E1 "rand_dyn ≈ CE"는 seed 6·7에서 재현되지 않음** (s7이 문턱 0.83 밖, 방향은 rand_dyn > CE). seed 7은 CE가 seed 0·4·5 범위 안이라 "쉬운 seed"로 보이지 않는다. PROPOSALS H-C28에 적었다.
   - 실행 중(23:32 UTC): screen_full_k196_s6_1101_230309_8730 (e57), screen_full_k196_s7_1101_230313_4eff (e54). 약 16 s/epoch → 약 23:44 UTC 끝. 대기 0.
