@@ -105,7 +105,7 @@ Total agent screen configs: 11
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
 | screen | maskedkd |  | 12 | 12.0 | 0,4,5 | 76.72 ± 0.63 | - | 10.07 | 2.45 | 0.00 | 622 | screen_maskedkd_k12_s5_1101_163741_b2e9 screen_maskedkd_k12_s4_1101_163726_3dc8 screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 20 | 20.0 | 0 | 78.00 ± 0.00 | - | 11.44 | 3.81 | 0.00 | 312 | screen_maskedkd_k20_s0_1101_100251_336a |
-| screen | maskedkd |  | 29 | 29.0 | 0,4,5 | 79.67 ± 0.50 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s0_1031_130150_1393 |
+| screen | maskedkd |  | 29 | 29.0 | 0,4,5,6 | 79.88 ± 0.58 | - | 12.99 | 5.36 | 0.00 | 944 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s6_1101_215100_14b0 screen_maskedkd_k29_s0_1031_130150_1393 |
 | screen | maskedkd |  | 49 | 49.0 | 0,4,5 | 80.78 ± 0.48 | - | 16.44 | 8.82 | 0.00 | 1035 | screen_maskedkd_k49_s5_1031_172301_3f83 screen_maskedkd_k49_s0_1031_130150_e26e screen_maskedkd_k49_s4_1031_172257_73af |
 | screen | maskedkd |  | 98 | 98.0 | 0,4,5 | 82.56 ± 1.90 | - | 25.04 | 17.41 | 0.00 | 916 | screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
 | screen | mk_halfkd@1b2cf8 |  | 98 | 98.0 | 0,4,5 | 81.83 ± 0.73 | - | 25.04 | 17.41 | 0.00 | 335 | screen_mk_halfkd_k98_s5_1101_204003_05ab screen_mk_halfkd_k98_s0_1101_203954_2f5c screen_mk_halfkd_k98_s4_1101_203959_bb22 |
