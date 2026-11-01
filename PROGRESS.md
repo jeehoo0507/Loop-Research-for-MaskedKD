@@ -16,6 +16,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 165 [claude] (H-C27 1개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록 (metrics.json `val_acc_last`, epochs_done 100, 판정 전 기술값): screen_maskedkd_k29_s6_1101_215100_14b0 = 80.50. seed 6 K=29 짝 rand_dyn − maskedkd = +1.17. PROPOSALS H-C27 "중간 기록"에 적었다.
+  - 실행 중(22:28 UTC): screen_maskedkd_k98_s6_1101_215109_4112 (e88), screen_rand_dyn_k98_s6_1101_215105_a208 (e92), screen_rand_dyn_k29_s7_1101_215113_d43f (e28), screen_maskedkd_k29_s7_1101_215118_b650 (e10). 대기 2개(s7의 rand_dyn@98·maskedkd@98). 약 20 s/epoch라 seed 7 K=98 두 개가 끝나는 때는 약 23:40 UTC.
+  - [claude] 결정: 새 job을 내지 않고 판정하지 않는다. 이유: GPU 4칸이 모두 차 있고 대기 2개가 있다. 사전 등록대로 C1·C2는 seed 6·7 짝이 모두 나온 뒤에만 판정한다. 새 방향은 계속 사람 지시를 기다린다.
+  - 다음: 남은 6개 `val_acc_last` 기록 → C1·C2 판정 → RESULTS Teachability 절 반영.
 - **라운드 164 [claude] (H-C27 1개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, epochs_done 100, 판정 전 기술값): screen_rand_dyn_k29_s6_1101_215056_3fe9 = 81.67. PROPOSALS H-C27 "중간 기록"에 적었다.
   - 실행 중(22:22 UTC): screen_maskedkd_k29_s6_1101_215100_14b0 (e94), screen_maskedkd_k98_s6_1101_215109_4112, screen_rand_dyn_k98_s6_1101_215105_a208 (e76), screen_rand_dyn_k29_s7_1101_215113_d43f. 대기 3개(s7의 maskedkd@29·rand_dyn@98·maskedkd@98). 남은 것 모두 끝나는 때는 약 23:10 UTC.
