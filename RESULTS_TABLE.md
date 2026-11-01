@@ -90,7 +90,7 @@ Total agent screen configs: 8
 | screen | grid |  | 12 | 12.0 | 0 | 74.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_grid_k12_s0_1031_130151_33bd |
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
-| screen | lateroll@69541b |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.08 | 1108 | screen_lateroll_k12_s0_1031_130339_f599 |
+| screen | lateroll@69541b |  | 12 | 12.0 | 0,4,5 | 78.56 ± 0.25 | - | 10.08 | 2.45 | 0.08 | 547 | screen_lateroll_k12_s5_1101_171055_ddbf screen_lateroll_k12_s4_1101_171051_5464 screen_lateroll_k12_s0_1031_130339_f599 |
 | screen | lateroll@69541b |  | 20 | 20.0 | 0 | 82.00 ± 0.00 | - | 11.44 | 3.81 | 0.08 | 377 | screen_lateroll_k20_s0_1101_100242_f95e |
 | screen | lateroll@69541b |  | 29 | 29.0 | 0,4,5 | 82.00 ± 0.58 | - | 12.99 | 5.36 | 0.08 | 518 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s5_1101_055814_a9a4 screen_lateroll_k29_s0_1031_130348_fd19 |
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
@@ -106,7 +106,7 @@ Total agent screen configs: 8
 | screen | random |  | 20 | 20.0 | 0 | 73.33 ± 0.00 | - | 11.46 | 3.81 | 0.00 | 320 | screen_random_k20_s0_1101_100259_6430 |
 | screen | random |  | 29 | 29.0 | 0 | 74.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1184 | screen_random_k29_s0_1031_130150_a433 |
 | screen | random |  | 49 | 49.0 | 0 | 78.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_random_k49_s0_1031_130150_91ee |
-| screen | rollout |  | 12 | 12.0 | 0,4 | 78.00 ± 0.47 | - | 10.08 | 2.45 | 0.17 | 612 | screen_rollout_k12_s4_1101_171039_2114 screen_rollout_k12_s0_1031_130151_9b9e |
+| screen | rollout |  | 12 | 12.0 | 0,4,5 | 78.11 ± 0.38 | - | 10.08 | 2.45 | 0.17 | 490 | screen_rollout_k12_s4_1101_171039_2114 screen_rollout_k12_s0_1031_130151_9b9e screen_rollout_k12_s5_1101_171046_f2c5 |
 | screen | rollout |  | 20 | 20.0 | 0 | 79.83 ± 0.00 | - | 11.45 | 3.81 | 0.17 | 353 | screen_rollout_k20_s0_1101_100255_f59b |
 | screen | rollout |  | 29 | 29.0 | 0,4,5 | 80.94 ± 0.35 | - | 12.99 | 5.36 | 0.17 | 931 | screen_rollout_k29_s4_1031_183515_ff99 screen_rollout_k29_s0_1031_130150_5726 screen_rollout_k29_s5_1031_183519_47eb |
 | screen | rollout |  | 49 | 49.0 | 0,4,5 | 81.28 ± 0.35 | - | 16.45 | 8.82 | 0.17 | 878 | screen_rollout_k49_s4_1031_172246_23ee screen_rollout_k49_s0_1031_130150_674d screen_rollout_k49_s5_1031_172253_99b6 |
