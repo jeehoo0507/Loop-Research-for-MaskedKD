@@ -8,7 +8,7 @@ in any decision here. Decisions use mean accuracy and measured train-step GFLOPs
 
 Gate: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.83 (need +1.0): PASS; MaskedKD@98 82.56 vs Full 82.17 (need >= Full - 0.5): PASS
 
-Noise: acc seed sigma 1.21 %p (pooled, dof 5) -> threshold 2.43 %p
+Noise: acc seed sigma 1.11 %p (pooled, dof 6) -> threshold 2.21 %p
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - lateroll@29 vs maskedkd@29 [acc]: +1.17 %p, 95% CI [+0.75, +1.58], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
@@ -30,17 +30,17 @@ Noise: acc seed sigma 1.21 %p (pooled, dof 5) -> threshold 2.43 %p
 - lateroll@29 vs rollout@29 [acc]: +0.94 %p, 95% CI [+0.71, +1.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
-- align_dyn@12 vs parent rand_dyn: acc +0.67 %p (threshold 2.43) -> added part UNPROVEN
-- kdhist_dyn@12 vs parent rand_dyn: acc +0.50 %p (threshold 2.43) -> added part UNPROVEN
-- lateroll@12 vs parent rollout: acc +0.00 %p (threshold 2.43) -> added part UNPROVEN
-- lateroll@20 vs parent rollout: acc +2.17 %p (threshold 2.43) -> added part UNPROVEN
-- lateroll@29 vs parent rollout: acc +0.50 %p (threshold 2.43) -> added part UNPROVEN
-- lateroll@49 vs parent rollout: acc +1.00 %p (threshold 2.43) -> added part UNPROVEN
-- mk_halfkd@98 vs parent maskedkd: acc +0.33 %p (threshold 2.43) -> added part UNPROVEN
-- sinkfree@12 vs parent maskedkd: acc +1.50 %p (threshold 2.43) -> added part UNPROVEN
-- sinkfree@29 vs parent maskedkd: acc -0.33 %p (threshold 2.43) -> added part UNPROVEN
-- sinkfree@49 vs parent maskedkd: acc +0.33 %p (threshold 2.43) -> added part UNPROVEN
-- trustfilt@29 vs parent lateroll: acc +0.50 %p (threshold 2.43) -> added part UNPROVEN
+- align_dyn@12 vs parent rand_dyn: acc +0.67 %p (threshold 2.21) -> added part UNPROVEN
+- kdhist_dyn@12 vs parent rand_dyn: acc +0.50 %p (threshold 2.21) -> added part UNPROVEN
+- lateroll@12 vs parent rollout: acc +0.00 %p (threshold 2.21) -> added part UNPROVEN
+- lateroll@20 vs parent rollout: acc +2.17 %p (threshold 2.21) -> added part UNPROVEN
+- lateroll@29 vs parent rollout: acc +0.50 %p (threshold 2.21) -> added part UNPROVEN
+- lateroll@49 vs parent rollout: acc +1.00 %p (threshold 2.21) -> added part UNPROVEN
+- mk_halfkd@98 vs parent maskedkd: acc +0.33 %p (threshold 2.21) -> added part UNPROVEN
+- sinkfree@12 vs parent maskedkd: acc +1.50 %p (threshold 2.21) -> added part UNPROVEN
+- sinkfree@29 vs parent maskedkd: acc -0.33 %p (threshold 2.21) -> added part UNPROVEN
+- sinkfree@49 vs parent maskedkd: acc +0.33 %p (threshold 2.21) -> added part UNPROVEN
+- trustfilt@29 vs parent lateroll: acc +0.50 %p (threshold 2.21) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 81.72 (seeds 1,2,3); KD gain +0.72, tolerance 0.36 %p; smallest mean kept tokens within it
@@ -51,7 +51,7 @@ Noise: acc seed sigma 1.21 %p (pooled, dof 5) -> threshold 2.43 %p
 ### screen: Full KD val 82.17 (seeds 0,4,5); KD gain +1.33, tolerance 0.67 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 29.0 (3 seeds)
-  - maskedkd : 98.0 (4 seeds)
+  - maskedkd : 98.0 (5 seeds)
   - mk_halfkd@1b2cf8 : 98.0 (3 seeds)
 - screening only (fewer seeds):
   - lateroll@69541b : 20.0 (1 seeds)
@@ -105,15 +105,15 @@ Total agent screen configs: 11
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
 | screen | maskedkd |  | 12 | 12.0 | 0,4,5 | 76.72 ± 0.63 | - | 10.07 | 2.45 | 0.00 | 622 | screen_maskedkd_k12_s5_1101_163741_b2e9 screen_maskedkd_k12_s4_1101_163726_3dc8 screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 20 | 20.0 | 0 | 78.00 ± 0.00 | - | 11.44 | 3.81 | 0.00 | 312 | screen_maskedkd_k20_s0_1101_100251_336a |
-| screen | maskedkd |  | 29 | 29.0 | 0,4,5,6 | 79.88 ± 0.58 | - | 12.99 | 5.36 | 0.00 | 944 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s6_1101_215100_14b0 screen_maskedkd_k29_s0_1031_130150_1393 |
+| screen | maskedkd |  | 29 | 29.0 | 0,4,5,6,7 | 80.23 ± 0.95 | - | 12.99 | 5.36 | 0.00 | 814 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s6_1101_215100_14b0 screen_maskedkd_k29_s7_1101_215118_b650 screen_maskedkd_k29_s0_1031_130150_1393 |
 | screen | maskedkd |  | 49 | 49.0 | 0,4,5 | 80.78 ± 0.48 | - | 16.44 | 8.82 | 0.00 | 1035 | screen_maskedkd_k49_s5_1031_172301_3f83 screen_maskedkd_k49_s0_1031_130150_e26e screen_maskedkd_k49_s4_1031_172257_73af |
-| screen | maskedkd |  | 98 | 98.0 | 0,4,5,6 | 82.46 ± 1.56 | - | 25.04 | 17.41 | 0.00 | 745 | screen_maskedkd_k98_s6_1101_215109_4112 screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa |
+| screen | maskedkd |  | 98 | 98.0 | 0,4,5,6,7 | 82.47 ± 1.35 | - | 25.04 | 17.41 | 0.00 | 660 | screen_maskedkd_k98_s6_1101_215109_4112 screen_maskedkd_k98_s0_1031_111002_5715 screen_maskedkd_k98_s4_1031_114911_7153 screen_maskedkd_k98_s5_1031_114911_80fa screen_maskedkd_k98_s7_1101_215126_017f |
 | screen | mk_halfkd@1b2cf8 |  | 98 | 98.0 | 0,4,5 | 81.83 ± 0.73 | - | 25.04 | 17.41 | 0.00 | 335 | screen_mk_halfkd_k98_s5_1101_204003_05ab screen_mk_halfkd_k98_s0_1101_203954_2f5c screen_mk_halfkd_k98_s4_1101_203959_bb22 |
 | screen | oracle |  | 12 | 12.0 | 0 | 76.33 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 638 | screen_oracle_k12_s0_1031_130151_6802 |
 | screen | rand_dyn |  | 12 | 10.7 | 0,4,5 | 80.89 ± 1.23 | - | 9.56 | 1.92 | 0.00 | 376 | screen_rand_dyn_k12_s4_1101_163722_152f screen_rand_dyn_k12_s5_1101_163737_06e0 screen_rand_dyn_k12_s0_1101_163714_2f8d |
 | screen | rand_dyn |  | 29 | 27.6 | 0,4,5,6,7 | 81.23 ± 0.63 | - | 12.58 | 4.94 | 0.00 | 379 | screen_rand_dyn_k29_s7_1101_215113_d43f screen_rand_dyn_k29_s4_1101_145534_d590 screen_rand_dyn_k29_s0_1101_145525_79b0 screen_rand_dyn_k29_s6_1101_215056_3fe9 screen_rand_dyn_k29_s5_1101_151255_4296 |
 | screen | rand_dyn |  | 49 | 49.0 | 0,4,5 | 80.89 ± 0.77 | - | 16.42 | 8.78 | 0.00 | 313 | screen_rand_dyn_k49_s5_1101_190526_0e9d screen_rand_dyn_k49_s0_1101_190515_ccab screen_rand_dyn_k49_s4_1101_190522_983e |
-| screen | rand_dyn |  | 98 | 98.0 | 0,4,5,6 | 81.29 ± 0.44 | - | 25.21 | 17.56 | 0.00 | 338 | screen_rand_dyn_k98_s4_1101_190535_b5c8 screen_rand_dyn_k98_s0_1101_190530_0832 screen_rand_dyn_k98_s6_1101_215105_a208 screen_rand_dyn_k98_s5_1101_190539_cd98 |
+| screen | rand_dyn |  | 98 | 98.0 | 0,4,5,6,7 | 81.40 ± 0.45 | - | 25.21 | 17.56 | 0.00 | 333 | screen_rand_dyn_k98_s4_1101_190535_b5c8 screen_rand_dyn_k98_s7_1101_215122_b95c screen_rand_dyn_k98_s0_1101_190530_0832 screen_rand_dyn_k98_s6_1101_215105_a208 screen_rand_dyn_k98_s5_1101_190539_cd98 |
 | screen | random |  | 12 | 12.0 | 0 | 75.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_random_k12_s0_1031_130151_7444 |
 | screen | random |  | 20 | 20.0 | 0 | 73.33 ± 0.00 | - | 11.46 | 3.81 | 0.00 | 320 | screen_random_k20_s0_1101_100259_6430 |
 | screen | random |  | 29 | 29.0 | 0 | 74.00 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1184 | screen_random_k29_s0_1031_130150_a433 |
