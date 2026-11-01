@@ -26,7 +26,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - lateroll@29 vs grid@29 [acc]: +6.06 %p, 95% CI [+2.71, +9.40], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 - lateroll@29 vs center@29 [acc]: +3.11 %p, 95% CI [+0.83, +5.39], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 - lateroll@29 vs random@29 [acc]: +6.44 %p, 95% CI [+3.54, +9.35], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
-- lateroll@29 vs full@196 [acc]: +0.00 %p, 95% CI [-6.35, +6.35], seeds 1,2, GFLOPs ratio 0.304 -> no difference
+- lateroll@29 vs full@196 [acc]: -0.33 %p, 95% CI [-2.23, +1.56], seeds 1,2,3, GFLOPs ratio 0.304 -> no difference
 - lateroll@29 vs rollout@29 [acc]: +0.94 %p, 95% CI [+0.71, +1.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
@@ -40,7 +40,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - trustfilt@29 vs parent lateroll: acc +0.50 %p (threshold 2.69) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 81.33 (seeds 1,2); KD gain +0.33, tolerance 0.17 %p; smallest mean kept tokens within it
+### final: Full KD val 81.72 (seeds 1,2,3); KD gain +0.72, tolerance 0.36 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 29.0 (3 seeds)
 - screening only (fewer seeds):
@@ -69,7 +69,7 @@ Total agent screen configs: 8
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 | final | center |  | 29 | 29.0 | 1,2,3 | 78.28 ± 1.08 | - | 13.00 | 5.36 | 0.00 | 279 | final_center_k29_s3_1101_140937_62e7 final_center_k29_s1_1101_104303_c1f7 final_center_k29_s2_1101_125958_d08b |
-| final | full |  | 196 | 196.0 | 1,2 | 81.33 ± 2.12 | - | 42.77 | 35.13 | 0.00 | 243 | final_full_k196_s2_1101_125958_cc04 cub_final_full_k196_s1_1030_153055_d87b |
+| final | full |  | 196 | 196.0 | 1,2,3 | 81.72 ± 1.64 | - | 42.77 | 35.13 | 0.00 | 227 | final_full_k196_s2_1101_125958_cc04 final_full_k196_s3_1101_140937_e8fa cub_final_full_k196_s1_1030_153055_d87b |
 | final | grid |  | 29 | 29.0 | 1,2,3 | 75.33 ± 0.60 | - | 13.00 | 5.36 | 0.00 | 281 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 final_grid_k29_s3_1101_140937_8b9f |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 81.39 ± 1.00 | - | 12.99 | 5.36 | 0.08 | 284 | final_lateroll_k29_s2_1101_125958_6470 final_lateroll_k29_s1_1101_104303_ef38 final_lateroll_k29_s3_1101_140937_ec98 |
 | final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
