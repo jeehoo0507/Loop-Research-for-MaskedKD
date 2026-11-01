@@ -551,3 +551,9 @@ IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), includi
   - 중간 기록 (라운드 165, 판정 전): screen_maskedkd_k29_s6_1101_215100_14b0 = 80.50 (epochs_done 100). seed 6 K=29 짝 rand_dyn − maskedkd = +1.17 (기술값, C1은 seed 7까지 본 뒤 판정). 22:28 UTC 실행 중 4개·대기 2개.
   - 중간 기록 (라운드 166, 판정 전): screen_rand_dyn_k98_s6_1101_215105_a208 = 81.33, screen_maskedkd_k98_s6_1101_215109_4112 = 82.17 (둘 다 epochs_done 100). seed 6 K=98 짝 rand_dyn − maskedkd = −0.83 (기술값, C2는 seed 7까지 본 뒤 판정). 22:34 UTC seed 7 네 개 실행 중(rand_dyn@29 e46, maskedkd@29 e28), 대기 0.
   - 중간 기록 (라운드 167, 판정 전): screen_rand_dyn_k29_s7_1101_215113_d43f = 81.50 (epochs_done 100). 22:55 UTC 짝 maskedkd@29 s7은 epoch 93/100, rand_dyn@98 s7 e62, maskedkd@98 s7 e57, 대기 0.
+  - **C1 판정 (라운드 168, seed 6·7 K=29 짝이 모두 나옴):** screen_maskedkd_k29_s7_1101_215118_b650 = 81.67 (epochs_done 100, 총 12.99 GFLOPs/img). seed 7 짝 rand_dyn − maskedkd = 81.50 − 81.67 = −0.17 (val 1장 수준). seed 6은 +1.17. 한 seed가 반대 부호 → **C1 "재현 불확실"** (사전 등록 문구, 반증 아님). 예측(C1 참)은 확인되지 않았다. 기술값: 5-seed(0·4·5·6·7) 짝 +1.67·+0.67·+1.67·+1.17·−0.17 (4/5 양수), 평균 rand_dyn@29 81.23 − maskedkd@29 80.23 = +1.00. maskedkd@29 s7 81.67은 seed 0·4·5 평균(79.67)보다 2.0 높다 — seed 간 분산이 짝 차이와 같은 크기다.
+- **H-C28 (라운드 168, CE·Full seed 6·7 결과 전·제출 전에 등록, H-C27 C2 결과 전): H-C27 seed 6·7의 CE·Full 기준점.** 새 선택기 없음, builtin `ce`·`full`만 낸다(4 job). 주장 대상 아님.
+  - 왜: H-C27 한계에 적은 대로 "rand_dyn ≈ CE 수준"과 "KD 이득 +1.33"은 seed 0·4·5에만 근거한다. seed 7에서 maskedkd@29가 81.67로 높게 나와, seed 6·7이 쉬운 seed인지(CE도 높은지) 가릴 기준점이 필요하다. GPU 2칸이 비고 새 방향은 사람 지시를 기다리므로 가장 보수적인 작업이다.
+  - 측정: CUB screen, seed 6·7 × {ce, full}. 값은 metrics.json `val_acc_last`.
+  - 판정(기술, 사전 등록): E1 "rand_dyn ≈ CE 재현" = seed 6·7 모두 |rand_dyn@29 − CE| ≤ 0.83 (val 5장). E2 "KD 이득 재현" = seed 6·7 모두 Full − CE > 0. 기술값: seed 0·4·5·6·7 5-seed 평균 CE·Full과 H-C27 네 점의 CE 대비 차이. 예측: E1 참, E2 참(확신 중간).
+  - 규칙: 결과와 무관하게 RESULTS Teachability 절에 적는다. 결과를 보고 seed·K를 추가하지 않는다. 감사 요청 없음. screen seed만(1·2·3 금지).
