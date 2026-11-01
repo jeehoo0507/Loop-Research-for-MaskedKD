@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lateroll_decomp_1101_070348_b793",
+ "name": "cub_lateroll_decomp",
+ "source_sha": "b793eb77bf877804a69f832092aeffdb58090c4d5efde1e3d2d5375c83ea4d8a",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, where does lateroll's masked-teacher fidelity come from: how much do its tokens overlap MaskedKD's and rollout's, do its non-overlapping tokens matter (swap with random/grid), and is it more centred than rollout?",
+  "method": "attention rollout (blocks 6..11 vs 0..11), MaskedKD last-block CLS attention; token overlap, swap test, spatial spread; keep-only masked teacher faithfulness (DKD TCKD, KL); image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Zhao et al. CVPR 2022 (DKD); DeYoung et al. ACL 2020 (ERASER sufficiency, keep-only)"
+ },
+ "seconds": 42.9
+}
