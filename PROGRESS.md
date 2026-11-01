@@ -1,12 +1,17 @@
 (해제, 라운드 109) 라운드 100~108의 STUCK(스케줄러 정지)은 사람 커밋 63cc33b(harness 코드가 바뀌면 스케줄러 재실행, 루프가 빠진 스케줄러 세션을 다시 띄움)로 풀렸다. 11-01 05:0x UTC에 H-C14가 끝났고 job이 다시 돈다.
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
 요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
-진행 중(라운드 110): H-C16 trustfilt@29 seed 4·5 재현 확인 (screen_trustfilt_k29_s4_1101_054136_636e , screen_trustfilt_k29_s5_1101_054141_7ad5 , 사전 등록 819adba). trustfilt@29 s0 = 81.83은 lateroll@29 s0 81.33, teacher_topk@29 s0 80.50보다 높지만 seed 1개이고 H-C14 분석 예측과 반대다.
-다음: 대기가 줄면 lateroll@29·teacher_topk@29 seed 4·5 제출 → H-C16 판정(P1~P3). lateroll 메커니즘은 H-C13·H-C15 기각으로 미해결.
+진행 중(라운드 111): H-C16 trustfilt@29 seed 4·5 재현 확인 (screen_trustfilt_k29_s4_1101_054136_636e , screen_trustfilt_k29_s5_1101_054141_7ad5 , 사전 등록 819adba)과 P3 비교용 lateroll@29·teacher_topk@29 seed 4·5 (라운드 111 제출). trustfilt@29 s0 = 81.83은 lateroll@29 s0 81.33, teacher_topk@29 s0 80.50보다 높지만 seed 1개이고 H-C14 분석 예측과 반대다.
+다음: 위 6개 결과 → H-C16 판정(P1~P3). lateroll 메커니즘은 H-C13·H-C15 기각으로 미해결.
 (해제된 STUCK, 기록용) 아래 두 STUCK은 더는 막힌 상태가 아니다. 9c99bba에서 harness/evidence.py가 모든 상태의 job 이력을 붙이게 바뀌었다. 하지만 두 주장 모두 suffdisc 계열이라 QUEUE 지시에 따라 다시 내지 않는다.
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 111 [claude] (H-C16 P3 비교 run 제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음.
+  - 05:58 UTC 기준 trustfilt@29 s4는 epoch 60 (val 80.83), s5도 실행 중이다. 아직 판정하지 않는다. waterbirds_final_ce_k0_s3_1031_201502_f7a9 가 끝났다(2단계 기준선, harness 자동 제출분).
+  - 사전 등록 819adba의 P3 비교용으로 소스·기준선을 그대로 제출했다: screen_lateroll_k29_s4_1101_055810_8619 , screen_lateroll_k29_s5_1101_055814_a9a4 (selectors/lateroll.py sha 69541b27… = seed 0과 같음), screen_teacher_topk_k29_s4_1101_055819_fa5a , screen_teacher_topk_k29_s5_1101_055826_eae2 .
+  - [claude] 결정: 4개를 모두 냈다. 이유: 대기가 5개였고 lateroll s4가 곧바로 실행으로 넘어가서 제출 뒤 대기가 8개다(AGENT_PROMPT 51행 "8개 넘게 쌓지 마라" 안). 새 분석·선택기는 쓰지 않았다. 다음 단계(TrustMask 계열 종료 또는 어긋남 분석)가 이 결과에 달려 있어서, 그 전에 새 방향을 내면 사전 등록 순서가 흐려진다.
+  - 다음: trustfilt·lateroll·teacher_topk@29 seed 4·5 결과 → H-C16 P1~P3 판정 → 규칙대로 TrustMask 계열 종료 또는 TCKD-정확도 어긋남 분석 사전 등록.
 - **라운드 110 [claude] (H-C15 판정, teacher_topk@29·trustfilt@29 판독, H-C16 사전 등록·제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md 마지막 변경은 4a6deb7, AUDIT_REQUEST.md 없음.
   - H-C15 (analysis_cub_rollout_cluster_1101_052312_4f10 , 사전 등록 6059daf): P1 맞음, P2·P3 틀림. full rollout 지도가 더 번지고(자기상관 +0.065 [0.061, 0.070]) 상위 K가 더 적은 덩어리로 뭉치지만, 이미지별 뭉침 차이와 TCKD 손해는 상관이 없다(K=29 ρ −0.020 [−0.100, 0.069]). 이웃 억제는 TCKD를 오히려 나쁘게 한다(roll0 기준 K=29 +0.386 [0.293, 0.485]). 규칙대로 "뭉침은 있지만 충실도 손해의 원인이 아니다"로 적었다(PROPOSALS·RESULTS). 이웃 억제 방향은 만들지 않는다.
   - 기준선: teacher_topk@29 s0 = 80.50 (screen_teacher_topk_k29_s0_1031_202120_8e2b , 총 13.3554 GFLOPs/img).
