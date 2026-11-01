@@ -443,7 +443,35 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 예측: P1 lateroll@20 s0 < 81.50 (K=12·29 사이 선형 보간 ≈ 79.8). P2 lateroll@20 s0 ≥ rollout@20 s0 (K=29·49의 짝지은 차이 6개가 모두 양수였던 방향).
   - 규칙: P1이 맞으면(밖) "screen에서 lateroll의 최소 K는 29"로 적고 20~29 사이 K를 더 훑지 않는다(K 골라내기 방지). P1이 틀리면(안) 같은 소스로 seed 4·5를 내서 seed 3개 평균으로만 판단한다. 어느 경우든 승격·감사 요청은 STUCK 해제 전에는 하지 않는다. P2는 기술값이다(seed 1개, 문턱 2.69보다 작은 차이는 해석하지 않는다).
   - 한계: seed 1개 screen, CUB val 600장(0.17 %p = 1장). Search effort에서 lateroll config가 3 → 4로 는다.
+  - 판정 (라운드 128): **P1 틀림, P2 맞음.** lateroll@20 s0 82.00 (screen_lateroll_k20_s0_1101_100242_f95e) ≥ 81.50 → screen 허용 오차 안. rollout@20 79.83 (screen_rollout_k20_s0_1101_100255_f59b), maskedkd@20 78.00 (screen_maskedkd_k20_s0_1101_100251_336a), random@20 73.33 (screen_random_k20_s0_1101_100259_6430). 규칙상 seed 4·5를 낼 차례지만, 사람 지시(QUEUE 2026-11-01)가 rollout 변형 탐색을 멈추고 lateroll을 "가장 강한 고정 K 기준선"(K=29 final)으로 정했으므로 lateroll@20 seed 4·5는 내지 않는다. seed 1개 값이라 주 지표에 쓰지 않는다.
 
 ## 2026-11-01 ideas from Codex (independent)
 IDEA 1: Contrastive token-gate attribution — From student logits \(z\), take predicted class \(c\), detached rival weights \(q=\mathrm{softmax}(z_{\neg c})\), and margin \(m=z_c-\sum_{j\ne c}q_jz_j\); request penultimate-block outputs \(H\) (`tokens=[-2]`).  
 IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), including CLS; factorize their signed split \(X=[\max(H,0),\max(-H,0)]\approx UV\) using rank-6 NMF, ten multiplicative updates, and content-based initialization; normalize rows of \(V\) to unit norm while rescaling \(U\).  
+
+## 이미지별 teacher 토큰 예산 (QUEUE 2026-11-01 연구 질문 전환 후)
+
+### 선행연구 경계 (시작 전에 적음)
+- Dynamic KD (Li et al., EMNLP 2021): student 불확실성으로 teacher에 물을 *샘플*을 고른다(전부/없음). → 우리 질문은 이미지마다 *토큰 수*를 연속으로 나눈다. harness 기준선 `dynkd`.
+- Masters (arXiv 2512.22238): teacher 마스킹 비율을 *학습 단계*로 바꾼다(모든 이미지 같음). → 우리는 같은 시점에서 이미지마다 다르다. 기준선 `kd_sched`.
+- SBAM (ECCV 2024): 이미지마다 마스킹 비율을 saliency로 정한다(MIM, 학습 상태 아님). → 우리 신호는 student의 학습 상태(teacher와의 attribution 일치, KD 손실 이력). 기준선 `sal_ratio`.
+- EGAD (arXiv 2605.01732), EA-KD: 엔트로피로 증류 손실 가중을 바꾼다(teacher 비용은 그대로). → 우리는 teacher 입력 토큰(비용) 자체를 옮긴다. 기준선 `ent_weight`.
+- Explanation-guided KD (EGKD 등): teacher–student 설명 일치를 *손실*로 쓴다. → 우리는 일치도를 *예산 신호*로만 쓴다.
+- MaskedKD: 모든 이미지에 같은 K. 이미지별 비율 후속은 사람이 찾지 못했다.
+- 우리 쪽 이전 결과 (주의): H-C7 (analysis_cub_adaptive_budget_1031_170029_c9ac)에서 두 단계 배분(K 12/49)은 oracle만 균일 K=29보다 TCKD가 낮았고(−0.120 [−0.180, −0.060]) student 신호(엔트로피·확신·집중도·margin)는 모두 random 수준으로 균일보다 나빴다. KL로는 oracle도 이득이 없었다(+0.084 [−0.006, +0.179]). Waterbirds H-W17 adaroll도 효과가 없었다. 이번 0단계는 (1) K=0(CE만)을 포함하고, (2) TCKD 대신 label 없는 KD 기울기 오차를 쓰고, (3) 연속 배분과 attribution 일치도 신호를 처음 본다는 점이 다르다. 이 이전 결과 때문에 사전 기대는 "H2 실패"쪽이다.
+
+- **H-C22 (라운드 128, 결과 전·제출 전에 등록): 0단계 생사 판정.** analysis/cub_budget_gonogo.py.
+  - KD 신호 품질 지표: 이미지별 G(K) = ‖p_T − q_K‖₂ (full teacher 확률과 K개 토큰만 본 teacher 확률의 L2). τ=1에서 KD 항의 logit 기울기는 p_s − q이므로, G는 full KD 대비 기울기 오차다. K=0이면 harness는 CE만 쓰고(train.py) full KD 대비 기울기 오차는 α(p_T − y)이므로 G(0) = ‖p_T − y‖₂로 같은 척도에 놓는다. KL(p_T‖q_K)도 기술값으로 낸다.
+  - 측정: CUB val 600장. K 격자 {0, 6, 12, 20, 29, 40, 49, 64, 80, 98, 128, 196}. student 5개: lateroll@29 s0 (screen_lateroll_k29_s0_1031_130348_fd19)의 e25·e50·최종, maskedkd@29 s0 (screen_maskedkd_k29_s0_1031_130150_1393)의 e50·최종. 이미지 안 토큰 순서: student rollout(주), 마지막 블록 CLS attention(보조, ALLOC_REFS와 같은 규칙). 격자 밖 K는 선형 보간(모든 배분에 같게). 짝지은 이미지 bootstrap 2000번, numpy default_rng(20261101).
+  - 신호(방향은 결과 전에 고정, need가 클수록 토큰을 더 준다):
+    - 해석 기반: align = student rollout과 teacher rollout 지도(teacher_cache와 같은 규칙, 원본 이미지)의 이미지별 Spearman, **낮을수록** 더 줌(주 신호). spread = student rollout 유효 토큰 수 exp(H), 클수록. sal_last = 마지막 블록 CLS attention 유효 토큰 수(SBAM식 = sal_ratio 신호), 클수록. drift = 1 − Spearman(마지막 블록 CLS attention, rollout), 클수록.
+    - 비해석 기반: kd29 = K=29(rollout 순서)에서 가린 teacher와 student의 KD 손실 KL(q₂₉‖p_s) (observe로 받는 값의 대리), 클수록(주 신호). ent = student 예측 엔트로피, 클수록.
+    - 대조: random.
+  - 배분: 평균 K = 29(주), 49(보조). (a) 고정 K. (b) oracle_cont: 이미지별 G 곡선의 아래 볼록 껍질에서 greedy (K=0 포함, 분석 전용 상한). (c) oracle_nozero: K ≥ 6. (d) oracle_aon: K ∈ {0, 196}, G(0)이 큰 floor(29·600/196)장에 196. (e) 신호별 lin: 순위에 비례해 K_i = 6 + (29−6)·2·(r_i+0.5)/n (6~52). (f) 신호별 aon: 신호 상위 floor(29·600/196)장에 196, 나머지 0 (Dynamic KD 형태).
+  - 예측과 판정 (rollout 순서, 평균 K=29):
+    - H1: 이미지별 필요량 K*_i = G_i(K) ≤ τ(= 고정 K=29의 평균 G)를 만족하는 가장 작은 격자 K. student마다 q25(K*) ≤ 12 이고 q75(K*) ≥ 49이면 통과. **5개 중 3개 이상 통과면 H1 참.** 예측: 참.
+    - H3: oracle_cont − 고정29의 평균 G 차이 CI 상한 < 0 이고 상대 감소 ≥ 10%면 그 student 통과. **3개 이상이면 H3 참.** 예측: 참(H-C7 oracle도 TCKD에서 이겼다).
+    - H2: 신호 하나가 lin 또는 aon 형태로 고정29보다 CI 상한 < 0인 student가 3개 이상이면 "그 신호는 쓸 여지가 있다". 예측: 해석·비해석 모두 실패(H-C7 근거). 갈래 비교는 주 신호끼리만(align_lin − kd29_lin): CI 상한 < 0이 3개 이상이면 해석 우세, CI 하한 > 0이 3개 이상이면 비해석 우세, 아니면 "차이는 불확실". 다른 신호·보조 순서·K=49는 기술값이다(다중 비교).
+    - H4 (멘토, 기술 판정): 이미지별 KD 이득 = full KD student 4개(screen s0·4·5, final s1)의 정답률 − CE student 4개(같은 seed)의 정답률. CE student의 rollout과 teacher 지도의 일치도(4개 평균) 5분위로 나눠, 가운데 3분위 평균 − 1분위, − 5분위가 둘 다 CI 하한 > 0이면 뒤집힌 U자.
+  - 규칙: **H1 거짓 또는 H3 거짓이면 이 방향을 끝낸다**(PROGRESS 첫 줄 "방향 종료", QUEUE '종료 시'). H1·H3 참이고 H2에서 통과한 신호가 있으면 그 신호로 1단계 선택기를 사전 등록한다(신호는 이 판정 규칙으로만 고른다). H1·H3 참인데 H2가 모두 실패하면 1단계 선택기는 내지 않고, 학습 중 신호(observe의 KD 손실 이력, 여러 epoch)를 볼 두 번째 분석을 사전 등록한다(오프라인 val 대리 신호의 한계 때문).
+  - 한계: val 이미지(증강 없음)에서의 오프라인 대리값이다. 학습 중에는 크롭·Mixup으로 이미지가 매번 달라진다. G는 한 시점의 KD 신호 오차이고 학습 결과가 아니다(H-C4에서 같은 K 안 충실도 ↔ 정확도 상관은 확인됨). student 2개 run(seed 0)만 본다. 기술 분석이고 주장이 아니다.
