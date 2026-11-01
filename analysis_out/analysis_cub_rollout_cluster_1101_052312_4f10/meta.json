@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_rollout_cluster_1101_052312_4f10",
+ "name": "cub_rollout_cluster",
+ "source_sha": "4f106dbedd78203c2425465553db0d7c39abfaf3126adbf19f314e11f5d35c74",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does full rollout keep fewer, more clustered token blobs than late-block rollout because the early blocks smooth the map spatially, and does that clustering cost masked-teacher fidelity (TCKD)?",
+  "method": "attention rollout split by block range; spatial statistics of the keep set (connected components, spread, neighbour autocorrelation); neighbour-suppressed top-K as a causal control; keep-only masked teacher faithfulness (KL, DKD TCKD); image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Allen-Zhu & Li ICLR 2023 (multi-view KD); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 48.9
+}

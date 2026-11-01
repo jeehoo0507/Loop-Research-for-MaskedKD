@@ -23,6 +23,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - sinkfree@12 vs parent maskedkd: acc +1.50 %p (threshold 2.69) -> added part UNPROVEN
 - sinkfree@29 vs parent maskedkd: acc -0.33 %p (threshold 2.69) -> added part UNPROVEN
 - sinkfree@49 vs parent maskedkd: acc +0.33 %p (threshold 2.69) -> added part UNPROVEN
+- trustfilt@29 vs parent lateroll: acc +0.50 %p (threshold 2.69) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 82.83 (seeds 1); KD gain +1.83, tolerance 0.92 %p; smallest mean kept tokens within it
@@ -33,7 +34,8 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 49.0 (3 seeds)
   - maskedkd : 98.0 (3 seeds)
-- screening only (fewer seeds): none
+- screening only (fewer seeds):
+  - trustfilt@27da28 : 29.0 (1 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
@@ -41,9 +43,10 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - K=12: maskedkd 76.00; rollout 78.33; random 75.33; grid 74.33; center 76.00; tome 78.17 (Full KD 82.17)
 
 ## Search effort (screen)
-Total agent screen configs: 6
+Total agent screen configs: 7
 - sinkfree: 3 configs
 - lateroll: 3 configs
+- trustfilt: 1 configs
 
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
@@ -83,10 +86,11 @@ Total agent screen configs: 6
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 78.17 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1183 | screen_tome_k12_s0_1031_130151_473d |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |
+| screen | trustfilt@27da28 |  | 29 | 29.0 | 0 | 81.83 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 499 | screen_trustfilt_k29_s0_1101_052028_1577 |
 
 # Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL
+Gate: [waterbirds final, 100 epochs, mean of seeds [1, 2]] Full KD 90.95 vs CE 89.62 (need +1.0): PASS; MaskedKD@98 90.24 vs Full 90.95 (need >= Full - 0.5): FAIL
 
 Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: WGA seed sigma 2.78 %p (pooled, dof 7) -> threshold 5.56 %p)
 
@@ -169,7 +173,7 @@ Total agent screen configs: 15
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
-| final | maskedkd |  | 98 | 98.0 | 1 | 90.33 ± 0.00 | 66.92 ± 0.00 | 25.04 | 17.41 | 0.00 | 387 | waterbirds_final_maskedkd_k98_s1_1031_130203_5bef |
+| final | maskedkd |  | 98 | 98.0 | 1,2 | 90.24 ± 0.12 | 65.04 ± 2.66 | 25.04 | 17.41 | 0.00 | 417 | waterbirds_final_maskedkd_k98_s1_1031_130203_5bef waterbirds_final_maskedkd_k98_s2_1031_201502_95ac |
 | final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 88.10 ± 1.17 | 50.88 ± 1.74 | 10.08 | 2.45 | 0.17 | 237 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s3_1030_220958_d961 final_rollout_k12_s2_1030_212126_33d1 |
 | final | suffdisc@0f0600 |  | 12 | 12.0 | 1,2,3 | 89.63 ± 0.46 | 62.40 ± 2.60 | 15.02 | 2.45 | 4.93 | 192 | final_suffdisc_k12_s3_1031_002453_9ebe final_suffdisc_k12_s1_1031_002441_5d86 final_suffdisc_k12_s2_1031_002448_664e |

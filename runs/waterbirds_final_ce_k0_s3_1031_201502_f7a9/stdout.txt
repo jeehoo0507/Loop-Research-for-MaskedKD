@@ -1,0 +1,42 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+[2026-11-01 05:39:16] job waterbirds_final_ce_k0_s3_1031_201502_f7a9 method=ce keep=0 seed=3 epochs=100 device=cuda
+[2026-11-01 05:39:18] flops per image (train step): {'total_gflops_per_img': 7.642, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.642}
+[2026-11-01 05:39:24] {"epoch": 1, "loss": 0.6396476755271087, "epoch_s": 7.6, "img_per_s": 620.6}
+[2026-11-01 05:39:31] {"epoch": 2, "loss": 0.4751122030051979, "epoch_s": 6.9, "img_per_s": 681.6}
+[2026-11-01 05:39:38] {"epoch": 3, "loss": 0.4425915664917714, "epoch_s": 6.7, "img_per_s": 707.9}
+[2026-11-01 05:39:45] {"epoch": 4, "loss": 0.4364769780958021, "epoch_s": 6.6, "img_per_s": 717.2}
+[2026-11-01 05:39:52] {"epoch": 5, "loss": 0.41843432912955414, "epoch_s": 7.0, "img_per_s": 679.0, "val_acc": 76.73060894012451, "val_wga": 46.62, "val_group_acc": {"0": 99.36, "1": 56.65, "2": 46.62, "3": 97.74}}
+[2026-11-01 05:40:00] {"epoch": 6, "loss": 0.42196119395462245, "epoch_s": 6.9, "img_per_s": 683.3}
+[2026-11-01 05:40:07] {"epoch": 7, "loss": 0.4215426606100959, "epoch_s": 6.5, "img_per_s": 725.2}
+[2026-11-01 05:40:14] {"epoch": 8, "loss": 0.40226487291825785, "epoch_s": 7.0, "img_per_s": 678.7}
+[2026-11-01 05:40:21] {"epoch": 9, "loss": 0.4103278984894624, "epoch_s": 6.8, "img_per_s": 696.3}
+[2026-11-01 05:40:28] {"epoch": 10, "loss": 0.41377305581762985, "epoch_s": 6.5, "img_per_s": 723.6, "val_acc": 82.48540163040161, "val_wga": 45.11, "val_group_acc": {"0": 99.57, "1": 72.53, "2": 45.11, "3": 94.74}}
+[2026-11-01 05:40:36] {"epoch": 11, "loss": 0.403483687220393, "epoch_s": 6.9, "img_per_s": 685.8}
+[2026-11-01 05:40:39] {"epoch": 12, "loss": 0.4020080775827975, "epoch_s": 3.3, "img_per_s": 1455.2}
+[2026-11-01 05:40:43] {"epoch": 13, "loss": 0.4060261378417144, "epoch_s": 3.2, "img_per_s": 1479.3}
+[2026-11-01 05:40:46] {"epoch": 14, "loss": 0.4096737383185206, "epoch_s": 3.2, "img_per_s": 1473.3}
+[2026-11-01 05:40:50] {"epoch": 15, "loss": 0.4138630612476452, "epoch_s": 3.2, "img_per_s": 1486.1, "val_acc": 86.23853325843811, "val_wga": 48.87, "val_group_acc": {"0": 99.57, "1": 81.76, "2": 48.87, "3": 92.48}}
+[2026-11-01 05:40:54] {"epoch": 16, "loss": 0.4155163644133387, "epoch_s": 3.2, "img_per_s": 1481.8}
+[2026-11-01 05:40:57] {"epoch": 17, "loss": 0.4055382335508192, "epoch_s": 3.2, "img_per_s": 1470.9}
+[2026-11-01 05:41:01] {"epoch": 18, "loss": 0.41163337552869644, "epoch_s": 3.2, "img_per_s": 1476.3}
+[2026-11-01 05:41:04] {"epoch": 19, "loss": 0.40810642612947, "epoch_s": 3.2, "img_per_s": 1465.6}
+[2026-11-01 05:41:08] {"epoch": 20, "loss": 0.38959132175187805, "epoch_s": 3.3, "img_per_s": 1446.7, "val_acc": 90.07506370544434, "val_wga": 61.65, "val_group_acc": {"0": 99.79, "1": 87.34, "2": 61.65, "3": 93.98}}
+[2026-11-01 05:41:12] {"epoch": 21, "loss": 0.39787128003867894, "epoch_s": 3.2, "img_per_s": 1485.2}
+[2026-11-01 05:41:15] {"epoch": 22, "loss": 0.3865978725858637, "epoch_s": 3.2, "img_per_s": 1487.7}
+[2026-11-01 05:41:18] {"epoch": 23, "loss": 0.40281240601797363, "epoch_s": 3.2, "img_per_s": 1489.5}
+[2026-11-01 05:41:22] {"epoch": 24, "loss": 0.4115361377999589, "epoch_s": 3.2, "img_per_s": 1469.7}
+[2026-11-01 05:41:26] {"epoch": 25, "loss": 0.40668181954203425, "epoch_s": 3.2, "img_per_s": 1481.6, "val_acc": 88.32360506057739, "val_wga": 61.65, "val_group_acc": {"0": 99.79, "1": 82.4, "2": 61.65, "3": 95.49}}
+[2026-11-01 05:41:29] {"epoch": 26, "loss": 0.41179768861951055, "epoch_s": 3.2, "img_per_s": 1492.6}
+[2026-11-01 05:41:33] {"epoch": 27, "loss": 0.38643840841344884, "epoch_s": 3.2, "img_per_s": 1477.2}
+[2026-11-01 05:41:36] {"epoch": 28, "loss": 0.4004278839439959, "epoch_s": 3.3, "img_per_s": 1439.7}
+[2026-11-01 05:41:40] {"epoch": 29, "loss": 0.3867284244782216, "epoch_s": 3.3, "img_per_s": 1456.6}
+[2026-11-01 05:41:44] {"epoch": 30, "loss": 0.39401175444190567, "epoch_s": 3.2, "img_per_s": 1475.6, "val_acc": 86.57214641571045, "val_wga": 74.68, "val_group_acc": {"0": 98.5, "1": 74.68, "2": 75.94, "3": 96.99}}
+[2026-11-01 05:41:47] {"epoch": 31, "loss": 0.40514584248130386, "epoch_s": 3.2, "img_per_s": 1475.7}
+[2026-11-01 05:41:51] {"epoch": 32, "loss": 0.40136862445522, "epoch_s": 3.2, "img_per_s": 1491.7}
+[2026-11-01 05:41:54] {"epoch": 33, "loss": 0.3919796242907241, "epoch_s": 3.2, "img_per_s": 1479.1}
+[2026-11-01 05:41:58] {"epoch": 34, "loss": 0.3839283521110947, "epoch_s": 3.2, "img_per_s": 1466.9}
+[2026-11-01 05:42:02] {"epoch": 35, "loss": 0.37597896279515447, "epoch_s": 3.3, "img_per_s": 1419.0, "val_acc": 90.74228405952454, "val_wga": 73.68, "val_group_acc": {"0": 99.79, "1": 85.84, "2": 73.68, "3": 93.23}}
+[2026-11-01 05:42:09] {"epoch": 36, "loss": 0.39971268740860194, "epoch_s": 6.8, "img_per_s": 691.6}
+[2026-11-01 05:42:16] {"epoch": 37, "loss": 0.4071359231665328, "epoch_s": 6.8, "img_per_s": 693.8}
+[2026-11-01 05:42:23] {"epoch": 38, "loss": 0.3910361423685744, "epoch_s": 6.7, "img_per_s": 709.5}
