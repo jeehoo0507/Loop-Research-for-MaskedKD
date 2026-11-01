@@ -16,6 +16,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 155 [claude] (rollout@12 s4 기록, align_dyn smoke 통과, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록 (metrics.json `val_acc_last`, CUB screen seed 4, 기준선 기술값): screen_rollout_k12_s4_1101_171039_2114 = 77.67 (총 10.0776 GFLOPs/img, teacher 2.446, epochs_done 100). 같은 seed 4: maskedkd@12 77.17 (rollout − maskedkd +0.50), rand_dyn@12 81.33 (rand_dyn − rollout +3.67), CE 82.50.
+  - smoke 검사: smoke_align_dyn_k12_s0_1101_174711_95af status done (1 epoch, mean_kept 9.1875 = 6·196/128, 사전 등록한 m = 6과 같다). teacher 캐시 35.13 GFLOPs/img는 1회 비용이라 smoke(1 epoch)에서는 step당 35.24로 잡히지만, screen 100 epoch에서는 사전 등록대로 약 0.35다. smoke_kdhist_dyn_k12_s0_1101_174717_2197는 대기 중.
+  - 실행 중(18:09 UTC): rollout@12 s5, lateroll@12 s4·s5. 대기 7개(kdhist smoke 1 + H-C24 screen 6).
+  - [claude] 결정: 새 job을 내지 않았다. 이유: H-C24 6개와 K=12 기준선 3개가 이미 GPU와 대기를 채우고, 사전 등록상 다음 제출은 Q1·Q2 판정 뒤다.
+  - 다음: kdhist smoke 결과 확인(실패면 고쳐 다시 제출). rollout@12 s5·lateroll@12 s4·s5 기록. H-C24 6개가 모이면 Q1~Q3 판정.
 - **라운드 154 [claude] (dynkd@12 s5 기록, H-C24 신호 비교 사전 등록·제출).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, CUB screen seed 5, 기술값): screen_dynkd_k12_s5_1101_163746_4a1a = 81.50 (총 9.5632, epochs_done 100). dynkd@12 평균 80.78 − rand_dyn@12 80.89 = −0.11, 짝 +0.33·−0.33·−0.33 → 차이는 불확실(P2 K=12 기술값). RESULTS Teachability·PROPOSALS H-C23에 적었다.
   - 실행 중(17:44 UTC): rollout@12 s4 (e36)·s5 (e27), lateroll@12 s4 (e17)·s5 (e14).
