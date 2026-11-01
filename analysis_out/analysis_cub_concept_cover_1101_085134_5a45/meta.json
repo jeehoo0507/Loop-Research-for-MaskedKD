@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_concept_cover_1101_085134_5a45",
+ "name": "cub_concept_cover",
+ "source_sha": "5a459df27c3b404c8359952da3d147e9ffe3ce14123df2b02a7d0efc64dc89ce",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, does a CLS-weighted concept-coverage choice of student block-8 tokens (NMF concepts, diminishing returns per concept) keep more masked-teacher TCKD than lateroll top-K, and is any gain from coverage (vs CLS relevance alone)?",
+  "method": "Deep Feature Factorization (NMF of block-8 patch features, signed split) with CLS concept weights; greedy submodular coverage; attention rollout blocks 6..11; keep-only masked teacher DKD TCKD / KL; image bootstrap",
+  "paper": "Collins et al. ECCV 2018 (Deep Feature Factorization); Allen-Zhu & Li ICLR 2023 (multi-view KD); Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD)"
+ },
+ "seconds": 15.1
+}
