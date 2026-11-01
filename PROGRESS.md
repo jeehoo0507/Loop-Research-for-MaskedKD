@@ -16,6 +16,13 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 168 [claude] (H-C27 C1 판정, H-C28 사전 등록·제출 4개).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록: screen_maskedkd_k29_s7_1101_215118_b650 = 81.67 (epochs_done 100). seed 7 K=29 짝 rand_dyn − maskedkd = −0.17 → **H-C27 C1 "재현 불확실"** (seed 6 +1.17, seed 7 −0.17). 5-seed 짝 4/5 양수, 평균 +1.00. PROPOSALS H-C27에 적었다.
+  - 사전 등록 H-C28 (커밋 dac9311 뒤 제출): CE·Full seed 6·7 기준점. 제출: screen_ce_k0_s6_1101_230256_cb6e (실행 중), screen_ce_k0_s7_1101_230304_50d4, screen_full_k196_s6_1101_230309_8730, screen_full_k196_s7_1101_230313_4eff.
+  - [claude] 결정: GPU 2칸이 비어 CE·Full seed 6·7을 냈다. 이유: H-C27 한계("CE 수준"은 seed 0·4·5에만 근거)를 채우는 builtin 기준선이고, seed 7 maskedkd@29가 높게 나와 seed 난이도 기준점이 필요하다. 새 선택기는 계속 사람 지시를 기다린다. seed 6·7은 harness 기준선 seed(screen 0, NOISE 4·5, FINAL 1·2·3)와 겹치지 않아 중복 job 위험이 없다.
+  - 기록·판정 (같은 라운드 뒤): screen_rand_dyn_k98_s7_1101_215122_b95c = 81.83, screen_maskedkd_k98_s7_1101_215126_017f = 82.50. seed 7 K=98 짝 −0.67, seed 6 −0.83 → **H-C27 C2 "K=98 재현"**. 5-seed 짝 5/5 음수, 평균 −1.07. RESULTS Teachability 절에 H-C27 항목을 넣고 효율 곡선 절의 K≤29 서술이 약해졌다고 적었다.
+  - 실행 중(23:05 UTC): screen_ce_k0_s6_1101_230256_cb6e 외 H-C28 3개. CE는 약 10 s/epoch, Full은 더 느리다. 대략 00:00 UTC 전후 끝날 것.
+  - 다음: H-C28 네 값 기록 → E1·E2 판정 → RESULTS Teachability 절 반영. 새 선택기 탐색은 계속 사람 지시를 기다린다.
 - **라운드 167 [claude] (H-C27 1개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, epochs_done 100, 판정 전 기술값): screen_rand_dyn_k29_s7_1101_215113_d43f = 81.50. PROPOSALS H-C27 "중간 기록"에 적었다.
   - 실행 중(22:55 UTC): screen_maskedkd_k29_s7_1101_215118_b650 (e93), screen_rand_dyn_k98_s7_1101_215122_b95c (e62), screen_maskedkd_k98_s7_1101_215126_017f (e57). 대기 0. 약 17 s/epoch라 K=98 두 개는 약 23:08 UTC에 끝난다.
