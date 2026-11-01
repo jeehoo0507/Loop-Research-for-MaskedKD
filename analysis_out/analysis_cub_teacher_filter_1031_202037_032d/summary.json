@@ -1,0 +1,679 @@
+{
+ "students": {
+  "run": "cub_final_full_k196_s1_1030_153055_d87b",
+  "epochs": [
+   25,
+   50,
+   "final"
+  ]
+ },
+ "n_images": 600,
+ "fidelity": {
+  "25": {
+   "98": {
+    "tckd": {
+     "s_roll0": 0.0254,
+     "s_roll6": 0.0249,
+     "t_pick": 0.0439,
+     "f_roll0": 0.0249,
+     "f_roll6": 0.0224,
+     "fa_roll6": 0.0264,
+     "random": 0.1969
+    },
+    "kl": {
+     "s_roll0": 0.0486,
+     "s_roll6": 0.0512,
+     "t_pick": 0.0893,
+     "f_roll0": 0.0499,
+     "f_roll6": 0.0479,
+     "fa_roll6": 0.0551,
+     "random": 0.3132
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     -0.0025,
+     -0.0071,
+     0.0025
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     -0.0004,
+     -0.007,
+     0.0057
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.0214,
+     -0.0357,
+     -0.0091
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.0189,
+     -0.0342,
+     -0.0066
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.004,
+     -0.0,
+     0.0085
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.7395,
+     "roll6": 0.6559
+    },
+    "adaptive_k": {
+     "mean": 98.0,
+     "p10": 79.0,
+     "p90": 117.0
+    }
+   },
+   "49": {
+    "tckd": {
+     "s_roll0": 0.1372,
+     "s_roll6": 0.1196,
+     "t_pick": 0.3754,
+     "f_roll0": 0.2354,
+     "f_roll6": 0.22,
+     "fa_roll6": 0.2289,
+     "random": 1.0114
+    },
+    "kl": {
+     "s_roll0": 0.2715,
+     "s_roll6": 0.2368,
+     "t_pick": 0.608,
+     "f_roll0": 0.3922,
+     "f_roll6": 0.3687,
+     "fa_roll6": 0.3808,
+     "random": 1.3429
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.1003,
+     0.0554,
+     0.1472
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.0982,
+     0.0574,
+     0.1425
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.1554,
+     -0.2072,
+     -0.104
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.2557,
+     -0.3266,
+     -0.1902
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0089,
+     -0.0233,
+     0.039
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.6405,
+     "roll6": 0.5355
+    },
+    "adaptive_k": {
+     "mean": 49.0,
+     "p10": 40.0,
+     "p90": 58.0
+    }
+   },
+   "29": {
+    "tckd": {
+     "s_roll0": 0.4869,
+     "s_roll6": 0.3989,
+     "t_pick": 1.0707,
+     "f_roll0": 0.8114,
+     "f_roll6": 0.7659,
+     "fa_roll6": 0.8326,
+     "random": 2.0328
+    },
+    "kl": {
+     "s_roll0": 0.7526,
+     "s_roll6": 0.6474,
+     "t_pick": 1.4971,
+     "f_roll0": 1.208,
+     "f_roll6": 1.138,
+     "fa_roll6": 1.2048,
+     "random": 2.5885
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.3671,
+     0.2766,
+     0.4576
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.3246,
+     0.2436,
+     0.407
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.3048,
+     -0.3962,
+     -0.2172
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.6718,
+     -0.7957,
+     -0.553
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0667,
+     -0.0037,
+     0.1348
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.5772,
+     "roll6": 0.4472
+    },
+    "adaptive_k": {
+     "mean": 29.0,
+     "p10": 20.0,
+     "p90": 38.0999755859375
+    }
+   },
+   "12": {
+    "tckd": {
+     "s_roll0": 2.0544,
+     "s_roll6": 1.7696,
+     "t_pick": 2.8387,
+     "f_roll0": 2.5426,
+     "f_roll6": 2.5443,
+     "fa_roll6": 2.6181,
+     "random": 3.5264
+    },
+    "kl": {
+     "s_roll0": 2.7084,
+     "s_roll6": 2.3534,
+     "t_pick": 3.5848,
+     "f_roll0": 3.2668,
+     "f_roll6": 3.2524,
+     "fa_roll6": 3.3199,
+     "random": 4.3054
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.7747,
+     0.6204,
+     0.9386
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.4883,
+     0.3487,
+     0.6321
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.2944,
+     -0.4099,
+     -0.1788
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -1.0691,
+     -1.2372,
+     -0.9038
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0738,
+     -0.0459,
+     0.1975
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.454,
+     "roll6": 0.2879
+    },
+    "adaptive_k": {
+     "mean": 12.0,
+     "p10": 5.0,
+     "p90": 19.0
+    }
+   }
+  },
+  "50": {
+   "98": {
+    "tckd": {
+     "s_roll0": 0.0232,
+     "s_roll6": 0.022,
+     "t_pick": 0.0439,
+     "f_roll0": 0.0248,
+     "f_roll6": 0.0223,
+     "fa_roll6": 0.0269,
+     "random": 0.1969
+    },
+    "kl": {
+     "s_roll0": 0.0492,
+     "s_roll6": 0.0469,
+     "t_pick": 0.0893,
+     "f_roll0": 0.0521,
+     "f_roll6": 0.0487,
+     "fa_roll6": 0.0563,
+     "random": 0.3132
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.0003,
+     -0.0047,
+     0.0055
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.0016,
+     -0.0032,
+     0.0067
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.0216,
+     -0.0375,
+     -0.0094
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.0219,
+     -0.0373,
+     -0.0098
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0046,
+     0.0002,
+     0.0096
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.7451,
+     "roll6": 0.6489
+    },
+    "adaptive_k": {
+     "mean": 98.0,
+     "p10": 79.0,
+     "p90": 117.0
+    }
+   },
+   "49": {
+    "tckd": {
+     "s_roll0": 0.1374,
+     "s_roll6": 0.1117,
+     "t_pick": 0.3754,
+     "f_roll0": 0.2338,
+     "f_roll6": 0.2188,
+     "fa_roll6": 0.2321,
+     "random": 1.0114
+    },
+    "kl": {
+     "s_roll0": 0.2677,
+     "s_roll6": 0.2303,
+     "t_pick": 0.608,
+     "f_roll0": 0.3884,
+     "f_roll6": 0.367,
+     "fa_roll6": 0.3919,
+     "random": 1.3429
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.1071,
+     0.063,
+     0.1527
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.0964,
+     0.0624,
+     0.1355
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.1566,
+     -0.2092,
+     -0.1081
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.2637,
+     -0.3337,
+     -0.1959
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0133,
+     -0.0182,
+     0.0448
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.6457,
+     "roll6": 0.5328
+    },
+    "adaptive_k": {
+     "mean": 49.0,
+     "p10": 40.0,
+     "p90": 58.0
+    }
+   },
+   "29": {
+    "tckd": {
+     "s_roll0": 0.4553,
+     "s_roll6": 0.3834,
+     "t_pick": 1.0707,
+     "f_roll0": 0.8226,
+     "f_roll6": 0.7753,
+     "fa_roll6": 0.8253,
+     "random": 2.0328
+    },
+    "kl": {
+     "s_roll0": 0.7263,
+     "s_roll6": 0.6381,
+     "t_pick": 1.4971,
+     "f_roll0": 1.2196,
+     "f_roll6": 1.1409,
+     "fa_roll6": 1.1954,
+     "random": 2.5885
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.3919,
+     0.3014,
+     0.4797
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.3673,
+     0.2883,
+     0.4536
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.2954,
+     -0.3862,
+     -0.2074
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.6873,
+     -0.8093,
+     -0.5661
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.05,
+     -0.0163,
+     0.1196
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.5857,
+     "roll6": 0.4432
+    },
+    "adaptive_k": {
+     "mean": 29.0,
+     "p10": 20.0,
+     "p90": 38.0999755859375
+    }
+   },
+   "12": {
+    "tckd": {
+     "s_roll0": 2.0319,
+     "s_roll6": 1.7244,
+     "t_pick": 2.8387,
+     "f_roll0": 2.5712,
+     "f_roll6": 2.5436,
+     "fa_roll6": 2.584,
+     "random": 3.5264
+    },
+    "kl": {
+     "s_roll0": 2.6615,
+     "s_roll6": 2.2906,
+     "t_pick": 3.5848,
+     "f_roll0": 3.2883,
+     "f_roll6": 3.2489,
+     "fa_roll6": 3.2847,
+     "random": 4.3054
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.8192,
+     0.6636,
+     0.987
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.5393,
+     0.4016,
+     0.6841
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.2951,
+     -0.407,
+     -0.1941
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -1.1144,
+     -1.2803,
+     -0.9397
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0404,
+     -0.0864,
+     0.1606
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.4656,
+     "roll6": 0.2926
+    },
+    "adaptive_k": {
+     "mean": 12.0,
+     "p10": 5.0,
+     "p90": 19.0
+    }
+   }
+  },
+  "final": {
+   "98": {
+    "tckd": {
+     "s_roll0": 0.023,
+     "s_roll6": 0.0229,
+     "t_pick": 0.0439,
+     "f_roll0": 0.0264,
+     "f_roll6": 0.0233,
+     "fa_roll6": 0.0259,
+     "random": 0.1969
+    },
+    "kl": {
+     "s_roll0": 0.0486,
+     "s_roll6": 0.0483,
+     "t_pick": 0.0893,
+     "f_roll0": 0.0537,
+     "f_roll6": 0.0504,
+     "fa_roll6": 0.055,
+     "random": 0.3132
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.0005,
+     -0.0044,
+     0.0061
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.0033,
+     -0.0014,
+     0.0089
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.0205,
+     -0.0344,
+     -0.0091
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.021,
+     -0.0357,
+     -0.0089
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0026,
+     -0.001,
+     0.0067
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.7462,
+     "roll6": 0.6498
+    },
+    "adaptive_k": {
+     "mean": 98.0,
+     "p10": 79.0,
+     "p90": 117.0
+    }
+   },
+   "49": {
+    "tckd": {
+     "s_roll0": 0.1472,
+     "s_roll6": 0.1085,
+     "t_pick": 0.3754,
+     "f_roll0": 0.2276,
+     "f_roll6": 0.2178,
+     "fa_roll6": 0.2319,
+     "random": 1.0114
+    },
+    "kl": {
+     "s_roll0": 0.276,
+     "s_roll6": 0.2298,
+     "t_pick": 0.608,
+     "f_roll0": 0.38,
+     "f_roll6": 0.3693,
+     "fa_roll6": 0.3909,
+     "random": 1.3429
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.1093,
+     0.066,
+     0.1571
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.0805,
+     0.0429,
+     0.1192
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.1576,
+     -0.2119,
+     -0.106
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.2669,
+     -0.3399,
+     -0.1994
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0142,
+     -0.0202,
+     0.0446
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.6444,
+     "roll6": 0.5308
+    },
+    "adaptive_k": {
+     "mean": 49.0,
+     "p10": 40.0,
+     "p90": 58.0
+    }
+   },
+   "29": {
+    "tckd": {
+     "s_roll0": 0.4293,
+     "s_roll6": 0.3629,
+     "t_pick": 1.0707,
+     "f_roll0": 0.7989,
+     "f_roll6": 0.7668,
+     "fa_roll6": 0.8296,
+     "random": 2.0328
+    },
+    "kl": {
+     "s_roll0": 0.7029,
+     "s_roll6": 0.6205,
+     "t_pick": 1.4971,
+     "f_roll0": 1.185,
+     "f_roll6": 1.132,
+     "fa_roll6": 1.1977,
+     "random": 2.5885
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.4039,
+     0.3094,
+     0.5061
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.3696,
+     0.2882,
+     0.455
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.3039,
+     -0.3916,
+     -0.2148
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -0.7078,
+     -0.8335,
+     -0.5863
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0628,
+     -0.0066,
+     0.1298
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.5792,
+     "roll6": 0.4434
+    },
+    "adaptive_k": {
+     "mean": 29.0,
+     "p10": 20.0,
+     "p90": 38.0999755859375
+    }
+   },
+   "12": {
+    "tckd": {
+     "s_roll0": 2.0565,
+     "s_roll6": 1.678,
+     "t_pick": 2.8387,
+     "f_roll0": 2.5337,
+     "f_roll6": 2.5465,
+     "fa_roll6": 2.5953,
+     "random": 3.5264
+    },
+    "kl": {
+     "s_roll0": 2.6734,
+     "s_roll6": 2.2252,
+     "t_pick": 3.5848,
+     "f_roll0": 3.2536,
+     "f_roll6": 3.258,
+     "fa_roll6": 3.293,
+     "random": 4.3054
+    },
+    "d_tckd_f_roll6_minus_s_roll6": [
+     0.8685,
+     0.7199,
+     1.0254
+    ],
+    "d_tckd_f_roll0_minus_s_roll0": [
+     0.4772,
+     0.338,
+     0.6168
+    ],
+    "d_tckd_f_roll6_minus_t_pick": [
+     -0.2923,
+     -0.3975,
+     -0.1839
+    ],
+    "d_tckd_s_roll6_minus_t_pick": [
+     -1.1607,
+     -1.3254,
+     -0.9946
+    ],
+    "d_tckd_fa_roll6_minus_f_roll6": [
+     0.0489,
+     -0.0738,
+     0.173
+    ],
+    "overlap_student_teacher": {
+     "roll0": 0.4563,
+     "roll6": 0.2885
+    },
+    "adaptive_k": {
+     "mean": 12.0,
+     "p10": 5.0,
+     "p90": 19.0
+    }
+   }
+  }
+ },
+ "verdict": {
+  "P1_f_roll6_beats_s_roll6_ci_hi_lt_0_at_12_and_29": false,
+  "P1_gain_at_12_larger_than_at_98": false,
+  "P2_e25_gain_larger_than_final_at_29": true,
+  "P3_fa_roll6_beats_f_roll6_ci_hi_lt_0_at_29": false,
+  "D_t_pick_best_tckd_at_each_k": {
+   "98": "s_roll6",
+   "49": "s_roll6",
+   "29": "s_roll6",
+   "12": "s_roll6"
+  }
+ }
+}

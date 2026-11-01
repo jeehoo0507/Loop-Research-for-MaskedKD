@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_teacher_filter_1031_202037_032d",
+ "name": "cub_teacher_filter",
+ "source_sha": "032dd2e21ed82ac72318dc77407b762c691ad22e0c9a8e0de56236e29327d2b5",
+ "status": "done",
+ "meta": {
+  "question": "on CUB, is the cached teacher rollout map better used to pick (teacher top-K) or to filter (student picks inside the teacher's allowed region), and does a filter gain appear only at small K or early in training?",
+  "method": "attention rollout (student and teacher); keep-only masked teacher faithfulness (KL, DKD TCKD); image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 53.3
+}
