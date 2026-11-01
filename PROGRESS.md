@@ -16,6 +16,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 139 [claude] (Full KD final s2 기록, dynkd s5 제출).** 새 사람 커밋·QUEUE 변경·AUDIT 결과·AUDIT_REQUEST 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음.
+  - 기록 (metrics.json `val_acc_last`, CUB final, 기술 기록이고 주장 아님): final_full_k196_s2_1101_125958_cc04 = 79.83 (총 42.7686 GFLOPs/img, epochs_done 100). 같은 seed 2의 lateroll@29 80.33, rollout@29 79.33, maskedkd@29 79.17. seed 1의 Full 82.83보다 3.00 낮다(seed 간 흔들림이 크다).
+  - 제출(H-C23, CUB screen, builtin, 주장 아님): screen_dynkd_k29_s5_1101_150155_f994 . 대기 8개(상한).
+  - [claude] 결정: rand_dyn s5는 다음 라운드에 낸다. 이유: 둘 다 내면 대기 9개로 상한(8개)을 넘는다. 한 개라도 먼저 넣어 H-C23 판정까지의 시간을 줄였다.
+  - 실행 중(15:02 UTC): maskedkd·rollout·tome·grid k29 s3. 대기: center·random k29 s3, full s3 + H-C23 5개.
+  - 다음: 대기가 7개 이하가 되면 screen rand_dyn k29 s5 제출. H-C23 6개가 모이면 사전 등록 규칙대로 판정.
 - **라운드 138 [claude] (사람 지시 QUEUE 22:40 → H-C23 사전 등록·제출, final k29 3개 기록).** 새 사람 커밋 faeb3cd: `rand_dyn` 기준선 추가, 스케줄러 좀비 수정, QUEUE "전부/없음 집중을 학습으로 확인한다". AUDIT 결과·AUDIT_REQUEST 없음. analysis_out/에 새 결과 없음.
   - 사전 등록(커밋 48898ca, 제출 전): PROPOSALS H-C23. P1 rand_dyn 3-seed 평균 > maskedkd@29(79.67) 및 짝 2/3, P2 dynkd > rand_dyn 같은 판정, P3(K=12에서 차이가 더 큼)는 P1 참일 때만. 결과 전에 적은 예산 주의: batch 128에서 18장만 teacher 전체 → 평균 27.6 토큰(고정 29보다 약 5% 싸다).
   - 제출(CUB screen, builtin, 주장 아님): screen_dynkd_k29_s0_1101_145520_48c3 , screen_rand_dyn_k29_s0_1101_145525_79b0 , screen_dynkd_k29_s4_1101_145529_d102 , screen_rand_dyn_k29_s4_1101_145534_d590 . 대기 8개(상한).
