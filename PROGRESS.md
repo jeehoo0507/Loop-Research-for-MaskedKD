@@ -8,6 +8,12 @@ STUCK: CUB Parent check 문턱 2.69 %p를 rollout의 자식은 구조적으로 �
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 124 [claude] (기준선 1개 기록, STUCK 유지, 새 job 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음(최신은 H-C20). 맨 위 STUCK에 대한 답이 없다.
+  - 기준선 기록 (metrics.json `val_acc_last`, builtin, 라운드 122 제출): screen_center_k49_s4_1101_085148_3a5e = 80.33 (총 16.4594 GFLOPs/img). 같은 seed의 lateroll@49 s4(81.67)보다 −1.34다. 기술 기록이고 주장이 아니다.
+  - 실행 중(09:24 UTC): screen_center_k49_s5_1101_085152_c3b1 epoch 92, screen_tome_k49_s4_1101_085156_6f20 epoch 89, screen_tome_k49_s5_1101_085201_e36a epoch 85. 대기 0개.
+  - [claude] 결정: 나머지 3개가 끝나기를 이 라운드 안에서 기다리지 않았다. 이유: 무인 세션에서 백그라운드 대기 명령이 승인을 요구해 막혔다. 몇 분 뒤 끝나므로 다음 라운드에 기록하는 편이 안전하다.
+  - [claude] 결정: 새 분석·선택기를 내지 않았다. 이유는 라운드 123과 같다. 승격은 STUCK(사람 판단)에 막혀 있고, 남은 Codex 아이디어 1은 H-C5·H-C6과 겹쳐 근거가 없다. GPU도 기준선 3개로 차 있다.
+  - 다음: center@49 s5, tome@49 s4·s5 기록 후 K=49 seed 0·4·5 평균으로 lateroll@49(82.11)와 비교만 한다. 사람이 STUCK에 답하면 그에 따라 lateroll@29를 final로 올리거나 닫는다.
 - **라운드 123 [claude] (H-C20 판정 → 기각, STUCK 유지, 새 job 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음. 맨 위 STUCK에 대한 답이 없다.
   - H-C20 analysis_cub_concept_cover_1101_085134_5a45 (사전 등록 b922462): **P1 틀림, P2·P3 맞음.** lateroll@29 student 3개에서 TCKD(CC) − TCKD(L) = +3.37·+3.36·+3.35 (CI 모두 > 0). CC(3.69~3.73)는 random(2.06)보다도 나쁘고, lateroll과 겹침은 4%로 우연(15%)보다 낮다. 규칙대로 "CLS 가중 개념 덮기는 lateroll보다 KD 신호를 더 지키지 않는다"로 적고 개념 덮기 계열을 끝낸다(PROPOSALS·RESULTS).
   - [claude] 결정: P2가 맞았지만(CC < CW) 쓰지 않았다. 이유: 사전 등록에서 P2는 P1이 맞을 때만 의미가 있다. 둘 다 random보다 나쁜 조건 사이의 차이다.
