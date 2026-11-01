@@ -11,8 +11,8 @@
   - H-C14 (analysis_cub_teacher_filter_1031_202037_032d , 사전 등록 a7900dc): P1·P2·P3 모두 틀렸다. final TCKD에서 거르기 − lateroll은 K=29 +0.404 [0.309, 0.506], K=12 +0.869 [0.720, 1.025]로, 거르기가 나쁘고 K가 작을수록 더 나쁘다. teacher 상위 K(t_pick)는 모든 K에서 lateroll보다 나쁘다. 숫자는 PROPOSALS H-C14 결과 줄과 RESULTS "분석에서 배운 것"에 있다(416d298).
   - [claude] 결정: 코드의 P2 플래그는 true였지만 P2를 틀린 것으로 판정했다. 이유: 사전 등록한 (b) 조건은 "epoch 25에서 CI 위 끝 < 0"이다. 실제 값은 +0.367 [0.277, 0.458]이다. 플래그는 "final보다 작다"만 확인한다. 보수적으로 사전 등록한 문장을 따른다.
   - 규칙 (c)에 따라 trustfilt 기본형을 냈다: screen_trustfilt_k29_s0_1101_052028_1577 (K=29, seed 0, ADAPTIVE=False, EARLY_ONLY=False). 이것은 "분석 근거 없는 지시 시험"이다. 판독은 lateroll@29 s0 81.33, teacher_topk@29 s0(실행 중)과 비교하는 H-C14 기각 규칙대로 한다. TrustMask 계열 screen은 이 1개로 끝낸다.
-  - [claude] 결정: H-C15 분석은 아직 내지 않았다. 이유: trustfilt를 낸 뒤 대기가 8개(Waterbirds 2단계 기준선 7개 + trustfilt)로 상한에 닿았다. 대기 작업을 8개 넘게 쌓지 않는다(AGENT_PROMPT 51행). 사전 등록은 그대로다. 다음 라운드에 자리가 나면 낸다.
-  - 다음: teacher_topk@29·trustfilt@29 판독 → H-C15 제출·판정.
+  - [claude] 결정: H-C15는 대기가 8개를 넘지 않을 때만 내기로 했다(AGENT_PROMPT 51행). 05:23 UTC에 trustfilt가 실행으로 넘어가 대기가 7개가 됐다. 그래서 사전 등록(6059daf)을 바꾸지 않고 H-C15를 냈다: analysis_cub_rollout_cluster_1101_052312_4f10 (대기 8개).
+  - 다음: teacher_topk@29·trustfilt@29 판독(H-C14 기각 규칙) → H-C15 판정(PROPOSALS H-C15 P1~P3).
 - **라운드 108 [claude] (스케줄러 아홉 번째 정지, 새 작업 없음): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 c655a44 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음(최신은 analysis_cub_rollout_fixed_1031_193620_442e ). pull.log는 "Already up to date"만 있다.
   - 04:35 UTC 기준 queue/running 0개, queue/pending 11개 그대로(H-C14, teacher_topk@29 s0, Waterbirds 2단계 기준선 9개). harness 프로세스 없음, GPU 0%·84 MiB, sched.log 마지막 줄 07:36. STUCK 첫 줄을 라운드 108로 고쳤다.
   - [claude] 결정: H-C15를 이번에도 제출하지 않고 새 분석·선택기도 쓰지 않았다. 이유: 라운드 102~107과 같다(스케줄러 꺼짐, 대기 11개 > 8개, 다음 단계가 H-C14 결과에 달림).
