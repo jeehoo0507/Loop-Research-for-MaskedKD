@@ -437,6 +437,13 @@ IDEA 2: Sparse-Residual Counterfactual Attribution (untested) — Scale cached b
   - 기각: P1이 틀리면 "CLS 가중 개념 덮기는 lateroll보다 KD 신호를 더 지키지 않는다"로 적고, 개념 덮기 선택기는 CUB에서도 만들지 않는다(H-W23와 함께 이 계열 끝). P1이 맞고 P2가 틀리면 "이득은 덮기가 아니라 CLS 관련도에서 온다"로 적고, CW를 따로 사전 등록한다. P1·P2가 맞을 때만 CC 선택기(parent none)를 사전 등록하고 K=29 screen seed 4로 낸다(seed 1·2·3 금지). P3가 틀리면 이 분석의 TCKD 차이는 해석하지 않는다.
   - 판정 (라운드 123, analysis_cub_concept_cover_1101_085134_5a45): **P1 틀림, P2 맞음, P3 맞음 → 기각.** K=29 TCKD(CC) − TCKD(L) = +3.372 [3.190, 3.557]·+3.359 [3.151, 3.551]·+3.345 [3.141, 3.532] (seed 0·4·5). CC는 random(U − L +1.70)보다도 나쁘다. CC − CW = −0.116 [−0.183, −0.052]·−0.098 [−0.158, −0.042]·−0.084 [−0.158, −0.018]이지만 P1이 틀려 쓰지 않는다. CC∩L 겹침 0.040~0.042(우연 0.148보다 낮음). 규칙대로 "CLS 가중 개념 덮기는 lateroll보다 KD 신호를 더 지키지 않는다"로 적고, 개념 덮기 선택기는 만들지 않는다. H-W23과 함께 이 계열을 끝낸다.
 
+- **H-C21 (라운드 126, 결과 전·제출 전에 등록): 주 지표(허용 오차 안의 최소 K) 탐침. lateroll(소스 그대로, lateroll@69541b)은 K=29와 K=12 사이인 K=20에서도 screen 허용 오차(81.50) 안에 드는가.**
+  - 왜: 주 지표는 "허용 오차 안의 최소 K"인데 lateroll은 K=29(seed 0·4·5 평균 82.00)에서 안이고 K=12(s0 78.33, screen_lateroll_k12_s0_1031_130339_f599)에서 밖이다. 그 사이는 잰 적이 없다. 새 변형이 아니라 같은 소스의 K만 바꾼 것이다. STUCK(Parent check)에 대한 사람 판단 재료로 K 곡선을 채운다.
+  - 측정: CUB screen seed 0, K=20. lateroll, 그리고 같은 K의 builtin maskedkd·rollout·random(AGENT_PROMPT 6항: 같은 K에 maskedkd·random이 있어야 비교 성립). 값은 metrics.json `val_acc_last`.
+  - 예측: P1 lateroll@20 s0 < 81.50 (K=12·29 사이 선형 보간 ≈ 79.8). P2 lateroll@20 s0 ≥ rollout@20 s0 (K=29·49의 짝지은 차이 6개가 모두 양수였던 방향).
+  - 규칙: P1이 맞으면(밖) "screen에서 lateroll의 최소 K는 29"로 적고 20~29 사이 K를 더 훑지 않는다(K 골라내기 방지). P1이 틀리면(안) 같은 소스로 seed 4·5를 내서 seed 3개 평균으로만 판단한다. 어느 경우든 승격·감사 요청은 STUCK 해제 전에는 하지 않는다. P2는 기술값이다(seed 1개, 문턱 2.69보다 작은 차이는 해석하지 않는다).
+  - 한계: seed 1개 screen, CUB val 600장(0.17 %p = 1장). Search effort에서 lateroll config가 3 → 4로 는다.
+
 ## 2026-11-01 ideas from Codex (independent)
 IDEA 1: Contrastive token-gate attribution — From student logits \(z\), take predicted class \(c\), detached rival weights \(q=\mathrm{softmax}(z_{\neg c})\), and margin \(m=z_c-\sum_{j\ne c}q_jz_j\); request penultimate-block outputs \(H\) (`tokens=[-2]`).  
 IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), including CLS; factorize their signed split \(X=[\max(H,0),\max(-H,0)]\approx UV\) using rank-6 NMF, ten multiplicative updates, and content-based initialization; normalize rows of \(V\) to unit norm while rescaling \(U\).  
