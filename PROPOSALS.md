@@ -510,3 +510,20 @@ IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), includi
   - 규칙: Q1·Q2가 모두 불확실/거짓이면 "전부/없음 틀에서 이득은 집중 자체이고, 해석·학습 상태 신호 모두 선택을 개선하지 못한다(K=12)"로 RESULTS Teachability 절에 적는다. 하나가 참이면 그 신호만 K=29 seed 0·4·5로 확인한다(예산이 커서 차이가 줄어야 한다는 예측과 함께, 그때 미리 적는다). 멘토의 뒤집힌 U자(중간 일치도)는 이번에 학습으로 시험하지 않는다(오프라인 align ρ ≈ 0). 결과를 본 뒤 추가하지 않는다. 혼합(일부 full, 나머지 작은 K)은 H-C22에서 작은 K 가린 teacher가 대부분 이미지에서 라벨보다 나빠 내지 않는다. 감사 요청 없음(기준선 대비 탐색). screen seed만(1·2·3 금지).
   - 검사: 연구자 세션에서 임의 Python 실행이 막혀 CPU 단위 검사를 하지 못했다. 대신 smoke tier(30 step) job을 각 1개 같이 낸다. smoke가 실패하면 screen job도 같은 오류로 실패하니 고쳐서 다시 낸다.
   - 중간 기록 (라운드 157, 판정 전 기술값, metrics.json `val_acc_last`, epochs_done 100): screen_align_dyn_k12_s0_1101_174726_2df8 = 80.17 (총 9.6306, 캐시 0.3524, selector 0.5206, mean_kept 9.19), screen_align_dyn_k12_s4_1101_174735_5d50 = 80.83, screen_kdhist_dyn_k12_s0_1101_174730_0fb5 = 80.00 (총 9.5632), screen_kdhist_dyn_k12_s4_1101_174739_13a9 = 80.83. rand_dyn@12 짝: align +0.67 (s0)·−0.50 (s4), kdhist +0.50 (s0)·−0.50 (s4). align_dyn 총비용 9.63은 사전 등록 추정 9.64와 맞다. seed 5 두 개가 끝나면 판정한다.
+  - **판정 (라운드 158, 6개 모두 epochs_done 100, metrics.json `val_acc_last`):** screen_align_dyn_k12_s5_1101_174743_56e0 = 80.50 (총 9.6306), screen_kdhist_dyn_k12_s5_1101_174748_53c6 = 79.83 (총 9.5632). 3-seed 평균: align_dyn 80.50 (80.17·80.83·80.50), kdhist_dyn 80.22 (80.00·80.83·79.83), rand_dyn 80.89 (79.50·81.33·81.83).
+    - Q1 거짓: align_dyn − rand_dyn = −0.39, 짝 +0.67·−0.50·−1.33 (1/3 양수).
+    - Q2 거짓: kdhist_dyn − rand_dyn = −0.67, 짝 +0.50·−0.50·−2.00 (1/3 양수).
+    - Q3: kdhist_dyn − align_dyn = −0.28, 짝 −0.17·0.00·−0.67 → 평균 차이가 0.33 이하라 차이는 불확실.
+    - 기술값: − CE (80.83) align −0.33, kdhist −0.61. − maskedkd@12 (76.72) align +3.78, kdhist +3.50. − dynkd@12 (80.78) align −0.28, kdhist −0.56.
+    - 해석 주의: "거짓"은 사전 등록 규칙("A > B")이 성립하지 않았다는 뜻이다. seed 3개, val 1장 = 0.17 %p라서 "두 신호가 무작위보다 나쁘다"고 주장하지는 않는다. 그 차이는 불확실하다.
+    - 규칙에 따른 결론: **전부/없음 틀에서 이득은 집중 자체이고, 해석 신호(attribution 일치도)와 학습 상태 신호(KD 손실 이력, 엔트로피 = dynkd)는 둘 다 K=12에서 무작위보다 선택을 개선하지 못한다.** K=29 확인은 내지 않는다(Q1·Q2 둘 다 참이 아님).
+
+- **H-C25 (라운드 158, 결과 전·제출 전에 등록): 전부/없음 집중의 효율 곡선 끝 — 예산이 클 때(K=49·98) 무작위 집중이 고정 K보다 나은가.** 새 선택기 없음, harness 기준선 `rand_dyn`만 낸다.
+  - 왜: QUEUE 2단계(멘토 보고) Efficiency = 평균 teacher GFLOPs 대비 정확도 곡선. 전부/없음(rand_dyn)은 K=12·29에서만 쟀다(둘 다 CE 수준). 고정 K는 K=49·98에서 CE보다 높아진다(maskedkd@98 82.56, lateroll@49 82.11). 두 곡선이 어디서 엇갈리는지 모르면 "적은 예산에서는 소수 이미지에 통째로"라는 결론의 범위를 적을 수 없다. H-C22 오프라인에서는 K=49의 random_aon이 고정49보다 나쁘거나 같았다(+0.019 ~ +0.025 G).
+  - 측정: CUB screen, rand_dyn@49 (m = int(49·128 // 196) = 32장 teacher 전체), rand_dyn@98 (m = 64장), seed 0·4·5, 6 job. 비교 대상(같은 seed, 이미 있음): maskedkd@49 80.78, rollout@49 81.28, lateroll@49 82.11, maskedkd@98 82.56, CE 80.83, Full 82.17. 값은 metrics.json `val_acc_last`.
+  - 예측 (판정 규칙은 H-C23과 같음: 평균 + 짝 2/3, 평균 차이 0.33 이하는 불확실):
+    - R1: K=49에서 rand_dyn − maskedkd@49 의 평균이 K=29의 같은 차이(+1.33)보다 작다. 예측: 참(오프라인 random_aon이 K=49에서 이점을 잃음).
+    - R2: rand_dyn@98 < maskedkd@98 (평균 + 짝 2/3). 예측: 참 — 큰 예산에서는 가린 teacher가 대부분 이미지에서 라벨보다 나아서(H-C22: K=98에서 라벨보다 먼 이미지 9~11%) 모든 이미지에 조금씩이 낫다.
+    - 기술값: rand_dyn@49·98 − CE, − lateroll@49, − Full. rand_dyn이 예산에 따라 CE에서 Full로 선형에 가깝게 오르는지(곡선 모양).
+  - 규칙: 결과와 무관하게 RESULTS Teachability 절의 효율 곡선에 적는다. 새 선택기·다른 K는 이 결과로 추가하지 않는다. 감사 요청 없음(기준선 비교). screen seed만(1·2·3 금지).
+  - 한계: seed 3개, val 600장. K=12·29와 달리 K=49·98에서는 batch 내림이 없어 이미지당 평균 토큰이 고정 K와 같다(32·196/128 = 49.0, 64·196/128 = 98.0).
