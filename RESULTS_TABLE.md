@@ -34,8 +34,7 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 49.0 (3 seeds)
   - maskedkd : 98.0 (3 seeds)
-- screening only (fewer seeds):
-  - trustfilt@27da28 : 29.0 (1 seeds)
+- screening only (fewer seeds): none
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
@@ -86,7 +85,7 @@ Total agent screen configs: 7
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0 | 78.17 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1183 | screen_tome_k12_s0_1031_130151_473d |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 79.67 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 1185 | screen_tome_k29_s0_1031_130150_b286 |
 | screen | tome |  | 49 | 49.0 | 0 | 79.00 ± 0.00 | - | 14.50 | 6.86 | 0.00 | 1110 | screen_tome_k49_s0_1031_130150_83af |
-| screen | trustfilt@27da28 |  | 29 | 29.0 | 0 | 81.83 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 499 | screen_trustfilt_k29_s0_1101_052028_1577 |
+| screen | trustfilt@27da28 |  | 29 | 29.0 | 0,4,5 | 81.33 ± 0.50 | - | 13.34 | 5.36 | 0.43 | 372 | screen_trustfilt_k29_s5_1101_054141_7ad5 screen_trustfilt_k29_s4_1101_054136_636e screen_trustfilt_k29_s0_1101_052028_1577 |
 
 # Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
