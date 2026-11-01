@@ -111,7 +111,7 @@ Total agent screen configs: 11
 | screen | mk_halfkd@1b2cf8 |  | 98 | 98.0 | 0,4,5 | 81.83 ± 0.73 | - | 25.04 | 17.41 | 0.00 | 335 | screen_mk_halfkd_k98_s5_1101_204003_05ab screen_mk_halfkd_k98_s0_1101_203954_2f5c screen_mk_halfkd_k98_s4_1101_203959_bb22 |
 | screen | oracle |  | 12 | 12.0 | 0 | 76.33 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 638 | screen_oracle_k12_s0_1031_130151_6802 |
 | screen | rand_dyn |  | 12 | 10.7 | 0,4,5 | 80.89 ± 1.23 | - | 9.56 | 1.92 | 0.00 | 376 | screen_rand_dyn_k12_s4_1101_163722_152f screen_rand_dyn_k12_s5_1101_163737_06e0 screen_rand_dyn_k12_s0_1101_163714_2f8d |
-| screen | rand_dyn |  | 29 | 27.6 | 0,4,5,6 | 81.17 ± 0.71 | - | 12.58 | 4.94 | 0.00 | 402 | screen_rand_dyn_k29_s4_1101_145534_d590 screen_rand_dyn_k29_s0_1101_145525_79b0 screen_rand_dyn_k29_s6_1101_215056_3fe9 screen_rand_dyn_k29_s5_1101_151255_4296 |
+| screen | rand_dyn |  | 29 | 27.6 | 0,4,5,6,7 | 81.23 ± 0.63 | - | 12.58 | 4.94 | 0.00 | 379 | screen_rand_dyn_k29_s7_1101_215113_d43f screen_rand_dyn_k29_s4_1101_145534_d590 screen_rand_dyn_k29_s0_1101_145525_79b0 screen_rand_dyn_k29_s6_1101_215056_3fe9 screen_rand_dyn_k29_s5_1101_151255_4296 |
 | screen | rand_dyn |  | 49 | 49.0 | 0,4,5 | 80.89 ± 0.77 | - | 16.42 | 8.78 | 0.00 | 313 | screen_rand_dyn_k49_s5_1101_190526_0e9d screen_rand_dyn_k49_s0_1101_190515_ccab screen_rand_dyn_k49_s4_1101_190522_983e |
 | screen | rand_dyn |  | 98 | 98.0 | 0,4,5,6 | 81.29 ± 0.44 | - | 25.21 | 17.56 | 0.00 | 338 | screen_rand_dyn_k98_s4_1101_190535_b5c8 screen_rand_dyn_k98_s0_1101_190530_0832 screen_rand_dyn_k98_s6_1101_215105_a208 screen_rand_dyn_k98_s5_1101_190539_cd98 |
 | screen | random |  | 12 | 12.0 | 0 | 75.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_random_k12_s0_1031_130151_7444 |
