@@ -1,8 +1,8 @@
 (해제, 라운드 109) 라운드 100~108의 STUCK(스케줄러 정지)은 사람 커밋 63cc33b(harness 코드가 바뀌면 스케줄러 재실행, 루프가 빠진 스케줄러 세션을 다시 띄움)로 풀렸다. 11-01 05:0x UTC에 H-C14가 끝났고 job이 다시 돈다.
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
 요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
-진행 중(라운드 111): H-C16 trustfilt@29 seed 4·5 재현 확인 (screen_trustfilt_k29_s4_1101_054136_636e , screen_trustfilt_k29_s5_1101_054141_7ad5 , 사전 등록 819adba)과 P3 비교용 lateroll@29·teacher_topk@29 seed 4·5 (라운드 111 제출). trustfilt@29 s0 = 81.83은 lateroll@29 s0 81.33, teacher_topk@29 s0 80.50보다 높지만 seed 1개이고 H-C14 분석 예측과 반대다.
-다음: 위 6개 결과 → H-C16 판정(P1~P3). lateroll 메커니즘은 H-C13·H-C15 기각으로 미해결.
+진행 중(라운드 112): H-C17 분석 analysis_cub_mask_average_1101_061802_efa4 (사전 등록 92ea1b1, 확률적 top-K의 epoch 평균 KD 목표 편향). 기준선 기록용 lateroll@29·teacher_topk@29 seed 4·5. H-C16은 기각됐고(trustfilt@29 seed 4·5 평균 81.08 < 81.50), TrustMask 계열은 끝났다.
+다음: H-C17 판정 → P1·P3가 맞을 때만 lateroll Gumbel 선택기 사전 등록·screen 1개. lateroll 메커니즘은 H-C13·H-C15 기각으로 미해결.
 (해제된 STUCK, 기록용) 아래 두 STUCK은 더는 막힌 상태가 아니다. 9c99bba에서 harness/evidence.py가 모든 상태의 job 이력을 붙이게 바뀌었다. 하지만 두 주장 모두 suffdisc 계열이라 QUEUE 지시에 따라 다시 내지 않는다.
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
@@ -11,7 +11,7 @@
   - H-C16 (사전 등록 819adba): trustfilt@29 s4 = 81.33 (screen_trustfilt_k29_s4_1101_054136_636e ), s5 = 80.83 (screen_trustfilt_k29_s5_1101_054141_7ad5 ). seed 4·5 평균 81.08 < 81.50 → P1 틀림. s4는 같은 seed rollout@29(81.33)와 같아 P2도 틀림. 기각 규칙대로 "seed 0 결과(81.83)는 잡음이었다"로 적고 TrustMask 계열을 끝낸다. seed 0·4·5 평균 81.33.
   - [claude] 결정: 이미 낸 lateroll@29·teacher_topk@29 seed 4·5(실행·대기 중)는 취소하지 않고 기준선 기록으로 둔다. 이유: 대기 파일을 직접 지우는 것은 harness 밖 조작이고, 두 기준선은 K=29 비교의 seed 수를 3개로 채운다.
   - [claude] 결정: 학습 진행에 따라 K를 바꾸는 schedule 방향은 내지 않는다. 이유: harness는 FLOPs를 학습 초반 몇 스텝에서만 잰다(harness/train.py 267행). 초반에 K를 줄이는 방법은 비용이 적게 찍혀 공정한 비교가 안 된다.
-  - H-C17 사전 등록(PROPOSALS) 후 analysis/cub_mask_average.py 제출: KD 기울기가 teacher 확률에 선형이므로 epoch 평균 목표의 편향을 본다. lateroll Gumbel top-K(τ=1 주 조건) 평균이 결정적 top-K보다 full teacher에 가까운지, 균등 random 평균은 그렇지 않은지(지표 타당성 대조).
+  - H-C17 사전 등록(92ea1b1) 후 analysis_cub_mask_average_1101_061802_efa4 제출: KD 기울기가 teacher 확률에 선형이므로 epoch 평균 목표의 편향을 본다. lateroll Gumbel top-K(τ=1 주 조건) 평균이 결정적 top-K보다 full teacher에 가까운지, 균등 random 평균은 그렇지 않은지(지표 타당성 대조).
   - 다음: H-C17 판정 → P1·P3가 맞으면 lateroll Gumbel 선택기를 별도 사전 등록하고 K=29 screen seed 0 1개. 틀리면 기록하고 끝낸다.
 - **라운드 111 [claude] (H-C16 P3 비교 run 제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음.
   - 05:58 UTC 기준 trustfilt@29 s4는 epoch 60 (val 80.83), s5도 실행 중이다. 아직 판정하지 않는다. waterbirds_final_ce_k0_s3_1031_201502_f7a9 가 끝났다(2단계 기준선, harness 자동 제출분).
