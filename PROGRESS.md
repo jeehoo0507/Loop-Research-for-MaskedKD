@@ -16,6 +16,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 167 [claude] (H-C27 1개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록 (metrics.json `val_acc_last`, epochs_done 100, 판정 전 기술값): screen_rand_dyn_k29_s7_1101_215113_d43f = 81.50. PROPOSALS H-C27 "중간 기록"에 적었다.
+  - 실행 중(22:55 UTC): screen_maskedkd_k29_s7_1101_215118_b650 (e93), screen_rand_dyn_k98_s7_1101_215122_b95c (e62), screen_maskedkd_k98_s7_1101_215126_017f (e57). 대기 0. 약 17 s/epoch라 K=98 두 개는 약 23:08 UTC에 끝난다.
+  - [claude] 결정: 새 job을 내지 않고 판정하지 않는다. 이유: 빈 1칸이 생겼지만 새 선택기 탐색은 사람 지시를 기다리고(라운드 159 결정), H-C27 사전 등록에 "결과를 보고 seed·K를 추가하지 않는다"고 적었다. C1·C2는 seed 7 짝이 모두 나온 뒤에만 판정한다.
+  - 다음: seed 7 남은 3개 `val_acc_last` 기록 → C1·C2 판정 → RESULTS Teachability 절 반영.
 - **라운드 166 [claude] (H-C27 2개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, epochs_done 100, 판정 전 기술값): screen_rand_dyn_k98_s6_1101_215105_a208 = 81.33, screen_maskedkd_k98_s6_1101_215109_4112 = 82.17. seed 6 K=98 짝 rand_dyn − maskedkd = −0.83. seed 6은 두 K 모두 예측 부호(K=29 +1.17, K=98 −0.83). PROPOSALS H-C27 "중간 기록"에 적었다.
   - 실행 중(22:34 UTC): seed 7 네 개 — screen_rand_dyn_k29_s7_1101_215113_d43f (e46), screen_maskedkd_k29_s7_1101_215118_b650 (e28), screen_rand_dyn_k98_s7_1101_215122_b95c, screen_maskedkd_k98_s7_1101_215126_017f (방금 시작). 대기 0. 약 20 s/epoch라 모두 끝나는 때는 약 23:10 UTC.

@@ -550,3 +550,4 @@ IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), includi
   - 중간 기록 (라운드 164, 판정 전): screen_rand_dyn_k29_s6_1101_215056_3fe9 = 81.67 (epochs_done 100). 짝 maskedkd@29 s6은 22:22 UTC에 epoch 94/100. 나머지 6개는 실행 중 3개·대기 3개.
   - 중간 기록 (라운드 165, 판정 전): screen_maskedkd_k29_s6_1101_215100_14b0 = 80.50 (epochs_done 100). seed 6 K=29 짝 rand_dyn − maskedkd = +1.17 (기술값, C1은 seed 7까지 본 뒤 판정). 22:28 UTC 실행 중 4개·대기 2개.
   - 중간 기록 (라운드 166, 판정 전): screen_rand_dyn_k98_s6_1101_215105_a208 = 81.33, screen_maskedkd_k98_s6_1101_215109_4112 = 82.17 (둘 다 epochs_done 100). seed 6 K=98 짝 rand_dyn − maskedkd = −0.83 (기술값, C2는 seed 7까지 본 뒤 판정). 22:34 UTC seed 7 네 개 실행 중(rand_dyn@29 e46, maskedkd@29 e28), 대기 0.
+  - 중간 기록 (라운드 167, 판정 전): screen_rand_dyn_k29_s7_1101_215113_d43f = 81.50 (epochs_done 100). 22:55 UTC 짝 maskedkd@29 s7은 epoch 93/100, rand_dyn@98 s7 e62, maskedkd@98 s7 e57, 대기 0.
