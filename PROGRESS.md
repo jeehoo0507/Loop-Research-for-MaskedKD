@@ -1,4 +1,5 @@
-방향 종료: 이미지별 teacher 토큰 예산(QUEUE 2026-11-01). H-C22 0단계(analysis_cub_budget_gonogo_1101_104255_4a16)에서 사전 등록한 H1이 5개 student 모두 거짓이다(K* 분위 [0, 0, 0, 0, 49~64], q75 = 0 < 49). 단, 실패 모양은 "필요량이 비슷하다"가 아니라 "76%의 이미지는 라벨만으로 고정 K=29 수준(가린 teacher가 라벨보다 full teacher에서 먼 이미지가 61~64%)"이다. H3는 참이지만 그 여유는 대부분 Dynamic KD식 전부/없음(무작위 신호로도 고정 K=29보다 나음)에 있다. 사람 판단 필요: 이 치우침을 "방향 종료"로 볼지, 전부/없음 기준선(dynkd)을 넘는 연속 배분(오라클 추가 여유 −0.045 G)을 1단계로 시험할지. 지시 전까지 1단계 선택기를 내지 않는다. Teachability 정리는 RESULTS.md 해당 절.
+(답 받음, 라운드 138) 아래 "방향 종료" 판단 요청에 사람이 답했다(QUEUE 2026-11-01 22:40): 전부/없음 집중을 학습으로 확인한다 → H-C23 진행 중.
+(기록) 방향 종료: 이미지별 teacher 토큰 예산(QUEUE 2026-11-01). H-C22 0단계(analysis_cub_budget_gonogo_1101_104255_4a16)에서 사전 등록한 H1이 5개 student 모두 거짓이다(K* 분위 [0, 0, 0, 0, 49~64], q75 = 0 < 49). 단, 실패 모양은 "필요량이 비슷하다"가 아니라 "76%의 이미지는 라벨만으로 고정 K=29 수준(가린 teacher가 라벨보다 full teacher에서 먼 이미지가 61~64%)"이다. H3는 참이지만 그 여유는 대부분 Dynamic KD식 전부/없음(무작위 신호로도 고정 K=29보다 나음)에 있다. 사람 판단 필요: 이 치우침을 "방향 종료"로 볼지, 전부/없음 기준선(dynkd)을 넘는 연속 배분(오라클 추가 여유 −0.045 G)을 1단계로 시험할지. 지시 전까지 1단계 선택기를 내지 않는다. Teachability 정리는 RESULTS.md 해당 절.
 요약 (라운드 130, [claude]): 감사된 결과는 없다. 위 방향 종료. 실행 중: lateroll@29 final s1 기준선(final_lateroll_k29_s1_1101_104303_ef38)과 같은 seed의 final_refs 6개(3개 실행, 4개 대기).
 다음: 대기가 1개 이하로 줄면 사람 지시(QUEUE "lateroll STUCK에 대한 답")대로 lateroll@29 final seed 2·3을 낸다(고정 K 기준선, 주장 아님). 사람 지시를 기다린다.
 (해제, 라운드 130) 아래 좀비 STUCK은 풀렸다: sched.log에 H-C22와 final k29 s1 job이 시작·종료된 기록이 있다(사람 또는 루프가 스케줄러를 재시작).
@@ -15,6 +16,13 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 138 [claude] (사람 지시 QUEUE 22:40 → H-C23 사전 등록·제출, final k29 3개 기록).** 새 사람 커밋 faeb3cd: `rand_dyn` 기준선 추가, 스케줄러 좀비 수정, QUEUE "전부/없음 집중을 학습으로 확인한다". AUDIT 결과·AUDIT_REQUEST 없음. analysis_out/에 새 결과 없음.
+  - 사전 등록(커밋 48898ca, 제출 전): PROPOSALS H-C23. P1 rand_dyn 3-seed 평균 > maskedkd@29(79.67) 및 짝 2/3, P2 dynkd > rand_dyn 같은 판정, P3(K=12에서 차이가 더 큼)는 P1 참일 때만. 결과 전에 적은 예산 주의: batch 128에서 18장만 teacher 전체 → 평균 27.6 토큰(고정 29보다 약 5% 싸다).
+  - 제출(CUB screen, builtin, 주장 아님): screen_dynkd_k29_s0_1101_145520_48c3 , screen_rand_dyn_k29_s0_1101_145525_79b0 , screen_dynkd_k29_s4_1101_145529_d102 , screen_rand_dyn_k29_s4_1101_145534_d590 . 대기 8개(상한).
+  - [claude] 결정: seed 5 짝(dynkd·rand_dyn s5)은 다음 라운드에 낸다. 이유: 이미 대기 4개라 6개를 다 내면 10개로 상한(8개)을 넘는다.
+  - 기록 (metrics.json `val_acc_last`, CUB final, 기술 기록이고 주장 아님): final_center_k29_s2_1101_125958_d08b = 77.17, final_random_k29_s2_1101_125958_9495 = 75.00, final_lateroll_k29_s3_1101_140937_ec98 = 81.50 (epochs_done 모두 100). lateroll@29 final seed 1·2·3 = 82.33·80.33·81.50, 평균 81.39.
+  - 실행 중(14:55 UTC): full s2, maskedkd·rollout·tome k29 s3. 대기: center·grid·random k29 s3, full s3 + H-C23 4개.
+  - 다음: 대기가 줄면 dynkd·rand_dyn s5 제출. H-C23 결과가 모이면 사전 등록 규칙대로 판정. seed 3 기준선이 끝나면 고정 K 짝 비교 기술 기록.
 - **라운드 137 [claude] (grid@29 final s2 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과·AUDIT_REQUEST 없음(QUEUE 마지막 변경 292ef47). PROGRESS 첫 줄의 "방향 종료" 사람 판단 요청에 답이 없다. analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, CUB final seed 2, 기술 기록이고 주장 아님): final_grid_k29_s2_1101_125958_44d7 = 75.83 (총 13.003 GFLOPs/img, epochs_done 100). seed 1의 grid 75.50과 비슷하다. 같은 seed의 lateroll@29 80.33, rollout@29 79.33, maskedkd@29 79.17, tome@29 78.67.
   - 실행 중(14:15 UTC): center k29 s2 (epoch 38), random k29 s2 (epoch 34), full s2 (epoch 12), final_lateroll_k29_s3_1101_140937_ec98 (epoch 3). 대기 7개(seed 3 기준선 6개 + full s3).
