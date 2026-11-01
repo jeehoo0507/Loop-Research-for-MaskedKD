@@ -84,7 +84,7 @@ Total agent screen configs: 10
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 80.44 ± 1.02 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 final_rollout_k29_s3_1101_140937_8573 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 79.78 ± 1.02 | - | 12.00 | 4.36 | 0.00 | 292 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s3_1101_140937_cdbb final_tome_k29_s2_1101_125958_ab06 |
-| screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4 | 80.50 ± 0.47 | - | 9.63 | 1.65 | 0.52 | 269 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 |
+| screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
 | screen | ce |  | 0 | None | 0,4,5 | 80.83 ± 1.96 | - | 7.64 | 0.00 | 0.00 | 1482 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
 | screen | center |  | 29 | 29.0 | 0,4,5 | 79.61 ± 0.67 | - | 13.00 | 5.36 | 0.00 | 639 | screen_center_k29_s4_1101_074021_b6e4 screen_center_k29_s5_1101_074025_d5c6 screen_center_k29_s0_1031_130150_cbde |
@@ -95,7 +95,7 @@ Total agent screen configs: 10
 | screen | grid |  | 12 | 12.0 | 0 | 74.33 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1266 | screen_grid_k12_s0_1031_130151_33bd |
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
-| screen | kdhist_dyn@cca0d3 |  | 12 | 10.7 | 0,4 | 80.42 ± 0.59 | - | 9.56 | 1.92 | 0.00 | 303 | screen_kdhist_dyn_k12_s0_1101_174730_0fb5 screen_kdhist_dyn_k12_s4_1101_174739_13a9 |
+| screen | kdhist_dyn@cca0d3 |  | 12 | 10.7 | 0,4,5 | 80.22 ± 0.54 | - | 9.56 | 1.92 | 0.00 | 399 | screen_kdhist_dyn_k12_s0_1101_174730_0fb5 screen_kdhist_dyn_k12_s4_1101_174739_13a9 screen_kdhist_dyn_k12_s5_1101_174748_53c6 |
 | screen | lateroll@69541b |  | 12 | 12.0 | 0,4,5 | 78.56 ± 0.25 | - | 10.08 | 2.45 | 0.08 | 547 | screen_lateroll_k12_s5_1101_171055_ddbf screen_lateroll_k12_s4_1101_171051_5464 screen_lateroll_k12_s0_1031_130339_f599 |
 | screen | lateroll@69541b |  | 20 | 20.0 | 0 | 82.00 ± 0.00 | - | 11.44 | 3.81 | 0.08 | 377 | screen_lateroll_k20_s0_1101_100242_f95e |
 | screen | lateroll@69541b |  | 29 | 29.0 | 0,4,5 | 82.00 ± 0.58 | - | 12.99 | 5.36 | 0.08 | 518 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s5_1101_055814_a9a4 screen_lateroll_k29_s0_1031_130348_fd19 |
