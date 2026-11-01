@@ -48,7 +48,7 @@ def _roll6(api, S, x):
     depth = len(S.blocks)
     with torch.no_grad():
         out = api.student_forward(S, x, attn_layers=list(range(SPLIT, depth)))
-        A = [a.float().mean(1) for a in out.attn]
+        A = [out.attn[i].float().mean(1) for i in range(SPLIT, depth)]
         B, N, _ = A[0].shape
         eye = torch.eye(N, device=A[0].device).expand(B, N, N)
         R = None
