@@ -11,13 +11,13 @@ Gate: [cub screen, 100 epochs, mean of seeds [0, 4, 5]] Full KD 82.17 vs CE 80.8
 Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
-- lateroll@29 vs maskedkd@29 [acc]: +1.08 %p, 95% CI [+0.02, +2.14], seeds 1,2, GFLOPs ratio 1.000 -> WIN
+- lateroll@29 vs maskedkd@29 [acc]: +1.17 %p, 95% CI [+0.75, +1.58], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +1.00 %p, 95% CI [+1.00, +1.00], seeds 1,2, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs tome@29 [acc]: +1.67 %p, 95% CI [+1.67, +1.67], seeds 1,2, GFLOPs ratio 1.083 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +1.00 %p, 95% CI [+1.00, +1.00], seeds 1,2, GFLOPs ratio 1.000 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- lateroll@29 vs maskedkd@29 [acc]: +1.08 %p, 95% CI [+0.02, +2.14], seeds 1,2, GFLOPs ratio 1.000 -> WIN
+- lateroll@29 vs maskedkd@29 [acc]: +1.17 %p, 95% CI [+0.75, +1.58], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +1.00 %p, 95% CI [+1.00, +1.00], seeds 1,2, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs tome@29 [acc]: +1.67 %p, 95% CI [+1.67, +1.67], seeds 1,2, GFLOPs ratio 1.083 -> WIN
 - lateroll@29 vs grid@29 [acc]: +5.67 %p, 95% CI [-9.16, +20.49], seeds 1,2, GFLOPs ratio 0.999 -> no difference
@@ -70,7 +70,7 @@ Total agent screen configs: 8
 | final | grid |  | 29 | 29.0 | 1,2 | 75.67 ± 0.24 | - | 13.00 | 5.36 | 0.00 | 283 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 81.39 ± 1.00 | - | 12.99 | 5.36 | 0.08 | 284 | final_lateroll_k29_s2_1101_125958_6470 final_lateroll_k29_s1_1101_104303_ef38 final_lateroll_k29_s3_1101_140937_ec98 |
 | final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
-| final | maskedkd |  | 29 | 29.0 | 1,2 | 80.25 ± 1.53 | - | 12.99 | 5.36 | 0.00 | 281 | final_maskedkd_k29_s2_1101_125958_5b02 final_maskedkd_k29_s1_1101_104303_b676 |
+| final | maskedkd |  | 29 | 29.0 | 1,2,3 | 80.22 ± 1.08 | - | 12.99 | 5.36 | 0.00 | 278 | final_maskedkd_k29_s3_1101_140937_b00f final_maskedkd_k29_s2_1101_125958_5b02 final_maskedkd_k29_s1_1101_104303_b676 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
 | final | random |  | 29 | 29.0 | 1,2 | 74.83 ± 0.24 | - | 13.00 | 5.36 | 0.00 | 280 | final_random_k29_s1_1101_104303_9664 final_random_k29_s2_1101_125958_9495 |
