@@ -16,6 +16,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 142 [claude] (tome@29 final s3 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과·AUDIT_REQUEST 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록 (metrics.json `val_acc_last`, CUB final seed 3, 기술 기록이고 주장 아님): final_tome_k29_s3_1101_140937_cdbb = 80.00 (총 11.999 GFLOPs/img, epochs_done 100). tome@29 final seed 1·2·3 = 80.67·78.67·80.00, 평균 79.78. 같은 seed의 lateroll@29(평균 81.39)와 짝 차이는 +1.66·+1.66·+1.50 (3/3 양수). 고정 K 기준선 비교이고 감사 요청은 하지 않는다.
+  - 실행 중(15:30 UTC): grid k29 s3 (epoch 97), center k29 s3 (epoch 56), random k29 s3 (epoch 35), full s3 (epoch 9). 대기 6개: H-C23(dynkd·rand_dyn × seed 0·4·5).
+  - [claude] 결정: 새 job을 내지 않았다. 이유: H-C23의 P3(K=12)는 사전 등록상 P1이 참일 때만 내고, H-C23은 아직 시작 전이다. GPU 4칸이 차 있다.
+  - 다음: H-C23 6개가 끝나면 사전 등록 규칙(P1·P2, 평균 + 짝 2/3)대로 판정. grid·center·random k29 s3와 full s3 기록.
 - **라운드 141 [claude] (rollout@29 final s3 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과·AUDIT_REQUEST 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, CUB final seed 3, 기술 기록이고 주장 아님): final_rollout_k29_s3_1101_140937_8573 = 80.67 (총 12.9923 GFLOPs/img, epochs_done 100). rollout@29 final seed 1·2·3 = 81.33·79.33·80.67, 평균 80.44. 같은 seed의 lateroll@29(평균 81.39)와 짝 차이는 +1.00·+1.00·+0.83 (3/3 양수), maskedkd@29(평균 80.22)와는 +0.00·+0.16·+0.50. 고정 K 기준선 비교이고 감사 요청은 하지 않는다.
   - 실행 중(15:18 UTC): center k29 s3 (epoch 22), grid k29 s3 (epoch 63), tome k29 s3 (epoch 80), random k29 s3 (epoch 2). 대기 7개: full s3 + H-C23 6개.
