@@ -2,12 +2,18 @@ STUCK: CUB Parent check 문턱 2.69 %p를 rollout의 자식은 구조적으로 �
 (해제, 라운드 109) 라운드 100~108의 STUCK(스케줄러 정지)은 사람 커밋 63cc33b(harness 코드가 바뀌면 스케줄러 재실행, 루프가 빠진 스케줄러 세션을 다시 띄움)로 풀렸다. 11-01 05:0x UTC에 H-C14가 끝났고 job이 다시 돈다.
 (해제, 라운드 68) 라운드 58의 "사람 확인 필요"(잠금 파일 되돌림)는 사람 커밋 42906db로 해결됐다. 이제 CUB가 1단계이고, CUB 관문을 통과했다(screen s0·4·5). harness가 CUB 기준선 23개를 넣었다.
 요약 (라운드 99, [claude]): 감사된 최선 결과는 없다. 주 지표(screen, seed 0·4·5)에서 98보다 작은 K로 허용 오차 안에 든 방법은 lateroll@49 하나다(평균 82.11, RESULTS_TABLE claim-grade 줄). 같은 총비용의 rollout@49 81.28, maskedkd@49 80.78은 밖이다. 하지만 Parent check 실패(rollout 대비 +0.83 < 2.69), 약한 노벨티, 메커니즘 미해결(H-C13 기각) 때문에 승격하지 않는다.
-진행 중(라운드 116): H-C18 분해 분석(analysis_cub_lateroll_decomp_1101_070348_b793 )은 끝났다. MaskedKD 대비 이득은 겹치지 않는 토큰에서 온다. rollout 대비 차이는 토큰 수준에서 불확실하다(P3 기각). 큐에는 harness의 Waterbirds 2단계 기준선만 있다.
+진행 중(라운드 117): H-C19 분석(analysis_cub_rollout_only_1101_071727_7bcc )이 대기·실행 중이다. H-C18 분해 분석(analysis_cub_lateroll_decomp_1101_070348_b793 )은 끝났다. MaskedKD 대비 이득은 겹치지 않는 토큰에서 온다. rollout 대비 차이는 토큰 수준에서 불확실하다(P3 기각). 큐에는 harness의 Waterbirds 2단계 기준선만 있다.
 다음: lateroll@29는 screen seed 0·4·5 평균 82.00으로 허용 오차(81.50) 안이지만, Parent check(rollout@29 대비 +1.06 < 2.69) 실패로 승격하지 않는다. 맨 위 STUCK에 대한 사람 판단을 기다린다.
 (해제된 STUCK, 기록용) 아래 두 STUCK은 더는 막힌 상태가 아니다. 9c99bba에서 harness/evidence.py가 모든 상태의 job 이력을 붙이게 바뀌었다. 하지만 두 주장 모두 suffdisc 계열이라 QUEUE 지시에 따라 다시 내지 않는다.
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 117 [claude] (STUCK 유지, H-C19 사전 등록·제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·AGENT_PROMPT·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음(최신은 H-C18 analysis_cub_lateroll_decomp_1101_070348_b793 ). 맨 위 STUCK(Parent check 문턱)에 대한 답이 없다.
+  - 2단계 기록: waterbirds_final_random_k29_s1_1031_201502_830c = 81.57 (총 13.0024 GFLOPs/img). harness 자동 기준선이고 주장에 쓰지 않는다. 실행 중 tome@29 s1, 대기 oracle@12 s1(둘 다 harness 2단계 기준선).
+  - 라운드 116의 "답이 없으면" 계획대로 H-C19를 사전 등록(커밋 직후 제출)했다: rollout만 고르는 토큰(R∖L)을 R∪L 밖 random으로 바꾸면 가린 teacher TCKD가 좋아지는가. analysis_cub_rollout_only_1101_071727_7bcc . 같은 lateroll student 6개, K=29 3개가 판정 대상이다.
+  - [claude] 결정: H-C19 결과가 어떻든 H-C18 P3 판정(rollout 대비 메커니즘 미주장)을 뒤집지 않는다고 사전 등록에 적었다. 이유: P3가 틀린 뒤에 방향을 바꿔 잰 것이라, 맞아도 사후 설명에 가깝다. 기술 결과로만 쓴다.
+  - [claude] 결정: 새 screen 선택기는 내지 않았다. 이유: 라운드 116과 같다. 승격 경로가 STUCK에 막혀 있고, 근거 없이 변형을 내면 탐색 횟수만 늘어난다.
+  - 다음: H-C19 판정(P1·P2). 사람이 STUCK에 답하면 그에 따라 lateroll@29를 final(seed 1·2·3)로 올리거나 닫는다.
 - **라운드 116 [claude] (기준선 기록, Parent check STUCK, H-C18 분해 분석 사전 등록·제출): 새 감사 결과도, 새 사람 커밋도 없다.** QUEUE.md·harness 마지막 변경은 63cc33b 그대로, AUDIT_REQUEST.md 없음, analysis_out/에 새 결과 없음.
   - 기준선 기록: teacher_topk@29 s5 = 80.67 (screen_teacher_topk_k29_s5_1101_055826_eae2 , 총 13.3554 GFLOPs/img). seed 0·4·5 = 80.50·78.83·80.67, 평균 80.00으로 허용 오차(81.50) 밖이다. 같은 K의 lateroll 82.00, rollout 80.94보다 낮다. MaskedKD 논문의 "teacher attention으로 고르기가 나쁘다"와 같은 방향이다.
   - 2단계 기록: waterbirds_final_maskedkd_k29_s1_1031_201502_4be8 = 87.24 (총 12.9875 GFLOPs/img). harness가 자동으로 낸 기준선이고 주장에 쓰지 않는다.
