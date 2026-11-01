@@ -34,7 +34,8 @@ Noise: acc seed sigma 1.35 %p (pooled, dof 4) -> threshold 2.69 %p
 - claim-grade (>= 3 seeds):
   - lateroll@69541b : 49.0 (3 seeds)
   - maskedkd : 98.0 (3 seeds)
-- screening only (fewer seeds): none
+- screening only (fewer seeds):
+  - lateroll@69541b : 29.0 (2 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - K=49: maskedkd 80.50; rollout 81.67; random 78.83; grid 77.33; center 80.17; tome 79.00 (Full KD 82.17)
@@ -65,7 +66,7 @@ Total agent screen configs: 7
 | screen | grid |  | 29 | 29.0 | 0 | 74.50 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 1183 | screen_grid_k29_s0_1031_130150_df6c |
 | screen | grid |  | 49 | 49.0 | 0 | 77.33 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 1094 | screen_grid_k49_s0_1031_130150_702e |
 | screen | lateroll@69541b |  | 12 | 12.0 | 0 | 78.33 ± 0.00 | - | 10.08 | 2.45 | 0.08 | 1108 | screen_lateroll_k12_s0_1031_130339_f599 |
-| screen | lateroll@69541b |  | 29 | 29.0 | 0 | 81.33 ± 0.00 | - | 12.99 | 5.36 | 0.08 | 1043 | screen_lateroll_k29_s0_1031_130348_fd19 |
+| screen | lateroll@69541b |  | 29 | 29.0 | 0,4 | 81.83 ± 0.71 | - | 12.99 | 5.36 | 0.08 | 647 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s0_1031_130348_fd19 |
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
 | screen | maskedkd |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 29 | 29.0 | 0,4,5 | 79.67 ± 0.50 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s0_1031_130150_1393 |
