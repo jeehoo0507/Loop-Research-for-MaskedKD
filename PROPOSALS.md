@@ -540,3 +540,10 @@ IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), includi
   - 한계: seed 3개, val 600장, maskedkd@98 s5 84.67이 평균을 끌어올린다(짝 비교를 같이 본다). CE 비중(0.5 vs 0.75)은 남는 차이다: D2라도 "KD 비중"과 "CE 비중" 중 무엇인지는 이것으로 나누지 못한다.
   - 규칙: 결과와 무관하게 RESULTS Teachability 절에 적는다. 결과를 보고 다른 K·가중치를 추가하지 않는다(추가하려면 새로 등록). 감사 요청 없음. screen seed만(1·2·3 금지).
   - **결과 (라운드 162):** screen_mk_halfkd_k98_s0_1101_203954_2f5c = 81.33, screen_mk_halfkd_k98_s4_1101_203959_bb22 = 81.50, screen_mk_halfkd_k98_s5_1101_204003_05ab = 82.67 (모두 epochs_done 100, 총 25.04). 평균 81.83 ∈ (81.59, 82.25) → **불확실**. rand_dyn 대비 짝 +0.67·0.00·+1.00 (2/3), maskedkd 대비 짝 +0.33·−0.50·−2.00 (2/3 음수)이지만 평균 조건을 둘 다 못 맞춘다. 예측 D1은 확인되지 않았다.
+- **H-C27 (라운드 163, 결과 전·제출 전에 등록): 효율 곡선 교차점의 새 seed 재현 — seed 6·7.** 새 선택기 없음, harness builtin `rand_dyn`·`maskedkd`만 낸다. 주장 대상이 아니라 Teachability 정리(멘토 보고)의 핵심 두 점을 seed 3개보다 단단하게 하는 재현이다.
+  - 왜: Teachability 효율 곡선의 결론("작은 예산(K≤29)은 소수 이미지에 통째로가 고정 비율 MaskedKD보다 낫고, 큰 예산(K=98)은 반대")은 seed 0·4·5에서 판정 규칙을 쓰면서 본 것이다(H-C23 P1, H-C25 R2). 같은 seed로 다시 볼 수는 없으므로 판정에 쓰지 않은 seed 6·7(CUB에서는 아직 쓰지 않음, screen에 허용된 seed ≥ 4)로 같은 비교를 다시 잰다. GPU가 비어 있고, 새 방법은 사람 지시를 기다리므로 가장 보수적인 작업이다.
+  - 측정: CUB screen, seed 6·7 × {rand_dyn@29, maskedkd@29, rand_dyn@98, maskedkd@98} = 8 job. 값은 metrics.json `val_acc_last`. seed 0·4·5 기존 값: K=29 rand_dyn − maskedkd 짝 +1.67·+0.67·+1.67 (평균 +1.33); K=98 짝 −0.33·−0.50·−3.00 (평균 −1.28).
+  - 판정 (seed 6·7만으로): C1 "K=29 재현" = 두 seed 모두 rand_dyn@29 − maskedkd@29 > 0. C2 "K=98 재현" = 두 seed 모두 rand_dyn@98 − maskedkd@98 < 0. 한 seed라도 부호가 반대거나 0이면 "재현 불확실"로 적는다(반증이라고 쓰지 않는다). 기술값: seed 0·4·5·6·7의 5-seed 평균 차이와 짝 부호 개수.
+  - 예측: C1 참(seed 0·4·5에서 3/3, 평균 +1.33). C2는 확신 낮음(seed 0·4·5 평균 −1.28의 대부분이 s5 maskedkd 84.67 한 점에서 옴).
+  - 한계: CE·Full의 seed 6·7은 내지 않는다(대기 8개 한도) → "CE 수준"이라는 서술은 seed 0·4·5에만 근거한다. H-C26의 KD 비중 혼재는 이 재현으로 풀리지 않는다.
+  - 규칙: 결과와 무관하게 RESULTS Teachability 절에 적는다. 결과를 보고 seed·K를 추가하지 않는다(추가하려면 새로 등록). 감사 요청 없음. screen seed만(1·2·3 금지).
