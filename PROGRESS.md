@@ -18,9 +18,11 @@
 # PROGRESS
 - **라운드 153 [claude] (H-C23 P3 dynkd@12 s4 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, CUB screen seed 4, 판정 전 기술값): screen_dynkd_k12_s4_1101_163733_a713 = 81.00 (총 9.5632 GFLOPs/img, teacher 1.921, mean_kept 10.72, epochs_done 100). 같은 seed 4: rand_dyn@12 81.33 (dynkd − rand_dyn = −0.33; s0는 +0.33), maskedkd@12 77.17 (+3.83), CE 82.50 (−1.50).
-  - 실행 중(17:31 UTC): rand_dyn@12 s5 (epoch 93), maskedkd@12 s5 (epoch 81), dynkd@12 s5 (epoch 77), rollout@12 s4 (epoch 3). 대기 3개: rollout@12 s5, lateroll@12 s4·s5.
-  - [claude] 결정: 새 job을 내지 않았다. 이유: 신호 비교 설계는 P3 판정 뒤에 사전 등록하기로 했고(라운드 150), P3에 필요한 s5 두 개가 몇 분 안에 끝난다. GPU 4칸이 차 있고 대기 3개가 있다.
-  - 다음: rand_dyn·maskedkd @12 s5가 나오면 P3 판정(K=12 rand_dyn − maskedkd 평균 > +1.33이면 참, 지금까지 짝 +3.50·+4.17). dynkd@12 s5로 P2(K=12) 기술값 정리. 그 뒤 신호 비교 사전 등록.
+  - 같은 라운드에 끝나서 기록: screen_rand_dyn_k12_s5_1101_163737_06e0 = 81.83 (총 9.5632), screen_maskedkd_k12_s5_1101_163741_b2e9 = 77.00 (총 10.0734).
+  - **P3 판정 (사전 등록 규칙): 참.** K=12 rand_dyn 80.89 − maskedkd 76.72 = +4.17 > K=29의 +1.33 (짝 +3.50·+4.17·+4.83). 기술값: rand_dyn@12 − CE 평균 +0.06 (짝 +0.83·−1.17·+0.50). rand_dyn은 K=12·29 모두 CE 수준이다 → 이득은 "나쁜 가린 teacher를 뺀 것"이고, 소수 이미지의 full teacher가 CE에 더하는 것은 보이지 않는다. RESULTS.md Teachability 절과 PROPOSALS H-C23에 적었다.
+  - 실행 중(17:40 UTC 무렵): dynkd@12 s5, rollout@12 s4, 그리고 대기 중이던 rollout@12 s5·lateroll@12 s4·s5가 빈 칸으로 들어간다.
+  - [claude] 결정: 이번 라운드에는 신호 비교를 사전 등록하지 않았다. 이유: P3 판정 직후이고, rand_dyn ≈ CE라는 결과 때문에 다음 질문을 "어떤 이미지에 몰아줄지(해석 vs 비해석 신호)"만이 아니라 "full teacher를 받은 이미지가 CE보다 나아지는 조건이 있는가"까지 함께 정해야 한다. 설계는 selector_api와 H-C22 결과를 다시 읽고 다음 라운드에 결과 전에 등록한다. GPU는 기준선 4개와 dynkd s5로 약 30~60분 차 있다.
+  - 다음: dynkd@12 s5 기록(P2 K=12 기술값). QUEUE 22:40·보충 지시대로 전부/없음 틀에서 해석 기반(예: student attention–teacher_map 일치도) vs 비해석(엔트로피, observe KD 손실 이력) vs 무작위 신호 비교를 같은 평균 K·같은 seed(0·4·5)로 사전 등록. 혼합(일부 full, 나머지 작은 K)도 후보로 검토.
 - **라운드 152 [claude] (H-C23 P3 결과 3개 기록, K=12 고정 K 기준선 4개 제출).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록 (metrics.json `val_acc_last`, CUB screen, 모두 epochs_done 100, 판정 전 기술값): screen_dynkd_k12_s0_1101_163718_78af = 79.83 (총 9.5632 GFLOPs/img, mean_kept 10.72), screen_rand_dyn_k12_s4_1101_163722_152f = 81.33 (총 9.5632), screen_maskedkd_k12_s4_1101_163726_3dc8 = 77.17 (총 10.0734, mean_kept 12). 같은 seed 짝: s0 dynkd − rand_dyn +0.33; s4 rand_dyn − maskedkd +4.17 (s0는 +3.50). s4 rand_dyn − CE(82.50) −1.17.
   - 실행 중(17:10 UTC): dynkd@12 s4·s5, rand_dyn@12 s5, maskedkd@12 s5. 대기 0개였다.
