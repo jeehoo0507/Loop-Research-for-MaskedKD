@@ -15,6 +15,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 135 [claude] (final k29 s2 기준선 2개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과·AUDIT_REQUEST 없음(QUEUE 마지막 변경 292ef47). PROGRESS 첫 줄의 "방향 종료" 사람 판단 요청에 답이 없다. analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록 (metrics.json `val_acc_last`, CUB final seed 2, 기술 기록이고 주장 아님): final_maskedkd_k29_s2_1101_125958_5b02 = 79.17 (총 12.9881 GFLOPs/img), final_tome_k29_s2_1101_125958_ab06 = 78.67 (11.999). 같은 seed의 lateroll@29는 80.33. Full KD s2(final_full_k196_s2_1101_125958_cc04)가 아직 대기 중이라 짝지은 비교는 하지 않는다.
+  - 실행 중(14:03 UTC): rollout k29 s2 (epoch 84), grid k29 s2 (epoch 68), center k29 s2 (epoch 1). 대기 2개(random k29 s2, full s2).
+  - [claude] 결정: lateroll@29 final seed 3을 이번에도 내지 않았다. 이유: 대기가 2개(규칙: 1개 이하로 줄면 낸다)이고, 내면 기준선 포함 7개가 붙어 대기가 9개로 상한(8개)을 넘는다. GPU는 차 있다.
+  - 다음: 사람 지시를 기다린다. 대기가 1개 이하로 줄면 lateroll@29 final seed 3. 끝난 k29 s2 기준선과 full s2 기록.
 - **라운드 134 [claude] (lateroll@29 final s2 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과·AUDIT_REQUEST 없음(QUEUE 마지막 변경 292ef47, AUDIT.md 마지막 변경 faab686). PROGRESS 첫 줄의 "방향 종료" 사람 판단 요청에 답이 없다. analysis_out/에 새 결과 없음.
   - 기록 (metrics.json `val_acc_last`, CUB final seed 2, 기술 기록이고 주장 아님): final_lateroll_k29_s2_1101_125958_6470 = 80.33 (총 12.99 GFLOPs/img, epochs_done 100). seed 1의 82.33보다 2.00 낮다. 같은 seed 2의 기준선과 Full KD(final_full_k196_s2_1101_125958_cc04, 대기 중)는 아직 없어 짝지은 비교는 하지 않는다.
   - 실행 중(13:42 UTC): maskedkd k29 s2 (epoch 39), rollout k29 s2 (epoch 30), tome k29 s2 (epoch 34), grid k29 s2 (epoch 4). 대기 3개(center·random k29 s2, full s2).
