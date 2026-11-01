@@ -30,3 +30,40 @@
 
 ## 2026-10-31 22:20 KST — CUB 관문의 MaskedKD 조건
 CUB seed 0에서 KD 이득은 +3.5%p (Full 82.17 vs CE 78.67)로 충분하다. MaskedKD@98은 Full보다 1.17 낮았다 (기준 −0.5). seed 0·4·5 평균으로도 MaskedKD 조건만 못 맞추면 부트는 멈추지 않고 진행한다 (BOOT_STATUS에 "kept as a finding"). 그렇다면 "CUB에서는 MaskedKD가 토큰 절반에서도 손해를 본다"는 것이 기록할 결과다. 비교 기준은 그대로 Full KD의 허용 오차다.
+
+## 2026-11-01 KST — 연구 질문 전환: student 학습 상태에 따른 이미지별 teacher 토큰 예산 (위 지시 전부보다 우선)
+사람 판단 (멘토 방향 "해석 가능성 기법으로 KD를 효율적으로, Efficiency + Teachability" 기준):
+- rollout을 조금씩 바꾸는 탐색(lateroll, sinkfree, priorroll, adaroll 등)은 여기서 멈춘다. 이득이 이미지 몇 장 수준이고, 층 범위 조절은 EViT 계열 토큰 가지치기에서 흔한 설정이라 노벨티가 없다.
+- 새 주 질문: **student가 아직 못 배운 이미지에 teacher 토큰을 더 주고 이미 배운 이미지에는 덜 준다(배치·run 평균은 같은 예산). 토큰은 해석 기법으로 고른다. 같은 평균 teacher 비용에서 고정 K(MaskedKD, lateroll)보다 나은가?** MaskedKD는 "어떤 토큰"을 정하고, 이 질문은 "각 이미지에 몇 개"를 student의 학습 상태로 정한다.
+- 데이터: CUB만으로 판단한다. Waterbirds는 KD 이득(+1.25%p)이 작아 판단에 쓰지 않는다(2단계 기록은 참고로만 남긴다). 루프 종료일은 2026-12-31로 늘렸다.
+
+### 선행연구 경계 (사람이 문헌 확인함). 이것들과의 차이를 먼저 적고 시작해라
+- Dynamic KD (Li et al., EMNLP 2021): student 불확실성으로 teacher에 물을 샘플을 고른다(샘플 단위, 전부 아니면 없음, NLP).
+- Masters (arXiv 2512.22238): teacher 마스킹 비율을 학습 단계별로 바꾼다(시간 스케줄, 이미지별 아님, VLM).
+- SBAM (ECCV 2024): 이미지마다 마스킹 비율을 saliency로 정한다(MIM, KD 아님, 학습 상태 아님).
+- EGAD (arXiv 2605.01732), EA-KD: 엔트로피로 샘플·토큰별 증류 손실 가중치를 바꾼다(teacher 비용은 그대로).
+- Explanation-guided KD (EGKD 등): teacher와 student 설명의 일치를 손실로 쓴다(예산 신호로 쓰지 않음).
+- MaskedKD: 고정 비율. 이미지별 비율 후속은 찾지 못했다. 빈자리는 "ViT supervised KD에서 student 학습 상태(특히 attribution 일치도)로 이미지별 teacher 토큰 수를 연속 배분"이다.
+
+### 이번 커밋의 harness 변경 (서버가 테스트 통과 후 스스로 받아들임). selector_api.py 문서를 먼저 읽어라
+- 이미지별 예산: bool keep에 이미지마다 다른 개수를 둘 수 있다. 0개면 그 이미지는 teacher 없이 CE만 쓴다. 배치 평균은 2×예산까지, run 전체 평균은 예산 이하(넘으면 over_budget으로 기록). FLOPs는 run 전체에 걸친 여러 구간에서 잰다.
+- `select`는 `(keep, kd_weight[B])`를 돌려줄 수 있다. kd_weight 평균은 teacher를 받은 이미지에서 1 이하다.
+- `observe(fb)`: teacher forward 뒤 이미지별 KD 손실(fb.kd, teacher 없는 이미지는 NaN)과 fb.sample_idx(학습셋 행 번호)를 받는다. 이미지별 학습 상태를 epoch을 넘어 기억할 수 있다(teacher 추가 비용 없음, resume 뒤에는 상태가 비어 있음). `ctx.sample_idx`도 있다.
+- 도우미: `allocate(weights, budget, kmin, kmax)`, `keep_by_counts(scores, counts)`.
+- 새 기준선 5개(`config.ALLOC_REFS`): `rand_alloc`(무작위 배분, 대조군), `dynkd`(Dynamic KD식 전부/없음), `sal_ratio`(SBAM식 saliency 비율), `kd_sched`(Masters식 시간 스케줄), `ent_weight`(EGAD식 손실 가중, 고정 K). META에 `"per_image_budget": True`를 넣은 방법은 RESULTS의 core 비교에서 이 5개와도 같은 평균 예산으로 비교된다. **이 5개를 모두 이겨야 기여가 있다.**
+
+### lateroll STUCK에 대한 답
+lateroll은 주장(새 방법)으로 올리지 않는다. 대신 **가장 강한 고정 K 기준선**으로 확정한다. lateroll@29 final seed 1·2·3을 내라(주장이 아니라 비교 기준이므로 Parent check 문턱과 무관). maskedkd@29·rollout@29 final은 final_refs로 함께 들어간다. 주장에 대한 Parent check 규칙은 그대로다.
+
+### 할 일 (순서대로)
+0단계 — 생사 판정 (분석만, 사전 등록 후 제출. analysis API의 teacher_forward_keepmask와 student 체크포인트를 써라):
+- H1: 이미지마다 필요한 토큰 수가 크게 다른가? 학습된 student(예: maskedkd@29, lateroll@29의 중간·끝 체크포인트)로 이미지별 "K를 늘릴 때 가린 teacher의 KD 신호가 Full teacher에 가까워지는 곡선"을 재고, 같은 품질에 필요한 K의 이미지 간 분포를 본다.
+- H2: 그 필요량을 싼 신호로 예측할 수 있나? 후보: (a) student 예측 엔트로피·KD 손실, (b) student attention과 teacher 캐시 지도(teacher_map)의 일치도 — 해석 가능성 기반 Teachability 신호, (c) 무작위.
+- H3: 같은 평균 K에서 연속 배분(필요량 순서로 토큰 수를 나눔)이 전부/없음 배분(Dynamic KD식)과 고정 K보다 KD 신호를 더 보존할 여지가 있나? 오라클 배분으로 상한을 먼저 재라.
+- 판정: H1이 아니면(이미지 간 필요량이 비슷하면) 또는 H3에서 오라클 배분도 고정 K와 구별되지 않으면 이 방향을 끝낸다. PROGRESS 첫 줄에 "방향 종료: <이유>"를 쓰고, 그때는 아래 '종료 시'로 간다.
+1단계 — 방법 (0단계 통과 시): 이미지별 예산 선택기를 설계한다(META `"per_image_budget": True`). 배분 규칙은 0단계 근거로 네가 정한다(공식 강제 없음). screen seed 0·4·5, 평균 K = 29(필요하면 49)에서 고정 K(maskedkd·rollout·lateroll)와 ALLOC_REFS 5개를 모두 같은 seed로 돌려 비교한다. 이기면 final 규칙대로.
+2단계 — 멘토 보고용 정리 (진행 중 계속): Efficiency = 평균 teacher GFLOPs 대비 정확도 곡선. Teachability = 어떤 이미지가 예산을 받는가, "teacher가 중요하게 보는 것 ≠ student가 배울 수 있는 것"을 이미지 단위로 보인다. 멘토가 말한 "너무 달라도, 너무 같아도 안 된다"(student–teacher attribution 일치도와 KD 이득의 뒤집힌 U자)를 직접 검증해라.
+종료 시 (0단계 실패): 새 rollout 변형을 만들지 말고, 지금까지의 고정 K 결과(K별 곡선, teacher_topk < student 기반, TrustMask 재현 실패)를 Teachability 분석으로 정리한 뒤 사람 지시를 기다린다.
+
+### 유지
+사전 등록, 같은 평균 총비용 비교, seed 3개 이상 평균으로만 주장, 위치 사전지식 금지, GPU 놀리지 않기(대기 8개 이하).

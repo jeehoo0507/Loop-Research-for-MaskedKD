@@ -47,8 +47,39 @@ def code_changed(since):
     return any(f.stat().st_mtime > since for f in (C.ROOT / "harness").glob("*.py"))
 
 
+def loop_end_date():
+    """END_DATE default from agent/loop.sh (the loop's last day, exclusive)."""
+    import re
+    m = re.search(r'END_DATE="\$\{END_DATE:-([0-9-]+)\}"', (C.ROOT / "agent" / "loop.sh").read_text())
+    return m.group(1) if m else None
+
+
+def revive_loop():
+    """The agent loop and the scheduler watch each other (loop.sh brings back a missing scheduler). A loop that
+    exited on its own (an older END_DATE, a crash) is started again unless a human left agent/STOP."""
+    try:
+        end = loop_end_date()
+        if (C.ROOT / "agent" / "STOP").exists() or end is None or time.strftime("%Y-%m-%d") >= end:
+            return
+        # only after bootstrap has started the research loop for the current setting (not during a switch/reset)
+        st = (C.ROOT / "agent" / "BOOT_STATUS.md")
+        lines = st.read_text().splitlines() if st.exists() else []
+        started = max((i for i, l in enumerate(lines) if "research loop started" in l), default=-1)
+        if started < 0 or started < max((i for i, l in enumerate(lines) if "SWITCH:" in l), default=-1):
+            return
+        if subprocess.run(["tmux", "has-session", "-t", "agent"], capture_output=True).returncode == 0:
+            return
+        aud = C.ROOT / "agent" / ".state" / "boot_auditor"
+        env = {**os.environ, "AUDITOR": aud.read_text().strip() if aud.exists() else "claude"}
+        subprocess.run(["bash", "agent/start.sh"], cwd=C.ROOT, env=env, capture_output=True, timeout=120)
+        print("[sched] agent loop was not running; started it (agent/start.sh)", flush=True)
+    except Exception as e:  # never let the watchdog stop the scheduler
+        print(f"[sched] revive_loop failed: {e}", flush=True)
+
+
 def main():
     t0 = time.time()
+    last_revive = 0.0
     q = queue_dirs()
     procs = {}
     started = {}
@@ -83,6 +114,9 @@ def main():
             del procs[jid]
             print(f"[sched] {jid} finished rc={rc}", flush=True)
 
+        if time.time() - last_revive > 600:
+            last_revive = time.time()
+            revive_loop()
         ok, msg = check()
         if code_changed(t0):
             # a scheduler kept running on old code compares the new lock with its old rule and never starts a job

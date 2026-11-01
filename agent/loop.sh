@@ -12,7 +12,7 @@
 # at least every HEARTBEAT seconds, and is forced when the GPU has been idle for IDLE_FORCE seconds.
 set -u
 cd "$(dirname "$0")/.."
-END_DATE="${END_DATE:-2026-11-05}"
+END_DATE="${END_DATE:-2026-12-31}"
 POLL="${POLL:-300}"                 # seconds between checks
 HEARTBEAT="${HEARTBEAT:-3600}"      # max seconds without a round
 IDLE_FORCE="${IDLE_FORCE:-1800}"    # GPU idle this long -> forced round
@@ -141,6 +141,7 @@ daily_ideas() {  # only when GPT is the configured auditor: 2 independent ideas 
 }
 
 round=0
+LOOP_MTIME="$(stat -c %Y agent/loop.sh 2>/dev/null)"
 while true; do
   if [ -f agent/STOP ]; then echo "[loop] STOP file found, exiting"; break; fi
   if [[ ! "$(date +%F)" < "$END_DATE" ]]; then echo "[loop] reached $END_DATE, exiting"; break; fi
@@ -153,6 +154,10 @@ while true; do
   fi
   # the researcher may not start the scheduler (AGENT_PROMPT 4); the loop brings it back if its session is gone
   tmux has-session -t sched 2>/dev/null || { echo "[loop] scheduler session gone, restarting it" | tee -a agent/logs/loop.log; bash agent/start.sh sched >/dev/null 2>&1; }
+  # a pulled loop.sh takes effect at once (bash keeps running the file it opened; 2026-11-01 END_DATE change)
+  if [ "$(stat -c %Y agent/loop.sh 2>/dev/null)" != "$LOOP_MTIME" ]; then
+    echo "[loop] agent/loop.sh changed, restarting on the new version" | tee -a agent/logs/loop.log; exec bash agent/loop.sh
+  fi
   [ -s "$HOME/.maskedkd_auditor" ] && AUDITOR="$(tr -d '[:space:]' < "$HOME/.maskedkd_auditor")"
 
   # --- should this be a round? ---

@@ -43,7 +43,7 @@ def main():
     t0 = time.time()
     with FlopCounterMode(display=False) as fc:
         loss, kept = train_step(s, t, sel, a.method, a.keep, x, y, opt, SoftTargetCrossEntropy(), 0, 0.0, segs,
-                                teacher_map=tm)
+                                teacher_map=tm, sample_idx=torch.arange(8, device=device))
     n = x.shape[0]
     print(json.dumps({"ok": True, "meta": meta, "sha": sha[:12], "loss": round(loss, 4), "mean_kept": kept,
                       "gflops_per_img": {k: round(v / n / 1e9, 3) for k, v in segs.flops.items()} |

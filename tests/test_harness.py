@@ -684,3 +684,88 @@ def test_gate_kd_only_ignores_the_maskedkd_clause():
     assert gate(runs)[0] is False and gate(runs, kd_only=True)[0] is True
     runs = [g("ce", 0, 0, 82.0), g("full", 196, 0, 82.2), g("maskedkd", 98, 0, 82.2)]
     assert gate(runs, kd_only=True)[0] is False          # no KD gain still stops
+
+
+# --- per-image teacher budgets (QUEUE 2026-11-01) ---
+
+def test_allocate_and_keep_by_counts():
+    from harness.selector_api import allocate, keep_by_counts
+    w = torch.tensor([1.0, 1.0, 2.0, 100.0])
+    k = allocate(w, 100, kmax=196)          # the capped image hands the rest back, 1:1:2
+    assert k.tolist() == [51, 51, 102, 196]
+    k = allocate(w, 29, kmax=196)
+    assert k.sum() == 29 * 4 and k.argmax() == 3 and k[2] >= k[1]
+    k = allocate(torch.zeros(5), 12.5, kmin=1)
+    assert k.sum() <= 62 and k.min() >= 1
+    m = keep_by_counts(torch.rand(3, 196), torch.tensor([0, 5, 196]))
+    assert m.sum(1).tolist() == [0, 5, 196]
+
+
+def test_per_image_budget_skips_teacher_and_matches_old_loss(models):
+    from harness.baselines import DynKD, SalRatio, EntWeight, KDSched, RandAlloc
+    # all-or-nothing: images without tokens get no teacher, so the teacher costs a fraction of Full KD
+    _, kept_full, f_full = _step("full", Full(), 196, models)
+    loss, kept, f = _step("dynkd", DynKD(), 98, models)
+    assert kept <= 98 and torch.isfinite(torch.tensor(loss)) and f["teacher"] < 0.6 * f_full["teacher"]
+    for sel in (SalRatio(), RandAlloc(), KDSched(), EntWeight()):
+        loss, kept, _ = _step("x", sel, 29, models)
+        assert kept <= 29 + 1e-6 and torch.isfinite(torch.tensor(loss))
+    # a fixed-K selector gives the same loss as the old batch formula
+    s, t = models
+    s.eval()                                 # no dropout/drop-path, so both forwards see the same student
+    aug = GpuAugment(torch.device("cpu"), C.NUM_CLASSES[C.STAGE1])
+    x, y = aug(torch.randint(0, 256, (4, 3, 64, 64), dtype=torch.uint8), torch.arange(4) % C.NUM_CLASSES[C.STAGE1])
+    with torch.no_grad():
+        out = student_forward(s, x, [-1])
+        keep = MaskedKD().select(Context(images=x, student=s, out=out, budget=49.0, num_patches=196, epoch=0, progress=0.0))
+        tl = teacher_forward_keepmask(t, x, keep)
+        kd = F.kl_div(F.log_softmax(out.logits / C.TAU, 1), F.softmax(tl / C.TAU, 1), reduction="batchmean") * C.TAU ** 2
+        old = (1 - C.ALPHA) * SoftTargetCrossEntropy()(out.logits, y) + C.ALPHA * kd
+    opt = torch.optim.SGD(s.parameters(), lr=0.0)
+    new, _ = train_step(s, t, MaskedKD(), "maskedkd", 49, x, y, opt, SoftTargetCrossEntropy(), 0, 0.0, Segments(False))
+    assert abs(new - old.item()) < 1e-3
+
+
+def test_per_image_budget_rules(models):
+    class Greedy(SelectorBase):          # one batch above 2x the budget
+        def select(self, ctx):
+            return torch.ones(ctx.images.shape[0], 196, dtype=torch.bool)
+    with pytest.raises(HarnessViolation):
+        _step("g", Greedy(), 29, models)
+
+    class Inflate(SelectorBase):         # KD weights may move signal, never add it
+        NEEDS = {"attn": [-1], "tokens": []}
+        def select(self, ctx):
+            return MaskedKD().select(ctx), torch.full((ctx.images.shape[0],), 2.0)
+    with pytest.raises(HarnessViolation):
+        _step("i", Inflate(), 29, models)
+
+    seen = {}
+    class Watch(SelectorBase):           # observe() sees each image's KD loss, NaN where no teacher ran
+        def select(self, ctx):
+            keep = torch.zeros(ctx.images.shape[0], 196, dtype=torch.bool)
+            keep[0, :58] = True
+            return keep
+        def observe(self, fb):
+            seen["kd"], seen["kept"] = fb.kd.clone(), fb.kept.clone()
+    _step("w", Watch(), 29, models)
+    assert torch.isfinite(seen["kd"][0]) and torch.isnan(seen["kd"][1:]).all() and seen["kept"].tolist()[0] == 58
+
+
+def test_per_image_run_measures_flops_over_the_run(tmp_path, monkeypatch):
+    from harness import submit, train
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setattr(C, "STATE", tmp_path / "state")
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 4)
+    monkeypatch.setitem(C.TIER_EPOCHS[C.STAGE1], "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    monkeypatch.setattr(C, "FLOP_WARMUP", 0)
+    monkeypatch.setattr(C, "FLOP_STEPS", 1)
+    monkeypatch.setattr(C, "FLOP_FRACS", (0.0, 0.5))
+    job = submit.make_job("kd_sched", 29, 0, "smoke", force=True)
+    jp = tmp_path / "job.json"
+    jp.write_text(json.dumps(job))
+    assert train.run(str(jp)) == 0
+    m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
+    assert m["status"] == "done" and m["mean_kept"] <= 29 + 1e-6 and m["flops"]["windows"] >= 1

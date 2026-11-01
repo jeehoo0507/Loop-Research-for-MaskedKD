@@ -110,6 +110,7 @@ EVAL_EVERY = 5               # epochs between val evaluations (last epoch always
 CKPT_EVERY = 1               # epochs between resume checkpoints
 FLOP_STEPS = 3               # steps measured with FlopCounterMode (after FLOP_WARMUP steps)
 FLOP_WARMUP = 2
+FLOP_FRACS = (0.0, 0.25, 0.5, 0.75, 0.95)   # FLOP windows over the run (a per-image budget may change with training)
 
 # Reproduction gate (must pass before the agent loop starts)
 GATE_KD_OVER_CE = 1.0        # Full KD val acc >= CE + 1.0 %p
@@ -130,7 +131,10 @@ def tolerance(full_acc, ce_acc):
     return max(0.0, min(TOLERANCE, TOLERANCE_FRAC * (full_acc - ce_acc)))
 KEEP_GRID = (196, 98, 49, 25, 12)
 ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric
-BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "rollout", "tome", "oracle", "teacher_topk")   # harness-owned reference methods
+BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "rollout", "tome", "oracle", "teacher_topk",
+             "rand_alloc", "dynkd", "sal_ratio", "kd_sched", "ent_weight")   # harness-owned reference methods
+# A per-image budget method (QUEUE 2026-11-01) must also beat each of these at the same mean budget
+ALLOC_REFS = ("rand_alloc", "dynkd", "sal_ratio", "kd_sched", "ent_weight")
 # A claim at budget K must beat every one of these at the same K (spatial ones: no interpretability signal at all)
 CLAIM_REFS = ("maskedkd", "rollout", "tome", "grid", "center", "random")
 FINAL_PRIORITY = 3           # agent final-seed jobs run before agent screen jobs (default priority 0)

@@ -187,7 +187,9 @@ def core(runs, tier="final"):
         if len(A) < 2:
             continue
         parent = parent_of(A[max(A)])
-        refs = [(ref, k) for ref in C.CLAIM_REFS] + [("full", 196.0)] + ([(parent, k)] if parent != "none" else [])
+        per_image = (A[max(A)].get("selector_meta") or {}).get("per_image_budget") is True
+        refs = ([(ref, k) for ref in C.CLAIM_REFS + (C.ALLOC_REFS if per_image else ())] + [("full", 196.0)]
+                + ([(parent, k)] if parent != "none" else []))
         keys = [("val_acc_last", "acc")]   # worst-group accuracy is a diagnostic, shown in the run table only
         for ref, rk in refs:
             B = by_seed(runs, ref, rk, tier)

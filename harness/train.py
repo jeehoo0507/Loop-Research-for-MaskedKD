@@ -24,7 +24,7 @@ from .data import GpuAugment, as_tensor, load_groups, load_split, make_loader, n
 from .lock import harness_digest
 from .models import make_student, make_teacher, student_forward, teacher_forward_keepmask
 from . import teacher_cache
-from .selector_api import Context
+from .selector_api import Context, Feedback
 from .baselines import oracle_keep
 from .tome import r_for_budget, teacher_forward_tome
 from .validate import load_selector
@@ -121,9 +121,16 @@ class Segments:
         self.flops[name] = self.flops.get(name, 0) + fc.get_total_flops()
 
 
-def train_step(student, teacher, selector, method, budget, x, y, opt, criterion, epoch, progress, segs, teacher_map=None):
+def train_step(student, teacher, selector, method, budget, x, y, opt, criterion, epoch, progress, segs, teacher_map=None,
+               sample_idx=None):
     """One optimizer step. Returns (loss, mean kept tokens or None). teacher_map: [B,196] cached teacher
-    attribution for selectors that declare it (harness/teacher_cache.py), else None."""
+    attribution for selectors that declare it (harness/teacher_cache.py), else None. sample_idx: [B] training-set
+    row of each image (selectors that track each image's learning state across epochs), else None.
+
+    Per-image budgets (QUEUE 2026-11-01): a selector may keep a different number of tokens per image, 0 included.
+    An image with 0 kept tokens gets no teacher forward and is trained on CE alone; the others get
+    (1-ALPHA)*CE + ALPHA*w*KD, w = 1 or the selector's kd_weight. A batch may keep up to 2x the budget on average,
+    the run as a whole at most the budget (checked in run())."""
     device = x.device
     needs = getattr(selector, "NEEDS", {}) if selector is not None else {}
     opt.zero_grad(set_to_none=True)
@@ -134,7 +141,8 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
             loss, kept = base, None
         else:
             ctx = Context(images=x, student=student, out=out, budget=float(budget),
-                          num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress, teacher_map=teacher_map)
+                          num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress, teacher_map=teacher_map,
+                          sample_idx=sample_idx)
             with segs.seg("selector"):
                 if method == "oracle":
                     keep = oracle_keep(teacher, x, budget)
@@ -144,18 +152,34 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
                     keep = selector.select(ctx)
             if any(p.grad is not None for p in student.parameters()):
                 raise HarnessViolation("selector left parameter gradients (called .backward())")
+            keep, w = split_selection(keep, x.shape[0])
             keep = to_keep_mask(keep, x.shape[0])
             kept = float(budget) if method == "tome" else keep.sum(1).float().mean().item()
-            if kept > budget + 1e-6:
-                raise HarnessViolation(f"selector kept {kept:.2f} tokens/img > budget {budget}")
-            with torch.no_grad(), segs.seg("teacher"):
-                if method == "tome":   # teacher sees every token and merges inside; keep = budget it is matched to
-                    t_logits = teacher_forward_tome(teacher, x, r_for_budget(budget))
-                else:
-                    t_logits = teacher_forward_keepmask(teacher, x, keep)
-            kd = F.kl_div(F.log_softmax(out.logits.float() / C.TAU, dim=1),
-                          F.softmax(t_logits.float() / C.TAU, dim=1), reduction="batchmean") * C.TAU * C.TAU
-            loss = (1 - C.ALPHA) * base + C.ALPHA * kd
+            if kept > min(C.NUM_PATCHES, 2 * float(budget)) + 1e-6:
+                raise HarnessViolation(f"selector kept {kept:.2f} tokens/img in one batch > 2x budget {budget}")
+            taught = torch.ones(x.shape[0], dtype=torch.bool, device=x.device) if method == "tome" else keep.any(1)
+            if w is None:
+                w = torch.ones(x.shape[0], device=x.device)
+            elif w[taught].numel() and w[taught].mean().item() > 1 + 1e-3:
+                raise HarnessViolation(f"kd_weight mean {w[taught].mean().item():.4f} > 1 on taught images")
+            kd = torch.zeros(x.shape[0], device=x.device)
+            if taught.any():
+                with torch.no_grad(), segs.seg("teacher"):
+                    if method == "tome":   # teacher sees every token and merges inside; keep = budget it is matched to
+                        t_logits = teacher_forward_tome(teacher, x, r_for_budget(budget))
+                    else:
+                        t_logits = teacher_forward_keepmask(teacher, x[taught], keep[taught])
+                kd[taught] = F.kl_div(F.log_softmax(out.logits.float()[taught] / C.TAU, dim=1),
+                                      F.softmax(t_logits.float() / C.TAU, dim=1),
+                                      reduction="none").sum(1) * C.TAU * C.TAU
+            ce = torch.sum(-y * F.log_softmax(out.logits.float(), dim=-1), dim=-1)   # SoftTargetCrossEntropy per image
+            per = torch.where(taught, (1 - C.ALPHA) * ce + C.ALPHA * w * kd, ce)
+            loss = per.mean()
+            if hasattr(selector, "observe"):
+                with torch.no_grad(), segs.seg("selector"):
+                    selector.observe(Feedback(sample_idx=sample_idx, kept=keep.sum(1),
+                                              kd=torch.where(taught, kd.detach(), torch.full_like(kd, float("nan"))),
+                                              epoch=epoch, progress=progress))
     loss.backward()
     opt.step()
     return loss.item(), kept
@@ -167,6 +191,22 @@ def uses_teacher_cache(selector, meta):
     if selector is None:
         return False
     return bool(getattr(type(selector), "USES_TEACHER_CACHE", False) or (meta or {}).get("uses_teacher_cache") is True)
+
+
+def split_selection(sel, B):
+    """A selector returns keep, or (keep, kd_weight [B]) to weight each image's KD term (mean <= 1 over taught
+    images, so weighting cannot add KD signal, only move it)."""
+    if isinstance(sel, (tuple, list)):
+        if len(sel) != 2:
+            raise HarnessViolation("selector must return keep or (keep, kd_weight)")
+        keep, w = sel
+        if not (torch.is_tensor(w) and w.dtype.is_floating_point and w.shape == (B,)):
+            raise HarnessViolation(f"kd_weight must be a float tensor [{B}]")
+        w = w.detach().float()
+        if not torch.isfinite(w).all() or (w < 0).any():
+            raise HarnessViolation("kd_weight must be finite and >= 0")
+        return keep, w
+    return sel, None
 
 
 def to_keep_mask(keep, B):
@@ -250,6 +290,8 @@ def run(job_path):
         torch.cuda.reset_peak_memory_stats()
     t_limit = C.time_limit_h(dataset, job["tier"]) * 3600
     max_steps = C.TIER_MAX_STEPS.get(job["tier"])
+    planned_steps = epochs * (min(steps_per_epoch, max_steps) if max_steps is not None else steps_per_epoch)
+    flop_starts = sorted({max(C.FLOP_WARMUP, int(f * epochs * steps_per_epoch)) for f in C.FLOP_FRACS})
     for epoch in range(state["epoch"], epochs):
         t0 = time.time()
         kept_sum, kept_n, loss_sum, n_steps = 0.0, 0, 0.0, 0
@@ -264,17 +306,21 @@ def run(job_path):
                 tm = None
             else:
                 x, y, tm = aug(xb, yb, extra=tmaps[loader.last_idx.to(tmaps.device)])
-            measure = state["flops"] is None and C.FLOP_WARMUP <= g < C.FLOP_WARMUP + C.FLOP_STEPS
+            # FLOPs are measured in windows spread over the run: a per-image budget that changes with training
+            # (QUEUE 2026-11-01) costs what it spends on average, not what it spent in the first steps
+            measure = any(s0 <= g < s0 + C.FLOP_STEPS for s0 in flop_starts) and g not in state.setdefault("_flop_g", [])
             segs = Segments(measure)
             if measure:
                 with FlopCounterMode(display=False) as fc:
                     loss, kept = train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
-                                            epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm)
+                                            epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm,
+                                            sample_idx=loader.last_idx)
+                state["_flop_g"].append(g)
                 segs.flops["total"] = segs.flops.get("total", 0) + fc.get_total_flops()
                 segs.flops["images"] = x.shape[0]
                 acc = state.setdefault("_flop_acc", [])
                 acc.append(segs.flops)
-                if len(acc) == C.FLOP_STEPS:
+                if len(acc) % C.FLOP_STEPS == 0:   # a window is complete: average over every window so far
                     n = sum(a["images"] for a in acc)
                     tot = {k: sum(a.get(k, 0) for a in acc) / n / 1e9 for k in ("total", "selector", "teacher")}
                     tot["student"] = tot["total"] - tot["selector"] - tot["teacher"]
@@ -283,11 +329,12 @@ def run(job_path):
                         tot["selector"] += cache_gflops
                         tot["total"] += cache_gflops
                     state["flops"] = {f"{k}_gflops_per_img": round(v, 4) for k, v in tot.items()}
-                    state.pop("_flop_acc")
+                    state["flops"]["windows"] = len(acc) // C.FLOP_STEPS
                     say(f"flops per image (train step): {state['flops']}")
             else:
                 loss, kept = train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
-                                        epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm)
+                                        epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm,
+                                        sample_idx=loader.last_idx)
             if not math.isfinite(loss):
                 raise HarnessViolation(f"non-finite loss at epoch {epoch} step {step}")
             loss_sum += loss
@@ -295,6 +342,9 @@ def run(job_path):
             if kept is not None:
                 kept_sum += kept
                 kept_n += 1
+                state["kept_total"] = state.get("kept_total", 0.0) + kept
+                if state["kept_total"] > budget * planned_steps + 1e-6:   # the run's whole allotment is spent
+                    raise HarnessViolation(f"selector spent more than budget {budget} x {planned_steps} steps")
         dt = time.time() - t0
         state["train_time_s"] += dt
         rec = {"epoch": epoch + 1, "loss": loss_sum / max(1, n_steps), "epoch_s": round(dt, 1),
@@ -330,6 +380,9 @@ def run(job_path):
 
 
 def write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status):
+    mean_kept = (sum(state["kept"]) / len(state["kept"])) if state["kept"] else None
+    if mean_kept is not None and job["method"] != "tome" and mean_kept > float(job["keep"]) + 1e-6:
+        status = "over_budget"   # a front-loaded per-image budget stopped before it could pay back (timeout)
     last = next((h for h in reversed(state["history"]) if "val_acc" in h), {})
     last_val = last.get("val_acc")
     m = {
@@ -339,7 +392,7 @@ def write_metrics(rdir, job, state, meta, sel_sha, teacher_sha, device, status):
         "val_wga_last": last.get("val_wga"), "val_group_acc_last": last.get("val_group_acc"),
         "student_lr": float(job.get("lr") or C.student_lr(job.get("dataset", C.STAGE1))),
         "lr_override": job.get("lr"),
-        "mean_kept": (sum(state["kept"]) / len(state["kept"])) if state["kept"] else None,
+        "mean_kept": mean_kept,
         "dataset": job.get("dataset", C.STAGE1),
         "tome_r": r_for_budget(job["keep"]) if job["method"] == "tome" else None,
         # wall-clock throughput depends on how many jobs shared the GPU; compare within the same concurrency
