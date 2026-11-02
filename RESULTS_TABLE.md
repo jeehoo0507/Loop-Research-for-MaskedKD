@@ -33,7 +33,7 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@49 vs rollout@49 [acc]: +0.42 %p, 95% CI [-13.35, +14.18], seeds 1,2, GFLOPs ratio 1.000 -> no difference
 - lateroll@49 vs tome@49 [acc]: +2.83 %p, 95% CI [-5.64, +11.30], seeds 1,2, GFLOPs ratio 1.134 -> no difference
 - lateroll@49 vs grid@49 [acc]: +4.25 %p, 95% CI [+1.07, +7.43], seeds 1,2, GFLOPs ratio 0.999 -> WIN
-- lateroll@49 vs center@49 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@49 vs center@49 [acc]: +2.75 %p, 95% CI [-8.90, +14.40], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@49 vs random@49 [acc]: missing (needs >= 2 shared seeds)
 - lateroll@49 vs full@196 [acc]: +0.75 %p, 95% CI [-21.49, +22.99], seeds 1,2, GFLOPs ratio 0.385 -> no difference
 - lateroll@49 vs rollout@49 [acc]: +0.42 %p, 95% CI [-13.35, +14.18], seeds 1,2, GFLOPs ratio 1.000 -> no difference
@@ -91,7 +91,7 @@ Total agent screen configs: 14
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 | final | center |  | 29 | 29.0 | 1,2,3 | 78.28 ± 1.08 | - | 13.00 | 5.36 | 0.00 | 279 | final_center_k29_s3_1101_140937_62e7 final_center_k29_s1_1101_104303_c1f7 final_center_k29_s2_1101_125958_d08b |
-| final | center |  | 49 | 49.0 | 1 | 80.00 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 283 | final_center_k49_s1_1102_034050_dbd2 |
+| final | center |  | 49 | 49.0 | 1,2 | 79.33 ± 0.94 | - | 16.46 | 8.82 | 0.00 | 319 | final_center_k49_s2_1102_043001_d845 final_center_k49_s1_1102_034050_dbd2 |
 | final | full |  | 196 | 196.0 | 1,2,3 | 81.72 ± 1.64 | - | 42.77 | 35.13 | 0.00 | 227 | final_full_k196_s2_1101_125958_cc04 final_full_k196_s3_1101_140937_e8fa cub_final_full_k196_s1_1030_153055_d87b |
 | final | grid |  | 29 | 29.0 | 1,2,3 | 75.33 ± 0.60 | - | 13.00 | 5.36 | 0.00 | 281 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 final_grid_k29_s3_1101_140937_8b9f |
 | final | grid |  | 49 | 49.0 | 1,2 | 77.83 ± 0.00 | - | 16.46 | 8.82 | 0.00 | 340 | final_grid_k49_s2_1102_043001_e20e final_grid_k49_s1_1102_034050_f172 |
@@ -159,7 +159,7 @@ Total agent screen configs: 14
 
 # Stage 2: aircraft (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -181,7 +181,9 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 Total agent screen configs: 0
 
 ## All finished runs
-- none yet
+| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | ce |  | 0 | None | 1 | 66.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 360 | aircraft_final_ce_k0_s1_1102_123044_6d5f |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
