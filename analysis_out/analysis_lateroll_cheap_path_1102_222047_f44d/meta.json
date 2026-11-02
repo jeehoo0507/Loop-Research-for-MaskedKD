@@ -1,0 +1,12 @@
+{
+ "id": "analysis_lateroll_cheap_path_1102_222047_f44d",
+ "name": "lateroll_cheap_path",
+ "source_sha": "f44dd95efe2133427d64802d396a2d39d026f783b382c84f3fe035f6c1850188",
+ "status": "done",
+ "meta": {
+  "question": "alone on the GPU, does computing the same late-half rollout (blocks 6..11, CLS row) without non-fused attention in the graph and without matrix-matrix products remove lateroll's step-time overhead over maskedkd at K=29, and are the selected masks the same as the harness lateroll path?",
+  "method": "CUDA-event timing of train_step segments (as H-A15), interleaved repeats, medians; mask overlap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Dao et al. NeurIPS 2022 (fused attention); Dehghani et al. ICLR 2022 (FLOPs vs throughput)"
+ },
+ "seconds": 72.8
+}
