@@ -592,3 +592,12 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - M3 전체: 예측한 "중간"이 아니라 mix ≈ rand_dyn < maskedkd. "더해진다": K=98에서도 아님.
     - 기술값: mix − CE(78.67 · 82.50 · 81.33) 짝 +2.67 · −2.00 · +0.67, 평균 +0.44.
     - 해석: 두 예산 모두 혼합은 두 끝 중 낮은 쪽 이하다(K=29: 둘 다보다 낮음, K=98: 낮은 끝 rand_dyn과 같음). 반은 full teacher, 반은 MaskedKD@65로 나눠도 모든 이미지에 MaskedKD@98을 주는 것만 못하다. H-C29는 여기서 끝낸다(사전 등록대로 비율·K·seed를 더하지 않는다).
+- **H-C30 (라운드 175, 결과 전·제출 전에 등록): 고정 K 효율 곡선의 K=98 칸 채우기 — rollout@98, lateroll@98 (QUEUE 2026-11-01 2단계 "Efficiency = 평균 teacher GFLOPs 대비 정확도 곡선").** builtin `rollout`과 `selectors/lateroll.py`(기준선, 주장 대상 아님, 감사 요청 없음).
+  - 왜: RESULTS 효율 곡선에서 고정 K 선택기 중 maskedkd만 K=98 값이 있다(82.56). rollout·lateroll은 K=12·29·49에만 있다. 멘토 보고용 곡선에서 "선택 규칙의 차이가 예산이 커지면 사라지는가"를 같은 seed로 닫는다. K=98은 config.BASELINE_KEEPS(49·29·12)에 없어 harness 기준선 제출과 겹치지 않는다. GPU가 30분 넘게 비어 있었다.
+  - 측정: CUB screen, rollout@98·lateroll@98, seed 0·4·5, 6 job. 비교(같은 seed, 이미 있음): maskedkd@98 81.00·82.00·84.67 (평균 82.56), Full 평균 82.17, screen 허용 오차 문턱 81.50. 값은 metrics.json `val_acc_last`.
+  - 판정 규칙(H-C23과 같음): "A > B" = 3-seed 평균이 높고 같은 seed 짝 2/3 이상 양수. 평균 차이 0.33 이하는 "차이는 불확실".
+    - F1: lateroll@98 3-seed 평균 ≥ 81.50 (허용 오차 안). 예측: 참(K=49에서 이미 82.11).
+    - F2: rollout@98 3-seed 평균 ≥ 81.50. 예측: 참(K=49 81.28에서 예산 두 배).
+    - F3: lateroll@98 vs maskedkd@98, rollout@98 vs maskedkd@98. 예측: 둘 다 "차이는 불확실" 또는 maskedkd 쪽이 높음(s5 84.67 때문) — 즉 K=98에서는 선택 규칙의 이득(K=29에서 lateroll − maskedkd 약 +2.3)이 사라진다. 확신 중간.
+  - 한계: seed 3개(0·4·5), val 600장, maskedkd@98 s5 84.67이 평균을 끌어올림. 주장 대상이 아니라 곡선 기술값이다.
+  - 규칙: 결과와 무관하게 RESULTS 효율 곡선 절에 적는다. 결과를 보고 K·seed를 추가하지 않는다(추가하려면 새로 등록). screen seed만(1·2·3 금지).
