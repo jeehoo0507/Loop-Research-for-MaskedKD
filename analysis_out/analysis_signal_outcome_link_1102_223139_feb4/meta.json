@@ -1,0 +1,12 @@
+{
+ "id": "analysis_signal_outcome_link_1102_223139_feb4",
+ "name": "signal_outcome_link",
+ "source_sha": "feb474a0bc5fbc12dd4393b63c9af3275df76ad673819faf0ddb56eb2b9ade70",
+ "status": "done",
+ "meta": {
+  "question": "on CUB final lateroll@29 / maskedkd@29 students of seeds 1, 2, 3, does the per-image masked-teacher KL advantage of the lateroll mask rank-correlate with the per-image student-teacher KL advantage of the lateroll student, also after controlling for image difficulty?",
+  "method": "keep-only masked-teacher faithfulness (KL) linked to student-teacher output divergence per image; Spearman and rank partial correlation with paired bootstrap over val images",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Stanton et al. NeurIPS 2021 (student-teacher fidelity); Hooker et al. NeurIPS 2019 (keep-only evaluation)"
+ },
+ "seconds": 14.2
+}
