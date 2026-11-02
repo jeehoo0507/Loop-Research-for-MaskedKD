@@ -97,9 +97,10 @@ Total agent screen configs: 14
 | final | full |  | 196 | 196.0 | 1,2,3 | 81.72 ± 1.64 | - | 42.77 | 35.13 | 0.00 | 227 | final_full_k196_s2_1101_125958_cc04 final_full_k196_s3_1101_140937_e8fa cub_final_full_k196_s1_1030_153055_d87b |
 | final | grid |  | 29 | 29.0 | 1,2,3 | 75.33 ± 0.60 | - | 13.00 | 5.36 | 0.00 | 281 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 final_grid_k29_s3_1101_140937_8b9f |
 | final | grid |  | 49 | 49.0 | 1,2,3 | 78.06 ± 0.38 | - | 16.46 | 8.82 | 0.00 | 313 | final_grid_k49_s2_1102_043001_e20e final_grid_k49_s3_1102_153530_d0e5 final_grid_k49_s1_1102_034050_f172 |
+| final | lateroll@69541b |  | 12 | 12.0 | 1 | 78.83 ± 0.00 | - | 10.08 | 2.45 | 0.08 | 377 | final_lateroll_k12_s1_1102_225104_b47e |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 81.39 ± 1.00 | - | 12.99 | 5.36 | 0.08 | 284 | final_lateroll_k29_s2_1101_125958_6470 final_lateroll_k29_s1_1101_104303_ef38 final_lateroll_k29_s3_1101_140937_ec98 |
 | final | lateroll@69541b |  | 49 | 49.0 | 1,2,3 | 82.17 ± 0.29 | - | 16.45 | 8.82 | 0.08 | 294 | final_lateroll_k49_s2_1102_043001_b758 final_lateroll_k49_s1_1102_034050_9f5a final_lateroll_k49_s3_1102_153530_c96e |
-| final | maskedkd |  | 12 | 12.0 | 2,3 | 78.00 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 880 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 |
+| final | maskedkd |  | 12 | 12.0 | 1,2,3 | 78.28 ± 0.48 | - | 10.07 | 2.45 | 0.00 | 690 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 final_maskedkd_k12_s1_1102_225104_7267 |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 80.22 ± 1.08 | - | 12.99 | 5.36 | 0.00 | 278 | final_maskedkd_k29_s3_1101_140937_b00f final_maskedkd_k29_s2_1101_125958_5b02 final_maskedkd_k29_s1_1101_104303_b676 |
 | final | maskedkd |  | 49 | 49.0 | 1,2,3 | 81.67 ± 1.17 | - | 16.44 | 8.82 | 0.00 | 258 | final_maskedkd_k49_s3_1102_153530_68ef final_maskedkd_k49_s2_1102_043001_cd83 final_maskedkd_k49_s1_1102_034050_d0b8 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
