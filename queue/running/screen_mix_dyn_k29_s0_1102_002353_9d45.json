@@ -1,0 +1,19 @@
+{
+ "id": "screen_mix_dyn_k29_s0_1102_002353_9d45",
+ "kind": "train",
+ "dataset": "cub",
+ "stage2": null,
+ "method": "mix_dyn",
+ "keep": 29.0,
+ "seed": 0,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"H-C29 (diagnostic, QUEUE 2026-11-01 22:40 \"\uc77c\ubd80\ub294 \uc804\uccb4, \ub098\uba38\uc9c0\ub294 \uc791\uc740 K\"): half all-or-nothing, half fixed K.\n\nThe efficiency curve (H-C23~28) crosses: all-or-nothing rand_dyn beats fixed-K maskedkd at K<=29, loses at K=98.\nThis splits the same token budget in two fixed halves: m = int(0.5 * budget * B // 196) random images get the\nwhole teacher, every other image gets an equal share of the rest (MaskedKD top-k by last-block CLS attention).\nThe split fraction 0.5 is fixed before any result; it is not tuned.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, keep_by_counts\n\nMETA = {\n    \"method\": \"MaskedKD top-K (last student block CLS attention) for most images + whole teacher for random images\",\n    \"paper\": \"Son et al. 2023 (MaskedKD); Li et al. EMNLP 2021 (Dynamic KD, all-or-nothing teacher use)\",\n    \"why\": \"rand_dyn wins at small budgets and maskedkd at large ones; half of each asks whether the two gains \"\n           \"(a few clean whole-teacher labels, plus coverage of every image) add up at the same teacher cost\",\n    \"vs_maskedkd\": \"half the token budget goes to whole-teacher passes for random images; the rest get fewer tokens\",\n    \"prior_art\": \"mixture of builtin rand_dyn and maskedkd at the same mean budget; no new signal\",\n    \"parent\": \"rand_dyn\",\n    \"per_image_budget\": True,\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [-1], \"tokens\": []}\n\n    def select(self, ctx):\n        B, n = ctx.images.shape[0], ctx.num_patches\n        dev = ctx.images.device\n        total = int(ctx.budget * B)\n        m = min(int(0.5 * total // n), B)\n        perm = torch.randperm(B, device=dev)\n        counts = torch.zeros(B, dtype=torch.long, device=dev)\n        counts[perm[:m]] = n\n        others = perm[m:]\n        if others.numel():\n            rest = total - m * n\n            k, r = divmod(rest, others.numel())\n            counts[others] = min(k, n)\n            if r and k < n:\n                counts[others[:r]] += 1\n        scores = ctx.out.attn[-1].detach().float().mean(dim=1)[:, 0, 1:]\n        return keep_by_counts(scores, counts)\n",
+ "selector_sha": "3b23e6b25b38f405b92ca687feeca81e92b007567a8b45d08141fddf3c53bbea",
+ "note": "H-C29",
+ "by": "claude",
+ "priority": 0,
+ "submitted": "2026-11-02 00:23:53",
+ "lr": null
+}
