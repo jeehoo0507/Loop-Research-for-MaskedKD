@@ -1,0 +1,65 @@
+{
+ "dataset": "cub",
+ "student": "cub_final_maskedkd_k98_s1_1030_153055_cdbc",
+ "n_val": 600,
+ "edges": [
+  0.0,
+  0.5,
+  0.8,
+  0.95,
+  1.0001
+ ],
+ "mean_pmax": 0.8935,
+ "overall": {
+  "maskedkd@98/kl": 0.0706,
+  "maskedkd@98/kl_se": 0.0065,
+  "maskedkd@98/top1_agree": 0.9483,
+  "maskedkd@98/top1_agree_se": 0.009,
+  "maskedkd@49/kl": 0.4038,
+  "maskedkd@49/kl_se": 0.03,
+  "maskedkd@49/top1_agree": 0.8283,
+  "maskedkd@49/top1_agree_se": 0.0154,
+  "rollout@98/kl": 0.0524,
+  "rollout@98/kl_se": 0.0056,
+  "rollout@98/top1_agree": 0.9483,
+  "rollout@98/top1_agree_se": 0.009,
+  "rollout@49/kl": 0.2621,
+  "rollout@49/kl_se": 0.0232,
+  "rollout@49/top1_agree": 0.87,
+  "rollout@49/top1_agree_se": 0.0137
+ },
+ "bins": [
+  {
+   "lo": 0.0,
+   "hi": 0.5,
+   "n": 38,
+   "frac": 0.0633,
+   "maskedkd@98/kl": 0.2721,
+   "maskedkd@98/kl_se": 0.0326
+  },
+  {
+   "lo": 0.5,
+   "hi": 0.8,
+   "n": 80,
+   "frac": 0.1333,
+   "maskedkd@98/kl": 0.1952,
+   "maskedkd@98/kl_se": 0.0222
+  },
+  {
+   "lo": 0.8,
+   "hi": 0.95,
+   "n": 87,
+   "frac": 0.145,
+   "maskedkd@98/kl": 0.1539,
+   "maskedkd@98/kl_se": 0.0273
+  },
+  {
+   "lo": 0.95,
+   "hi": 1.0,
+   "n": 395,
+   "frac": 0.6583,
+   "maskedkd@98/kl": 0.0077,
+   "maskedkd@98/kl_se": 0.0013
+  }
+ ]
+}

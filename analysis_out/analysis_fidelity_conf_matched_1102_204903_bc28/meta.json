@@ -1,0 +1,12 @@
+{
+ "id": "analysis_fidelity_conf_matched_1102_204903_bc28",
+ "name": "fidelity_conf_matched",
+ "source_sha": "bc28c712727ef81ec7d78b3235543fc1df26a8c090064a342abe8a243b1e7722",
+ "status": "done",
+ "meta": {
+  "question": "within fixed bins of full-teacher confidence, is the MaskedKD masked teacher at K=98/49 less faithful (KL, top-1 agreement) on FGVC-Aircraft than on CUB?",
+  "method": "keep-only masked-teacher faithfulness stratified by full-teacher max probability (fixed bins), last-block CLS attention and attention rollout token keeps",
+  "paper": "Hinton et al. 2015 (KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 5.8
+}
