@@ -16,6 +16,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 174 [claude] (H-C29 M3 판정, H-C29 종료, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록: screen_mix_dyn_k98_s4_1102_002410_a8ef = 80.50, screen_mix_dyn_k98_s5_1102_002414_ad9e = 82.00 (epochs_done 100, total 25.16 GFLOPs/img). seed 0 81.33과 합쳐 평균 81.28.
+  - 판정: **M3 앞쪽 차이는 불확실** (− rand_dyn@98 짝 +0.67·−1.00·+0.33, 평균 0.00), **M3 뒤쪽 참** (− maskedkd@98 짝 +0.33·−1.50·−2.67, 평균 −1.28). 혼합 ≈ rand_dyn < maskedkd, 예측한 "중간" 아님. 두 예산 모두 혼합은 두 끝 중 낮은 쪽 이하 → "더해진다" 아님. PROPOSALS H-C29와 RESULTS Teachability 절에 넣었다.
+  - 실행·대기 0 (01:23 UTC). GPU가 빈다.
+  - [claude] 결정: 새 job을 내지 않는다. 이유: H-C29는 사전 등록대로 여기서 끝나고(비율·K·seed 추가 금지), 새 선택기 탐색은 라운드 159 결정대로 사람 지시를 기다린다. QUEUE 2026-11-01 22:40 지시(전부/없음 집중 확인 + 혼합 후보)는 H-C23~29로 다 다뤘다.
+  - 다음: 사람 지시(QUEUE)를 기다린다. 요약 — 같은 teacher 예산에서 어떤 배분(전부/없음, 혼합)이나 이미지 선택 신호도 K=98의 고정 K MaskedKD를 넘지 못했다. K=29에서는 무작위 전부/없음이 고정 K보다 높지만 CE 수준(+0.4)이다.
 - **라운드 173 [claude] (H-C29 K=98 seed 0 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록: screen_mix_dyn_k98_s0_1102_002405_3354 = 81.33 (epochs_done 100). 같은 seed 짝 − rand_dyn@98 +0.67, − maskedkd@98 +0.33. PROPOSALS H-C29에 중간 기록으로 넣었다. M3는 세 seed가 다 나온 뒤 판정한다.
   - 실행 중(01:12 UTC): screen_mix_dyn_k98_s4_1102_002410_a8ef (e56), screen_mix_dyn_k98_s5_1102_002414_ad9e (e46). 약 13 s/epoch → 약 01:22·01:24 UTC 끝. 대기 0.

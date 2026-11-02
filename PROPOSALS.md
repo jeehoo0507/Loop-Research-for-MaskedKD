@@ -586,3 +586,9 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - 기술값: mix − CE(78.67 · 82.50 · 81.33) 짝 +0.50 · −4.50 · −2.67, 평균 −2.22.
     - 해석(사전 등록 근거 H-C22와 맞음): 남은 119장에 이미지당 약 16개만 주면 가린 teacher가 라벨보다 더 나빠져서, full teacher 9장의 이득으로도 그 손해를 덮지 못한다. 고정 K=29보다 낮다는 것은 "적은 토큰의 가린 teacher" 손해가 K가 줄수록 이미지당 가파르게 커진다(K=12 maskedkd 76.72와 같은 방향)는 뜻으로 적는다. K=98 세 개(M3)는 실행 중.
   - **K=98 중간 기록 (라운드 173, [claude]).** screen_mix_dyn_k98_s0_1102_002405_3354 = 81.33 (epochs_done 100, total 25.16 GFLOPs/img). 같은 seed 짝: − rand_dyn@98 80.67 = +0.67, − maskedkd@98 81.00 = +0.33. seed 4·5(screen_mix_dyn_k98_s4_1102_002410_a8ef, screen_mix_dyn_k98_s5_1102_002414_ad9e)는 01:12 UTC에 epoch 55·45/100. M3 판정은 세 개가 다 나온 뒤에 한다(한 seed로 판정하지 않는다).
+  - **K=98 판정 (라운드 174, [claude]).** mix_dyn@98 = 81.33 · 80.50 · 82.00 (seed 0·4·5, epochs_done 100, 셋 다 total 25.16 GFLOPs/img), 평균 81.28. 런: screen_mix_dyn_k98_s0_1102_002405_3354, screen_mix_dyn_k98_s4_1102_002410_a8ef, screen_mix_dyn_k98_s5_1102_002414_ad9e.
+    - M3 앞쪽 (mix > rand_dyn@98 81.28): 짝 +0.67 · −1.00 · +0.33, 평균 0.00 → **차이는 불확실** (예측 "참" 확인 안 됨).
+    - M3 뒤쪽 (mix < maskedkd@98 82.56): 짝 +0.33 · −1.50 · −2.67, 평균 −1.28, 음수 2/3 → **참, 예측대로**. maskedkd@98 s5 84.67이 평균 차이의 큰 몫이다(한계에 적은 대로).
+    - M3 전체: 예측한 "중간"이 아니라 mix ≈ rand_dyn < maskedkd. "더해진다": K=98에서도 아님.
+    - 기술값: mix − CE(78.67 · 82.50 · 81.33) 짝 +2.67 · −2.00 · +0.67, 평균 +0.44.
+    - 해석: 두 예산 모두 혼합은 두 끝 중 낮은 쪽 이하다(K=29: 둘 다보다 낮음, K=98: 낮은 끝 rand_dyn과 같음). 반은 full teacher, 반은 MaskedKD@65로 나눠도 모든 이미지에 MaskedKD@98을 주는 것만 못하다. H-C29는 여기서 끝낸다(사전 등록대로 비율·K·seed를 더하지 않는다).
