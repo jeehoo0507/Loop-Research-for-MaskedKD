@@ -159,7 +159,7 @@ Total agent screen configs: 14
 
 # Stage 2: aircraft (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: [aircraft final, 100 epochs, mean of seeds [1]] Full KD 68.29 vs CE 66.00 (need +1.0): PASS; MaskedKD@98 67.14 vs Full 68.29 (need >= Full - 0.5): FAIL
+Gate: [aircraft final, 100 epochs, mean of seeds [1, 2]] Full KD 68.36 vs CE 66.43 (need +1.0): PASS; MaskedKD@98 67.64 vs Full 68.36 (need >= Full - 0.5): FAIL
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -173,9 +173,10 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - no child selectors yet
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 68.29 (seeds 1); KD gain +1.86, tolerance 0.93 %p; smallest mean kept tokens within it
+### final: Full KD val 68.36 (seeds 1,2); KD gain +1.93, tolerance 0.96 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds): none
-- screening only (fewer seeds): none
+- screening only (fewer seeds):
+  - maskedkd : 98.0 (2 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -186,9 +187,9 @@ Total agent screen configs: 0
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1,2 | 66.43 ± 0.61 | - | 7.64 | 0.00 | 0.00 | 491 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s1_1102_123044_6d5f |
-| final | full |  | 196 | 196.0 | 1 | 68.29 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 254 | aircraft_final_full_k196_s1_1102_123044_ed5d |
-| final | maskedkd |  | 98 | 98.0 | 1 | 67.14 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 602 | aircraft_final_maskedkd_k98_s1_1102_123044_bd9b |
+| final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
+| final | full |  | 196 | 196.0 | 1,2 | 68.36 ± 0.10 | - | 42.77 | 35.13 | 0.00 | 250 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s2_1102_132227_123b |
+| final | maskedkd |  | 98 | 98.0 | 1,2 | 67.64 ± 0.71 | - | 25.04 | 17.41 | 0.00 | 447 | aircraft_final_maskedkd_k98_s2_1102_132227_2f10 aircraft_final_maskedkd_k98_s1_1102_123044_bd9b |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
