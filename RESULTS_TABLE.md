@@ -36,6 +36,7 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@20 vs parent rollout: acc +2.17 %p (threshold 1.92) -> added part helps
 - lateroll@29 vs parent rollout: acc +0.50 %p (threshold 1.92) -> added part UNPROVEN
 - lateroll@49 vs parent rollout: acc +1.00 %p (threshold 1.92) -> added part UNPROVEN
+- lateroll@98 vs parent rollout: acc +1.00 %p (threshold 1.92) -> added part UNPROVEN
 - mix_dyn@29 vs parent rand_dyn: acc -1.67 %p (threshold 1.92) -> added part UNPROVEN
 - mix_dyn@98 vs parent rand_dyn: acc +0.67 %p (threshold 1.92) -> added part UNPROVEN
 - mk_halfkd@98 vs parent maskedkd: acc +0.33 %p (threshold 1.92) -> added part UNPROVEN
@@ -65,8 +66,8 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - K=12: maskedkd 76.00; rollout 78.33; random 75.33; grid 74.33; center 76.00; tome 78.17 (Full KD 82.17)
 
 ## Search effort (screen)
-Total agent screen configs: 13
-- lateroll: 4 configs
+Total agent screen configs: 14
+- lateroll: 5 configs
 - sinkfree: 3 configs
 - mix_dyn: 2 configs
 - align_dyn: 1 configs
@@ -106,6 +107,7 @@ Total agent screen configs: 13
 | screen | lateroll@69541b |  | 20 | 20.0 | 0 | 82.00 ± 0.00 | - | 11.44 | 3.81 | 0.08 | 377 | screen_lateroll_k20_s0_1101_100242_f95e |
 | screen | lateroll@69541b |  | 29 | 29.0 | 0,4,5 | 82.00 ± 0.58 | - | 12.99 | 5.36 | 0.08 | 518 | screen_lateroll_k29_s4_1101_055810_8619 screen_lateroll_k29_s5_1101_055814_a9a4 screen_lateroll_k29_s0_1031_130348_fd19 |
 | screen | lateroll@69541b |  | 49 | 49.0 | 0,4,5 | 82.11 ± 0.51 | - | 16.45 | 8.82 | 0.08 | 974 | screen_lateroll_k49_s4_1031_184753_4b41 screen_lateroll_k49_s0_1031_130352_adc5 screen_lateroll_k49_s5_1031_184758_5d9f |
+| screen | lateroll@69541b |  | 98 | 98.0 | 0,4,5 | 82.50 ± 0.33 | - | 25.04 | 17.41 | 0.08 | 279 | screen_lateroll_k98_s0_1102_020138_8a4c screen_lateroll_k98_s4_1102_020142_9191 screen_lateroll_k98_s5_1102_020146_a022 |
 | screen | maskedkd |  | 12 | 12.0 | 0,4,5 | 76.72 ± 0.63 | - | 10.07 | 2.45 | 0.00 | 622 | screen_maskedkd_k12_s5_1101_163741_b2e9 screen_maskedkd_k12_s4_1101_163726_3dc8 screen_maskedkd_k12_s0_1031_130150_a887 |
 | screen | maskedkd |  | 20 | 20.0 | 0 | 78.00 ± 0.00 | - | 11.44 | 3.81 | 0.00 | 312 | screen_maskedkd_k20_s0_1101_100251_336a |
 | screen | maskedkd |  | 29 | 29.0 | 0,4,5,6,7 | 80.23 ± 0.95 | - | 12.99 | 5.36 | 0.00 | 814 | screen_maskedkd_k29_s4_1031_183523_7354 screen_maskedkd_k29_s5_1031_183528_bfe5 screen_maskedkd_k29_s6_1101_215100_14b0 screen_maskedkd_k29_s7_1101_215118_b650 screen_maskedkd_k29_s0_1031_130150_1393 |
