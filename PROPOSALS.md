@@ -563,3 +563,19 @@ IDEA 2: CLS-weighted concept coverage — Request block-8 outputs \(H\), includi
   - E2는 Full seed 6·7(23:32 UTC에 epoch 57·54/100, 약 16 s/epoch → 약 23:44 UTC 끝)이 나온 뒤 판정한다.
   - **E2 판정 (라운드 170, Full seed 6·7이 나옴):** screen_full_k196_s6_1101_230309_8730 = 82.00, screen_full_k196_s7_1101_230313_4eff = 82.33 (둘 다 epochs_done 100). Full − CE: seed 6 +0.67, seed 7 +2.17 → 두 seed 모두 양수 → **E2 "KD 이득 재현"** (예측 참). 기술값(5-seed 0·4·5·6·7): CE 80.80, Full 82.17 (KD 이득 +1.37, 허용 오차 문턱 Full − 0.68 = 81.48). H-C27 네 점의 5-seed 평균 − CE: rand_dyn@29 +0.43 (짝 4/5 양수), maskedkd@29 −0.57, rand_dyn@98 +0.60, maskedkd@98 +1.67 (Full보다 +0.30). Full은 5 seed에서 82.00~82.33으로 좁고, CE는 78.67~82.50으로 넓다 — KD 이득의 seed 간 분산은 대부분 CE 쪽에서 온다.
   - 정리: "rand_dyn ≈ CE"는 5-seed에서 +0.43으로 약해졌다(CE보다 조금 높을 수 있으나 KD 이득의 1/3 이하, 차이는 불확실). "maskedkd@29 < CE"는 5-seed −0.57로 남지만 seed 7에서 반대(+1.50)다. KD 이득 자체(Full > CE)는 5/5 seed 양수가 아니다(seed 4 −0.50) — 4/5 양수.
+
+## 2026-11-02 ideas from Codex (independent)
+IDEA 1: Late LeGrad selection — For the student’s predicted class \(c=\arg\max z\), compute \(G^\ell=\partial z_c/\partial A^\ell\) for blocks 10–12 using `autograd.grad(..., retain_graph=True)`; score patch \(i\) by \(s_i=\sum_{\ell=10}^{12}\operatorname{mean}_{h,q}[G^\ell_{hqi}]_+\).
+IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\), factor the nonnegative matrix \([X_+,(-X)_+]\approx HW\) using rank-6 NMF with 20 multiplicative-update iterations; normalize each column of \(H\) to maximum 1, producing six candidate concept maps.
+
+- **H-C29 (라운드 171, 결과 전·제출 전에 등록): 전부/없음 반 + 고정 K 반 혼합 (QUEUE 2026-11-01 22:40 "일부는 전체, 나머지는 작은 K" 후보).** `selectors/mix_dyn.py`, 진단(주장 대상 아님, 감사 요청 없음).
+  - 왜: 효율 곡선이 엇갈린다 — K=29에서 rand_dyn > maskedkd (5-seed 평균 +1.00, 짝 4/5), K=98에서 rand_dyn < maskedkd (−1.07, 5/5). 같은 예산을 반씩 나누면 두 이득(소수 이미지의 깨끗한 full-teacher 라벨 + 모든 이미지 덮기)이 더해지는지, 아니면 두 끝의 중간에 그치는지 본다. GPU가 31분 비어 있었고, QUEUE가 이 혼합을 후보로 명시했다.
+  - 규칙: m = int(0.5·K·B // 196)장(무작위)에 teacher 전체, 나머지 이미지는 남은 토큰을 똑같이 나눠 MaskedKD 점수(마지막 블록 CLS attention) 상위로. 비율 0.5는 결과 전에 고정, 바꾸지 않는다. K=29: m=9, 나머지 119장 약 16개. K=98: m=32, 나머지 96장 65~66개. trysel K=29 총 12.988 GFLOPs/img (maskedkd@29 12.99와 같음).
+  - 측정: CUB screen, mix_dyn@29·@98, seed 0·4·5, 6 job. 비교(같은 seed, 이미 있음): rand_dyn@29 80.83·80.33·81.83, maskedkd@29 79.17·79.67·80.17, rand_dyn@98 80.67·81.50·81.67, maskedkd@98 81.00·82.00·84.67, CE 78.67·82.50·81.33. 값은 metrics.json `val_acc_last`.
+  - 판정 규칙(H-C23과 같음): "A > B" = 3-seed 평균이 높고 같은 seed 짝 2/3 이상 양수. 평균 차이 0.33 이하는 "차이는 불확실".
+    - M1: mix_dyn@29 > maskedkd@29. 예측: 참(full-teacher 9장이 들어감).
+    - M2: mix_dyn@29 vs rand_dyn@29. 예측: mix < rand_dyn (H-C22: K=29 가린 teacher가 76% 이미지에서 라벨보다 못하니 16개는 더 나쁠 것) — 확신 낮음.
+    - M3: mix_dyn@98 > rand_dyn@98, 그리고 mix_dyn@98 < maskedkd@98. 예측: 둘 다 참(중간).
+    - "더해진다" = 한 예산에서 mix_dyn이 두 끝 모두보다 높음(위 규칙). 예측: 두 예산 모두 아님.
+  - 한계: seed 3개(0·4·5, 판정 규칙을 만들 때 본 seed), val 600장, maskedkd@98 s5 84.67이 평균을 끌어올림. KD 총비중은 두 끝의 중간(K=29: 0.5·(9/128 + 119/128)이므로 maskedkd와 같은 0.5, K=98: 같음 0.5) — rand_dyn과 달리 모든 이미지가 KD를 받으므로 H-C26의 KD 비중 섞임은 maskedkd 쪽과 같다.
+  - 규칙: 결과와 무관하게 RESULTS Teachability 효율 곡선에 적는다. 결과를 보고 비율·K·seed를 추가하지 않는다(추가하려면 새로 등록). screen seed만(1·2·3 금지).
