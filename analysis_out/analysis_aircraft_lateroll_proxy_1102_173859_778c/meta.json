@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_lateroll_proxy_1102_173859_778c",
+ "name": "aircraft_lateroll_proxy",
+ "source_sha": "778c695f669d43e68bf6c766e27ae44f28b819f8f14bb7ff897651abedc02e32",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft, does roll6 (late-block rollout, selectors/lateroll.py unchanged) keep the masked teacher's TCKD/KL lower than maskedkd's ranking (roll11), full rollout (roll0) and random at K = 29 and 12, with paired bootstrap CIs, as it did on CUB (H-C2c)?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD TCKD) with paired bootstrap CIs; attention rollout start-block variants",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 8.6
+}
