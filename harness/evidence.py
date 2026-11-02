@@ -92,7 +92,25 @@ def past_locks(run_ids):
         lines.append(run("git", "log", "--format=%h | %an | %ci | %s", f"{commit}..HEAD", "--", *LOCKED_PATHS))
         lines.append(f"--- git diff --stat {commit[:12]} HEAD -- locked files ---")
         lines.append(run("git", "diff", "--stat", commit, "HEAD", "--", *LOCKED_PATHS))
+    if seen:   # the content, not only titles and stats (2026-11-02 audit: stats cannot show unchanged semantics)
+        oldest = run("git", "merge-base", "--octopus", *seen).splitlines()[0] if len(seen) > 1 else next(iter(seen))
+        lines.append(f"\n--- git diff {oldest[:12]} HEAD -- locked files except tests (full text) ---")
+        lines.append(run("git", "diff", oldest, "HEAD", "--", *[p for p in LOCKED_PATHS if p != "tests"]))
     return "\n".join(lines) or "(no cited runs)"
+
+
+def method_history(methods):
+    """For each cited agent method: its PROPOSALS.md entries (pre-registration, analysis before implementation) and the
+    git history of selectors/<method>.py, so the order analysis -> proposal -> code -> runs can be checked."""
+    props = read("PROPOSALS.md").split("\n- **")
+    out = []
+    for m in sorted(methods):
+        out.append(f"### {m}: git log --follow selectors/{m}.py")
+        out.append(run("git", "log", "--follow", "--format=%h | %an | %ci | %s", "--", f"selectors/{m}.py"))
+        hits = [b for b in props if re.search(rf"\b{re.escape(m)}\b", b)]
+        out.append(f"### {m}: PROPOSALS.md entries naming it ({len(hits)}; oldest first, each cut at 2500 chars)")
+        out += ["- **" + b[:2500] for b in hits]
+    return "\n".join(out) or "(no agent method cited)"
 
 
 def audit():
@@ -108,7 +126,7 @@ def audit():
            section("agent/INVALID.md", read("agent/INVALID.md")),
            section("complete job history (all states)", history(), limit=60_000)]
     run_ids = sorted(set(re.findall(r"\b(?:in100_)?(?:screen|final)_[A-Za-z0-9_.-]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req)))
-    out.append(section("past locks of the cited runs (harness.lock.digest_at)", past_locks(run_ids), limit=20_000))
+    out.append(section("past locks of the cited runs (harness.lock.digest_at)", past_locks(run_ids), limit=40_000))
     shas = {}
     for rid in run_ids:
         out.append(section(f"runs/{rid}/metrics.json", run_metrics(rid)))
@@ -119,6 +137,8 @@ def audit():
                 shas[j["selector_sha"]] = j["method"]
                 out.append(section(f"selector source {j['method']} (sha {j['selector_sha'][:12]}, from the job snapshot)",
                                    j["selector_src"]))
+    agent_methods = {m for m in shas.values() if m not in C.BASELINES}
+    out.append(section("proposal and code history of the cited agent methods", method_history(agent_methods), limit=60_000))
     for aid in sorted(set(re.findall(r"\banalysis_[A-Za-z0-9_]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req))):
         d = C.ROOT / "analysis_out" / aid
         files = sorted(d.glob("*.json")) if d.is_dir() else []
