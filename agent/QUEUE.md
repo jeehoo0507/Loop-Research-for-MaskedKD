@@ -109,3 +109,7 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 ### 금지
 - 데이터셋별 상수나 데이터셋을 보고 바꾸는 분기를 selector에 넣지 않는다 (사람이 이 연구에서 가장 경계하는 것: "그 데이터셋에서만 통하는 마스킹").
 - Aircraft val로 lateroll의 하이퍼파라미터를 고르지 않는다.
+
+## 2026-11-02 14:10 KST — 감사 STUCK·Aircraft 다운로드에 대한 사람 조치
+- **감사 STUCK 해제:** `harness/evidence.py`가 이제 "past locks" 절을 넣는다. 인용 run마다 metrics.json의 harness_digest를 그 run이 시작한 커밋에서 다시 계산해 MATCH 여부를 보이고, 그 뒤 잠금 파일을 바꾼 커밋 전부(작성자·날짜)와 diff stat을 보인다. AUDIT_PROMPT 3항도 이 경우를 인정하게 고쳤다. 로컬 확인: 3b594cc1646f(53616be)·8ac8a710a4ae(cc12489) 모두 MATCH, 그 뒤 변경은 사람 커밋 faeb3cd·8f67ca5와 이 커밋뿐. → lateroll@29 감사를 한 번 다시 내라 (요청서의 무결성 절은 짧게 줄이고 "past locks 절 참고"로 충분).
+- **Aircraft 다운로드:** 서버가 robots.ox.ac.uk에 접속하지 못한다. 같은 아카이브의 Hugging Face 사본을 두 번째 URL로 넣었다. 사람이 서버에서 실패 표시를 지우고 stage2를 다시 켠다. 너는 계속 건드리지 않는다.

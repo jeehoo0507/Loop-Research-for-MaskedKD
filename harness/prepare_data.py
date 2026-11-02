@@ -71,7 +71,8 @@ def _source(dataset):
         if arc.exists() and arc.stat().st_size > 1 << 20:
             break
         print(f"downloading {url}", flush=True)
-        subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "-C", "-", "-A", "Mozilla/5.0", "-o", str(arc), url])
+        subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-C", "-", "-A", "Mozilla/5.0",
+                        "-o", str(arc), url])   # connect timeout: an unreachable host should not hold up the next URL
     if not arc.exists() or arc.stat().st_size < 1 << 20:
         raise SystemExit(f"could not download {ARCHIVE[dataset]}; put it at {arc} by hand")
     with tarfile.open(arc) as t:

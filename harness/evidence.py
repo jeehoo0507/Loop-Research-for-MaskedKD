@@ -63,6 +63,38 @@ def history():
     return "\n".join(lines)
 
 
+LOCKED_PATHS = ["harness", "tests", "agent/loop.sh", "agent/relock.sh", "agent/AGENT_PROMPT.md", "agent/AUDIT_PROMPT.md",
+                "agent/IDEAS_PROMPT.md", "requirements.txt", "state/epochs.json", "state/recipe.json"]
+
+
+def past_locks(run_ids):
+    """For cited runs made under an earlier lock: the digest recomputed from the commit the run started at (its
+    metrics.json "git"), and every later commit that touched a locked file, with its author (2026-11-02: two audits
+    could not verify a past digest from the bundle)."""
+    from .lock import digest_at, harness_digest
+    now, seen, lines = harness_digest(), {}, []
+    for rid in run_ids:
+        m = C.RUNS / rid / "metrics.json"
+        if not m.exists():
+            continue
+        d = json.loads(m.read_text())
+        rec, commit = d.get("harness_digest"), d.get("git")
+        if not rec or rec == now or not commit:
+            lines.append(f"{rid}: recorded {str(rec)[:12]} {'= current lock' if rec == now else '(no git commit recorded)'}")
+            continue
+        if commit not in seen:
+            seen[commit] = digest_at(commit)
+        got = seen[commit]
+        lines.append(f"{rid}: recorded {rec[:12]}, run started at {commit[:12]}, digest recomputed from that commit "
+                     f"{str(got)[:12]} -> {'MATCH' if got == rec else 'NO MATCH (the run used uncommitted locked files)'}")
+    for commit in seen:
+        lines.append(f"\n--- commits touching locked files after {commit[:12]} (author, date, subject) ---")
+        lines.append(run("git", "log", "--format=%h | %an | %ci | %s", f"{commit}..HEAD", "--", *LOCKED_PATHS))
+        lines.append(f"--- git diff --stat {commit[:12]} HEAD -- locked files ---")
+        lines.append(run("git", "diff", "--stat", commit, "HEAD", "--", *LOCKED_PATHS))
+    return "\n".join(lines) or "(no cited runs)"
+
+
 def audit():
     req = read("agent/AUDIT_REQUEST.md")
     py = sys.executable   # the loop runs this module with the project's .venv python
@@ -76,6 +108,7 @@ def audit():
            section("agent/INVALID.md", read("agent/INVALID.md")),
            section("complete job history (all states)", history(), limit=60_000)]
     run_ids = sorted(set(re.findall(r"\b(?:in100_)?(?:screen|final)_[A-Za-z0-9_.-]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req)))
+    out.append(section("past locks of the cited runs (harness.lock.digest_at)", past_locks(run_ids), limit=20_000))
     shas = {}
     for rid in run_ids:
         out.append(section(f"runs/{rid}/metrics.json", run_metrics(rid)))

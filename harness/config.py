@@ -38,7 +38,10 @@ DATA_URLS = {
     "waterbirds": ["https://downloads.cs.stanford.edu/nlp/data/dro/waterbird_complete95_forest2water2.tar.gz",
                    "https://nlp.stanford.edu/data/dro/waterbird_complete95_forest2water2.tar.gz"],
     "cub": ["https://data.caltech.edu/records/65de6-vp158/files/CUB_200_2011.tgz?download=1"],
-    "aircraft": ["https://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz"],
+    "aircraft": ["https://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz",
+                 # the server cannot reach robots.ox.ac.uk (2026-11-02, curl 28); a Hugging Face copy of the same
+                 # archive (2,753,340,328 bytes); prepare_data checks the split sizes against EXPECTED_SIZES
+                 "https://huggingface.co/datasets/xingslong/fgvc-aircraft-2013b/resolve/main/fgvc-aircraft-2013b.tar.gz"],
 }
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train

@@ -810,3 +810,26 @@ def test_aircraft_split_and_banner_trim(tmp_path):
     out = P._load((str(d / "images" / "x.jpg"), 224, C.TRIM_BOTTOM["aircraft"]))
     assert out.shape == (3, 224, 224) and out[0].max() < 60   # no red from the banner left
     assert C.EXPECTED_SIZES["aircraft"] == {"train": 5967, "val": 700, "test": 3333}
+
+
+def test_digest_at_reproduces_the_lock_of_a_commit(tmp_path, monkeypatch):
+    """An audit of a run made under an earlier lock recomputes that lock from the commit the run started at."""
+    import subprocess as sp
+    from harness import lock
+    monkeypatch.setattr(C, "ROOT", tmp_path)
+    g = lambda *a: sp.run(["git", *a], cwd=tmp_path, check=True, capture_output=True)   # noqa: E731
+    g("init", "-q")
+    g("config", "user.email", "t@t"), g("config", "user.name", "t")
+    (tmp_path / "harness" / "sub").mkdir(parents=True)
+    (tmp_path / "harness" / "a.py").write_text("x = 1\n")
+    (tmp_path / "harness" / "sub" / "b.py").write_text("y = 2\n")
+    (tmp_path / "harness" / "notes.txt").write_text("not locked\n")
+    (tmp_path / "agent").mkdir()
+    (tmp_path / "agent" / "loop.sh").write_text("echo\n")
+    g("add", "-A"), g("commit", "-qm", "one")
+    first = lock.harness_digest()
+    assert lock.digest_at("HEAD") == first
+    (tmp_path / "harness" / "a.py").write_text("x = 3\n")
+    g("commit", "-qam", "two")
+    assert lock.digest_at("HEAD") == lock.harness_digest() != first
+    assert lock.digest_at("HEAD~1") == first and lock.digest_at("nope") is None

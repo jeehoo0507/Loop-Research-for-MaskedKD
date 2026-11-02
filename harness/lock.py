@@ -44,6 +44,42 @@ def harness_digest():
     return h.hexdigest()
 
 
+def digest_at(commit):
+    """harness_digest() of the locked files as committed at `commit` (same files, order and bytes), or None if git
+    fails. Lets an audit check a run made under an earlier lock: its metrics.json records harness_digest and the HEAD
+    it started from ("git"); if digest_at(that HEAD) equals the recorded digest, the run used exactly that commit's
+    locked files, and `git log <that HEAD>..HEAD -- <locked paths>` shows every change since and who made it."""
+    import fnmatch
+    from pathlib import PurePosixPath
+    try:
+        names = subprocess.run(["git", "ls-tree", "-r", "--name-only", commit], cwd=C.ROOT, capture_output=True,
+                               text=True, check=True, timeout=120).stdout.split("\n")
+    except (subprocess.SubprocessError, OSError):
+        return None
+    def locked(n):   # same matches as Path.glob(LOCKED_GLOBS): "dir/**/*.py" = any .py at any depth under dir
+        for g in LOCKED_GLOBS:
+            if "/**/" in g:
+                top, base = g.split("/**/")
+                if n.startswith(top + "/") and fnmatch.fnmatchcase(n.rsplit("/", 1)[1], base):
+                    return True
+            elif n == g:
+                return True
+        return False
+    files = sorted(PurePosixPath(n) for n in names if n and "__pycache__" not in n and locked(n))
+    h = hashlib.sha256()
+    for f in files:
+        try:
+            data = subprocess.run(["git", "show", f"{commit}:{f}"], cwd=C.ROOT, capture_output=True, check=True,
+                                  timeout=120).stdout
+        except (subprocess.SubprocessError, OSError):
+            return None
+        h.update(str(f).encode())
+        h.update(b"\0")
+        h.update(data)
+        h.update(b"\0")
+    return h.hexdigest()
+
+
 def _git(*args):
     r = subprocess.run(["git", *args], cwd=C.ROOT, capture_output=True, text=True, stdin=subprocess.DEVNULL,
                        timeout=120, env=dict(os.environ, GIT_TERMINAL_PROMPT="0", GIT_ASKPASS="true"))

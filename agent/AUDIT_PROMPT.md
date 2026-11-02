@@ -20,7 +20,10 @@ For every claim, check:
 2. Fair comparison: same tier, same epochs, same seeds for both sides; baselines (maskedkd, full, and
    random where relevant) exist at the compared budgets. No cherry-picked seeds or budgets
    (look at all runs of that selector in RESULTS_TABLE.md, not only the cited ones).
-3. Integrity: metrics.json harness_digest equals `python -m harness.lock` output; selector_sha matches
+3. Integrity: metrics.json harness_digest equals `python -m harness.lock` output, or, for a run made under an
+   earlier lock, the bundle's "past locks" section shows MATCH (the digest recomputed from the commit the run started
+   at equals the recorded one) and every later commit touching locked files is a human commit (not a "[claude]" /
+   "[codex]" round) whose diff does not change how the compared runs were trained or measured; selector_sha matches
    the source embedded in the job (queue/done/<id>.json "selector_src"); agent/INVALID.md has no
    tamper event covering those runs; git log shows no edits to harness/ or tests/ by the agent and no
    use of harness.test_eval.
