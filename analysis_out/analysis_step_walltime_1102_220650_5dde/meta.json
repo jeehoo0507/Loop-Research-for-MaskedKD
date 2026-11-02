@@ -1,0 +1,12 @@
+{
+ "id": "analysis_step_walltime_1102_220650_5dde",
+ "name": "step_walltime",
+ "source_sha": "5dde08d7e8c2b967e9eb34a001d07c48c459e4e767015ffa29211e943db26526",
+ "status": "done",
+ "meta": {
+  "question": "alone on the GPU, how much wall-clock time does one CUB training step take per method and budget (ce, full, maskedkd/rollout/lateroll/random at K=12,29,49,98), and does the step-time ratio to full KD follow the total-GFLOPs ratio? Does reading attention weights (non-fused attention in the student blocks rollout/lateroll need) cost time that FLOPs do not show?",
+  "method": "CUDA-event timing of each train_step segment, interleaved repeats, medians",
+  "paper": "Son et al. ECCV 2024 (MaskedKD, reports wall-clock savings); Dehghani et al. ICLR 2022 (The Efficiency Misnomer: FLOPs vs throughput); Abnar & Zuidema ACL 2020 (rollout)"
+ },
+ "seconds": 153.8
+}
