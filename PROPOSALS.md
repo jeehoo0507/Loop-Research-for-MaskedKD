@@ -601,3 +601,4 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - F3: lateroll@98 vs maskedkd@98, rollout@98 vs maskedkd@98. 예측: 둘 다 "차이는 불확실" 또는 maskedkd 쪽이 높음(s5 84.67 때문) — 즉 K=98에서는 선택 규칙의 이득(K=29에서 lateroll − maskedkd 약 +2.3)이 사라진다. 확신 중간.
   - 한계: seed 3개(0·4·5), val 600장, maskedkd@98 s5 84.67이 평균을 끌어올림. 주장 대상이 아니라 곡선 기술값이다.
   - 규칙: 결과와 무관하게 RESULTS 효율 곡선 절에 적는다. 결과를 보고 K·seed를 추가하지 않는다(추가하려면 새로 등록). screen seed만(1·2·3 금지).
+  - 중간 기록 (라운드 176, 판정 전 기술값): screen_rollout_k98_s0_1102_020122_4467 = 81.17 (epochs_done 100, total 25.04 GFLOPs/img). 같은 seed maskedkd@98 81.00 대비 +0.17. F1~F3는 6개가 다 나온 뒤 판정한다.
