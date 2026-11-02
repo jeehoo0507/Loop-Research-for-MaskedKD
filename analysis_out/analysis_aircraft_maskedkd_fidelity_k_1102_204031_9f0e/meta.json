@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_maskedkd_fidelity_k_1102_204031_9f0e",
+ "name": "aircraft_maskedkd_fidelity_k",
+ "source_sha": "9f0e04d45605b9cb21d391df27acf1dd38c6eb70d9c450fd5244e0f8d7e730bb",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft, how faithful (KL to full teacher, DKD TCKD/NCKD, top-1 agreement) is the MaskedKD masked teacher at K = 98/49/29/25/12, compared with CUB at the same K?",
+  "method": "keep-only masked-teacher faithfulness (KL to full teacher, DKD decomposition, top-1/top-5 agreement) under last-block CLS attention, attention rollout and random token keeps",
+  "paper": "Hinton et al. 2015 (KD); Zhao et al. CVPR 2022 (DKD); Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only evaluation); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 11.1
+}

@@ -1,0 +1,75 @@
+{
+ "students": {
+  "full196_s1": "aircraft_final_full_k196_s1_1102_123044_ed5d",
+  "maskedkd98_s1": "aircraft_final_maskedkd_k98_s1_1102_123044_bd9b"
+ },
+ "n_val": 700,
+ "ks": [
+  98,
+  49,
+  29,
+  25,
+  12
+ ],
+ "reference": {
+  "teacher_full_acc": 77.43,
+  "teacher_full_p_true": 0.7483,
+  "teacher_full_nontarget_mass": 0.2517
+ },
+ "maskedkd98_s1": {
+  "maskedkd@98": {
+   "kl": 0.1818,
+   "tckd": 0.0891,
+   "nckd": 0.0927,
+   "nontarget_kl": 0.3565,
+   "top1_agree": 88.0,
+   "top5_overlap": 80.0,
+   "t_acc": 73.57,
+   "p_true": 0.7173
+  },
+  "maskedkd@49": {
+   "kl": 0.8275,
+   "tckd": 0.4893,
+   "nckd": 0.3383,
+   "nontarget_kl": 1.3717,
+   "top1_agree": 70.29,
+   "top5_overlap": 60.71,
+   "t_acc": 61.14,
+   "p_true": 0.5715
+  },
+  "maskedkd@29": {
+   "kl": 1.765,
+   "tckd": 1.1736,
+   "nckd": 0.5914,
+   "nontarget_kl": 2.2318,
+   "top1_agree": 49.14,
+   "top5_overlap": 44.66,
+   "t_acc": 44.71,
+   "p_true": 0.3817
+  },
+  "maskedkd@25": {
+   "kl": 2.0914,
+   "tckd": 1.4245,
+   "nckd": 0.6669,
+   "nontarget_kl": 2.5188,
+   "top1_agree": 42.29,
+   "top5_overlap": 40.86,
+   "t_acc": 38.86,
+   "p_true": 0.3266
+  },
+  "maskedkd@12": {
+   "kl": 3.5803,
+   "tckd": 2.6244,
+   "nckd": 0.9559,
+   "nontarget_kl": 3.588,
+   "top1_agree": 17.43,
+   "top5_overlap": 21.74,
+   "t_acc": 17.0,
+   "p_true": 0.1158
+  }
+ },
+ "verdict": {
+  "F1_kl98_above_cub": true,
+  "F2_top1_98_below_cub": true
+ }
+}
