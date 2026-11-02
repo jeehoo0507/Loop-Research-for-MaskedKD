@@ -1,0 +1,12 @@
+{
+ "id": "analysis_attn_mass_fidelity_1102_205746_826c",
+ "name": "attn_mass_fidelity",
+ "source_sha": "826cbaa660c51171cabec95b2b40d68dd043d04de7203c3566087f102c623262",
+ "status": "done",
+ "meta": {
+  "question": "is MaskedKD's last-block CLS attention more spread on FGVC-Aircraft than on CUB (more mass outside the top K), and does the left-out mass track per-image masked-teacher KL within each dataset?",
+  "method": "per-image attention mass outside the top-K maskedkd keep and attention effective token count, Spearman with keep-only masked-teacher KL, bootstrap CI",
+  "paper": "Hinton et al. 2015 (KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 7.0
+}
