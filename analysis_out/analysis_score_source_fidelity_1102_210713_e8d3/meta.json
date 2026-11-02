@@ -1,0 +1,12 @@
+{
+ "id": "analysis_score_source_fidelity_1102_210713_e8d3",
+ "name": "score_source_fidelity",
+ "source_sha": "e8d36687da1f7a72571c68151af6a1a0d5b5e2815285c5c838012fb6c839b799",
+ "status": "done",
+ "meta": {
+  "question": "at K=98, does the student's last-block CLS attention top-K agree less with the teacher's own last-block CLS attention top-K on FGVC-Aircraft than on CUB, and does a teacher-attention keep mask close the Aircraft-vs-CUB gap in masked-teacher KL that the student-score mask shows?",
+  "method": "last-block CLS attention (student and teacher), top-K Jaccard overlap, keep-only masked-teacher KL for student / teacher / random scores, bootstrap CI",
+  "paper": "Hinton et al. 2015 (KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 6.8
+}
