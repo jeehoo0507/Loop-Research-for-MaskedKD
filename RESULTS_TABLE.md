@@ -173,7 +173,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - no child selectors yet
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 68.29 (seeds 1); KD gain +2.29, tolerance 1.00 %p; smallest mean kept tokens within it
+### final: Full KD val 68.29 (seeds 1); KD gain +1.86, tolerance 0.93 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds): none
 - screening only (fewer seeds): none
 
@@ -186,7 +186,7 @@ Total agent screen configs: 0
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1 | 66.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 360 | aircraft_final_ce_k0_s1_1102_123044_6d5f |
+| final | ce |  | 0 | None | 1,2 | 66.43 ± 0.61 | - | 7.64 | 0.00 | 0.00 | 491 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s1_1102_123044_6d5f |
 | final | full |  | 196 | 196.0 | 1 | 68.29 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 254 | aircraft_final_full_k196_s1_1102_123044_ed5d |
 | final | maskedkd |  | 98 | 98.0 | 1 | 67.14 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 602 | aircraft_final_maskedkd_k98_s1_1102_123044_bd9b |
 
