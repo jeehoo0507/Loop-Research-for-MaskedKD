@@ -20,6 +20,7 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@29 vs rollout@29 [acc]: +0.94 %p, 95% CI [+0.71, +1.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@49 vs tome@49 [acc]: +2.50 %p, 95% CI [+0.31, +4.69], seeds 1,2,3, GFLOPs ratio 1.134 -> WIN
 - lateroll@49 vs grid@49 [acc]: +4.11 %p, 95% CI [+3.25, +4.97], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
+- lateroll@49 vs random@49 [acc]: +3.83 %p, 95% CI [+2.40, +5.27], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - lateroll@29 vs maskedkd@29 [acc]: +1.17 %p, 95% CI [+0.75, +1.58], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
@@ -35,7 +36,7 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@49 vs tome@49 [acc]: +2.50 %p, 95% CI [+0.31, +4.69], seeds 1,2,3, GFLOPs ratio 1.134 -> WIN
 - lateroll@49 vs grid@49 [acc]: +4.11 %p, 95% CI [+3.25, +4.97], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 - lateroll@49 vs center@49 [acc]: +2.50 %p, 95% CI [-0.02, +5.02], seeds 1,2,3, GFLOPs ratio 0.999 -> no difference
-- lateroll@49 vs random@49 [acc]: +4.00 %p, 95% CI [-2.35, +10.35], seeds 1,2, GFLOPs ratio 0.999 -> no difference
+- lateroll@49 vs random@49 [acc]: +3.83 %p, 95% CI [+2.40, +5.27], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 - lateroll@49 vs full@196 [acc]: +0.44 %p, 95% CI [-4.10, +4.99], seeds 1,2,3, GFLOPs ratio 0.385 -> no difference
 - lateroll@49 vs rollout@49 [acc]: +0.06 %p, 95% CI [-3.05, +3.16], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 
@@ -104,7 +105,7 @@ Total agent screen configs: 14
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
 | final | random |  | 29 | 29.0 | 1,2,3 | 74.94 ± 0.25 | - | 13.00 | 5.36 | 0.00 | 279 | final_random_k29_s3_1101_140937_24cb final_random_k29_s1_1101_104303_9664 final_random_k29_s2_1101_125958_9495 |
-| final | random |  | 49 | 49.0 | 1,2 | 78.08 ± 1.06 | - | 16.46 | 8.82 | 0.00 | 283 | final_random_k49_s1_1102_034050_5828 final_random_k49_s2_1102_043001_3091 |
+| final | random |  | 49 | 49.0 | 1,2,3 | 78.33 ± 0.87 | - | 16.46 | 8.82 | 0.00 | 434 | final_random_k49_s1_1102_034050_5828 final_random_k49_s3_1102_153530_ccb4 final_random_k49_s2_1102_043001_3091 |
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 80.44 ± 1.02 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 final_rollout_k29_s3_1101_140937_8573 |
 | final | rollout |  | 49 | 49.0 | 1,2,3 | 82.11 ± 1.13 | - | 16.45 | 8.82 | 0.17 | 230 | final_rollout_k49_s1_1102_034050_c1e4 final_rollout_k49_s2_1102_043001_2aed final_rollout_k49_s3_1102_153530_4395 |
