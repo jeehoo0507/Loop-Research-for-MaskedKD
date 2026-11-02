@@ -200,7 +200,7 @@ Total agent screen configs: 0
 | final | rollout |  | 12 | 12.0 | 1 | 62.43 ± 0.00 | - | 10.08 | 2.45 | 0.17 | 336 | aircraft_final_rollout_k12_s1_1102_132227_d6d1 |
 | final | rollout |  | 29 | 29.0 | 1 | 66.86 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 330 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 65.57 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 297 | aircraft_final_tome_k12_s1_1102_132227_991f |
-| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1 | 66.00 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 384 | aircraft_final_tome_k29_s1_1102_132227_ccc7 |
+| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2 | 66.29 ± 0.40 | - | 12.00 | 4.36 | 0.00 | 384 | aircraft_final_tome_k29_s1_1102_132227_ccc7 aircraft_final_tome_k29_s2_1102_180330_3c69 |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
