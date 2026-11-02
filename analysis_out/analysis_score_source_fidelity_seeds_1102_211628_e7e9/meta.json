@@ -1,0 +1,12 @@
+{
+ "id": "analysis_score_source_fidelity_seeds_1102_211628_e7e9",
+ "name": "score_source_fidelity_seeds",
+ "source_sha": "e7e9e325979e5f135c659a7ff5710950aa0e59ede56cdc72743690b07150176c",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft final maskedkd@98 students of seeds 2 and 3, does the student-score top-98 keep mask still lose more masked-teacher KL than the teacher's own last-block CLS attention top-98 mask, as for seed 1 (H-A9)?",
+  "method": "last-block CLS attention (student and teacher), top-K Jaccard overlap, keep-only masked-teacher KL for student / teacher / random scores, bootstrap CI; same code path as score_source_fidelity.py",
+  "paper": "Hinton et al. 2015 (KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 9.4
+}
