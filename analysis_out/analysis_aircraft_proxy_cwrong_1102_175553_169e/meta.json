@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_proxy_cwrong_1102_175553_169e",
+ "name": "aircraft_proxy_cwrong",
+ "source_sha": "169e188c017973a56ec48b938d0832fc4a44d92cc3e0305c459811854dd62739",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft, does the masked teacher's confident disagreement with the full teacher (cwrong) rank-predict student val accuracy across selectors (maskedkd, rollout, random, tome; final seed 1) at K=12,29, where TCKD ranked K=12 backwards?",
+  "method": "keep-only masked-teacher confident-wrong mass and entropy under each selector's mask, validated against trained students by within-K Spearman correlation and permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Zhao et al. CVPR 2022 (DKD); Abnar & Zuidema ACL 2020 (rollout); Bolya et al. ICLR 2023 (ToMe); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 20.8
+}
