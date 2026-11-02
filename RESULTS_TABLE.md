@@ -191,6 +191,9 @@ Total agent screen configs: 0
 | final | full |  | 196 | 196.0 | 1,2,3 | 68.05 ± 0.54 | - | 42.77 | 35.13 | 0.00 | 252 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s3_1102_132227_69cc aircraft_final_full_k196_s2_1102_132227_123b |
 | final | maskedkd |  | 29 | 29.0 | 1 | 66.71 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 340 | aircraft_final_maskedkd_k29_s1_1102_132227_6542 |
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 67.43 ± 0.62 | - | 25.04 | 17.41 | 0.00 | 398 | aircraft_final_maskedkd_k98_s2_1102_132227_2f10 aircraft_final_maskedkd_k98_s1_1102_123044_bd9b aircraft_final_maskedkd_k98_s3_1102_132227_c979 |
+| final | random |  | 29 | 29.0 | 1 | 64.29 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 371 | aircraft_final_random_k29_s1_1102_132227_7454 |
+| final | rollout |  | 29 | 29.0 | 1 | 66.86 ± 0.00 | - | 12.99 | 5.36 | 0.17 | 330 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 |
+| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1 | 66.00 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 384 | aircraft_final_tome_k29_s1_1102_132227_ccc7 |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
