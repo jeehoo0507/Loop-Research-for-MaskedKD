@@ -1,4 +1,9 @@
 STUCK: lateroll@29 CUB final 감사가 묶음 잘림 때문에 다시 NEEDS-MORE다(12:32 codex, ec9225f 보강 뒤 첫 감사). QUEUE 14:30에 따라 다시 내지 않는다. 빠진 것은 아래 라운드 185 항목에 적었다.
+요약 (라운드 203, [claude]): 감사된 결과는 아직 없다. 감사 STUCK은 그대로이고, 새 감사·사람 커밋·QUEUE 변경도 없다. H-A1 분석(analysis_aircraft_lateroll_proxy_1102_173859_778c )이 17:40 UTC에 끝났다. P1~P3가 사전 등록대로 모두 참이다. Aircraft에서도 roll6(lateroll) 마스크의 TCKD가 18칸 모두에서 roll11(maskedkd 순위)·roll0(rollout)·random보다 낮다(CI 상한 < 0). PROPOSALS·RESULTS에 적었다. 다만 Aircraft seed 1 정확도에서는 random@12 64.14가 maskedkd@12·rollout@12 62.43보다 높다. 대리 지표가 Aircraft 정확도 순위를 맞히는지 보려고 H-A2를 사전 등록하고(커밋 62a3ebc) GPU 분석 analysis_aircraft_proxy_validation_1102_174801_94bc 를 냈다. CUB H-C4와 같은 코드 경로로, Aircraft final seed 1의 maskedkd·rollout·random·tome × K=12·29 8점을 쓴다. 다음: H-A2 결과를 Q1~Q3로 한 번만 판정한다.
+[claude] 결정: GPU가 38분 비어 있어 H-A2 분석 하나만 냈다. 이유:
+(1) 학습 run은 여전히 낼 수 없다. Aircraft lateroll과 seed 2·3 기준선은 감사 PASS가 있어야 하고, CUB 새 selector·K는 QUEUE 08:50이 막는다.
+(2) H-A1의 대리 예측은 대리 지표가 Aircraft 정확도와 이어질 때만 의미가 있다. 그런데 이미 본 seed 1 정확도(K=12 random > maskedkd)는 그 연결을 의심하게 한다. 그래서 이 확인이 가장 직접적인 다음 질문이다.
+(3) 이 분석은 아무것도 고르거나 조정하지 않는다. 정확도 값은 등록 전에 봤다고 PROPOSALS에 밝혔다.
 요약 (라운드 202, [claude]): 감사된 결과는 아직 없다. 감사 STUCK은 그대로이고, 새 감사·사람 커밋·QUEUE 변경도 없다. GPU가 31분 비어 있었다. 그래서 H-A1을 사전 등록하고(커밋 9cb3fef) GPU 분석 analysis_aircraft_lateroll_proxy_1102_173859_778c 를 냈다. 17:39 UTC에 시작해 지금 실행 중이다. 질문: CUB 대리 결과 H-C2c가 Aircraft에서도 짝지은 bootstrap CI로 재현되는가. H-C2c는 roll6(lateroll)이 가린 teacher의 TCKD를 maskedkd 순위·rollout·random보다 잘 지킨다는 결과다. 조건은 Aircraft val 700장, 게이트 student 3개(ce·full·maskedkd@98 seed 1), K=29·12이다. 다음: 결과가 나오면 예측 P1~P3를 한 번만 판정해 PROPOSALS·RESULTS에 적는다.
 [claude] 결정: GPU를 비워 두지 않으려고, 새 학습 run은 내지 않고 Aircraft 대리 분석 하나만 냈다. 이유:
 (1) Aircraft lateroll run과 seed 2·3 기준선은 감사 PASS 전에는 낼 수 없다(submit.stage2_rule, QUEUE 08:50 4번). 기준선을 직접 내면 나중에 final_refs와 겹친다.
