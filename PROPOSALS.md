@@ -611,3 +611,8 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - **F3 lateroll 쪽: 차이는 불확실** (같은 seed 짝 +1.17·+0.83·−2.17, 2/3 양수지만 평균 차이 −0.06으로 평균이 높지 않음, |차이| ≤ 0.33). 예측 범위 안.
     - 종합: F3 예측(K=98에서 선택 규칙의 이득이 사라짐)이 두 선택기 모두 맞았다. F2만 틀렸다(rollout은 K=98에서도 문턱 바로 밖). 사전 등록 비교가 아닌 기술값: lateroll@98 − rollout@98 짝 +1.00·+1.83·+0.50 (평균 +1.11).
     - H-C30 종료. RESULTS 효율 곡선 절에 반영했다.
+- **H-C31 (라운드 179, 결과 전·제출 전에 등록): CUB 효율 곡선의 final 칸 — lateroll@49 final seed 1·2·3 (QUEUE 2026-11-02 08:50 3번).** `selectors/lateroll.py` 그대로(sha 69541b, sel_args {}), 코드·K 변경 없음. 주장 대상은 아직 아니다(감사 요청은 K=29만).
+  - 왜: lateroll final은 K=29에만 있다. 같은 총비용 비교(AUDIT_PROMPT 17항)에는 더 큰 K의 maskedkd final이 필요한데 CUB final K=49는 하나도 없다. `--tier final`이면 final_refs가 같은 seed의 maskedkd·rollout·tome·grid·center·random@49를 같이 낸다. K=12는 screen에서 lateroll 78.56이 CE보다 낮아 곡선의 이 부분은 screen으로 충분하다고 보고 내지 않는다. 대기 8개 규칙과 Aircraft 양보 때문에 seed 1부터 한 번에 하나씩 낸다(seed 2·3은 큐가 빈 라운드에).
+  - 근거: screen seed 0·4·5 lateroll@49 82.11, maskedkd@49 80.78, rollout@49 81.28 (RESULTS_TABLE). final K=29 lateroll 81.39 (final_lateroll_k29_s1_1101_104303_ef38 등 3개).
+  - 예측 (final seed 1·2·3이 다 나온 뒤 한 번만 판정): G1 lateroll@49 − maskedkd@49 짝 평균 > 0. G2 같은 총비용 비교: lateroll@29 (12.99 GFLOPs/img) − maskedkd@49 (16.44) 짝 평균 ≥ 0 (screen에서 +1.22). G3 lateroll@49 − lateroll@29 평균 |차이| ≤ 0.5 (screen에서 곡선이 K=29부터 평평).
+  - 기각·해석: G2가 틀리면(maskedkd@49가 더 높으면) "lateroll@29의 FLOPs 이득은 같은 비용의 maskedkd를 넘지 못한다"로 적고 FLOPs 주장을 하지 않는다. G1이 틀리면 K=49에서는 선택 규칙의 이득이 없다(K=98과 같음)로 적는다. 결과를 보고 K·seed를 더하지 않는다. Aircraft job이 시작되면 seed 2·3 제출은 미룬다.

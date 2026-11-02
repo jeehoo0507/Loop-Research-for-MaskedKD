@@ -50,6 +50,16 @@
 
 ## Teachability 정리 (CUB, 방향 종료 시 QUEUE 2026-11-01 '종료 시' 지시, [claude] 라운드 130, 기술 정리이고 감사 전)
 모두 CUB screen seed 0·4·5 평균(100 에폭) 또는 val 600장 오프라인 분석이다. 주장이 아니라 다음 결정을 위한 정리다.
+
+**결론: 멘토 질문 "이미지당 teacher 토큰은 몇 개가 필요한가"에 대한 답 (H-C22~H-C29, [claude] 라운드 179, QUEUE 2026-11-02 08:50 1번, 감사 전, screen 판정 그대로).** 이 방향(이미지별 예산)은 사람 결정으로 닫았다.
+1. **오프라인으로는 "대부분 0, 일부는 많이"로 치우친다 (H-C22).** 고정 K=29 가린 teacher는 이미지의 61~64%에서 라벨보다 full teacher에서 멀다. 그래서 같은 평균 예산이면 일부 이미지에 teacher 전체, 나머지는 teacher 없음(전부/없음)이 오차가 가장 작아 보였다.
+2. **학습으로 확인하면 전부/없음 집중은 CE 수준이다 (H-C23·H-C25·H-C28).** rand_dyn은 K=12·29·49·98에서 80.89~81.28로 예산에 거의 평평하고, 5-seed(0·4·5·6·7)로 CE보다 +0.4~0.6 (KD 이득 +1.37의 절반 이하, 차이는 불확실)이다. 고정 비율 MaskedKD가 CE보다 나쁜 K≤29에서는 그 손해를 없애 maskedkd보다 높지만, KD 이득을 되찾지는 못한다.
+3. **어떤 이미지에 몰아줄지 고르는 신호는 무작위를 넘지 못했다 (H-C23 P2, H-C24).** 엔트로피(dynkd), 해석 신호(student–teacher attribution 일치도, align_dyn), 학습 상태 신호(KD 손실 이력, kdhist_dyn) 모두 무작위 rand_dyn과 차이가 불확실하거나 낮다(평균 −0.11~−0.67, val 1~4장 수준).
+4. **고정 K 대비: K=98에서는 모든 이미지에 고정 K가 높고, 새 seed에서도 재현된다 (H-C25 R2, H-C27 C2: 5-seed 짝 5/5, 평균 −1.07).** 다만 rand_dyn은 손실의 KD 총비중이 절반이라 이 차이에는 손실 비중이 섞여 있고, 같은 비중으로 맞춘 ablation(mk_halfkd@98, H-C26)에서 덮기와 희석의 몫은 나뉘지 않았다(판정 불확실).
+5. **K≤29에서 전부/없음 > maskedkd는 새 seed에서 재현이 불확실하다 (H-C27 C1: seed 6 +1.17, seed 7 −0.17).** 5-seed 평균 +1.00(짝 4/5)이지만 seed 간 분산이 같은 크기다.
+6. **둘을 섞어도 더해지지 않는다 (H-C29).** 같은 예산을 반씩 나눈 mix_dyn은 K=29 78.61, K=98 81.28로 두 끝 중 낮은 쪽 이하다.
+7. **기준점 (H-C28):** seed 6·7에서 Full > CE는 재현됐고(+0.67·+2.17), "rand_dyn@29 ≈ CE"는 재현되지 않았다(+0.33·+1.33, 방향은 rand_dyn > CE).
+- 답(주장 범위 안): CUB·DeiT-Ti 증류에서 같은 teacher 예산을 이미지별로 몰아주는 것은, 어떤 선택 신호로도, 모든 이미지에 고정 K를 주는 것(특히 lateroll@29 82.00, maskedkd@98 82.56)보다 낫지 않았다. KD 이득은 "teacher를 받는 이미지 비율"이 아니라 "모든 이미지가 충분히 충실한 가린 teacher를 받는가"에 달려 있다. 이미지당 필요 토큰 수의 실용적 답은 고정 K 곡선이다: lateroll은 K=29(teacher 토큰 15%)부터 허용 오차 안이고(screen 82.00, final 81.39), maskedkd는 K=98에서야 안이다. 모두 screen seed 3~5개이고 감사 전이다.
 - **고정 K 곡선 (평균 정확도, 같은 K면 teacher 비용이 같다).** CE 80.83, Full KD 82.17 (KD 이득 +1.33, 허용 오차 문턱 81.50). K=29: maskedkd 79.67, center 79.61, teacher_topk 80.00, rollout 80.94, trustfilt 81.33, lateroll 82.00. K=49: center 80.44, maskedkd 80.78, rollout 81.28, lateroll 82.11. K=98: maskedkd 82.56. K=12 (라운드 156에 seed 4·5 보충): maskedkd 76.72, rollout 78.11 (78.33·77.67·78.33), lateroll 78.56 (78.33·78.50·78.83) — 고정 K=12는 셋 다 CE보다 2.3~4.1 낮고, 같은 예산보다 싼 rand_dyn@12(80.89)는 lateroll@12보다 짝 +1.17·+2.83·+3.00 높다(기술값). K≤49에서 maskedkd·center는 CE보다 낮고, 허용 오차 안에 드는 것은 lateroll뿐이다(K=20 seed 0 하나도 82.00).
 - **teacher가 중요하게 보는 것 ≠ student가 배울 수 있는 것.** teacher 자신의 rollout 상위 K(teacher_topk@29, 80.00)는 student 기반 rollout(80.94)·lateroll(82.00)보다 평균이 낮다. 오프라인으로도 teacher 지도로 고르기·거르기가 student lateroll보다 가린 teacher의 TCKD를 더 잃는다(H-C14, analysis_cub_teacher_filter_1031_202037_032d). TrustMask식 teacher 거르기(trustfilt@29 81.33)는 lateroll(82.00)을 넘지 못했다(재현 실패).
 - **"어느 토큰"의 student 신호는 토큰 단위 회복을 설명하지 못한다** (H-C5~7, |ρ| < 0.1). 이득은 rollout 계열이 MaskedKD와 겹치지 않게 고르는 토큰에서 오지만(H-C18), 그 토큰의 어떤 성질 때문인지는 찾지 못했다(H-C13·H-C15·H-C19 기각).
