@@ -1,0 +1,12 @@
+{
+ "id": "analysis_lateroll_proxy_k29students_1102_213546_aa9a",
+ "name": "lateroll_proxy_k29students",
+ "source_sha": "aa9a0c23e128267460880e28f1051015a5fd4abff7625c562e8d7bcb3a29a5bb",
+ "status": "done",
+ "meta": {
+  "question": "on CUB and FGVC-Aircraft final maskedkd@29 students of seeds 1, 2, 3, at K=29, does roll6 (lateroll) give lower masked-teacher KL / TCKD than roll11 (maskedkd ranking), roll0 (full rollout) and random, with paired bootstrap CIs?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD TCKD), attention rollout start-block variants, paired bootstrap over val images",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only evaluation)"
+ },
+ "seconds": 7.3
+}
