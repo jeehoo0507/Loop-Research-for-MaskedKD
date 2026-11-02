@@ -669,3 +669,11 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·student·점수·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
   - 제출 (라운드 213, 등록 커밋 f0da985 뒤): analysis_aircraft_maskedkd_fidelity_k_1102_204031_9f0e
   - 결과 (라운드 213, 한 번만): **F1 참, F2 참.** Aircraft maskedkd98_s1의 maskedkd@98은 KL 0.1818 (CUB 0.0706), top-1 일치 88.00 (CUB 94.83)이다. @49는 0.8275 / 70.29 (CUB 0.4038 / 82.83), @25는 2.0914 / 42.29 (CUB 1.7461 / 51.17), @12는 3.5803 / 17.43 (CUB 3.8017 / 17.17)이다. @29는 1.765 / 49.14다. 같은 student의 rollout@98은 0.0613 / 93.14다. teacher val 77.43, p_true 0.7483이다. 등록 문구대로 이렇게 적는다: "Aircraft에서 같은 K의 가린 teacher가 soft label을 덜 지킨다(K ≥ 25; K=12는 차이 없음)." MaskedKD@98 − Full의 원인이라고 쓰지 않는다. RESULTS "분석에서 배운 것" 라운드 213 참고.
+- **H-A7 (라운드 214, 결과 전·제출 전에 등록): H-A6의 충실도 차이가 teacher 확신 차이만으로 설명되는가 — full teacher 최대확률 구간별 비교 (GPU 분석 2개: `--dataset cub`, `--dataset aircraft`, 학습 run 없음).** analysis/fidelity_conf_matched.py. 아무것도 고르거나 조정하지 않는다. selector·lateroll·판정 규칙(QUEUE 08:50 4번)을 바꾸지 않는다. 주장 대상 아님.
+  - 왜: H-A6 등록 때 미리 적은 단서("Aircraft teacher가 덜 확신해서 KL 차이 일부는 soft label이 퍼진 탓일 수 있다")를 따로 확인한다. H-A6의 결과로 새 run·K·student를 고르는 것이 아니라, 등록 전에 적어 둔 혼입 요인을 같은 student·같은 점수로 나눠 보는 것이다. GPU가 40분 비어 있었다.
+  - 방법: 각 데이터셋의 final seed 1 maskedkd@98 student, val 전체(CUB 600, Aircraft 700), 점수 maskedkd(마지막 블록 CLS attention)·rollout, K = 98·49. 이미지를 full teacher 최대확률 고정 구간 [0, 0.5), [0.5, 0.8), [0.8, 0.95), [0.95, 1]에 넣고 구간별 KL·top-1 일치의 평균과 SE를 쓴다. 구간은 결과 전에 정했다.
+  - 이미 아는 것 (등록 전): H-A6·H-C1 전체 평균만 (maskedkd@98 KL Aircraft 0.1818 / CUB 0.0706, @49 0.8275 / 0.4038). 구간별 값과 두 데이터셋의 확신 분포는 모른다.
+  - 일관성 확인: CUB 실행의 전체 maskedkd@98 KL이 H-C1 0.0706과 ±0.002 안이어야 한다(Aircraft는 H-A6 0.1818). 다르면 코드 경로 차이로 보고 판정하지 않는다.
+  - 예측 (한 번만, maskedkd@98 KL): C1 두 데이터셋 모두 n ≥ 30인 구간마다 Aircraft 평균 KL > CUB — 확신 중간. C2 Aircraft 구간 평균을 CUB 구간 비율로 가중한 값 − CUB 전체 평균 > 0, 정규 근사 95% CI(구간 SE로 계산)가 0을 포함하지 않음 — 확신 중간.
+  - 해석: C1·C2 참 → "teacher 확신 분포 차이만으로는 Aircraft의 낮은 충실도를 설명하지 못한다(seed 1 student)". C2 거짓 → "H-A6 차이는 teacher 확신 분포 차이와 구별되지 않는다". 어느 쪽이든 MaskedKD@98 − Full 정확도 차이의 원인이라고 쓰지 않는다. K=49·rollout·top-1 일치는 보고만 한다.
+  - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 구간·K·student·점수·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
