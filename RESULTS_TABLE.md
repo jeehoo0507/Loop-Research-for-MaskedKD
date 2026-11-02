@@ -127,7 +127,7 @@ Total agent screen configs: 13
 | screen | rollout |  | 20 | 20.0 | 0 | 79.83 ± 0.00 | - | 11.45 | 3.81 | 0.17 | 353 | screen_rollout_k20_s0_1101_100255_f59b |
 | screen | rollout |  | 29 | 29.0 | 0,4,5 | 80.94 ± 0.35 | - | 12.99 | 5.36 | 0.17 | 931 | screen_rollout_k29_s4_1031_183515_ff99 screen_rollout_k29_s0_1031_130150_5726 screen_rollout_k29_s5_1031_183519_47eb |
 | screen | rollout |  | 49 | 49.0 | 0,4,5 | 81.28 ± 0.35 | - | 16.45 | 8.82 | 0.17 | 878 | screen_rollout_k49_s4_1031_172246_23ee screen_rollout_k49_s0_1031_130150_674d screen_rollout_k49_s5_1031_172253_99b6 |
-| screen | rollout |  | 98 | 98.0 | 0 | 81.17 ± 0.00 | - | 25.04 | 17.41 | 0.17 | 288 | screen_rollout_k98_s0_1102_020122_4467 |
+| screen | rollout |  | 98 | 98.0 | 0,4,5 | 81.39 ± 0.54 | - | 25.04 | 17.41 | 0.17 | 259 | screen_rollout_k98_s4_1102_020129_44d7 screen_rollout_k98_s5_1102_020133_2625 screen_rollout_k98_s0_1102_020122_4467 |
 | screen | sinkfree@60bc72 |  | 12 | 12.0 | 0 | 77.50 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 1240 | screen_sinkfree_k12_s0_1031_180704_f0b3 |
 | screen | sinkfree@60bc72 |  | 29 | 29.0 | 0 | 78.83 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 1161 | screen_sinkfree_k29_s0_1031_180708_1cb6 |
 | screen | sinkfree@60bc72 |  | 49 | 49.0 | 0 | 80.83 ± 0.00 | - | 16.44 | 8.82 | 0.00 | 1076 | screen_sinkfree_k49_s0_1031_180713_dba8 |
