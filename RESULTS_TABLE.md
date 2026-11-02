@@ -110,6 +110,7 @@ Total agent screen configs: 14
 | final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 80.44 ± 1.02 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 final_rollout_k29_s3_1101_140937_8573 |
 | final | rollout |  | 49 | 49.0 | 1,2,3 | 82.11 ± 1.13 | - | 16.45 | 8.82 | 0.17 | 230 | final_rollout_k49_s1_1102_034050_c1e4 final_rollout_k49_s2_1102_043001_2aed final_rollout_k49_s3_1102_153530_4395 |
+| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 80.00 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 296 | final_tome_k12_s1_1102_225104_3037 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 79.78 ± 1.02 | - | 12.00 | 4.36 | 0.00 | 292 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s3_1101_140937_cdbb final_tome_k29_s2_1101_125958_ab06 |
 | final | tome |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.83 | - | 14.50 | 6.86 | 0.00 | 272 | final_tome_k49_s2_1102_043001_61ab final_tome_k49_s3_1102_153530_f477 final_tome_k49_s1_1102_034050_9b6d |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
