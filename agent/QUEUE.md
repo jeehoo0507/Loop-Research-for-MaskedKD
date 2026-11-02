@@ -87,3 +87,25 @@ H-C22의 실패 모양이 결과다: 고정 K=29에서 가린 teacher는 이미�
 - P2가 틀려도(무작위 = 불확실성) P1이 맞으면 결과다: 이득은 집중 자체에서 오고, 선택 신호는 부차적이다.
 선행연구 경계: Dynamic KD(EMNLP 2021)가 NLP에서 샘플 단위 teacher 선택을 했다. 여기서의 차이는 ViT supervised KD에서 같은 teacher FLOPs의 고정 비율 토큰 마스킹(MaskedKD)과 직접 비교한다는 것, 그리고 무작위 집중까지 분리해 본다는 것이다.
 lateroll@29 final seed 2·3은 그대로 진행한다.
+
+## 2026-11-02 08:50 KST — 사람 결정: 이미지별 예산 탐색 종료 → lateroll 정리 + Aircraft 이전 검증
+라운드 159의 판단 요청에 대한 답이다. 이미지별 예산(전부/없음 집중) 방향은 여기서 닫는다. 새 선택기 탐색도 하지 않는다.
+
+### 하네스 변경 (사람, 이 커밋)
+- `config.STAGE2 = "aircraft"` (FGVC-Aircraft 2013b, 100 variants). 분할: 공식 test 3333, 공식 trainval을 클래스별 90/10 (CUB와 같은 규칙) → train 5967 / val 700. 아래 20 px 저작권 띠는 잘라낸다. Waterbirds run은 그대로 유효하고 RESULTS_TABLE의 "Earlier check" 절에 남는다.
+- **설정은 루프가 사람 없이 한다** (`agent/loop.sh` → `agent/stage2_boot.sh`): 데이터 다운로드·준비 → teacher 미세조정 (DeiT-B, CUB와 같은 레시피, 약 1~2 h; 그동안 루프가 잠깐 멈췄다 relock 뒤 다시 켜진다) → 게이트 (final seed 1, Full KD ≥ CE + 1.0) → 기준선 (pick-keeps 예산). 학생 lr은 기본값 1e-4 (CUB 스윕이 고른 값과 같다). 진행 상황은 `agent/BOOT_STATUS.md`의 `[stage2]` 줄.
+- `STAGE2_MAX_RUNNING` 1 → 3 (CUB 탐색이 끝나 Aircraft가 주 작업).
+- 너는 이 설정 과정을 건드리지 않는다. 막히면 (`STOPPED` 줄) PROGRESS에 적고 사람을 기다린다.
+
+### 할 일 (순서대로)
+1. **Teachability 정리 (지금, GPU 불필요):** H-C22~H-C28을 RESULTS의 한 절로 정리한다. 결론은 판정 그대로 쓴다: 전부/없음 집중은 CE 수준, 선택 신호는 무작위를 넘지 못함, K=98에서 고정 K 우위 재현, K≤29 우위는 재현 불확실, H-C26 손실 비중 혼입 불확실. H-C28(CE·Full seed 6·7)이 끝나면 그 판정도 넣는다. 멘토 질문 "이미지당 토큰 몇 개"에 대한 답으로 읽히게 쓰되, 주장 범위를 넘지 않는다.
+2. **lateroll 감사 요청 (지금):** stage 2에 agent 방법을 올리려면 AUDIT.md에 PASS가 필요하다 (`submit.stage2_rule`). lateroll@29 CUB final seed 1·2·3 (81.39 vs maskedkd 80.22, rollout 80.44, Full 81.72)을 `agent/AUDIT_REQUEST.md`에 AGENT_PROMPT 9번 형식으로 적는다. 감사관이 NEEDS-MORE를 주면 요구를 채운다.
+3. **CUB Efficiency 곡선 마무리:** lateroll final이 K=29에만 있다. 곡선(평균 teacher GFLOPs 대비 정확도)에 필요한 최소한의 lateroll final (예: K=12·49, seed 1·2·3, `--tier final`이면 final_refs가 같은 K의 기준선을 같이 낸다)을 낼지 네가 정한다. 이미 있는 run은 다시 내지 않는다. Aircraft job이 시작되면 GPU를 그쪽에 양보한다 (stage 2 우선순위는 하네스가 정한다).
+4. **Aircraft 이전 검증 (게이트 통과 + 감사 PASS 뒤):** lateroll을 **CUB에서 정한 그대로** (코드·sel_args·K 변경 없음 → `stage2_untouched`) Aircraft final seed 1·2·3에 낸다: `python -m harness.submit --method lateroll --keep 29 --seed <s> --tier final --dataset aircraft` (final_refs가 maskedkd·rollout·tome·full을 같은 seed로 낸다). 3번에서 다른 K를 CUB에서 확정했으면 그 K도 같은 방식으로.
+   - **판정 (미리 적음, 결과 보고 바꾸지 않는다):** Aircraft에서 lateroll − maskedkd, lateroll − rollout의 seed 3개 평균이 둘 다 0보다 크고 짝지은 95% CI가 0을 포함하지 않으면 "CUB에서 고른 lateroll이 다른 데이터셋으로 이전된다". 평균은 양수지만 CI가 0을 포함하면 "경향은 같으나 불확실". 평균이 0 이하면 "CUB 특화"로 기록하고 주장 범위를 CUB로 줄인다. 셋 다 보고할 수 있는 결과다.
+   - Aircraft 결과를 본 뒤 lateroll을 고치는 것(`stage2_tuned`)은 판정이 끝난 뒤에만, 별도 항목으로.
+5. **게이트가 실패하면** (Aircraft에서 KD가 CE를 +1.0 넘지 못함): 그 자체를 기록하고 (KD 이득이 없는 데이터셋에서는 토큰 선택을 판정할 수 없다) 사람을 기다린다. 다른 데이터셋을 스스로 고르지 않는다.
+
+### 금지
+- 데이터셋별 상수나 데이터셋을 보고 바꾸는 분기를 selector에 넣지 않는다 (사람이 이 연구에서 가장 경계하는 것: "그 데이터셋에서만 통하는 마스킹").
+- Aircraft val로 lateroll의 하이퍼파라미터를 고르지 않는다.

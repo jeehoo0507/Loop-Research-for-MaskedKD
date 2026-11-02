@@ -304,6 +304,10 @@ def main():
     body += stage_section(load_runs(C.STAGE1), C.STAGE1, "screen")
     body += [f"# Stage 2: {C.STAGE2} (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)", ""]
     body += stage_section(load_runs(C.STAGE2), C.STAGE2, "final")
+    for ds in C.DATASETS:   # a former check dataset (Waterbirds until 2026-11-02): its runs stay valid and visible
+        if ds not in (C.STAGE1, C.STAGE2) and load_runs(ds):
+            body += [f"# Earlier check: {ds} (no new runs; kept for the record)", ""]
+            body += stage_section(load_runs(ds), ds, "final")
     (C.ROOT / "RESULTS_TABLE.md").write_text("\n".join(body) + "\n")
     print("\n".join(body))
 

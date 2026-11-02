@@ -22,23 +22,30 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 # student, 100 epochs; CUB: KD - CE = +1.62 %p over 3 seeds), and on Waterbirds MaskedKD at 15 % of the tokens cost
 # 18.5 %p of worst-group accuracy against Full KD: token choice matters there. Recipe = aim-lab-test-5
 # docs/maskedkd_settings.md section 6, except that augmentation runs on the GPU from stored 256x256 images.
-DATASETS = ("waterbirds", "cub")
+DATASETS = ("waterbirds", "cub", "aircraft")
 # 2026-10-31: the search moved to CUB. The aim is FLOPs-efficient KD, not robustness: Waterbirds was picked only because
 # KD > CE there, but with 2 classes the teacher's soft labels carry almost no class-relation information (the thing KD
 # transfers), so a token-selection result there says little about MaskedKD's multi-class setting. CUB (200 classes)
 # has the larger, verified KD gain (aim-lab-test-5 +1.62 %p over 3 seeds; +1.83 here). Waterbirds is the check.
 STAGE1 = "cub"               # search
-STAGE2 = "waterbirds"        # check on a second dataset (fixed methods, fresh seeds)
-NUM_CLASSES = {"waterbirds": 2, "cub": 200}
-NUM_GROUPS = {"waterbirds": 4, "cub": 0}   # Waterbirds group = 2*y + place; evaluation only, never used in training
+STAGE2 = "aircraft"          # check on a second dataset (fixed methods, fresh seeds)
+# 2026-11-02: the check moved from Waterbirds to FGVC-Aircraft. Waterbirds (2 classes, spurious background) checks
+# robustness, not whether a token budget chosen on CUB transfers to another fine-grained, many-class task. Its runs stay
+# valid and stay in RESULTS_TABLE ("earlier check").
+NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100}
+NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0}   # Waterbirds group = 2*y + place; evaluation only, never used in training
 DATA_URLS = {
     "waterbirds": ["https://downloads.cs.stanford.edu/nlp/data/dro/waterbird_complete95_forest2water2.tar.gz",
                    "https://nlp.stanford.edu/data/dro/waterbird_complete95_forest2water2.tar.gz"],
     "cub": ["https://data.caltech.edu/records/65de6-vp158/files/CUB_200_2011.tgz?download=1"],
+    "aircraft": ["https://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz"],
 }
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
-                  "cub": {"train": 5394, "val": 600, "test": 5794}}   # CUB val = 10 % per class of official train
+                  "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
+                  "aircraft": {"train": 5967, "val": 700, "test": 3333}}  # Aircraft (100 variants): val = 10 % per
+                  # class of official trainval (the CUB rule), official test
 CUB_VAL_FRACTION, CUB_VAL_SEED = 0.10, 0     # same split rule as aim-lab-test-5 (teachers are interchangeable)
+TRIM_BOTTOM = {"aircraft": 20}               # Aircraft images carry a 20-px copyright banner (removed, as is standard)
 STAGE0_OUTPUTS = Path(os.environ.get("STAGE0_OUTPUTS", Path.home() / "stage0" / "outputs"))  # aim-lab-test-5 results
 STAGE0_DATA = Path(os.environ.get("STAGE0_DATA", Path.home() / "stage0" / "data"))
 
@@ -83,13 +90,15 @@ def student_lr(dataset):
     return STUDENT_LR_DEFAULT
 
 
-STAGE2_MAX_RUNNING = 1     # stage-2 jobs share the GPU with the search: at most this many at once
+STAGE2_MAX_RUNNING = 3     # stage-2 jobs share the GPU with the search: at most this many at once (was 1 while the
+                           # CUB search filled the GPU; 2026-11-02 the CUB search is done and Aircraft is the main work)
 STAGE2_PRIORITY = -10      # and they start only when nothing else is waiting
 
 # Epochs per dataset and tier: 100 everywhere (the aim-lab-test-5 recipe; a Waterbirds run takes minutes).
 TIER_EPOCHS = {
     "cub": {"smoke": 1, "screen": 100, "final": 100},
-    "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # stage 2: only harness jobs and audited methods
+    "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # earlier check
+    "aircraft": {"smoke": 1, "screen": 100, "final": 100},     # stage 2: only harness jobs and audited methods
 }
 TIER_MAX_STEPS = {"smoke": 30}   # smoke = a few minutes: catches CUDA/shape errors, nothing else
 SMOKE_VAL_LIMIT = 500

@@ -1,12 +1,14 @@
-"""Download Waterbirds and CUB-200-2011 and store them as uint8 arrays (bootstrap runs this once).
+"""Download Waterbirds, CUB-200-2011 and FGVC-Aircraft and store them as uint8 arrays (bootstrap runs this once).
 
-    python -m harness.prepare_data [--datasets waterbirds cub] [--workers 8]
+    python -m harness.prepare_data [--datasets waterbirds cub aircraft] [--workers 8]
 
 Sources: the official archives (config.DATA_URLS). If aim-lab-test-5 already extracted them under $STAGE0_DATA
 (~/stage0/data/<dataset>/...), those folders are used and nothing is downloaded.
 Splits (same as aim-lab-test-5, so its teachers can be reused):
   Waterbirds: metadata.csv split column (train 4795 / val 1199 / test 5794); group = 2*y + place.
   CUB: official test 5794; official train split per class 90 / 10 into train 5394 / val 600 (random.Random(0)).
+  Aircraft (2013b, 100 variants): official test 3333; official trainval split per class 90 / 10 (the CUB rule) into
+  train 5967 / val 700. The 20-px copyright banner at the bottom of every image is cut off first.
 Stored per dataset in $DATA_ROOT/<dataset>/: {split}_x.u8 (memmap uint8 [N,3,H,W]), {split}_y.npy, {split}_g.npy,
 meta.json. Train images: Resize(256, bicubic) -> CenterCrop(256) (RandomResizedCrop to 224 runs on the GPU).
 Val / test: Resize(256, bicubic) -> CenterCrop(224), exactly the evaluation view.
@@ -25,16 +27,20 @@ import numpy as np
 
 from . import config as C
 
-FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011"}
-ARCHIVE = {"waterbirds": "waterbird_complete95_forest2water2.tar.gz", "cub": "CUB_200_2011.tgz"}
+FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011", "aircraft": "fgvc-aircraft-2013b"}
+ARCHIVE = {"waterbirds": "waterbird_complete95_forest2water2.tar.gz", "cub": "CUB_200_2011.tgz",
+           "aircraft": "fgvc-aircraft-2013b.tar.gz"}
 
 
 def _load(args):
-    path, crop = args
+    path, crop, trim = args
     from PIL import Image
     with Image.open(path) as im:
         im = im.convert("RGB")
         w, h = im.size
+        if trim:
+            im = im.crop((0, 0, w, h - trim))
+            h -= trim
         s = C.RESIZE / min(w, h)
         im = im.resize((max(C.RESIZE, round(w * s)), max(C.RESIZE, round(h * s))), Image.BICUBIC)
         w, h = im.size
@@ -42,10 +48,10 @@ def _load(args):
         return np.asarray(im.crop((l, t, l + crop, t + crop)), dtype=np.uint8).transpose(2, 0, 1)
 
 
-def _write(out, split, items, crop, workers):
+def _write(out, split, items, crop, workers, trim=0):
     arr = np.memmap(out / f"{split}_x.u8", dtype=np.uint8, mode="w+", shape=(len(items), 3, crop, crop))
     with Pool(workers) as pool:
-        for i, img in enumerate(pool.imap(_load, [(p, crop) for p, _, _ in items], chunksize=32)):
+        for i, img in enumerate(pool.imap(_load, [(p, crop, trim) for p, _, _ in items], chunksize=32)):
             arr[i] = img
     arr.flush()
     np.save(out / f"{split}_y.npy", np.array([y for _, y, _ in items], dtype=np.int64))
@@ -102,20 +108,52 @@ def splits_cub(root):
             "test": [item(i) for i in sorted(images) if not is_train[i]]}
 
 
+def _split_per_class(ids, label):
+    """90 / 10 per class with random.Random(CUB_VAL_SEED): the CUB rule. Returns (train ids, val ids)."""
+    by_class = defaultdict(list)
+    for i in ids:
+        by_class[label[i]].append(i)
+    rng, val = random.Random(C.CUB_VAL_SEED), []
+    for c in sorted(by_class):
+        cs = sorted(by_class[c])
+        val += rng.sample(cs, max(1, round(C.CUB_VAL_FRACTION * len(cs))))
+    vs = set(val)
+    return [i for i in ids if i not in vs], sorted(val)
+
+
+def splits_aircraft(root):
+    d = root / "data"
+    variants = [v.strip() for v in open(d / "variants.txt") if v.strip()]
+    cls = {v: k for k, v in enumerate(variants)}
+
+    def read(split):   # lines "<image id> <variant name, may contain spaces>"
+        return [tuple(line.rstrip("\n").split(" ", 1)) for line in open(d / f"images_variant_{split}.txt") if line.strip()]
+    trainval, test = read("trainval"), read("test")
+    label = {i: cls[v] for i, v in trainval + test}
+    train, val = _split_per_class(sorted(i for i, _ in trainval), label)
+    item = lambda i: (str(d / "images" / f"{i}.jpg"), label[i], -1)   # noqa: E731
+    return {"train": [item(i) for i in train], "val": [item(i) for i in val], "test": [item(i) for i, _ in test]}
+
+
+SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft}
+
+
 def prepare(dataset, workers):
     out = C.DATA_ROOT / dataset
     if (out / "meta.json").exists():
         print(f"{dataset}: already prepared ({out})")
         return
     root = _source(dataset)
-    sp = (splits_waterbirds if dataset == "waterbirds" else splits_cub)(root)
+    sp = SPLITS[dataset](root)
     sizes = {k: len(v) for k, v in sp.items()}
     if sizes != C.EXPECTED_SIZES[dataset]:
         raise SystemExit(f"{dataset} split sizes {sizes} != expected {C.EXPECTED_SIZES[dataset]}")
     out.mkdir(parents=True, exist_ok=True)
-    shapes = {s: _write(out, s, sp[s], C.RESIZE if s == "train" else C.IMG_SIZE, workers) for s in ("train", "val", "test")}
+    trim = C.TRIM_BOTTOM.get(dataset, 0)
+    shapes = {s: _write(out, s, sp[s], C.RESIZE if s == "train" else C.IMG_SIZE, workers, trim)
+              for s in ("train", "val", "test")}
     (out / "meta.json").write_text(json.dumps({"dataset": dataset, "source": str(root), "shapes": shapes,
-                                               "sizes": sizes}, indent=1))
+                                               "sizes": sizes, "trim_bottom": trim}, indent=1))
     print(f"{dataset}: {sizes} -> {out}")
 
 

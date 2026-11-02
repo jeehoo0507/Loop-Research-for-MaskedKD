@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
-# Stage 2 (config.STAGE2, the check dataset), started in the background by agent/bootstrap.sh. Safe to re-run.
-#   teacher (aim-lab-test-5's or fine-tune) + student lr -> relock (loop paused briefly)
+# Stage 2 (config.STAGE2, the check dataset), started in the background by agent/bootstrap.sh, or by agent/loop.sh when
+# config.STAGE2 names a dataset this script has not finished yet (2026-11-02: Waterbirds -> Aircraft). Safe to re-run.
+#   data -> teacher (aim-lab-test-5's or fine-tune) + student lr -> relock (loop paused briefly)
 #   -> stage-2 gate (final tier, one GPU slot) -> baselines at the budgets stage 1 found informative
-# The data were prepared by bootstrap (harness.prepare_data does both datasets).
 set -u
 cd "$(dirname "$0")/.."
 PY=.venv/bin/python
 S=agent/.state; LOG=agent/logs/stage2_boot.log
 say()  { echo "[stage2 $(date '+%m-%d %H:%M')] $*" | tee -a "$LOG"; }
 status() { echo "- $(date '+%Y-%m-%d %H:%M') [stage2] $*" >> agent/BOOT_STATUS.md; say "$*"; }
-fail() { status "STOPPED: $*"; exit 1; }
 S2=$($PY -c 'from harness import config as C; print(C.STAGE2)')
+# markers per dataset: agent/loop.sh starts this script again only while neither exists
+fail() { status "STOPPED: $*"; touch "$S/stage2_failed_$S2"; exit 1; }
+G2="$S/gate2_ids_$S2"; B2="$S/stage2_baseline_ids_$S2"
+$PY -m harness.prepare_data --datasets "$S2" >>"$LOG" 2>&1 || fail "$S2 data preparation failed (see $LOG)"
 TJ=$($PY -c "from harness.train import teacher_paths; print(teacher_paths('$S2')[1])")
 
 if [ ! -f "$TJ" ]; then
@@ -28,9 +31,9 @@ if [ ! -f "$TJ" ]; then
 fi
 
 if ! $PY -m harness.report --gate --dataset "$S2" >/dev/null 2>&1; then
-  [ -s "$S/gate2_ids" ] || $PY -m harness.submit --gate --dataset "$S2" > "$S/gate2_ids" || fail "gate submit failed"
+  [ -s "$G2" ] || $PY -m harness.submit --gate --dataset "$S2" > "$G2" || fail "gate submit failed"
   status "$S2 gate submitted (one GPU slot)"
-  $PY -m harness.submit --wait $(cat "$S/gate2_ids") | tee -a "$LOG" || fail "a $S2 gate run failed"
+  $PY -m harness.submit --wait $(cat "$G2") | tee -a "$LOG" || fail "a $S2 gate run failed"
 fi
 # Same rule as stage 1 (agent/bootstrap.sh): only KD not beating CE stops; MaskedKD@98 below Full is a finding.
 if msg=$($PY -m harness.report --gate --dataset "$S2"); then
@@ -41,10 +44,11 @@ else
   status "$S2 gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: $msg"
 fi
 
-if [ ! -s "$S/stage2_baseline_ids" ]; then
+if [ ! -s "$B2" ]; then
   [ -s "$S/stage1_baseline_ids" ] && $PY -m harness.submit --wait $(cat "$S/stage1_baseline_ids") >/dev/null
   keeps=$($PY -m harness.boot pick-keeps)
-  $PY -m harness.submit --baselines --dataset "$S2" --keeps "$keeps" > "$S/stage2_baseline_ids" 2>>"$LOG" ||
-    { rm -f "$S/stage2_baseline_ids"; fail "baselines submit failed: $(tail -1 "$LOG")"; }
-  status "$S2 baselines queued at K=$keeps ($(wc -l < "$S/stage2_baseline_ids") jobs)"
+  $PY -m harness.submit --baselines --dataset "$S2" --keeps "$keeps" > "$B2" 2>>"$LOG" ||
+    { rm -f "$B2"; fail "baselines submit failed: $(tail -1 "$LOG")"; }
+  status "$S2 baselines queued at K=$keeps ($(wc -l < "$B2") jobs)"
 fi
+touch "$S/stage2_done_$S2"

@@ -154,6 +154,12 @@ while true; do
   fi
   # the researcher may not start the scheduler (AGENT_PROMPT 4); the loop brings it back if its session is gone
   tmux has-session -t sched 2>/dev/null || { echo "[loop] scheduler session gone, restarting it" | tee -a agent/logs/loop.log; bash agent/start.sh sched >/dev/null 2>&1; }
+  # a new check dataset (config.STAGE2) is set up without a human: data, teacher, relock, gate, baselines
+  S2="$($PY -c 'from harness import config as C; print(C.STAGE2)' 2>/dev/null)"
+  if [ -n "$S2" ] && [ ! -f "$S/stage2_done_$S2" ] && [ ! -f "$S/stage2_failed_$S2" ] && ! tmux has-session -t stage2 2>/dev/null; then
+    echo "[loop] stage 2 ($S2) not set up yet; starting agent/stage2_boot.sh" | tee -a agent/logs/loop.log
+    tmux new-session -d -s stage2 "bash agent/stage2_boot.sh"
+  fi
   # a pulled loop.sh takes effect at once (bash keeps running the file it opened; 2026-11-01 END_DATE change)
   if [ "$(stat -c %Y agent/loop.sh 2>/dev/null)" != "$LOOP_MTIME" ]; then
     echo "[loop] agent/loop.sh changed, restarting on the new version" | tee -a agent/logs/loop.log; exec bash agent/loop.sh

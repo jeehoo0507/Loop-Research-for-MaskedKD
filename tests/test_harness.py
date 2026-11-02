@@ -786,3 +786,27 @@ def test_scheduler_reaps_jobs_it_lost_the_popen_of():
     q = subprocess.Popen(["sleep", "5"])
     assert job_rc(q.pid) is None
     q.kill(); q.wait()
+
+
+def test_aircraft_split_and_banner_trim(tmp_path):
+    """Aircraft: 90/10 per class of trainval (the CUB rule), variant names with spaces, 20-px banner cut off."""
+    from PIL import Image
+    from harness import prepare_data as P
+    d = tmp_path / "fgvc-aircraft-2013b" / "data"
+    (d / "images").mkdir(parents=True)
+    variants = ["707-320", "Falcon 2000"]
+    (d / "variants.txt").write_text("\n".join(variants) + "\n")
+    tv = [(f"{i:07d}", variants[i % 2]) for i in range(40)]
+    te = [(f"{100 + i:07d}", variants[i % 2]) for i in range(6)]
+    (d / "images_variant_trainval.txt").write_text("".join(f"{i} {v}\n" for i, v in tv))
+    (d / "images_variant_test.txt").write_text("".join(f"{i} {v}\n" for i, v in te))
+    sp = P.splits_aircraft(tmp_path / "fgvc-aircraft-2013b")
+    assert (len(sp["train"]), len(sp["val"]), len(sp["test"])) == (36, 4, 6)
+    assert {y for _, y, _ in sp["val"]} == {0, 1} and not {p for p, _, _ in sp["train"]} & {p for p, _, _ in sp["val"]}
+    assert sp["test"][1][1] == 1 and sp["test"][1][0].endswith("0000101.jpg")
+    im = Image.new("RGB", (300, 220), (0, 0, 255))
+    im.paste((255, 0, 0), (0, 200, 300, 220))     # the banner: bottom 20 rows
+    im.save(d / "images" / "x.jpg")
+    out = P._load((str(d / "images" / "x.jpg"), 224, C.TRIM_BOTTOM["aircraft"]))
+    assert out.shape == (3, 224, 224) and out[0].max() < 60   # no red from the banner left
+    assert C.EXPECTED_SIZES["aircraft"] == {"train": 5967, "val": 700, "test": 3333}
