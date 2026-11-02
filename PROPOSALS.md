@@ -659,3 +659,4 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 이미 아는 것 (등록 전, RESULTS_TABLE): Aircraft maskedkd@29 65.29, @98 67.43, Full 68.05, CE 66.43 (모두 seed 1·2·3). CUB final maskedkd@49 81.67 ≈ Full 81.72.
   - 예측 (seed 1·2·3이 다 나온 뒤 한 번만, 기술값): M1 maskedkd@49 3-seed 평균이 maskedkd@29(65.29)와 @98(67.43) 사이 — 확신 중간. M2 maskedkd@49 − CE 짝 평균 ≥ 0 — 확신 낮음(K=29는 −1.15).
   - 규칙: 결과와 무관하게 RESULTS 게이트 절에 적는다. 결과를 보고 K·seed·기준선을 더하지 않는다(rollout·tome·random@49는 내지 않는다). Aircraft lateroll 판정 규칙은 바꾸지 않는다.
+  - 제출 (라운드 210, 등록 커밋 bc126e1 뒤): aircraft_final_maskedkd_k49_s1_1102_193509_429e , aircraft_final_maskedkd_k49_s2_1102_193516_9d71 , aircraft_final_maskedkd_k49_s3_1102_193521_573d
