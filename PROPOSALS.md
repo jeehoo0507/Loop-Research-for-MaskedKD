@@ -679,3 +679,11 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 구간·K·student·점수·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
   - 제출 (라운드 214, 등록 커밋 c002e69 뒤): analysis_fidelity_conf_matched_1102_204859_bc28 (aircraft), analysis_fidelity_conf_matched_1102_204903_bc28 (cub)
   - 결과 (라운드 214, 한 번만): 일관성 확인 통과 (CUB 0.0706, Aircraft 0.1818). **C1 참**: 네 구간 모두 n ≥ 30이고 Aircraft KL이 CUB보다 높다. 값은 0.648/0.272, 0.537/0.195, 0.272/0.154, 0.045/0.008이다. **C2 참**: CUB 구간 비율로 가중한 Aircraft KL은 0.1815이고, CUB와의 차이는 +0.111 [+0.080, +0.142]다. 두 teacher의 최대확률 분포는 거의 같다(평균 0.891 / 0.894, 구간 비율 차이 ≤ 1.1%p). 읽기: "teacher 확신 분포 차이만으로는 Aircraft의 낮은 충실도를 설명하지 못한다(seed 1 student)." RESULTS "분석에서 배운 것" 라운드 214 참고.
+- **H-A8 (라운드 215, 결과 전·제출 전에 등록): MaskedKD 점수(student 마지막 블록 CLS attention)가 Aircraft에서 더 퍼져 있어 top-K 밖에 남는 attention 질량이 큰가, 그리고 그 남은 질량이 이미지별 충실도 손실(KL)을 따라가는가 (GPU 분석 2개: `--dataset cub`, `--dataset aircraft`, 학습 run 없음).** analysis/attn_mass_fidelity.py. 아무것도 고르거나 조정하지 않는다. selector·lateroll·판정 규칙(QUEUE 08:50 4번)을 바꾸지 않는다. 주장 대상 아님.
+  - 왜: H-A6(같은 K에서 Aircraft 충실도가 낮음)과 H-A7(teacher 확신으로 설명 안 됨) 다음의 가장 단순한 설명 후보는 점수 분포의 퍼짐이다. 점수 자체가 중요하다고 매긴 질량 중 고정 K가 버리는 몫이 크면 충실도가 떨어진다. 이 양은 위치 사전지식 없이 점수만 쓰는 이미지별 값이고, 멘토 질문 "이미지당 토큰 몇 개"의 기술적 쪽이다. GPU가 49분 비어 있었다.
+  - 방법: 각 데이터셋 final seed 1 maskedkd@98 student(H-A6·H-A7과 같음), val 전체. 이미지별 (a) top-K(K=98·49) 밖 attention 질량 out_mass@K, (b) attention 유효 토큰 수 exp(엔트로피), (c) maskedkd@K 가린 teacher KL. 데이터셋 안 Spearman과 bootstrap 95% CI (numpy default_rng(0), 2000회).
+  - 이미 아는 것 (등록 전): H-A6·H-A7의 KL 평균(maskedkd@98 Aircraft 0.1818 / CUB 0.0706)과 구간별 KL. attention 질량·유효 토큰 수는 본 적 없다.
+  - 일관성 확인: kl@98 평균이 CUB 0.0706, Aircraft 0.1818과 ±0.002 안이어야 한다. 다르면 판정하지 않는다.
+  - 예측 (한 번만, K=98): E1 Aircraft out_mass@98 평균 > CUB, 두 평균의 SE로 만든 정규 근사 95% CI가 0을 포함하지 않음 — 확신 중간. E2 두 데이터셋 모두 Spearman(out_mass@98, kl@98) > 0이고 bootstrap CI가 0을 포함하지 않음 — 확신 중간. K=49와 유효 토큰 수는 보고만 한다.
+  - 해석: E1·E2 참 → "Aircraft에서는 MaskedKD 점수가 더 퍼져 같은 K가 점수 질량을 더 버리고, 이미지별로도 버린 질량이 클수록 충실도가 낮다(seed 1 student, 상관)". E1 거짓 → "점수 퍼짐으로는 데이터셋 차이를 설명하지 못한다". E2 거짓 → "남은 질량은 이미지별 충실도를 예측하지 못한다". 어느 쪽이든 정확도 차이의 원인이라고 쓰지 않고, 이 값으로 새 selector·이미지별 K를 만들지 않는다(QUEUE 08:50).
+  - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·student·점수·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
