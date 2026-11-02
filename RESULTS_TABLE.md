@@ -159,7 +159,7 @@ Total agent screen configs: 14
 
 # Stage 2: aircraft (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1], full seeds [1], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -173,6 +173,9 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - no child selectors yet
 
 ## Primary metric (analysis-only methods excluded: oracle)
+### final: Full KD val 68.29 (seeds 1); KD gain +2.29, tolerance 1.00 %p; smallest mean kept tokens within it
+- claim-grade (>= 3 seeds): none
+- screening only (fewer seeds): none
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -184,6 +187,7 @@ Total agent screen configs: 0
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 66.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 360 | aircraft_final_ce_k0_s1_1102_123044_6d5f |
+| final | full |  | 196 | 196.0 | 1 | 68.29 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 254 | aircraft_final_full_k196_s1_1102_123044_ed5d |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
