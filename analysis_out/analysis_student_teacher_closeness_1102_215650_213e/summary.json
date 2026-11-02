@@ -1,0 +1,333 @@
+{
+ "dataset": "cub",
+ "n_val": 600,
+ "n_boot": 2000,
+ "students": {
+  "ce_s1": {
+   "run": "cub_final_ce_k0_s1_1030_153055_1256",
+   "val_acc_last": 81.00000023841858,
+   "val_acc_here": 81.0,
+   "kl": 0.56144,
+   "tckd": 0.34313,
+   "nckd": 1.10949,
+   "agree": 84.167
+  },
+  "full_s1": {
+   "run": "cub_final_full_k196_s1_1030_153055_d87b",
+   "val_acc_last": 82.833331823349,
+   "val_acc_here": 82.833,
+   "kl": 0.43287,
+   "tckd": 0.24337,
+   "nckd": 0.97115,
+   "agree": 85.333
+  },
+  "full_s2": {
+   "run": "final_full_k196_s2_1101_125958_cc04",
+   "val_acc_last": 79.83333468437195,
+   "val_acc_here": 79.833,
+   "kl": 0.43856,
+   "tckd": 0.25747,
+   "nckd": 0.96495,
+   "agree": 84.333
+  },
+  "full_s3": {
+   "run": "final_full_k196_s3_1101_140937_e8fa",
+   "val_acc_last": 82.4999988079071,
+   "val_acc_here": 82.5,
+   "kl": 0.42931,
+   "tckd": 0.24375,
+   "nckd": 0.93836,
+   "agree": 84.5
+  },
+  "lateroll_s1": {
+   "run": "final_lateroll_k29_s1_1101_104303_ef38",
+   "val_acc_last": 82.33333230018616,
+   "val_acc_here": 82.333,
+   "kl": 0.47517,
+   "tckd": 0.28139,
+   "nckd": 0.95998,
+   "agree": 85.667
+  },
+  "lateroll_s2": {
+   "run": "final_lateroll_k29_s2_1101_125958_6470",
+   "val_acc_last": 80.33333420753479,
+   "val_acc_here": 80.333,
+   "kl": 0.4659,
+   "tckd": 0.2854,
+   "nckd": 0.92866,
+   "agree": 86.833
+  },
+  "lateroll_s3": {
+   "run": "final_lateroll_k29_s3_1101_140937_ec98",
+   "val_acc_last": 81.49999976158142,
+   "val_acc_here": 81.5,
+   "kl": 0.49143,
+   "tckd": 0.29818,
+   "nckd": 0.94012,
+   "agree": 84.833
+  },
+  "maskedkd_s1": {
+   "run": "final_maskedkd_k29_s1_1101_104303_b676",
+   "val_acc_last": 81.33333325386047,
+   "val_acc_here": 81.333,
+   "kl": 0.61913,
+   "tckd": 0.40434,
+   "nckd": 1.05307,
+   "agree": 83.833
+  },
+  "maskedkd_s2": {
+   "run": "final_maskedkd_k29_s2_1101_125958_5b02",
+   "val_acc_last": 79.16666865348816,
+   "val_acc_here": 79.167,
+   "kl": 0.65559,
+   "tckd": 0.44072,
+   "nckd": 1.05758,
+   "agree": 83.333
+  },
+  "maskedkd_s3": {
+   "run": "final_maskedkd_k29_s3_1101_140937_b00f",
+   "val_acc_last": 80.16666769981384,
+   "val_acc_here": 80.167,
+   "kl": 0.61067,
+   "tckd": 0.39889,
+   "nckd": 1.0239,
+   "agree": 83.833
+  },
+  "rollout_s1": {
+   "run": "final_rollout_k29_s1_1101_104303_3861",
+   "val_acc_last": 81.33333325386047,
+   "val_acc_here": 81.333,
+   "kl": 0.50959,
+   "tckd": 0.31004,
+   "nckd": 0.97333,
+   "agree": 86.667
+  },
+  "rollout_s2": {
+   "run": "final_rollout_k29_s2_1101_125958_2ad2",
+   "val_acc_last": 79.3333351612091,
+   "val_acc_here": 79.333,
+   "kl": 0.52194,
+   "tckd": 0.32912,
+   "nckd": 0.95584,
+   "agree": 84.5
+  },
+  "rollout_s3": {
+   "run": "final_rollout_k29_s3_1101_140937_8573",
+   "val_acc_last": 80.66666722297668,
+   "val_acc_here": 80.667,
+   "kl": 0.519,
+   "tckd": 0.32165,
+   "nckd": 0.94818,
+   "agree": 83.667
+  }
+ },
+ "seed1_gaps": {
+  "kl_maskedkd_minus_lateroll": [
+   0.14395,
+   0.1263,
+   0.16313
+  ],
+  "tckd_maskedkd_minus_lateroll": [
+   0.12296,
+   0.10767,
+   0.13963
+  ],
+  "nckd_maskedkd_minus_lateroll": [
+   0.09309,
+   0.07288,
+   0.11469
+  ],
+  "agree_lateroll_minus_maskedkd": [
+   1.83333,
+   -0.33333,
+   4.0
+  ],
+  "kl_rollout_minus_lateroll": [
+   0.03442,
+   0.02056,
+   0.04947
+  ],
+  "tckd_rollout_minus_lateroll": [
+   0.02865,
+   0.01679,
+   0.04098
+  ],
+  "nckd_rollout_minus_lateroll": [
+   0.01336,
+   -0.00321,
+   0.03032
+  ],
+  "agree_lateroll_minus_rollout": [
+   -1.0,
+   -2.83333,
+   0.66667
+  ],
+  "kl_full_minus_lateroll": [
+   -0.0423,
+   -0.06355,
+   -0.02129
+  ],
+  "tckd_full_minus_lateroll": [
+   -0.03801,
+   -0.05586,
+   -0.02036
+  ],
+  "nckd_full_minus_lateroll": [
+   0.01117,
+   -0.01337,
+   0.03717
+  ],
+  "agree_lateroll_minus_full": [
+   0.33333,
+   -1.5,
+   2.16667
+  ],
+  "kl_ce_minus_lateroll": [
+   0.08627,
+   0.06479,
+   0.10931
+  ],
+  "tckd_ce_minus_lateroll": [
+   0.06174,
+   0.04392,
+   0.0797
+  ],
+  "nckd_ce_minus_lateroll": [
+   0.14952,
+   0.12264,
+   0.17672
+  ],
+  "agree_lateroll_minus_ce": [
+   1.5,
+   -0.5,
+   3.5
+  ]
+ },
+ "seed2_gaps": {
+  "kl_maskedkd_minus_lateroll": [
+   0.18968,
+   0.16958,
+   0.20949
+  ],
+  "tckd_maskedkd_minus_lateroll": [
+   0.15532,
+   0.13718,
+   0.17395
+  ],
+  "nckd_maskedkd_minus_lateroll": [
+   0.12892,
+   0.10792,
+   0.1492
+  ],
+  "agree_lateroll_minus_maskedkd": [
+   3.5,
+   1.33333,
+   5.66667
+  ],
+  "kl_rollout_minus_lateroll": [
+   0.05604,
+   0.03981,
+   0.07265
+  ],
+  "tckd_rollout_minus_lateroll": [
+   0.04372,
+   0.03037,
+   0.0565
+  ],
+  "nckd_rollout_minus_lateroll": [
+   0.02719,
+   0.00863,
+   0.04561
+  ],
+  "agree_lateroll_minus_rollout": [
+   2.33333,
+   0.5,
+   4.16667
+  ],
+  "kl_full_minus_lateroll": [
+   -0.02734,
+   -0.04816,
+   -0.00628
+  ],
+  "tckd_full_minus_lateroll": [
+   -0.02793,
+   -0.04536,
+   -0.0108
+  ],
+  "nckd_full_minus_lateroll": [
+   0.0363,
+   0.00916,
+   0.06391
+  ],
+  "agree_lateroll_minus_full": [
+   2.5,
+   0.16667,
+   4.66667
+  ]
+ },
+ "seed3_gaps": {
+  "kl_maskedkd_minus_lateroll": [
+   0.11924,
+   0.10164,
+   0.13768
+  ],
+  "tckd_maskedkd_minus_lateroll": [
+   0.10071,
+   0.08591,
+   0.11632
+  ],
+  "nckd_maskedkd_minus_lateroll": [
+   0.08378,
+   0.06249,
+   0.10535
+  ],
+  "agree_lateroll_minus_maskedkd": [
+   1.0,
+   -1.0,
+   3.0
+  ],
+  "kl_rollout_minus_lateroll": [
+   0.02757,
+   0.0105,
+   0.04496
+  ],
+  "tckd_rollout_minus_lateroll": [
+   0.02346,
+   0.0086,
+   0.03797
+  ],
+  "nckd_rollout_minus_lateroll": [
+   0.00806,
+   -0.00991,
+   0.02795
+  ],
+  "agree_lateroll_minus_rollout": [
+   1.16667,
+   -0.83333,
+   3.33333
+  ],
+  "kl_full_minus_lateroll": [
+   -0.06212,
+   -0.08756,
+   -0.03923
+  ],
+  "tckd_full_minus_lateroll": [
+   -0.05443,
+   -0.07501,
+   -0.03523
+  ],
+  "nckd_full_minus_lateroll": [
+   -0.00176,
+   -0.02941,
+   0.02752
+  ],
+  "agree_lateroll_minus_full": [
+   0.33333,
+   -2.0,
+   2.5
+  ]
+ },
+ "spearman_kl_vs_acc_all": -0.5659,
+ "spearman_kl_vs_acc_kd_only": -0.5874,
+ "n_students": 13
+}

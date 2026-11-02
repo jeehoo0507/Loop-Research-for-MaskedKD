@@ -1,0 +1,12 @@
+{
+ "id": "analysis_student_teacher_closeness_1102_215650_213e",
+ "name": "student_teacher_closeness",
+ "source_sha": "213e22f76535d27a3391dea96a23f8976d12e9ccfcde6709321db1af1b8630d2",
+ "status": "done",
+ "meta": {
+  "question": "on CUB final students of seeds 1, 2, 3, is KL(full teacher || student) on val lower for lateroll@29 than for maskedkd@29 and rollout@29 of the same seed, and does closeness to the teacher track val accuracy across methods?",
+  "method": "teacher-student output divergence on held-out images, decoupled into target (TCKD) and non-target (NCKD) parts, paired bootstrap over val images",
+  "paper": "Hinton et al. 2015 (KD); Zhao et al. CVPR 2022 (DKD); Stanton et al. NeurIPS 2021 (does KD really work? student-teacher fidelity)"
+ },
+ "seconds": 8.1
+}
