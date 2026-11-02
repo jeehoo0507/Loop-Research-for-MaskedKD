@@ -189,6 +189,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
 | final | full |  | 196 | 196.0 | 1,2 | 68.36 ± 0.10 | - | 42.77 | 35.13 | 0.00 | 250 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s2_1102_132227_123b |
+| final | maskedkd |  | 29 | 29.0 | 1 | 66.71 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 340 | aircraft_final_maskedkd_k29_s1_1102_132227_6542 |
 | final | maskedkd |  | 98 | 98.0 | 1,2 | 67.64 ± 0.71 | - | 25.04 | 17.41 | 0.00 | 447 | aircraft_final_maskedkd_k98_s2_1102_132227_2f10 aircraft_final_maskedkd_k98_s1_1102_123044_bd9b |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
