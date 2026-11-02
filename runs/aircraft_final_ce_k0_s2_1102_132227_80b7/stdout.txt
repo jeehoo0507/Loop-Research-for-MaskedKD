@@ -1,0 +1,37 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+[2026-11-02 13:22:40] job aircraft_final_ce_k0_s2_1102_132227_80b7 method=ce keep=0 seed=2 epochs=100 device=cuda
+[2026-11-02 13:22:42] flops per image (train step): {'total_gflops_per_img': 7.6421, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.6421, 'windows': 1}
+[2026-11-02 13:22:45] {"epoch": 1, "loss": 4.675207138061523, "epoch_s": 4.9, "img_per_s": 1201.9}
+[2026-11-02 13:22:49] {"epoch": 2, "loss": 4.621218515479046, "epoch_s": 3.9, "img_per_s": 1523.3}
+[2026-11-02 13:22:53] {"epoch": 3, "loss": 4.59888219833374, "epoch_s": 3.9, "img_per_s": 1515.2}
+[2026-11-02 13:22:58] {"epoch": 4, "loss": 4.542612687401149, "epoch_s": 3.9, "img_per_s": 1504.2}
+[2026-11-02 13:23:02] {"epoch": 5, "loss": 4.401252300842948, "epoch_s": 4.0, "img_per_s": 1489.3, "val_acc": 13.71428519487381}
+[2026-11-02 13:23:06] {"epoch": 6, "loss": 4.269809028376704, "epoch_s": 3.9, "img_per_s": 1494.7}
+[2026-11-02 13:23:10] {"epoch": 7, "loss": 4.145688621894173, "epoch_s": 3.9, "img_per_s": 1508.4}
+[2026-11-02 13:23:15] {"epoch": 8, "loss": 4.0471340055051055, "epoch_s": 4.0, "img_per_s": 1483.7}
+[2026-11-02 13:23:19] {"epoch": 9, "loss": 3.9814772916876753, "epoch_s": 3.9, "img_per_s": 1502.6}
+[2026-11-02 13:23:23] {"epoch": 10, "loss": 3.8839978705281797, "epoch_s": 4.0, "img_per_s": 1490.3, "val_acc": 37.57142722606659}
+[2026-11-02 13:23:28] {"epoch": 11, "loss": 3.7403122186660767, "epoch_s": 4.0, "img_per_s": 1485.9}
+[2026-11-02 13:23:32] {"epoch": 12, "loss": 3.8108925197435464, "epoch_s": 3.9, "img_per_s": 1497.2}
+[2026-11-02 13:23:36] {"epoch": 13, "loss": 3.696680830872577, "epoch_s": 4.0, "img_per_s": 1480.7}
+[2026-11-02 13:23:40] {"epoch": 14, "loss": 3.7633328696955806, "epoch_s": 4.0, "img_per_s": 1483.0}
+[2026-11-02 13:23:45] {"epoch": 15, "loss": 3.6632916305376138, "epoch_s": 4.1, "img_per_s": 1442.2, "val_acc": 46.714285016059875}
+[2026-11-02 13:23:54] {"epoch": 16, "loss": 3.605647646862528, "epoch_s": 8.7, "img_per_s": 680.3}
+[2026-11-02 13:24:03] {"epoch": 17, "loss": 3.6644236626832383, "epoch_s": 8.6, "img_per_s": 684.4}
+[2026-11-02 13:24:12] {"epoch": 18, "loss": 3.6056554317474365, "epoch_s": 8.8, "img_per_s": 669.1}
+[2026-11-02 13:24:21] {"epoch": 19, "loss": 3.593864300976629, "epoch_s": 8.4, "img_per_s": 701.2}
+[2026-11-02 13:24:30] {"epoch": 20, "loss": 3.493793539378954, "epoch_s": 8.8, "img_per_s": 668.4, "val_acc": 51.85714364051819}
+[2026-11-02 13:24:39] {"epoch": 21, "loss": 3.4873794783716616, "epoch_s": 8.4, "img_per_s": 697.7}
+[2026-11-02 13:24:49] {"epoch": 22, "loss": 3.445254709409631, "epoch_s": 10.1, "img_per_s": 584.8}
+[2026-11-02 13:25:03] {"epoch": 23, "loss": 3.460494367972664, "epoch_s": 13.0, "img_per_s": 452.5}
+[2026-11-02 13:25:16] {"epoch": 24, "loss": 3.414217798606209, "epoch_s": 13.0, "img_per_s": 452.7}
+[2026-11-02 13:25:29] {"epoch": 25, "loss": 3.336282543514086, "epoch_s": 12.8, "img_per_s": 458.4, "val_acc": 54.71428632736206}
+[2026-11-02 13:25:31] flops per image (train step): {'total_gflops_per_img': 7.6421, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.6421, 'windows': 2}
+[2026-11-02 13:25:43] {"epoch": 26, "loss": 3.2961625845535942, "epoch_s": 13.4, "img_per_s": 440.4}
+[2026-11-02 13:25:56] {"epoch": 27, "loss": 3.2951045191806294, "epoch_s": 12.9, "img_per_s": 454.8}
+[2026-11-02 13:26:10] {"epoch": 28, "loss": 3.3435083679530933, "epoch_s": 12.9, "img_per_s": 457.1}
+[2026-11-02 13:26:23] {"epoch": 29, "loss": 3.336175068565037, "epoch_s": 13.1, "img_per_s": 450.3}
+[2026-11-02 13:26:36] {"epoch": 30, "loss": 3.3126563507577647, "epoch_s": 12.9, "img_per_s": 457.4, "val_acc": 57.2857141494751}
+[2026-11-02 13:26:50] {"epoch": 31, "loss": 3.2813145751538486, "epoch_s": 13.1, "img_per_s": 450.9}
+[2026-11-02 13:27:03] {"epoch": 32, "loss": 3.3134436192719834, "epoch_s": 13.0, "img_per_s": 453.4}

@@ -47,3 +47,5 @@
 - 2026-11-02 12:30 [stage2] aircraft teacher: fine-tuned here val acc 77.43
 - 2026-11-02 12:30 [stage2] loop restarted after stage-2 relock
 - 2026-11-02 12:30 [stage2] aircraft gate submitted (one GPU slot)
+- 2026-11-02 13:22 [stage2] aircraft gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: [aircraft final, 100 epochs, mean of seeds [1]] Full KD 68.29 vs CE 66.00 (need +1.0): PASS; MaskedKD@98 67.14 vs Full 68.29 (need >= Full - 0.5): FAIL
+- 2026-11-02 13:22 [stage2] aircraft baselines queued at K=29,12 (15 jobs)
