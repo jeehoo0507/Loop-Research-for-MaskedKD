@@ -107,7 +107,7 @@ Total agent screen configs: 14
 | final | random |  | 12 | 12.0 | 2 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1258 | cub_final_random_k12_s2_1031_103009_1917 |
 | final | random |  | 29 | 29.0 | 1,2,3 | 74.94 ± 0.25 | - | 13.00 | 5.36 | 0.00 | 279 | final_random_k29_s3_1101_140937_24cb final_random_k29_s1_1101_104303_9664 final_random_k29_s2_1101_125958_9495 |
 | final | random |  | 49 | 49.0 | 1,2,3 | 78.33 ± 0.87 | - | 16.46 | 8.82 | 0.00 | 434 | final_random_k49_s1_1102_034050_5828 final_random_k49_s3_1102_153530_ccb4 final_random_k49_s2_1102_043001_3091 |
-| final | rollout |  | 12 | 12.0 | 2,3 | 78.33 ± 0.94 | - | 10.08 | 2.45 | 0.17 | 984 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd |
+| final | rollout |  | 12 | 12.0 | 1,2,3 | 78.50 ± 0.73 | - | 10.08 | 2.45 | 0.17 | 739 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd final_rollout_k12_s1_1102_225104_31a8 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 80.44 ± 1.02 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 final_rollout_k29_s3_1101_140937_8573 |
 | final | rollout |  | 49 | 49.0 | 1,2,3 | 82.11 ± 1.13 | - | 16.45 | 8.82 | 0.17 | 230 | final_rollout_k49_s1_1102_034050_c1e4 final_rollout_k49_s2_1102_043001_2aed final_rollout_k49_s3_1102_153530_4395 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 80.00 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 296 | final_tome_k12_s1_1102_225104_3037 |
