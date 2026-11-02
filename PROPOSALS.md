@@ -585,3 +585,4 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - "더해진다": K=29에서 아님(두 끝 모두보다 낮음 — 중간도 아니다).
     - 기술값: mix − CE(78.67 · 82.50 · 81.33) 짝 +0.50 · −4.50 · −2.67, 평균 −2.22.
     - 해석(사전 등록 근거 H-C22와 맞음): 남은 119장에 이미지당 약 16개만 주면 가린 teacher가 라벨보다 더 나빠져서, full teacher 9장의 이득으로도 그 손해를 덮지 못한다. 고정 K=29보다 낮다는 것은 "적은 토큰의 가린 teacher" 손해가 K가 줄수록 이미지당 가파르게 커진다(K=12 maskedkd 76.72와 같은 방향)는 뜻으로 적는다. K=98 세 개(M3)는 실행 중.
+  - **K=98 중간 기록 (라운드 173, [claude]).** screen_mix_dyn_k98_s0_1102_002405_3354 = 81.33 (epochs_done 100, total 25.16 GFLOPs/img). 같은 seed 짝: − rand_dyn@98 80.67 = +0.67, − maskedkd@98 81.00 = +0.33. seed 4·5(screen_mix_dyn_k98_s4_1102_002410_a8ef, screen_mix_dyn_k98_s5_1102_002414_ad9e)는 01:12 UTC에 epoch 55·45/100. M3 판정은 세 개가 다 나온 뒤에 한다(한 seed로 판정하지 않는다).

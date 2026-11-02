@@ -16,6 +16,11 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 173 [claude] (H-C29 K=98 seed 0 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록: screen_mix_dyn_k98_s0_1102_002405_3354 = 81.33 (epochs_done 100). 같은 seed 짝 − rand_dyn@98 +0.67, − maskedkd@98 +0.33. PROPOSALS H-C29에 중간 기록으로 넣었다. M3는 세 seed가 다 나온 뒤 판정한다.
+  - 실행 중(01:12 UTC): screen_mix_dyn_k98_s4_1102_002410_a8ef (e56), screen_mix_dyn_k98_s5_1102_002414_ad9e (e46). 약 13 s/epoch → 약 01:22·01:24 UTC 끝. 대기 0.
+  - [claude] 결정: 빈 칸에 새 job을 내지 않고, 끝나기를 기다리지도 않는다. 이유: 라운드 172와 같다(새 선택기 탐색은 사람 지시 대기, H-C29는 결과를 보고 비율·K·seed를 더하지 않음, 무인 라운드에서 백그라운드 대기 금지).
+  - 다음: seed 4·5 `val_acc_last` 기록 → M3 판정 → RESULTS Teachability 효율 곡선(K=98 줄) 반영. 그 뒤 사람 지시를 기다린다.
 - **라운드 172 [claude] (H-C29 K=29 판정, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록: screen_mix_dyn_k29_s0_1102_002353_9d45 = 79.17, screen_mix_dyn_k29_s4_1102_002357_d2a8 = 78.00, screen_mix_dyn_k29_s5_1102_002401_a7c4 = 78.67 (epochs_done 100), 평균 78.61.
   - 판정: **M1 거짓, 예측과 반대** (− maskedkd@29 짝 0.00·−1.67·−1.50, 평균 −1.06). **M2 mix < rand_dyn** (짝 −1.67·−2.33·−3.17, 3/3, 예측대로). K=29에서 혼합은 두 끝보다 모두 낮다. PROPOSALS H-C29와 RESULTS Teachability 절에 넣었다.
