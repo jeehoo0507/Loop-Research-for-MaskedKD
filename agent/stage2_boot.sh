@@ -17,15 +17,22 @@ $PY -m harness.prepare_data --datasets "$S2" >>"$LOG" 2>&1 || fail "$S2 data pre
 TJ=$($PY -c "from harness.train import teacher_paths; print(teacher_paths('$S2')[1])")
 
 if [ ! -f "$TJ" ]; then
-  say "$S2 teacher: import aim-lab-test-5's or fine-tune (about 1 h)"
-  $PY -m harness.finetune_teacher --dataset "$S2" >>"$LOG" 2>&1 || fail "$S2 teacher failed (see $LOG)"
+  # DeiT-B fine-tuning needs the whole GPU (2026-11-02: OOM next to 4 CUB jobs) and writes state/recipe.json, a locked
+  # file: stop the loop and new job starts first, wait for running jobs, and undo everything if it fails.
+  status "$S2 teacher: pausing the loop and new job starts until the running jobs finish, then fine-tune (about 1-2 h)"
+  touch agent/STOP "$S/sched_hold"
+  while tmux has-session -t agent 2>/dev/null || ls queue/running/*.json >/dev/null 2>&1; do sleep 60; done
+  if ! $PY -m harness.finetune_teacher --dataset "$S2" >>"$LOG" 2>&1; then
+    git checkout -- state/recipe.json; rm -f "$TJ" "${TJ%.json}.pt"
+    rm -f agent/STOP "$S/sched_hold"
+    AUDITOR="$(cat "$S/boot_auditor" 2>/dev/null || echo claude)" bash agent/start.sh >>"$LOG" 2>&1
+    fail "$S2 teacher failed (see $LOG); recipe restored, loop and scheduler resumed"
+  fi
   status "$S2 teacher: $($PY -c "import json;d=json.load(open('$TJ'));print(d['source'], 'val acc', d['val_acc'])")"
-  # teacher and recipe are locked: pause the loop between rounds, commit, relock, restart
-  touch agent/STOP
-  while tmux has-session -t agent 2>/dev/null; do sleep 30; done
+  # teacher and recipe are locked: commit, relock, restart
   git add "$TJ" state/recipe.json && git commit -qm "stage2: $S2 teacher and student lr" && git push -q
   bash agent/relock.sh >>"$LOG" 2>&1 || fail "relock failed"
-  rm -f agent/STOP
+  rm -f agent/STOP "$S/sched_hold"
   AUDITOR="$(cat "$S/boot_auditor" 2>/dev/null || echo claude)" bash agent/start.sh >>"$LOG" 2>&1
   status "loop restarted after stage-2 relock"
 fi

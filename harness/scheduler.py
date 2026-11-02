@@ -4,7 +4,8 @@
 
 Concurrency: at most config.MAX_JOBS, and a job starts only if free VRAM >= the largest peak VRAM
 measured by harness.bench (or 8 GiB before a bench exists) + VRAM_MARGIN_GIB.
-Refuses to start jobs while the harness lock does not match. Jobs whose process died (pod restart)
+Refuses to start jobs while the harness lock does not match, and while agent/.state/sched_hold exists (agent/stage2_boot.sh
+holds new starts so a teacher fine-tune gets the whole GPU; running jobs finish normally). Jobs whose process died (pod restart)
 go back to pending and resume from their checkpoint.
 """
 import json
@@ -150,9 +151,11 @@ def main():
             os.execv(sys.executable, [sys.executable, "-m", "harness.scheduler"])
         pending = sorted(q["pending"].glob("*.json"),
                          key=lambda f: (-json.loads(f.read_text()).get("priority", 0), f.stat().st_mtime))
-        if not ok:
+        hold = (C.ROOT / "agent" / ".state" / "sched_hold").exists()
+        if not ok or hold:
+            msg = msg if not ok else "agent/.state/sched_hold exists (teacher fine-tune waiting for the GPU)"
             if msg != last_msg:
-                print(f"[sched] LOCK {msg}; not starting jobs", flush=True)
+                print(f"[sched] {'LOCK ' if not ok else ''}{msg}; not starting jobs", flush=True)
                 last_msg = msg
         elif pending and len(procs) < C.MAX_JOBS:
             free = free_vram_gib()
