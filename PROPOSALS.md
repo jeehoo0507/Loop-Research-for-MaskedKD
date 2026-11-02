@@ -621,4 +621,5 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - G2 lateroll@29 − maskedkd@49 = +0.17, 0.00, −1.00 → −0.28 [−1.85, +1.29]. **예측(≥ 0) 틀림.** 사전 등록한 해석 그대로: "lateroll@29의 FLOPs 이득(12.99 대 16.44 GFLOPs/img)은 같은 비용의 maskedkd를 넘지 못한다"로 적고 FLOPs 주장을 하지 않는다. 차이 자체는 불확실하다.
     - G3 lateroll@49 − lateroll@29 = −0.50, +2.00, +0.83 → +0.78 [−2.33, +3.89]. **예측(|평균| ≤ 0.5) 틀림.** final에서는 곡선이 K=29부터 평평하다고 말할 수 없다(차이는 불확실).
     - 결과를 보고 K·seed를 더하지 않는다(사전 등록). 같은 seed의 rollout·tome·grid·center·random@49 seed 3은 아직 실행·대기 중이고 기록만 한다.
+  - 기록 (라운드 199~201, 판정 밖): seed 3 rollout@49 83.00, tome@49 80.50, grid@49 78.50, center@49 80.33, random@49 78.83 (final_random_k49_s3_1102_153530_ccb4). H-C31 run이 모두 끝났다. H-C31 종료.
   - 기각·해석: G2가 틀리면(maskedkd@49가 더 높으면) "lateroll@29의 FLOPs 이득은 같은 비용의 maskedkd를 넘지 못한다"로 적고 FLOPs 주장을 하지 않는다. G1이 틀리면 K=49에서는 선택 규칙의 이득이 없다(K=98과 같음)로 적는다. 결과를 보고 K·seed를 더하지 않는다. Aircraft job이 시작되면 seed 2·3 제출은 미룬다.
