@@ -91,3 +91,71 @@ curl: (28) Failed to connect to www.robots.ox.ac.uk port 443 after 135354 ms: Co
 curl: (28) Failed to connect to www.robots.ox.ac.uk port 443 after 135533 ms: Could not connect to server
 could not download fgvc-aircraft-2013b.tar.gz; put it at /home/coder/Loop-Research-for-MaskedKD/data/raw/fgvc-aircraft-2013b.tar.gz by hand
 [stage2 11-02 04:37] STOPPED: aircraft data preparation failed (see agent/logs/stage2_boot.log)
+downloading https://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/archives/fgvc-aircraft-2013b.tar.gz
+curl: (28) Connection timed out after 30001 milliseconds
+curl: (28) Connection timed out after 30002 milliseconds
+curl: (28) Connection timed out after 30001 milliseconds
+curl: (28) Connection timed out after 30002 milliseconds
+curl: (28) Connection timed out after 30001 milliseconds
+curl: (28) Connection timed out after 30002 milliseconds
+downloading https://huggingface.co/datasets/xingslong/fgvc-aircraft-2013b/resolve/main/fgvc-aircraft-2013b.tar.gz
+[stage2 11-02 05:24] aircraft teacher: import aim-lab-test-5's or fine-tune (about 1 h)
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py", line 108, in <module>
+    main()
+  File "/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py", line 95, in main
+    model, info = (got if got else finetune(a.dataset, out, device))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py", line 56, in finetune
+    loader = GpuLoader(xtr, ytr, C.TEACHER_BATCH, device, seed=0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/coder/Loop-Research-for-MaskedKD/harness/data.py", line 209, in __init__
+    self.x = x.to(device)
+             ^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.09 GiB. GPU 0 has a total capacity of 23.55 GiB of which 638.00 MiB is free. Process 4018619 has 5.38 GiB memory in use. Process 4020497 has 6.39 GiB memory in use. Process 4022573 has 5.50 GiB memory in use. Process 4037738 has 5.35 GiB memory in use. Process 4072804 has 204.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-test-5 sweep found)"}
+[stage2 11-02 05:24] STOPPED: aircraft teacher failed (see agent/logs/stage2_boot.log)
+aircraft: already prepared (/home/coder/Loop-Research-for-MaskedKD/data/aircraft)
+[stage2 11-02 11:56] aircraft teacher: pausing the loop and new job starts until the running jobs finish, then fine-tune (about 1-2 h)
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-test-5 sweep found)"}
+{'epoch': 5, 'val_acc': 51.85714364051819, 'epoch_s': 17.5}
+{'epoch': 10, 'val_acc': 68.14285516738892, 'epoch_s': 17.7}
+{'epoch': 15, 'val_acc': 70.85714340209961, 'epoch_s': 17.7}
+{'epoch': 20, 'val_acc': 72.2857117652893, 'epoch_s': 17.7}
+{'epoch': 25, 'val_acc': 72.7142870426178, 'epoch_s': 17.7}
+{'epoch': 30, 'val_acc': 76.99999809265137, 'epoch_s': 17.7}
+{'epoch': 35, 'val_acc': 76.57142877578735, 'epoch_s': 17.7}
+{'epoch': 40, 'val_acc': 75.71428418159485, 'epoch_s': 17.7}
+{'epoch': 45, 'val_acc': 73.85714054107666, 'epoch_s': 17.7}
+{'epoch': 50, 'val_acc': 75.0, 'epoch_s': 17.7}
+{'epoch': 55, 'val_acc': 76.42857432365417, 'epoch_s': 17.7}
+{'epoch': 60, 'val_acc': 75.99999904632568, 'epoch_s': 17.7}
+{'epoch': 65, 'val_acc': 76.57142877578735, 'epoch_s': 17.7}
+{'epoch': 70, 'val_acc': 76.28571391105652, 'epoch_s': 17.7}
+{'epoch': 75, 'val_acc': 76.42857432365417, 'epoch_s': 17.7}
+{'epoch': 80, 'val_acc': 76.71428322792053, 'epoch_s': 17.7}
+{'epoch': 85, 'val_acc': 76.42857432365417, 'epoch_s': 17.7}
+{'epoch': 90, 'val_acc': 77.42857336997986, 'epoch_s': 17.7}
+{'epoch': 95, 'val_acc': 76.28571391105652, 'epoch_s': 17.7}
+{'epoch': 100, 'val_acc': 76.57142877578735, 'epoch_s': 17.7}
+/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py:80: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(out, map_location="cpu"))
+{"val_acc": 77.43, "source": "fine-tuned here", "sha256": "a12076a04b71d3a6fd7f1ba3b0fe95047a01ad53d8539f700c6b69dd03437ab2"}
+[stage2 11-02 12:30] aircraft teacher: fine-tuned here val acc 77.43
+.............................................                            [100%]
+45 passed in 31.13s
+locked: 3ae0bca7279258c7616a4f5453bac273852a96a4f54756609c6eed97216fa388
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+agent: 1 windows (created Mon Nov  2 12:30:40 2026)
+boot: 1 windows (created Sat Oct 31 10:46:16 2026)
+gatewatch: 1 windows (created Sat Oct 31 13:17:07 2026)
+sched: 1 windows (created Sun Nov  1 12:22:22 2026)
+stage2: 1 windows (created Mon Nov  2 11:56:01 2026)
+[stage2 11-02 12:30] loop restarted after stage-2 relock
+[stage2 11-02 12:30] aircraft gate submitted (one GPU slot)

@@ -42,3 +42,8 @@
 - 2026-10-31 20:14 [stage2] waterbirds gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: [waterbirds final, 100 epochs, mean of seeds [1]] Full KD 91.33 vs CE 90.08 (need +1.0): PASS; MaskedKD@98 90.33 vs Full 91.33 (need >= Full - 0.5): FAIL
 - 2026-10-31 20:15 [stage2] waterbirds baselines queued at K=29,12 (15 jobs)
 - 2026-11-02 04:37 [stage2] STOPPED: aircraft data preparation failed (see agent/logs/stage2_boot.log)
+- 2026-11-02 05:24 [stage2] STOPPED: aircraft teacher failed (see agent/logs/stage2_boot.log)
+- 2026-11-02 11:56 [stage2] aircraft teacher: pausing the loop and new job starts until the running jobs finish, then fine-tune (about 1-2 h)
+- 2026-11-02 12:30 [stage2] aircraft teacher: fine-tuned here val acc 77.43
+- 2026-11-02 12:30 [stage2] loop restarted after stage-2 relock
+- 2026-11-02 12:30 [stage2] aircraft gate submitted (one GPU slot)
