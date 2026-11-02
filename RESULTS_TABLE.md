@@ -139,7 +139,33 @@ Total agent screen configs: 14
 | screen | tome |  | 49 | 49.0 | 0,4,5 | 79.83 ± 0.73 | - | 14.50 | 6.86 | 0.00 | 574 | screen_tome_k49_s0_1031_130150_83af screen_tome_k49_s4_1101_085156_6f20 screen_tome_k49_s5_1101_085201_e36a |
 | screen | trustfilt@27da28 |  | 29 | 29.0 | 0,4,5 | 81.33 ± 0.50 | - | 13.34 | 5.36 | 0.43 | 372 | screen_trustfilt_k29_s5_1101_054141_7ad5 screen_trustfilt_k29_s4_1101_054136_636e screen_trustfilt_k29_s0_1101_052028_1577 |
 
-# Stage 2: waterbirds (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
+# Stage 2: aircraft (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
+
+Gate: gate incomplete: ce seeds [], full seeds [], maskedkd seeds []
+
+Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
+
+## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- none yet
+
+## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
+- no agent method has >= 2 final seeds yet
+
+## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
+- no child selectors yet
+
+## Primary metric (analysis-only methods excluded: oracle)
+
+## Where token choice matters (screen seed 0, each baseline vs Full KD)
+- not measured yet
+
+## Search effort (screen)
+Total agent screen configs: 0
+
+## All finished runs
+- none yet
+
+# Earlier check: waterbirds (no new runs; kept for the record)
 
 Gate: [waterbirds final, 100 epochs, mean of seeds [1, 2, 3]] Full KD 91.16 vs CE 89.80 (need +1.0): PASS; MaskedKD@98 90.46 vs Full 91.16 (need >= Full - 0.5): FAIL
 
