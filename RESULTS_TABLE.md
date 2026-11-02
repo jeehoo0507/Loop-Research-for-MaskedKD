@@ -159,7 +159,7 @@ Total agent screen configs: 14
 
 # Stage 2: aircraft (fixed methods from stage 1; 'stage2' in metrics.json says untouched/tuned)
 
-Gate: gate incomplete: ce seeds [1], full seeds [1], maskedkd seeds []
+Gate: [aircraft final, 100 epochs, mean of seeds [1]] Full KD 68.29 vs CE 66.00 (need +1.0): PASS; MaskedKD@98 67.14 vs Full 68.29 (need >= Full - 0.5): FAIL
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -188,6 +188,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 66.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 360 | aircraft_final_ce_k0_s1_1102_123044_6d5f |
 | final | full |  | 196 | 196.0 | 1 | 68.29 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 254 | aircraft_final_full_k196_s1_1102_123044_ed5d |
+| final | maskedkd |  | 98 | 98.0 | 1 | 67.14 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 602 | aircraft_final_maskedkd_k98_s1_1102_123044_bd9b |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
