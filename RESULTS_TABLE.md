@@ -192,7 +192,7 @@ Total agent screen configs: 0
 | final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
 | final | full |  | 196 | 196.0 | 1,2,3 | 68.05 ± 0.54 | - | 42.77 | 35.13 | 0.00 | 252 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s3_1102_132227_69cc aircraft_final_full_k196_s2_1102_132227_123b |
 | final | maskedkd |  | 12 | 12.0 | 1 | 62.43 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 444 | aircraft_final_maskedkd_k12_s1_1102_132227_f01c |
-| final | maskedkd |  | 29 | 29.0 | 1 | 66.71 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 340 | aircraft_final_maskedkd_k29_s1_1102_132227_6542 |
+| final | maskedkd |  | 29 | 29.0 | 1,2 | 65.57 ± 1.62 | - | 12.99 | 5.36 | 0.00 | 394 | aircraft_final_maskedkd_k29_s2_1102_180321_52e2 aircraft_final_maskedkd_k29_s1_1102_132227_6542 |
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 67.43 ± 0.62 | - | 25.04 | 17.41 | 0.00 | 398 | aircraft_final_maskedkd_k98_s2_1102_132227_2f10 aircraft_final_maskedkd_k98_s1_1102_123044_bd9b aircraft_final_maskedkd_k98_s3_1102_132227_c979 |
 | final | oracle |  | 12 | 12.0 | 1 | 63.71 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 172 | aircraft_final_oracle_k12_s1_1102_132227_86cd |
 | final | random |  | 12 | 12.0 | 1 | 64.14 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 397 | aircraft_final_random_k12_s1_1102_132227_c818 |
