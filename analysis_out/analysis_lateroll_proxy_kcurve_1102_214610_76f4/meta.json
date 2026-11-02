@@ -1,0 +1,12 @@
+{
+ "id": "analysis_lateroll_proxy_kcurve_1102_214610_76f4",
+ "name": "lateroll_proxy_kcurve",
+ "source_sha": "76f4f78175417d1e358e5473f4b2f2697e2f7a26f27a71dc2e6f8fd69177dfc2",
+ "status": "done",
+ "meta": {
+  "question": "on CUB and FGVC-Aircraft final maskedkd@29 students of seeds 1, 2, 3, does the masked-teacher KL gap roll11 - roll6 and roll0 - roll6 shrink from K=29 to K=49 (and how large is it at K=12)?",
+  "method": "keep-only masked-teacher faithfulness (KL, DKD TCKD) at several budgets, attention rollout start-block variants, paired bootstrap over val images of the K=49 minus K=29 gap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only evaluation)"
+ },
+ "seconds": 9.2
+}
