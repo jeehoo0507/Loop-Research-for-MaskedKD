@@ -124,8 +124,10 @@ def _step(api, student, teacher, params, cfg, x, y, ev):
 
 
 def _masks(api, student, x):
+    # harness/analyze.py runs run() inside an outer autocast, so its weight-cast cache lives for the whole job;
+    # casts made here under no_grad must not be cached (they would carry no grad into later timed steps)
     student.eval()
-    with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
+    with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16, cache_enabled=False):
         res = {}
         for cfg in ("lateroll_29", "lateroll_29_clsrow", "lateroll_29_lite"):
             out, _ = _forward_select(api, student, x, cfg)
@@ -155,7 +157,26 @@ def run(api):
     batches = iter(api.val_batches(batch=B))
     x, y = next(batches)
 
-    # mask agreement on the first 5 val batches (up to 640 images), eval mode
+    names =["student_fwd", "selector", "teacher", "loss_and_grad", "total"]
+    times = {c: {n: [] for n in names} for c in CONFIGS}
+    order_rng = np.random.default_rng(0)
+    orders = []
+    for rep in range(REPEATS):
+        order = list(CONFIGS) if rep == 0 else [CONFIGS[i] for i in order_rng.permutation(len(CONFIGS))]
+        orders.append(order)
+        for cfg in order:
+            for i in range(WARM + STEPS):
+                ev = [torch.cuda.Event(enable_timing=True) for _ in range(5)]
+                _step(api, student, teacher, params, cfg, x, y, ev)
+                torch.cuda.synchronize()
+                if i < WARM:
+                    continue
+                seg = [ev[0].elapsed_time(ev[1]), ev[1].elapsed_time(ev[2]), ev[2].elapsed_time(ev[3]),
+                       ev[3].elapsed_time(ev[4]), ev[0].elapsed_time(ev[4])]
+                for n, v in zip(names, seg):
+                    times[cfg][n].append(v)
+
+    # mask agreement on the first 5 val batches (up to 640 images), eval mode, after all timing
     agree_parts = []
     xs = [x]
     for _ in range(4):
@@ -176,26 +197,7 @@ def run(api):
             "frac_identical": round(float(np.average([a[cfg]["frac_identical"] for _, a in agree_parts], weights=w)), 5),
         }
 
-    names = ["student_fwd", "selector", "teacher", "loss_and_grad", "total"]
-    times = {c: {n: [] for n in names} for c in CONFIGS}
-    order_rng = np.random.default_rng(0)
-    orders = []
-    for rep in range(REPEATS):
-        order = list(CONFIGS) if rep == 0 else [CONFIGS[i] for i in order_rng.permutation(len(CONFIGS))]
-        orders.append(order)
-        for cfg in order:
-            for i in range(WARM + STEPS):
-                ev = [torch.cuda.Event(enable_timing=True) for _ in range(5)]
-                _step(api, student, teacher, params, cfg, x, y, ev)
-                torch.cuda.synchronize()
-                if i < WARM:
-                    continue
-                seg = [ev[0].elapsed_time(ev[1]), ev[1].elapsed_time(ev[2]), ev[2].elapsed_time(ev[3]),
-                       ev[3].elapsed_time(ev[4]), ev[0].elapsed_time(ev[4])]
-                for n, v in zip(names, seg):
-                    times[cfg][n].append(v)
-
-    summary = {"run_for_student_weights": rid, "dataset": api.dataset, "batch": B, "warmup": WARM,
+    summary ={"run_for_student_weights": rid, "dataset": api.dataset, "batch": B, "warmup": WARM,
                "steps_per_repeat": STEPS, "repeats": REPEATS, "orders": orders,
                "device": torch.cuda.get_device_name(dev), "mask_agreement_images": n_img,
                "mask_agreement_vs_harness_lateroll": agreement, "configs": {}}
