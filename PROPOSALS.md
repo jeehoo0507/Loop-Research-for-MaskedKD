@@ -677,3 +677,5 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 예측 (한 번만, maskedkd@98 KL): C1 두 데이터셋 모두 n ≥ 30인 구간마다 Aircraft 평균 KL > CUB — 확신 중간. C2 Aircraft 구간 평균을 CUB 구간 비율로 가중한 값 − CUB 전체 평균 > 0, 정규 근사 95% CI(구간 SE로 계산)가 0을 포함하지 않음 — 확신 중간.
   - 해석: C1·C2 참 → "teacher 확신 분포 차이만으로는 Aircraft의 낮은 충실도를 설명하지 못한다(seed 1 student)". C2 거짓 → "H-A6 차이는 teacher 확신 분포 차이와 구별되지 않는다". 어느 쪽이든 MaskedKD@98 − Full 정확도 차이의 원인이라고 쓰지 않는다. K=49·rollout·top-1 일치는 보고만 한다.
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 구간·K·student·점수·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
+  - 제출 (라운드 214, 등록 커밋 c002e69 뒤): analysis_fidelity_conf_matched_1102_204859_bc28 (aircraft), analysis_fidelity_conf_matched_1102_204903_bc28 (cub)
+  - 결과 (라운드 214, 한 번만): 일관성 확인 통과 (CUB 0.0706, Aircraft 0.1818). **C1 참**: 네 구간 모두 n ≥ 30이고 Aircraft KL이 CUB보다 높다. 값은 0.648/0.272, 0.537/0.195, 0.272/0.154, 0.045/0.008이다. **C2 참**: CUB 구간 비율로 가중한 Aircraft KL은 0.1815이고, CUB와의 차이는 +0.111 [+0.080, +0.142]다. 두 teacher의 최대확률 분포는 거의 같다(평균 0.891 / 0.894, 구간 비율 차이 ≤ 1.1%p). 읽기: "teacher 확신 분포 차이만으로는 Aircraft의 낮은 충실도를 설명하지 못한다(seed 1 student)." RESULTS "분석에서 배운 것" 라운드 214 참고.
