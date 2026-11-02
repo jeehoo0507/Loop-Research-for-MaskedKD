@@ -606,3 +606,8 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
     - **F2 거짓 (예측과 반대)**: 평균 81.39 < 81.50 (문턱과 차이 −0.11). K=49 81.28에서 예산을 두 배로 늘려도 +0.11뿐이다.
     - **F3 rollout 쪽: maskedkd@98 > rollout@98** (같은 seed 짝 +0.17·−1.00·−2.67, 2/3 음수, 평균 −1.17). 예측 범위("불확실 또는 maskedkd 쪽이 높음") 안. 단 s5 짝 −2.67은 maskedkd s5 84.67 한 값의 영향이 크다.
     - F1과 F3 lateroll 쪽은 lateroll@98 세 개가 끝난 뒤 판정한다.
+  - 최종 판정 (라운드 178): screen_lateroll_k98_s0_1102_020138_8a4c = 82.17, screen_lateroll_k98_s4_1102_020142_9191 = 82.83, screen_lateroll_k98_s5_1102_020146_a022 = 82.50 (epochs_done 100, total 25.04 GFLOPs/img). lateroll@98 평균 82.50.
+    - **F1 참 (예측대로)**: 82.50 ≥ 81.50. Full 82.17보다 +0.33.
+    - **F3 lateroll 쪽: 차이는 불확실** (같은 seed 짝 +1.17·+0.83·−2.17, 2/3 양수지만 평균 차이 −0.06으로 평균이 높지 않음, |차이| ≤ 0.33). 예측 범위 안.
+    - 종합: F3 예측(K=98에서 선택 규칙의 이득이 사라짐)이 두 선택기 모두 맞았다. F2만 틀렸다(rollout은 K=98에서도 문턱 바로 밖). 사전 등록 비교가 아닌 기술값: lateroll@98 − rollout@98 짝 +1.00·+1.83·+0.50 (평균 +1.11).
+    - H-C30 종료. RESULTS 효율 곡선 절에 반영했다.

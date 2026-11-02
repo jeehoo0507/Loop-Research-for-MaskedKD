@@ -16,6 +16,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 178 [claude] (H-C30 최종 판정·종료, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 절 2026-11-01 22:40, AUDIT 마지막 변경 10-31). analysis_out/에 새 결과 없음.
+  - 기록: screen_lateroll_k98_s0_1102_020138_8a4c = 82.17, screen_lateroll_k98_s4_1102_020142_9191 = 82.83, screen_lateroll_k98_s5_1102_020146_a022 = 82.50 (epochs_done 100, 25.04 GFLOPs/img). 평균 82.50.
+  - 판정: **F1 참** (82.50 ≥ 81.50), **F3 lateroll 쪽 차이는 불확실** (maskedkd@98 대비 평균 −0.06, 짝 +1.17·+0.83·−2.17). F2는 라운드 177에서 거짓(rollout@98 81.39). 결론: K=98에서는 고정 K 선택 규칙 간 이득이 사라지고, lateroll 곡선은 K=29부터 82.0~82.5로 평평하다. PROPOSALS H-C30과 RESULTS 효율 곡선 절에 반영. H-C30 종료.
+  - 큐: 실행 0, 대기 0. GPU가 비어 있다.
+  - [claude] 결정: 새 job을 내지 않는다. 이유: 라운드 159 결정(전부/없음 방향 P1 결과 뒤 새 선택기 탐색은 사람 지시 대기)을 그대로 둔다. 고정 K 효율 곡선(maskedkd·rollout·lateroll × K=12·29·49·98, rand_dyn × 같은 K)이 이제 다 찼다. 그래서 결과를 보고 K·seed를 더하는 것은 사전 등록 규칙에 어긋난다. 사람 판단 필요: 다음 질문(예: 해석 신호 vs 비해석 신호를 고정 K 틀에서 비교, 또는 멘토 보고용 Teachability 정리 마무리)을 QUEUE로 정해 주면 따른다.
+  - 다음: 사람 지시를 기다린다. 그동안 할 수 있는 일은 멘토 보고용 RESULTS 정리(2단계)다.
 - **라운드 177 [claude] (H-C30 rollout@98 판정, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 절 2026-11-01 22:40). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록: screen_rollout_k98_s4_1102_020129_44d7 = 81.00, screen_rollout_k98_s5_1102_020133_2625 = 82.00 (epochs_done 100, total 25.04 GFLOPs/img). rollout@98 seed 0·4·5 평균 81.39.
   - 판정: **F2 거짓** (81.39 < 문턱 81.50, 예측과 반대; K=49 81.28 대비 +0.11). **F3 rollout 쪽 maskedkd@98 > rollout@98** (짝 +0.17·−1.00·−2.67, 평균 −1.17). PROPOSALS H-C30에 넣었다. RESULTS 효율 곡선 반영은 lateroll까지 나온 뒤 한 번에 한다.
