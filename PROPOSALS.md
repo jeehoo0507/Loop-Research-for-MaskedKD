@@ -602,3 +602,7 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 한계: seed 3개(0·4·5), val 600장, maskedkd@98 s5 84.67이 평균을 끌어올림. 주장 대상이 아니라 곡선 기술값이다.
   - 규칙: 결과와 무관하게 RESULTS 효율 곡선 절에 적는다. 결과를 보고 K·seed를 추가하지 않는다(추가하려면 새로 등록). screen seed만(1·2·3 금지).
   - 중간 기록 (라운드 176, 판정 전 기술값): screen_rollout_k98_s0_1102_020122_4467 = 81.17 (epochs_done 100, total 25.04 GFLOPs/img). 같은 seed maskedkd@98 81.00 대비 +0.17. F1~F3는 6개가 다 나온 뒤 판정한다.
+  - 중간 기록 (라운드 177): screen_rollout_k98_s4_1102_020129_44d7 = 81.00, screen_rollout_k98_s5_1102_020133_2625 = 82.00 (epochs_done 100, total 25.04 GFLOPs/img). rollout@98 세 seed가 다 나왔다: 81.17·81.00·82.00, 평균 81.39.
+    - **F2 거짓 (예측과 반대)**: 평균 81.39 < 81.50 (문턱과 차이 −0.11). K=49 81.28에서 예산을 두 배로 늘려도 +0.11뿐이다.
+    - **F3 rollout 쪽: maskedkd@98 > rollout@98** (같은 seed 짝 +0.17·−1.00·−2.67, 2/3 음수, 평균 −1.17). 예측 범위("불확실 또는 maskedkd 쪽이 높음") 안. 단 s5 짝 −2.67은 maskedkd s5 84.67 한 값의 영향이 크다.
+    - F1과 F3 lateroll 쪽은 lateroll@98 세 개가 끝난 뒤 판정한다.

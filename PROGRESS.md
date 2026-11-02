@@ -16,6 +16,12 @@
 (해제) 2/4부(suffdisc@12 vs maskedkd@12, 새 seed 4~6)가 "run 이력이 빠짐없다는 증거"로 두 번 막혔다(05:13, 06:10 codex). 06:10 감사는 모든 상태(실패·중단 포함)의 제출 이력을 요구했다. 그런데 analysis API `api.runs()`는 status done만 돌려주고(harness/analysis_api.py 57행), 분석은 파일을 읽을 수 없다. evidence 묶음에도 queue 이력은 들어가지 않는다. 그래서 감사관이 볼 수 있는 경로로는 이 증거를 만들 수 없다. 사람 확인용 기록: 내가 직접 센 결과, queue/done의 job 134개 중 returncode ≠ 0인 것은 analysis_group_fidelity_1030_143842_1ea0 하나뿐이다(train이 아니라 분석). runs/의 metrics.json 116개는 모두 status done이다(timeout 0). runs/ 디렉터리 120개 = 116 + 지금 실행 중인 4개다. 2/4부는 다시 내지 않는다.
 (해제) 분석 하나만 인용한 겹침 주장(analysis_suffdisc_decomp_1030_202612_878c , 10.65–14.14%)이 두 번 NEEDS-MORE를 받았다(03:57, 04:06 codex). 두 번 모두 REASON은 값과 범위가 맞다고만 적었고, 무엇이 빠졌는지는 적지 않았다. 다시 내지 않는다. 이 겹침은 H-W30 결과와 함께 주장 1의 분해 근거(AUDIT_PROMPT 15항)로만 넣는다.
 # PROGRESS
+- **라운드 177 [claude] (H-C30 rollout@98 판정, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE 마지막 절 2026-11-01 22:40). analysis_out/에 새 결과 없음(최신 H-C22).
+  - 기록: screen_rollout_k98_s4_1102_020129_44d7 = 81.00, screen_rollout_k98_s5_1102_020133_2625 = 82.00 (epochs_done 100, total 25.04 GFLOPs/img). rollout@98 seed 0·4·5 평균 81.39.
+  - 판정: **F2 거짓** (81.39 < 문턱 81.50, 예측과 반대; K=49 81.28 대비 +0.11). **F3 rollout 쪽 maskedkd@98 > rollout@98** (짝 +0.17·−1.00·−2.67, 평균 −1.17). PROPOSALS H-C30에 넣었다. RESULTS 효율 곡선 반영은 lateroll까지 나온 뒤 한 번에 한다.
+  - 실행 중(02:44 UTC): screen_lateroll_k98_s0_1102_020138_8a4c (e19), screen_lateroll_k98_s4_1102_020142_9191 (e11), screen_lateroll_k98_s5_1102_020146_a022 (e8). 대기 0. 약 20 s/epoch → 약 03:12~03:15 UTC 끝.
+  - [claude] 결정: 빈 1칸에 새 job을 내지 않는다. 이유: 라운드 176과 같다(H-C30은 결과를 보고 K·seed를 더하지 않음, 새 선택기 탐색은 라운드 159 결정대로 사람 지시 대기, 무인 라운드에서 백그라운드 대기 금지).
+  - 다음: lateroll@98 세 개 `val_acc_last` 기록 → F1·F3(lateroll 쪽) 판정 → RESULTS 효율 곡선 절에 K=98 줄(rollout·lateroll) 반영.
 - **라운드 176 [claude] (H-C30 1개 기록, 새 job 없음).** 새 사람 커밋·QUEUE 변경·AUDIT 결과 없음(QUEUE·AUDIT 마지막 변경 faeb3cd). analysis_out/에 새 결과 없음(최신 H-C22).
   - 기록: screen_rollout_k98_s0_1102_020122_4467 = 81.17 (epochs_done 100, total 25.04 GFLOPs/img). 같은 seed maskedkd@98 81.00 대비 +0.17. PROPOSALS H-C30 중간 기록에 넣었다.
   - 실행 중(02:38 UTC): screen_rollout_k98_s4_1102_020129_44d7 (e94), screen_rollout_k98_s5_1102_020133_2625 (e90), screen_lateroll_k98_s0_1102_020138_8a4c (e2). 대기 2개(screen_lateroll_k98_s4_1102_020142_9191, screen_lateroll_k98_s5_1102_020146_a022). 약 22 s/epoch → rollout 두 개는 약 02:42 UTC, lateroll 세 개는 약 03:15~03:20 UTC에 끝난다.
