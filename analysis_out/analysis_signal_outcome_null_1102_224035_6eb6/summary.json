@@ -1,0 +1,245 @@
+{
+ "dataset": "cub",
+ "K": 29,
+ "n_val": 600,
+ "n_boot": 2000,
+ "students": {
+  "lateroll_s1": {
+   "run": "final_lateroll_k29_s1_1101_104303_ef38",
+   "val_acc_last": 82.33333230018616,
+   "val_acc_here": 82.333,
+   "signal_kl": 0.60413,
+   "outcome_kl": 0.47517
+  },
+  "lateroll_s2": {
+   "run": "final_lateroll_k29_s2_1101_125958_6470",
+   "val_acc_last": 80.33333420753479,
+   "val_acc_here": 80.333,
+   "signal_kl": 0.63259,
+   "outcome_kl": 0.4659
+  },
+  "lateroll_s3": {
+   "run": "final_lateroll_k29_s3_1101_140937_ec98",
+   "val_acc_last": 81.49999976158142,
+   "val_acc_here": 81.5,
+   "signal_kl": 0.63224,
+   "outcome_kl": 0.49143
+  },
+  "maskedkd_s1": {
+   "run": "final_maskedkd_k29_s1_1101_104303_b676",
+   "val_acc_last": 81.33333325386047,
+   "val_acc_here": 81.333,
+   "signal_kl": 1.24139,
+   "outcome_kl": 0.61913
+  },
+  "maskedkd_s2": {
+   "run": "final_maskedkd_k29_s2_1101_125958_5b02",
+   "val_acc_last": 79.16666865348816,
+   "val_acc_here": 79.167,
+   "signal_kl": 1.23858,
+   "outcome_kl": 0.65559
+  },
+  "maskedkd_s3": {
+   "run": "final_maskedkd_k29_s3_1101_140937_b00f",
+   "val_acc_last": 80.16666769981384,
+   "val_acc_here": 80.167,
+   "signal_kl": 1.19421,
+   "outcome_kl": 0.61067
+  },
+  "rollout_s1": {
+   "run": "final_rollout_k29_s1_1101_104303_3861",
+   "val_acc_last": 81.33333325386047,
+   "val_acc_here": 81.333,
+   "signal_kl": 0.76219,
+   "outcome_kl": 0.50959
+  },
+  "rollout_s2": {
+   "run": "final_rollout_k29_s2_1101_125958_2ad2",
+   "val_acc_last": 79.3333351612091,
+   "val_acc_here": 79.333,
+   "signal_kl": 0.75837,
+   "outcome_kl": 0.52194
+  },
+  "rollout_s3": {
+   "run": "final_rollout_k29_s3_1101_140937_8573",
+   "val_acc_last": 80.66666722297668,
+   "val_acc_here": 80.667,
+   "signal_kl": 0.70872,
+   "outcome_kl": 0.519
+  }
+ },
+ "A_rollout_vs_lateroll": {
+  "seed1": {
+   "g_mean": 0.15806,
+   "o_mean": 0.03442,
+   "spearman_g_o": [
+    0.0971,
+    0.0073,
+    0.1839
+   ],
+   "partial_g_o_given_difficulty": [
+    0.0822,
+    -0.0087,
+    0.1696
+   ]
+  },
+  "seed2": {
+   "g_mean": 0.12579,
+   "o_mean": 0.05604,
+   "spearman_g_o": [
+    0.1737,
+    0.0895,
+    0.2637
+   ],
+   "partial_g_o_given_difficulty": [
+    0.1655,
+    0.0784,
+    0.2577
+   ]
+  },
+  "seed3": {
+   "g_mean": 0.07648,
+   "o_mean": 0.02757,
+   "spearman_g_o": [
+    0.1764,
+    0.0873,
+    0.2685
+   ],
+   "partial_g_o_given_difficulty": [
+    0.1729,
+    0.0834,
+    0.2637
+   ]
+  }
+ },
+ "N_same_method_pairs": {
+  "maskedkd_s1_vs_s2": {
+   "g_mean": -0.00281,
+   "o_mean": 0.03646,
+   "spearman_g_o": [
+    0.0631,
+    -0.0234,
+    0.1441
+   ],
+   "partial_g_o_given_difficulty": [
+    0.0589,
+    -0.027,
+    0.1404
+   ]
+  },
+  "maskedkd_s1_vs_s3": {
+   "g_mean": -0.04717,
+   "o_mean": -0.00846,
+   "spearman_g_o": [
+    0.0878,
+    -0.0017,
+    0.171
+   ],
+   "partial_g_o_given_difficulty": [
+    0.084,
+    -0.0046,
+    0.1667
+   ]
+  },
+  "maskedkd_s2_vs_s3": {
+   "g_mean": -0.04436,
+   "o_mean": -0.04492,
+   "spearman_g_o": [
+    0.0951,
+    0.0095,
+    0.1797
+   ],
+   "partial_g_o_given_difficulty": [
+    0.0978,
+    0.012,
+    0.1851
+   ]
+  },
+  "lateroll_s1_vs_s2": {
+   "g_mean": 0.02845,
+   "o_mean": -0.00927,
+   "spearman_g_o": [
+    0.0141,
+    -0.0775,
+    0.1026
+   ],
+   "partial_g_o_given_difficulty": [
+    0.0118,
+    -0.0801,
+    0.0997
+   ]
+  },
+  "lateroll_s1_vs_s3": {
+   "g_mean": 0.02811,
+   "o_mean": 0.01626,
+   "spearman_g_o": [
+    0.0539,
+    -0.0384,
+    0.1485
+   ],
+   "partial_g_o_given_difficulty": [
+    0.0529,
+    -0.0376,
+    0.1442
+   ]
+  },
+  "lateroll_s2_vs_s3": {
+   "g_mean": -0.00034,
+   "o_mean": 0.02552,
+   "spearman_g_o": [
+    0.0766,
+    -0.0077,
+    0.1672
+   ],
+   "partial_g_o_given_difficulty": [
+    0.0766,
+    -0.0068,
+    0.1661
+   ]
+  }
+ },
+ "H_A17_repro_maskedkd_vs_lateroll": {
+  "seed1": {
+   "g_mean": 0.63725,
+   "o_mean": 0.14395,
+   "spearman_g_o": [
+    0.3116,
+    0.2336,
+    0.3857
+   ],
+   "partial_g_o_given_difficulty": [
+    0.2264,
+    0.1406,
+    0.3128
+   ]
+  },
+  "seed2": {
+   "g_mean": 0.60599,
+   "o_mean": 0.18968,
+   "spearman_g_o": [
+    0.2538,
+    0.1699,
+    0.3311
+   ],
+   "partial_g_o_given_difficulty": [
+    0.1799,
+    0.087,
+    0.2657
+   ]
+  },
+  "seed3": {
+   "g_mean": 0.56197,
+   "o_mean": 0.11924,
+   "spearman_g_o": [
+    0.2617,
+    0.181,
+    0.3444
+   ],
+   "partial_g_o_given_difficulty": [
+    0.1961,
+    0.1038,
+    0.2871
+   ]
+  }
+ }
+}

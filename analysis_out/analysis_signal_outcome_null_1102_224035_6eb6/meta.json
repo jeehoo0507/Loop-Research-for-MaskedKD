@@ -1,0 +1,12 @@
+{
+ "id": "analysis_signal_outcome_null_1102_224035_6eb6",
+ "name": "signal_outcome_null",
+ "source_sha": "6eb60315a4f2a81fe1fbbf7e827846b0f4ef3c622583c6e5256b18176bae11fb",
+ "status": "done",
+ "meta": {
+  "question": "on CUB final K=29 students of seeds 1, 2, 3, does the H-A17 per-image signal/outcome link also hold for lateroll vs rollout, and does a same-method different-seed null pair show the same link?",
+  "method": "keep-only masked-teacher faithfulness (KL) linked to student-teacher output divergence per image; Spearman and rank partial correlation with paired bootstrap over val images; same-method null pairs",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Stanton et al. NeurIPS 2021 (student-teacher fidelity); Hooker et al. NeurIPS 2019 (keep-only evaluation)"
+ },
+ "seconds": 35.8
+}
