@@ -34,7 +34,7 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@49 vs rollout@49 [acc]: +0.06 %p, 95% CI [-3.05, +3.16], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 - lateroll@49 vs tome@49 [acc]: +2.50 %p, 95% CI [+0.31, +4.69], seeds 1,2,3, GFLOPs ratio 1.134 -> WIN
 - lateroll@49 vs grid@49 [acc]: +4.11 %p, 95% CI [+3.25, +4.97], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
-- lateroll@49 vs center@49 [acc]: +2.75 %p, 95% CI [-8.90, +14.40], seeds 1,2, GFLOPs ratio 0.999 -> no difference
+- lateroll@49 vs center@49 [acc]: +2.50 %p, 95% CI [-0.02, +5.02], seeds 1,2,3, GFLOPs ratio 0.999 -> no difference
 - lateroll@49 vs random@49 [acc]: +4.00 %p, 95% CI [-2.35, +10.35], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@49 vs full@196 [acc]: +0.44 %p, 95% CI [-4.10, +4.99], seeds 1,2,3, GFLOPs ratio 0.385 -> no difference
 - lateroll@49 vs rollout@49 [acc]: +0.06 %p, 95% CI [-3.05, +3.16], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
@@ -92,7 +92,7 @@ Total agent screen configs: 14
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
 | final | center |  | 29 | 29.0 | 1,2,3 | 78.28 ± 1.08 | - | 13.00 | 5.36 | 0.00 | 279 | final_center_k29_s3_1101_140937_62e7 final_center_k29_s1_1101_104303_c1f7 final_center_k29_s2_1101_125958_d08b |
-| final | center |  | 49 | 49.0 | 1,2 | 79.33 ± 0.94 | - | 16.46 | 8.82 | 0.00 | 319 | final_center_k49_s2_1102_043001_d845 final_center_k49_s1_1102_034050_dbd2 |
+| final | center |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.88 | - | 16.46 | 8.82 | 0.00 | 340 | final_center_k49_s2_1102_043001_d845 final_center_k49_s1_1102_034050_dbd2 final_center_k49_s3_1102_153530_7a3d |
 | final | full |  | 196 | 196.0 | 1,2,3 | 81.72 ± 1.64 | - | 42.77 | 35.13 | 0.00 | 227 | final_full_k196_s2_1101_125958_cc04 final_full_k196_s3_1101_140937_e8fa cub_final_full_k196_s1_1030_153055_d87b |
 | final | grid |  | 29 | 29.0 | 1,2,3 | 75.33 ± 0.60 | - | 13.00 | 5.36 | 0.00 | 281 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 final_grid_k29_s3_1101_140937_8b9f |
 | final | grid |  | 49 | 49.0 | 1,2,3 | 78.06 ± 0.38 | - | 16.46 | 8.82 | 0.00 | 313 | final_grid_k49_s2_1102_043001_e20e final_grid_k49_s3_1102_153530_d0e5 final_grid_k49_s1_1102_034050_f172 |
