@@ -521,7 +521,7 @@ def test_evidence_bundle_attaches_cited_runs(tmp_path, monkeypatch):
     text = evidence.audit()
     assert f"runs/{rid}/metrics.json" in text and '"val_acc": 80.1' in text and '"loss"' not in text
     assert "selector source mysel" in text and "META = {'parent': 'none'}" in text
-    assert "complete job history" in text and f"{rid} | done" in text and "total 1 jobs" in text
+    assert "complete job history" in text and f"{rid} | done" in text and "listed 1 jobs of mysel" in text
     assert "selector_api" in evidence.ideas() or "missing: harness/selector_api.py" in evidence.ideas()
 
 
