@@ -202,3 +202,9 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **이미지 안의 토큰 선택은 고정**한다 (지금 기준 TrustMask 버전과 같은 선택기). 그래야 "몇 개를 주느냐"의 효과만 본다.
 - **대조군:** `rand_alloc`(같은 평균, 무작위로 다른 K) + 고정 K. 신호가 무작위 배분보다 나아야 신호의 효과다.
 - **판정:** 18:40 "범용성" 절 그대로 — Aircraft와 CUB 둘 다에서 같은 코드로, MaskedKD 대비. 각 데이터셋 final seed 1·2·3.
+
+## 2026-11-03 20:20 KST — 사람: Waterbirds 한정 방식 금지
+- TrustMask의 탐색·채택은 **Aircraft와 CUB**로만 한다 (18:40 범용성 기준 그대로). Waterbirds 결과는 채택·기각 근거로 쓰지 않는다.
+- **Waterbirds에 맞춘 설계를 제안하지 않는다:** 배경/편향(spurious) 대응, worst-group accuracy(WGA)나 group 정보를 쓰는 규칙, 2클래스 가정, Waterbirds 실험에서 고른 값(예: 사람 노트의 Waterbirds 숫자, suffdisc의 ±2 탐색 범위)을 근거로 한 선택. 그런 근거로 나온 구성요소는 Aircraft·CUB 결과로 다시 정당화되지 않으면 쓰지 않는다.
+- 사람 노트(TrustMask)는 Waterbirds에서 나왔다. 노트에서는 **아이디어(신호 두 종류, shared/gap/pruned, 이미지별 토큰 수)만** 가져오고, 수치·하이퍼파라미터는 가져오지 않는다.
+- 보고(아침 요약·RESULTS)에는 데이터셋마다 결과를 따로 적고, 두 데이터셋에서 방향이 같은지 한 줄로 적는다.
