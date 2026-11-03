@@ -163,6 +163,7 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
             elif w[taught].numel() and w[taught].mean().item() > 1 + 1e-3:
                 raise HarnessViolation(f"kd_weight mean {w[taught].mean().item():.4f} > 1 on taught images")
             kd = torch.zeros(x.shape[0], device=x.device)
+            t_ok = torch.full((x.shape[0],), float("nan"), device=x.device)
             if taught.any():
                 with torch.no_grad(), segs.seg("teacher"):
                     if method == "tome":   # teacher sees every token and merges inside; keep = budget it is matched to
@@ -172,6 +173,7 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
                 kd[taught] = F.kl_div(F.log_softmax(out.logits.float()[taught] / C.TAU, dim=1),
                                       F.softmax(t_logits.float() / C.TAU, dim=1),
                                       reduction="none").sum(1) * C.TAU * C.TAU
+                t_ok[taught] = (t_logits.argmax(1) == y[taught].argmax(1)).float()
             ce = torch.sum(-y * F.log_softmax(out.logits.float(), dim=-1), dim=-1)   # SoftTargetCrossEntropy per image
             per = torch.where(taught, (1 - C.ALPHA) * ce + C.ALPHA * w * kd, ce)
             loss = per.mean()
@@ -179,7 +181,7 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
                 with torch.no_grad(), segs.seg("selector"):
                     selector.observe(Feedback(sample_idx=sample_idx, kept=keep.sum(1),
                                               kd=torch.where(taught, kd.detach(), torch.full_like(kd, float("nan"))),
-                                              epoch=epoch, progress=progress))
+                                              epoch=epoch, progress=progress, teacher_ok=t_ok))
     loss.backward()
     opt.step()
     return loss.item(), kept

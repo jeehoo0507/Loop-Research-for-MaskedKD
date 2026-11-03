@@ -730,6 +730,19 @@ def test_per_image_budget_skips_teacher_and_matches_old_loss(models):
     assert abs(new - old.item()) < 1e-3
 
 
+def test_feedback_reports_masked_teacher_correctness(models):
+    from harness.baselines import RandDyn
+    seen = {}
+
+    class Spy(RandDyn):
+        def observe(self, fb):
+            seen["ok"], seen["kept"] = fb.teacher_ok.clone(), fb.kept.clone()
+    _step("x", Spy(), 98, models)
+    ok, kept = seen["ok"], seen["kept"]
+    assert torch.isnan(ok[kept == 0]).all()                      # no teacher, no verdict
+    assert set(ok[kept > 0].tolist()) <= {0.0, 1.0}
+
+
 def test_per_image_budget_rules(models):
     class Greedy(SelectorBase):          # one batch above 2x the budget
         def select(self, ctx):

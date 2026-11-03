@@ -66,6 +66,10 @@ class Feedback:
     kd: torch.Tensor                     # [B] KD loss per image (TAU^2 KL), NaN where the image got no teacher
     epoch: int
     progress: float
+    # [B] 1.0 if the masked teacher's top class equals the image's main label (largest Mixup/CutMix weight), 0.0 if
+    # not, NaN where the image got no teacher: lets a per-image budget give more tokens where the masked teacher
+    # keeps failing (TrustMask "how many?", 2026-11-03)
+    teacher_ok: Optional[torch.Tensor] = None
 
 
 class SelectorBase:
