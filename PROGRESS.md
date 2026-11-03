@@ -1,5 +1,10 @@
 STUCK: 게이트 2 — `.venv/bin/python -m harness.prepare_data --datasets cub_lt`가 무인 모드 권한에서 두 번 거부됐다(라운드 277, 278). data/cub_lt가 없어 H-A39 18 job을 낼 수 없다. 사람이 cub_lt 준비를 돌리거나 그 명령을 허용해 달라.
 STUCK: 감사 P1 (H-A37 v1 − teacher_topk 음성 결과) — 두 번 연속 NEEDS-MORE(18:56, 19:15 agent/logs/audit_20261103_191532.log). 같은 이유: 묶음의 metrics가 잘려 run별 selector_sha가 감사자에게 안 보이고, 연구자가 쓴 sha 표는 독립 증거로 인정되지 않는다(+ "analysis_out 분해 없음"). 묶음 내용은 harness/evidence.py(잠금 파일) 몫이라 연구자가 고칠 수 없다. 다시 내지 않는다. 사람이 evidence.py에 selector_sha를 metrics 잘림 밖에 넣거나, 게이트 판정의 감사 기준(WGA 주 지표, 분해 요구)을 정해 달라.
+요약 (라운드 285, [claude], 19:50 UTC): 새 사람 지시 없음(pull "Already up to date", QUEUE 마지막 = 11-04 01:40 KST 세 게이트), git 정상, data/cub_lt 여전히 없음 → 위 두 STUCK 그대로(재시도·재요청 안 함).
+- 기록 (H-A37 K=12, 판정 아님): v1@12 seed 1·2·3 끝남 — waterbirds_final_trustmask_v1_k12_s1_1103_171059_cd8d 39.85, waterbirds_final_trustmask_v1_k12_s2_1103_171104_150e 48.87, waterbirds_final_trustmask_v1_k12_s3_1103_171109_331a 45.86 (평균 WGA 44.86, 10.43 GFLOPs/img). 짝 WGA: v1 − teacher_topk −12.78 [−27.60, +2.03], v1 − maskedkd +22.55 [+14.00, +31.10], v1 − rollout −6.02 [−18.95, +6.92]. acc는 harness.compare. RESULTS.md에 적었다.
+- 기록 (v0): waterbirds_final_trustfilt_k29_s1_1103_171121_24be WGA 72.18 / acc 91.49 — seed 1에서 rollout(63.16)·v1(61.65)·teacher_topk(64.66)보다 높다(방향만). s2·s3는 epoch 18 근처.
+- 실행 4개(trustfilt@29 s2·s3, @12 s1·s2), 대기 1개(trustfilt@12 s3). GPU 100%. 남은 5 job ≈ 1시간.
+- [claude] 결정: 새 job·분석 없음. 이유는 라운드 284와 같다(QUEUE 01:40: 새 선택기 금지, 스냅샷 분석은 GPU가 빈 뒤). v0@29가 seed 1에서 높게 나왔지만 등록상 v0 − rollout은 기록이므로 seed·K를 더하지 않는다. 09:00 KST(00:00 UTC) 아침 요약을 쓸 것.
 요약 (라운드 284, [claude], 19:25 UTC): 새 사람 지시 없음(QUEUE 마지막 = 11-04 01:40 KST 세 게이트), git 정상, data/cub_lt 여전히 없음 → 게이트 2 STUCK 그대로(재시도 안 함).
 - 감사 19:15: P1 다시 NEEDS-MORE → 위 STUCK. 숫자·설정·해석 문구는 감사자가 지지했다("support the stated arithmetic and cautious interpretation").
 - 기록 (K=12, 판정 아님): waterbirds_final_teacher_topk_k12_s2_1103_171051_3651 WGA 54.89 / acc 88.41, waterbirds_final_teacher_topk_k12_s3_1103_171055_5959 WGA 60.90 / acc 89.24 → teacher_topk@12 seed 1·2·3 평균 WGA 57.64 (10.44 GFLOPs/img). RESULTS.md에 적었다.
