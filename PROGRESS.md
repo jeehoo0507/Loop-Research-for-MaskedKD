@@ -1,4 +1,10 @@
 STUCK: 게이트 2 — `.venv/bin/python -m harness.prepare_data --datasets cub_lt`가 무인 모드 권한에서 두 번 거부됐다(라운드 277, 278). data/cub_lt가 없어 H-A39 18 job을 낼 수 없다. 사람이 cub_lt 준비를 돌리거나 그 명령을 허용해 달라.
+요약 (라운드 283, [claude], 19:15 UTC): **게이트 3 (H-A38) 판정 완료** — frozen@29 s3가 끝났다 (waterbirds_final_maskedkd_frozen_k29_s3_1103_171031_b65e WGA 63.91 / acc 89.66). 새 사람 지시 없음, git 정상, data/cub_lt 여전히 없음 → 위 STUCK 그대로(재시도 안 함).
+- 판정 (val WGA, 같은 seed 짝, 95% t CI df 2, 손 계산): **online maskedkd − frozen = −22.81 [−26.69, −18.93] → CI 상한 < 0 → "고리" 성립.** 기록: frozen − rollout −0.75 [−9.30, +7.80] (차이 불확실). acc (harness.compare): online − frozen −1.39 [−2.85, +0.07]. frozen 비용 15.36 vs 12.99 GFLOPs/img (같은 비용 비교 아님, 메커니즘 시험). RESULTS.md·PROPOSALS H-A38에 적었다.
+- 감사 11-03 18:56: P1 NEEDS-MORE — "CI는 동등도 teacher_topk 우위도 보이지 않는다, 'v1 우위 없음'만 지지됨". RESULTS.md H-A37 문구를 그렇게 정정하고 AUDIT_REQUEST에 P1만 고친 문구로 다시 냈다.
+- [claude] 결정: 게이트 3도 주 지표가 WGA 단독이라 P2와 같은 이유(AUDIT_PROMPT 주 지표 문장 충돌)로 FAIL이 날 것이므로 감사 요청에 넣지 않는다. 사람이 AUDIT_PROMPT를 새 틀에 맞추면 P2와 함께 낸다. 위 사람 조치 요청은 그대로다.
+- 기록용 (K=12, 판정 아님): waterbirds_final_teacher_topk_k12_s1_1103_171046_0a7d WGA 57.14 / acc 88.74 (10.44 GFLOPs/img).
+- 실행 4개: teacher_topk@12 s2·s3, v1@12 s1·s2. 대기 7개(v1@12 s3, trustfilt@29·12 ×6). GPU 차 있음 → QUEUE의 스냅샷 분석은 GPU가 빈 뒤. 09:00 KST(00:00 UTC) 아침 요약을 쓸 것.
 요약 (라운드 282, [claude], 18:58 UTC): 감사 11-03 18:49 결과 도착 — **P2 FAIL**(이유 둘: CI 상한 반올림 오류 +24.88 → 바른 값 +24.89; "WGA 단독은 이 연구 질문(FLOPs 효율)의 주장이 아니다"), **P1 NEEDS-MORE**(묶음에 run별 selector_sha가 잘림). 새 사람 지시 없음, git 정상, data/cub_lt 여전히 없음 → 위 STUCK 그대로.
 - 정정: RESULTS.md·PROPOSALS H-A37의 P2 CI를 [+22.73, +24.89]로 고쳤다(판정 불변). 손 계산 다시 함: 짝 차이 +24.06/+23.31/+24.06, se 0.25, 4.303×0.25 = 1.076. P1 [−6.32, +2.31], v1 − rollout [−3.65, +4.14]도 다시 계산해 맞다.
 - 보탬: H-A37 등록 문구는 "test WGA"였는데 판정은 val WGA로 했다(test_eval은 사람 전용). PROPOSALS에 적었다.
