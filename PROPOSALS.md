@@ -939,3 +939,11 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - 한계: val 이미지(약 600장 이상, 3 seed)는 학습 이미지가 아니다. 학습 중 이력은 증강·Mixup 아래의 학습 이미지에서 쌓인다. epoch 25·50 두 시점만 있어 이력 해상도가 낮다. 이것은 학습 결과가 아니라 대리 지표다.
   - 규칙: 결과를 보고 K·시점·셋 비율·지표를 바꾸지 않는다. CUB에서 같은 진단은 v1 CUB(H-A30)가 끝난 뒤에만, 같은 코드로 낸다.
   - 제출 (라운드 251, 등록 커밋 9c1eb81 뒤): analysis_aircraft_signal2_fixable_1103_101502_53d0 (학습 job 뒤에 대기)
+
+- **H-A33 (라운드 256, Caltech-256 결과 전·후보 동결 전에 등록, QUEUE 11-03 20:50 마감 계획): 최종 후보 동결 규칙 + Caltech-256 held-out 판정 규칙.** 이 항목은 새 방법이 아니라 규칙이다. 결과를 보고 바꾸지 않는다.
+  - **후보 동결 규칙 (11/4 11:00 KST = 02:00 UTC, 늦어도 12:00 KST):** 후보 집합 = 그 시각에 같은 소스(selector_sha)로 CUB와 Aircraft 둘 다 K=29 final seed 1·2·3이 끝난 TrustMask 버전(v0 trustfilt, v1, v2, 그때까지 끝난 v3 이상). 대조군(v2r 등)·닫힌 방향(lateroll 단독, ent_weight)은 후보가 아니다. (1) QUEUE 18:40 채택 기준(두 데이터셋 모두 v − maskedkd@29 평균 > 0, 하나 이상에서 CI 하한 > 0, 그리고 그 버전의 등록에 적힌 추가 조건)을 통과한 버전이 있으면 그중 가장 최근 버전을 고른다. (2) 통과한 버전이 없으면 "미채택 후보"로, **두 데이터셋 중 작은 쪽의 평균 짝 차이 min(Aircraft, CUB)(v − maskedkd@29)가 가장 큰 버전**을 고른다(한 데이터셋에서만 좋은 버전을 피하는 보수적 규칙). 차이가 0.10 %p 이내로 같으면 구성요소가 적은(낮은 번호) 버전을 고른다. 숫자는 harness.compare --tier final 출력만 쓴다. 동결 시 PROGRESS에 버전, 소스 sha, 두 데이터셋 숫자를 적는다.
+  - **Caltech-256 제출 (동결 직후, `--priority 5`):** 후보@29, maskedkd@29, rollout@29 seed 1·2·3 + CE·Full seed 2·3 (seed 1은 게이트). final 20 epoch(config). 결과를 보고 K·seed·방법을 더하지 않는다.
+  - **게이트 조건:** 게이트(seed 1)와 seed 2·3을 합쳐 Caltech-256 Full − CE 평균이 +1.0 이하이면 "Caltech-256에서는 KD 이득이 작아 토큰 선택 비교의 전제가 약하다"고 적고, 후보 run은 참고용으로만 보고한다(아래 판정을 쓰되 "참고"를 붙인다). 게이트가 seed 1만으로 판정되는 경우 그 사실을 적는다.
+  - **예측 (한 번만, seed 1·2·3 평균과 같은 seed 짝 차이의 t 95% CI, df 2):** H1(주 판정) 후보 − maskedkd@29 평균 > 0 — 확신 중간(CUB·Aircraft에서 v1이 +1.06·+1.76이지만 둘 다 CI 0 포함). H1의 CI 하한 > 0 — 확신 낮음. H2(기록·맥락) 후보 − rollout@29, 후보 − CE, 후보 − Full, 총 GFLOPs/img(캐시 상각 포함).
+  - **해석 (QUEUE 20:50 문구 그대로):** H1 평균 > 0 → "세 번째 데이터셋에서도 같은 방향". CI 하한 > 0 → "확인". 평균 ≤ 0 → "세 번째 데이터셋에서는 같은 방향이 아니다". 후보 − rollout 평균 ≤ 0이면 숨기지 않고 "rollout 대비 이득은 보이지 않는다(해석 기반 선택 자체의 이득과 TrustMask만의 이득을 구분할 수 없다)"고 적는다. 최종 요약에는 세 데이터셋 각각의 후보 − maskedkd, − rollout, − CE(짝 차이와 CI)와 방향이 세 데이터셋에서 같은지 한 줄을 쓴다.
+  - 규칙: Caltech-256에서 아무것도 고르지 않는다(held-out). 동결 뒤 후보 소스를 바꾸지 않는다(`holdout_rule`이 같은 sha를 요구).
