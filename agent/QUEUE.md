@@ -161,3 +161,9 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - 판정 규칙은 결과 전에 적고 결과를 보고 바꾸지 않는다. 결과 보고 seed를 더하지 않는다.
 - 데이터셋별 상수·분기를 selector에 넣지 않는다.
 - 비용은 선택기 FLOPs 포함 (캐시 상각 포함)으로 비교한다.
+
+### 보강 (16:55 KST, 사람이 먼저 찾은 가까운 선행 연구 — 할 일 1의 표에 반드시 넣고 원문으로 확인)
+- **LeaF, "Learning to Focus: Causal Attention Distillation via Gradient-Guided Token Pruning" (NeurIPS 2025, arXiv 2506.07851):** teacher와 student의 기울기를 비교해 "student는 주목하는데 teacher는 무시하는" 토큰을 찾아 학습 중 제거한다. **TrustMask의 pruned 규칙(student는 보지만 teacher가 무시하는 토큰 제거)과 겹친다.** 다만 LLM 추론의 정확도(교란 토큰 제거)가 목적이고, student 입력을 자른다. teacher 연산을 줄이려는 게 아니다. 차이를 이 축(목적: teacher FLOPs / 대상: teacher 입력 / 신호: 캐시된 attribution vs 기울기 / 영역: ViT 이미지 분류)으로 적는다.
+- **MaskedKD (ECCV 2024, arXiv 2302.10494):** student 마지막 층 CLS attention으로 teacher 입력을 가린다. 저자는 이것이 "커리큘럼"처럼 작동한다고 해석한다 (초반에는 쉽고 나중에는 어려운 teacher 감독). → student 신뢰도 곡선(할 일 3a)은 이 해석과 직접 맞닿는다. 그 주장을 확인하거나 반박하는 쪽으로 설계한다.
+- **Distilling Token-Pruned Pose Transformer (arXiv 2304.05548):** teacher attention으로 학습 초반 student의 토큰 위치 찾기를 돕는다 ("초반에는 teacher 신호가 낫다"는 주장과 가까움).
+- 웹 검색 몇 번으로는 "student attention 신뢰도에 따라 teacher/student 신호를 바꾸는 KD 토큰 선택"과 "teacher-student 합의로 teacher 입력 토큰을 고르는 효율 KD"는 찾지 못했다. 네 검색으로 더 확인하고, 찾으면 그대로 적는다.
