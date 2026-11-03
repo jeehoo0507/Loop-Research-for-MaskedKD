@@ -825,6 +825,7 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 예측 (한 번만, 판정은 seed 1·2·3 평균과 같은 seed 짝 차이의 t 95% CI(df 2)): Q1 maskedkd@12 − CE의 seed 평균 < 0 이고 CI 상한 < 0 — 확신 중간. Q2 rollout@12 − CE 도 같은 조건 — 확신 중간. Q3 random@12 − CE의 seed 평균 < 0 (CI는 보고만) — 확신 중간. Q4 random@12 − maskedkd@12 의 seed 평균 > 0 (CI는 보고만; seed 1에서는 +1.71) — 확신 낮음.
   - 해석: Q1·Q2 참 → "Aircraft에서 K=12(토큰 6%)의 가린 teacher KD는 seed 3개 평균으로 CE보다 나쁘다"를 RESULTS Aircraft 절에 적는다(감사 전, 주장 아님). 평균은 음수지만 CI가 0을 포함하면 "CE보다 낮은 경향, 차이는 불확실". 평균 ≥ 0이면 "seed 1의 모양은 재현되지 않았다". Q4는 어느 쪽이든 선택 규칙에 대한 주장으로 쓰지 않는다(무작위 기준선과의 비교일 뿐).
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·seed·방법을 더하지 않는다. tome@12 seed 2·3은 비용이 맞지 않아(x2.69) 내지 않는다. H-A20 job이 열리면 그쪽이 먼저다(이 job들은 기본 priority).
+  - 제출 (라운드 239, 등록 커밋 cc72a20 뒤): aircraft_final_maskedkd_k12_s2_1103_024925_555b , aircraft_final_maskedkd_k12_s3_1103_024931_458c , aircraft_final_random_k12_s2_1103_024935_e173 , aircraft_final_random_k12_s3_1103_024939_6b93 , aircraft_final_rollout_k12_s2_1103_024944_52f8 , aircraft_final_rollout_k12_s3_1103_024948_a6c2
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
