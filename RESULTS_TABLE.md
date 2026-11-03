@@ -25,6 +25,8 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@49 vs tome@49 [acc]: +2.50 %p, 95% CI [+0.31, +4.69], seeds 1,2,3, GFLOPs ratio 1.134 -> WIN
 - lateroll@49 vs grid@49 [acc]: +4.11 %p, 95% CI [+3.25, +4.97], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 - lateroll@49 vs random@49 [acc]: +3.83 %p, 95% CI [+2.40, +5.27], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
+- trustmask_v1@29 vs grid@29 [acc]: +5.58 %p, 95% CI [+0.29, +10.88], seeds 1,2, GFLOPs ratio 1.026 -> WIN
+- trustmask_v1@29 vs random@29 [acc]: +6.42 %p, 95% CI [+1.12, +11.71], seeds 1,2, GFLOPs ratio 1.026 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - lateroll@12 vs maskedkd@12 [acc]: +0.50 %p, 95% CI [-0.60, +1.60], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
@@ -51,6 +53,14 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@49 vs random@49 [acc]: +3.83 %p, 95% CI [+2.40, +5.27], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 - lateroll@49 vs full@196 [acc]: +0.44 %p, 95% CI [-4.10, +4.99], seeds 1,2,3, GFLOPs ratio 0.385 -> no difference
 - lateroll@49 vs rollout@49 [acc]: +0.06 %p, 95% CI [-3.05, +3.16], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- trustmask_v1@29 vs maskedkd@29 [acc]: +1.00 %p, 95% CI [-9.59, +11.59], seeds 1,2, GFLOPs ratio 1.027 -> no difference
+- trustmask_v1@29 vs rollout@29 [acc]: +0.92 %p, 95% CI [-8.61, +10.45], seeds 1,2, GFLOPs ratio 1.027 -> no difference
+- trustmask_v1@29 vs tome@29 [acc]: +1.58 %p, 95% CI [-7.95, +11.11], seeds 1,2, GFLOPs ratio 1.112 -> no difference
+- trustmask_v1@29 vs grid@29 [acc]: +5.58 %p, 95% CI [+0.29, +10.88], seeds 1,2, GFLOPs ratio 1.026 -> WIN
+- trustmask_v1@29 vs center@29 [acc]: +3.50 %p, 95% CI [-0.74, +7.74], seeds 1,2, GFLOPs ratio 1.026 -> no difference
+- trustmask_v1@29 vs random@29 [acc]: +6.42 %p, 95% CI [+1.12, +11.71], seeds 1,2, GFLOPs ratio 1.026 -> WIN
+- trustmask_v1@29 vs full@196 [acc]: -0.08 %p, 95% CI [-15.97, +15.80], seeds 1,2, GFLOPs ratio 0.312 -> no difference
+- trustmask_v1@29 vs trustfilt@29 (parent) [acc]: missing (needs >= 2 shared seeds)
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - align_dyn@12 vs parent rand_dyn: acc +0.67 %p (threshold 1.92) -> added part UNPROVEN
@@ -75,7 +85,6 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
   - maskedkd : 49.0 (3 seeds)
   - rollout : 49.0 (3 seeds)
 - screening only (fewer seeds):
-  - trustmask_v1@8186a4 : 29.0 (1 seeds)
   - maskedkd : 98.0 (1 seeds)
 ### screen: Full KD val 82.17 (seeds 0,4,5,6,7); KD gain +1.37, tolerance 0.68 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
@@ -129,7 +138,7 @@ Total agent screen configs: 14
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 79.78 ± 1.02 | - | 12.00 | 4.36 | 0.00 | 292 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s3_1101_140937_cdbb final_tome_k29_s2_1101_125958_ab06 |
 | final | tome |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.83 | - | 14.50 | 6.86 | 0.00 | 272 | final_tome_k49_s2_1102_043001_61ab final_tome_k49_s3_1102_153530_f477 final_tome_k49_s1_1102_034050_9b6d |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1 | 80.67 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 254 | final_trustfilt_k29_s1_1103_095835_0073 |
-| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1 | 81.50 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 245 | final_trustmask_v1_k29_s1_1103_095834_2518 |
+| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2 | 81.25 ± 0.35 | - | 13.34 | 5.36 | 0.43 | 244 | final_trustmask_v1_k29_s2_1103_095842_a161 final_trustmask_v1_k29_s1_1103_095834_2518 |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
 | screen | ce |  | 0 | None | 0,4,5,6,7 | 80.80 ± 1.45 | - | 7.64 | 0.00 | 0.00 | 1041 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 screen_ce_k0_s7_1101_230304_50d4 screen_ce_k0_s6_1101_230256_cb6e |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
