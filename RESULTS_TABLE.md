@@ -207,14 +207,14 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
 | final | full |  | 196 | 196.0 | 1,2,3 | 68.05 ± 0.54 | - | 42.77 | 35.13 | 0.00 | 252 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s3_1102_132227_69cc aircraft_final_full_k196_s2_1102_132227_123b |
-| final | maskedkd |  | 12 | 12.0 | 1 | 62.43 ± 0.00 | - | 10.07 | 2.45 | 0.00 | 444 | aircraft_final_maskedkd_k12_s1_1102_132227_f01c |
+| final | maskedkd |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.33 | - | 10.07 | 2.45 | 0.00 | 455 | aircraft_final_maskedkd_k12_s1_1102_132227_f01c aircraft_final_maskedkd_k12_s3_1103_024931_458c aircraft_final_maskedkd_k12_s2_1103_024925_555b |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 65.29 ± 1.25 | - | 12.99 | 5.36 | 0.00 | 384 | aircraft_final_maskedkd_k29_s2_1102_180321_52e2 aircraft_final_maskedkd_k29_s3_1102_180336_347e aircraft_final_maskedkd_k29_s1_1102_132227_6542 |
 | final | maskedkd |  | 49 | 49.0 | 1,2,3 | 66.95 ± 1.76 | - | 16.44 | 8.82 | 0.00 | 398 | aircraft_final_maskedkd_k49_s3_1102_193521_573d aircraft_final_maskedkd_k49_s1_1102_193509_429e aircraft_final_maskedkd_k49_s2_1102_193516_9d71 |
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 67.43 ± 0.62 | - | 25.04 | 17.41 | 0.00 | 398 | aircraft_final_maskedkd_k98_s2_1102_132227_2f10 aircraft_final_maskedkd_k98_s1_1102_123044_bd9b aircraft_final_maskedkd_k98_s3_1102_132227_c979 |
 | final | oracle |  | 12 | 12.0 | 1 | 63.71 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 172 | aircraft_final_oracle_k12_s1_1102_132227_86cd |
-| final | random |  | 12 | 12.0 | 1 | 64.14 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 397 | aircraft_final_random_k12_s1_1102_132227_c818 |
+| final | random |  | 12 | 12.0 | 1,2,3 | 63.14 ± 1.17 | - | 10.09 | 2.45 | 0.00 | 401 | aircraft_final_random_k12_s3_1103_024939_6b93 aircraft_final_random_k12_s2_1103_024935_e173 aircraft_final_random_k12_s1_1102_132227_c818 |
 | final | random |  | 29 | 29.0 | 1 | 64.29 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 371 | aircraft_final_random_k29_s1_1102_132227_7454 |
-| final | rollout |  | 12 | 12.0 | 1 | 62.43 ± 0.00 | - | 10.08 | 2.45 | 0.17 | 336 | aircraft_final_rollout_k12_s1_1102_132227_d6d1 |
+| final | rollout |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.46 | - | 10.08 | 2.45 | 0.17 | 358 | aircraft_final_rollout_k12_s3_1103_024948_a6c2 aircraft_final_rollout_k12_s2_1103_024944_52f8 aircraft_final_rollout_k12_s1_1102_132227_d6d1 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 66.43 ± 0.52 | - | 12.99 | 5.36 | 0.17 | 335 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 aircraft_final_rollout_k29_s3_1102_180341_8606 aircraft_final_rollout_k29_s2_1102_180325_20b6 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 65.57 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 297 | aircraft_final_tome_k12_s1_1102_132227_991f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 66.19 ± 0.33 | - | 12.00 | 4.36 | 0.00 | 398 | aircraft_final_tome_k29_s1_1102_132227_ccc7 aircraft_final_tome_k29_s2_1102_180330_3c69 aircraft_final_tome_k29_s3_1102_180345_552f |

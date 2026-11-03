@@ -826,6 +826,7 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 해석: Q1·Q2 참 → "Aircraft에서 K=12(토큰 6%)의 가린 teacher KD는 seed 3개 평균으로 CE보다 나쁘다"를 RESULTS Aircraft 절에 적는다(감사 전, 주장 아님). 평균은 음수지만 CI가 0을 포함하면 "CE보다 낮은 경향, 차이는 불확실". 평균 ≥ 0이면 "seed 1의 모양은 재현되지 않았다". Q4는 어느 쪽이든 선택 규칙에 대한 주장으로 쓰지 않는다(무작위 기준선과의 비교일 뿐).
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·seed·방법을 더하지 않는다. tome@12 seed 2·3은 비용이 맞지 않아(x2.69) 내지 않는다. H-A20 job이 열리면 그쪽이 먼저다(이 job들은 기본 priority).
   - 제출 (라운드 239, 등록 커밋 cc72a20 뒤): aircraft_final_maskedkd_k12_s2_1103_024925_555b , aircraft_final_maskedkd_k12_s3_1103_024931_458c , aircraft_final_random_k12_s2_1103_024935_e173 , aircraft_final_random_k12_s3_1103_024939_6b93 , aircraft_final_rollout_k12_s2_1103_024944_52f8 , aircraft_final_rollout_k12_s3_1103_024948_a6c2
+  - 판정 (라운드 240, 6 job 모두 done, 한 번만): 3-seed 평균 CE 66.43, maskedkd@12 62.62, rollout@12 62.62, random@12 63.14. Q1 −3.81 [−4.35, −3.27] 참. Q2 −3.81 [−4.55, −3.07] 참. Q3 −3.29 [−6.67, +0.10] 평균 < 0 참(CI 0 포함). Q4 +0.52 [−2.32, +3.37] 점추정 참, 차이 불확실. → 등록 해석 "Aircraft에서 K=12의 가린 teacher KD(maskedkd·rollout)는 seed 3개 평균으로 CE보다 나쁘다"를 RESULTS final 절에 적었다(감사 전, 주장 아님). 손 계산(t 0.975, df 2 = 4.303). K·seed·방법 추가 없음.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
