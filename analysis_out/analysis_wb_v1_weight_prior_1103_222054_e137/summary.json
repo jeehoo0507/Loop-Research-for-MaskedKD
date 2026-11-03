@@ -1,0 +1,240 @@
+{
+ "k": 29,
+ "n_val": 1199,
+ "n_waterbird": 266,
+ "n_runs": 6,
+ "by_method": {
+  "trustmask_v1": {
+   "n_seeds": 3,
+   "val_wga": 62.4033,
+   "qT_25": 0.2083,
+   "qTw_25": 0.2051,
+   "cov_mean_25": 0.1751,
+   "shift_25": -0.0032,
+   "r_25": 0.992,
+   "qT_final": 0.2051,
+   "qTw_final": 0.2018,
+   "cov_mean_final": 0.1752,
+   "shift_final": -0.0033,
+   "r_final": 0.9925
+  },
+  "maskedkd": {
+   "n_seeds": 3,
+   "val_wga": 38.5933,
+   "qT_25": 0.1978,
+   "qTw_25": 0.1952,
+   "cov_mean_25": 0.1715,
+   "shift_25": -0.0027,
+   "r_25": 0.9883,
+   "qT_final": 0.1886,
+   "qTw_final": 0.1883,
+   "cov_mean_final": 0.1685,
+   "shift_final": -0.0003,
+   "r_final": 1.0054
+  }
+ },
+ "runs": [
+  {
+   "method": "maskedkd",
+   "seed": 1,
+   "run": "waterbirds_final_maskedkd_k29_s1_1031_201502_4be8",
+   "val_wga": 37.59,
+   "val_acc": 87.23936676979065,
+   "qT_25": 0.2044,
+   "qTw_25": 0.2014,
+   "shift_25": [
+    -0.003,
+    -0.0048,
+    -0.0012
+   ],
+   "r_25": [
+    0.9819,
+    0.9665,
+    0.9977
+   ],
+   "cov_mean_25": 0.1714,
+   "qT_final": 0.188,
+   "qTw_final": 0.1872,
+   "shift_final": [
+    -0.0009,
+    -0.0026,
+    0.0009
+   ],
+   "r_final": [
+    0.9979,
+    0.9819,
+    1.0137
+   ],
+   "cov_mean_final": 0.1692
+  },
+  {
+   "method": "maskedkd",
+   "seed": 2,
+   "run": "waterbirds_final_maskedkd_k29_s2_1103_170931_92bd",
+   "val_wga": 37.59,
+   "val_acc": 87.65637874603271,
+   "qT_25": 0.2122,
+   "qTw_25": 0.2083,
+   "shift_25": [
+    -0.0039,
+    -0.0057,
+    -0.0021
+   ],
+   "r_25": [
+    0.9868,
+    0.9708,
+    1.0024
+   ],
+   "cov_mean_25": 0.1736,
+   "qT_final": 0.1951,
+   "qTw_final": 0.1953,
+   "shift_final": [
+    0.0002,
+    -0.0015,
+    0.0021
+   ],
+   "r_final": [
+    1.0112,
+    0.9943,
+    1.0265
+   ],
+   "cov_mean_final": 0.1682
+  },
+  {
+   "method": "maskedkd",
+   "seed": 3,
+   "run": "waterbirds_final_maskedkd_k29_s3_1103_170935_907a",
+   "val_wga": 40.6,
+   "val_acc": 88.32360506057739,
+   "qT_25": 0.1769,
+   "qTw_25": 0.1759,
+   "shift_25": [
+    -0.0011,
+    -0.0028,
+    0.0007
+   ],
+   "r_25": [
+    0.9962,
+    0.9803,
+    1.0123
+   ],
+   "cov_mean_25": 0.1695,
+   "qT_final": 0.1827,
+   "qTw_final": 0.1824,
+   "shift_final": [
+    -0.0003,
+    -0.002,
+    0.0014
+   ],
+   "r_final": [
+    1.007,
+    0.9909,
+    1.0227
+   ],
+   "cov_mean_final": 0.168
+  },
+  {
+   "method": "trustmask_v1",
+   "seed": 1,
+   "run": "waterbirds_final_trustmask_v1_k29_s1_1103_170855_2e3c",
+   "val_wga": 61.65,
+   "val_acc": 90.24186730384827,
+   "qT_25": 0.209,
+   "qTw_25": 0.2048,
+   "shift_25": [
+    -0.0043,
+    -0.0068,
+    -0.0018
+   ],
+   "r_25": [
+    0.9913,
+    0.9728,
+    1.0098
+   ],
+   "cov_mean_25": 0.1766,
+   "qT_final": 0.2032,
+   "qTw_final": 0.2002,
+   "shift_final": [
+    -0.003,
+    -0.0052,
+    -0.0005
+   ],
+   "r_final": [
+    0.9978,
+    0.9804,
+    1.0162
+   ],
+   "cov_mean_final": 0.1755
+  },
+  {
+   "method": "trustmask_v1",
+   "seed": 2,
+   "run": "waterbirds_final_trustmask_v1_k29_s2_1103_170951_279c",
+   "val_wga": 60.9,
+   "val_acc": 90.24186730384827,
+   "qT_25": 0.1997,
+   "qTw_25": 0.1966,
+   "shift_25": [
+    -0.003,
+    -0.0053,
+    -0.0006
+   ],
+   "r_25": [
+    0.9925,
+    0.975,
+    1.0103
+   ],
+   "cov_mean_25": 0.1746,
+   "qT_final": 0.2054,
+   "qTw_final": 0.2009,
+   "shift_final": [
+    -0.0044,
+    -0.0068,
+    -0.0022
+   ],
+   "r_final": [
+    0.9891,
+    0.9717,
+    1.0062
+   ],
+   "cov_mean_final": 0.1759
+  },
+  {
+   "method": "trustmask_v1",
+   "seed": 3,
+   "run": "waterbirds_final_trustmask_v1_k29_s3_1103_170956_fdca",
+   "val_wga": 64.66,
+   "val_acc": 91.32610559463501,
+   "qT_25": 0.2162,
+   "qTw_25": 0.2138,
+   "shift_25": [
+    -0.0024,
+    -0.005,
+    0.0003
+   ],
+   "r_25": [
+    0.9921,
+    0.9733,
+    1.0117
+   ],
+   "cov_mean_25": 0.1742,
+   "qT_final": 0.2066,
+   "qTw_final": 0.2042,
+   "shift_final": [
+    -0.0025,
+    -0.005,
+    0.0
+   ],
+   "r_final": [
+    0.9906,
+    0.9736,
+    1.009
+   ],
+   "cov_mean_final": 0.1741
+  }
+ ],
+ "verdict": {
+  "P1_v1_r25_ci_lo_gt_1_all_seeds": false,
+  "P2_v1_qTw25_seedmean_ge_0.231": false
+ }
+}

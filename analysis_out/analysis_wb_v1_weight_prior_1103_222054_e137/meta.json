@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_v1_weight_prior_1103_222054_e137",
+ "name": "wb_v1_weight_prior",
+ "source_sha": "e13704f4feedc995cf6a52a61616e7460a4b79a53267e91c4050de67feaf18d8",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does trustmask_v1's teacher-map coverage weight put more KD weight on minority-class (waterbird) images, so that its weighted KD target carries more waterbird mass than the unweighted one?",
+  "method": "attention rollout (teacher all blocks, student blocks 6..11); last-block CLS attention; keep-only masked teacher; coverage weight; class-conditional weight ratio; image bootstrap",
+  "paper": "Hinton et al. 2015 (KD soft targets); Menon et al. ICLR 2021 (logit adjustment); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Sagawa et al. ICLR 2020 (Waterbirds)"
+ },
+ "seconds": 16.1
+}
