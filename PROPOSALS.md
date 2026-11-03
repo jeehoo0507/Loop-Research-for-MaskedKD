@@ -817,6 +817,8 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 예측 (한 번만): R1' seed 평균 Full − CE의 이미지 bootstrap 95% CI 하한 > 0 — 확신 중간. R2 같은 seed Full 대 CE 불일치율 평균 ÷ 같은 방법 seed 짝 불일치율 평균이 0.8~1.25 안 — 확신 낮음. R3 teacher argmax 일치율 Full − CE의 CI 하한 > 0 이 seed 3개 모두 — 확신 중간. R4 KL(T‖S) Full − CE의 CI 상한 < 0 이 seed 3개 모두 — 확신 높음. R5 teacher가 맞힌 이미지의 Full − CE가 틀린 이미지의 것보다 크다(점추정) — 확신 중간.
   - 해석: R1' 참 → "Aircraft final은 seed 평균 KD 이득을 val 표본 잡음 밖에서 가른다(CUB와 다름)". R1' 거짓 → "Aircraft도 CUB처럼 KD 이득이 val 표본 잡음 안". R3·R4 참 → "Aircraft에서 KD는 teacher 출력을 student에 옮긴다". 어느 쪽이든 H-A20 판정 규칙·데이터셋 선택은 바꾸지 않는다(사람 결정).
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 seed·student·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
+  - 제출 (라운드 238, 등록 커밋 2e01a9c 뒤): analysis_kd_gain_resolution_1103_023915_d9fe (aircraft, 이번 라운드 안에 끝남)
+  - 결과 (라운드 238, 한 번만): 일관성 확인 통과. **R1' 참**: +1.62 [+0.29, +3.05]. **R2 참**: 불일치율 비 0.81 (같은 seed 9.6~12.3%, 같은 방법 다른 seed 12.0~14.1%). **R3 거짓**: teacher 일치 Full − CE +3.14 [+0.57, +5.72], +1.71 [−1.00, +4.29], +1.00 [−1.57, +3.43]. **R4 참**: KL Full − CE −0.155·−0.126·−0.136, CI 모두 0 아래. **R5 참** (점추정): +1.97 vs +0.42 %p (차이 CI [−1.60, +4.58]). 해석(등록대로): R1' 참 → "Aircraft final은 seed 평균 KD 이득을 val 표본 잡음 밖에서 가른다(CUB와 다름)". R3 거짓이라 "KD는 teacher 출력을 옮긴다" 문장은 쓰지 않고, 단서로 KL 수준 전달은 뚜렷하다. RESULTS 라운드 238 참고. 더 내지 않는다.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
