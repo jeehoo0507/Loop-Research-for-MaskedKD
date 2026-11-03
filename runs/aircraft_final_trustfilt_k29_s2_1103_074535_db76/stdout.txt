@@ -1,0 +1,112 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+/home/coder/Loop-Research-for-MaskedKD/harness/train.py:69: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  t.load_state_dict(torch.load(ckpt, map_location="cpu"))
+[2026-11-03 07:46:50] teacher cache: 35.13 GFLOPs/image once -> 0.3560 GFLOPs per image-step
+[2026-11-03 07:46:50] job aircraft_final_trustfilt_k29_s2_1103_074535_db76 method=trustfilt keep=29.0 seed=2 epochs=100 device=cuda
+[2026-11-03 07:46:53] flops per image (train step): {'total_gflops_per_img': 13.3457, 'selector_gflops_per_img': 0.4324, 'teacher_gflops_per_img': 5.3606, 'student_gflops_per_img': 7.5527, 'teacher_cache_gflops_per_img': 0.356, 'windows': 1}
+[2026-11-03 07:47:03] {"epoch": 1, "loss": 3.8313379028569097, "epoch_s": 13.0, "img_per_s": 452.6, "mean_kept": 29.0}
+[2026-11-03 07:47:15] {"epoch": 2, "loss": 3.756485192672066, "epoch_s": 11.9, "img_per_s": 493.0, "mean_kept": 29.0}
+[2026-11-03 07:47:27] {"epoch": 3, "loss": 3.7163800674936045, "epoch_s": 11.9, "img_per_s": 494.2, "mean_kept": 29.0}
+[2026-11-03 07:47:40] {"epoch": 4, "loss": 3.6198728913846225, "epoch_s": 11.9, "img_per_s": 494.6, "mean_kept": 29.0}
+[2026-11-03 07:47:54] {"epoch": 5, "loss": 3.467794931453207, "epoch_s": 13.4, "img_per_s": 439.3, "mean_kept": 29.0, "val_acc": 17.428570985794067}
+[2026-11-03 07:48:12] {"epoch": 6, "loss": 3.3190995973089468, "epoch_s": 18.1, "img_per_s": 325.7, "mean_kept": 29.0}
+[2026-11-03 07:48:31] {"epoch": 7, "loss": 3.184247716613438, "epoch_s": 18.0, "img_per_s": 327.1, "mean_kept": 29.0}
+[2026-11-03 07:48:49] {"epoch": 8, "loss": 3.107345917950506, "epoch_s": 18.1, "img_per_s": 324.9, "mean_kept": 29.0}
+[2026-11-03 07:49:13] {"epoch": 9, "loss": 3.0539764217708423, "epoch_s": 23.8, "img_per_s": 247.6, "mean_kept": 29.0}
+[2026-11-03 07:49:38] {"epoch": 10, "loss": 2.9884024702984355, "epoch_s": 24.1, "img_per_s": 244.8, "mean_kept": 29.0, "val_acc": 35.14285683631897}
+[2026-11-03 07:50:02] {"epoch": 11, "loss": 2.8979815711145815, "epoch_s": 23.8, "img_per_s": 247.9, "mean_kept": 29.0}
+[2026-11-03 07:50:26] {"epoch": 12, "loss": 2.859925451486007, "epoch_s": 23.9, "img_per_s": 246.0, "mean_kept": 29.0}
+[2026-11-03 07:50:50] {"epoch": 13, "loss": 2.8233650974605395, "epoch_s": 23.8, "img_per_s": 247.3, "mean_kept": 29.0}
+[2026-11-03 07:51:10] {"epoch": 14, "loss": 2.830785300420678, "epoch_s": 19.6, "img_per_s": 300.2, "mean_kept": 29.0}
+[2026-11-03 07:51:34] {"epoch": 15, "loss": 2.7259426531584365, "epoch_s": 23.1, "img_per_s": 255.1, "mean_kept": 29.0, "val_acc": 49.28571283817291}
+[2026-11-03 07:51:58] {"epoch": 16, "loss": 2.719727065252221, "epoch_s": 23.8, "img_per_s": 247.1, "mean_kept": 29.0}
+[2026-11-03 07:52:22] {"epoch": 17, "loss": 2.707396263661592, "epoch_s": 23.8, "img_per_s": 246.9, "mean_kept": 29.0}
+[2026-11-03 07:52:47] {"epoch": 18, "loss": 2.6774221295895786, "epoch_s": 23.9, "img_per_s": 246.5, "mean_kept": 29.0}
+[2026-11-03 07:53:11] {"epoch": 19, "loss": 2.56480610370636, "epoch_s": 23.8, "img_per_s": 247.2, "mean_kept": 29.0}
+[2026-11-03 07:53:35] {"epoch": 20, "loss": 2.6442337502603945, "epoch_s": 23.8, "img_per_s": 247.8, "mean_kept": 29.0, "val_acc": 55.42857050895691}
+[2026-11-03 07:53:59] {"epoch": 21, "loss": 2.672488269598588, "epoch_s": 23.8, "img_per_s": 247.2, "mean_kept": 29.0}
+[2026-11-03 07:54:24] {"epoch": 22, "loss": 2.51493880023127, "epoch_s": 23.9, "img_per_s": 246.2, "mean_kept": 29.0}
+[2026-11-03 07:54:48] {"epoch": 23, "loss": 2.5165678677351577, "epoch_s": 23.9, "img_per_s": 246.4, "mean_kept": 29.0}
+[2026-11-03 07:55:12] {"epoch": 24, "loss": 2.5496694989826367, "epoch_s": 23.9, "img_per_s": 246.4, "mean_kept": 29.0}
+[2026-11-03 07:55:37] {"epoch": 25, "loss": 2.5393139434897383, "epoch_s": 23.8, "img_per_s": 247.8, "mean_kept": 29.0, "val_acc": 56.14285469055176}
+[2026-11-03 07:55:39] flops per image (train step): {'total_gflops_per_img': 13.3457, 'selector_gflops_per_img': 0.4324, 'teacher_gflops_per_img': 5.3606, 'student_gflops_per_img': 7.5527, 'teacher_cache_gflops_per_img': 0.356, 'windows': 2}
+[2026-11-03 07:56:01] {"epoch": 26, "loss": 2.5267676685167397, "epoch_s": 23.9, "img_per_s": 245.9, "mean_kept": 29.0}
+[2026-11-03 07:56:25] {"epoch": 27, "loss": 2.5521824670874556, "epoch_s": 23.8, "img_per_s": 247.7, "mean_kept": 29.0}
+[2026-11-03 07:56:49] {"epoch": 28, "loss": 2.521542419557986, "epoch_s": 23.9, "img_per_s": 246.6, "mean_kept": 29.0}
+[2026-11-03 07:57:13] {"epoch": 29, "loss": 2.4110351153042004, "epoch_s": 23.9, "img_per_s": 246.2, "mean_kept": 29.0}
+[2026-11-03 07:57:38] {"epoch": 30, "loss": 2.4774655829305234, "epoch_s": 23.9, "img_per_s": 246.5, "mean_kept": 29.0, "val_acc": 59.142857789993286}
+[2026-11-03 07:58:02] {"epoch": 31, "loss": 2.481811181358669, "epoch_s": 23.8, "img_per_s": 247.3, "mean_kept": 29.0}
+[2026-11-03 07:58:26] {"epoch": 32, "loss": 2.369808425074038, "epoch_s": 23.7, "img_per_s": 248.2, "mean_kept": 29.0}
+[2026-11-03 07:58:50] {"epoch": 33, "loss": 2.3646692011667336, "epoch_s": 23.9, "img_per_s": 246.3, "mean_kept": 29.0}
+[2026-11-03 07:59:15] {"epoch": 34, "loss": 2.405888987624127, "epoch_s": 24.0, "img_per_s": 245.1, "mean_kept": 29.0}
+[2026-11-03 07:59:39] {"epoch": 35, "loss": 2.359914022943248, "epoch_s": 24.0, "img_per_s": 245.0, "mean_kept": 29.0, "val_acc": 60.285717248916626}
+[2026-11-03 08:00:04] {"epoch": 36, "loss": 2.4423858860264653, "epoch_s": 23.8, "img_per_s": 247.5, "mean_kept": 29.0}
+[2026-11-03 08:00:28] {"epoch": 37, "loss": 2.3811957006869107, "epoch_s": 23.8, "img_per_s": 247.1, "mean_kept": 29.0}
+[2026-11-03 08:00:52] {"epoch": 38, "loss": 2.415362350318743, "epoch_s": 23.9, "img_per_s": 246.0, "mean_kept": 29.0}
+[2026-11-03 08:01:16] {"epoch": 39, "loss": 2.4652252430501194, "epoch_s": 23.9, "img_per_s": 246.3, "mean_kept": 29.0}
+[2026-11-03 08:01:41] {"epoch": 40, "loss": 2.342763356540514, "epoch_s": 24.0, "img_per_s": 245.3, "mean_kept": 29.0, "val_acc": 61.14285588264465}
+[2026-11-03 08:02:05] {"epoch": 41, "loss": 2.330464461575384, "epoch_s": 24.0, "img_per_s": 245.6, "mean_kept": 29.0}
+[2026-11-03 08:02:29] {"epoch": 42, "loss": 2.31755013310391, "epoch_s": 23.9, "img_per_s": 246.0, "mean_kept": 29.0}
+[2026-11-03 08:02:54] {"epoch": 43, "loss": 2.3501018311666404, "epoch_s": 24.0, "img_per_s": 245.7, "mean_kept": 29.0}
+[2026-11-03 08:03:18] {"epoch": 44, "loss": 2.34708107036093, "epoch_s": 23.9, "img_per_s": 246.3, "mean_kept": 29.0}
+[2026-11-03 08:03:43] {"epoch": 45, "loss": 2.3196063767308774, "epoch_s": 24.0, "img_per_s": 245.2, "mean_kept": 29.0, "val_acc": 61.42857074737549}
+[2026-11-03 08:04:07] {"epoch": 46, "loss": 2.294830345589182, "epoch_s": 23.7, "img_per_s": 248.0, "mean_kept": 29.0}
+[2026-11-03 08:04:31] {"epoch": 47, "loss": 2.3440816791161248, "epoch_s": 24.0, "img_per_s": 245.6, "mean_kept": 29.0}
+[2026-11-03 08:04:55] {"epoch": 48, "loss": 2.2495960463648257, "epoch_s": 24.0, "img_per_s": 245.3, "mean_kept": 29.0}
+[2026-11-03 08:05:20] {"epoch": 49, "loss": 2.221543869246607, "epoch_s": 23.9, "img_per_s": 246.0, "mean_kept": 29.0}
+[2026-11-03 08:05:44] {"epoch": 50, "loss": 2.3323819196742512, "epoch_s": 24.0, "img_per_s": 245.2, "mean_kept": 29.0, "val_acc": 64.14285898208618}
+[2026-11-03 08:05:46] flops per image (train step): {'total_gflops_per_img': 13.3457, 'selector_gflops_per_img': 0.4324, 'teacher_gflops_per_img': 5.3606, 'student_gflops_per_img': 7.5527, 'teacher_cache_gflops_per_img': 0.356, 'windows': 3}
+[2026-11-03 08:06:09] {"epoch": 51, "loss": 2.2832625974779543, "epoch_s": 23.8, "img_per_s": 246.9, "mean_kept": 29.0}
+[2026-11-03 08:06:33] {"epoch": 52, "loss": 2.288712978363037, "epoch_s": 23.8, "img_per_s": 247.0, "mean_kept": 29.0}
+[2026-11-03 08:06:57] {"epoch": 53, "loss": 2.2104628993117292, "epoch_s": 23.9, "img_per_s": 246.2, "mean_kept": 29.0}
+[2026-11-03 08:07:21] {"epoch": 54, "loss": 2.2827113400334897, "epoch_s": 23.9, "img_per_s": 246.0, "mean_kept": 29.0}
+[2026-11-03 08:07:46] {"epoch": 55, "loss": 2.2234311777612437, "epoch_s": 23.9, "img_per_s": 246.8, "mean_kept": 29.0, "val_acc": 63.57142925262451}
+[2026-11-03 08:08:10] {"epoch": 56, "loss": 2.218718137430108, "epoch_s": 23.8, "img_per_s": 247.4, "mean_kept": 29.0}
+[2026-11-03 08:08:34] {"epoch": 57, "loss": 2.26268194032752, "epoch_s": 23.7, "img_per_s": 248.4, "mean_kept": 29.0}
+[2026-11-03 08:08:58] {"epoch": 58, "loss": 2.2513301605763645, "epoch_s": 23.7, "img_per_s": 248.9, "mean_kept": 29.0}
+[2026-11-03 08:09:22] {"epoch": 59, "loss": 2.1996218095655027, "epoch_s": 23.9, "img_per_s": 246.6, "mean_kept": 29.0}
+[2026-11-03 08:09:47] {"epoch": 60, "loss": 2.2428852552952976, "epoch_s": 24.0, "img_per_s": 245.1, "mean_kept": 29.0, "val_acc": 63.85714411735535}
+[2026-11-03 08:10:11] {"epoch": 61, "loss": 2.15759298334951, "epoch_s": 23.9, "img_per_s": 246.7, "mean_kept": 29.0}
+[2026-11-03 08:10:35] {"epoch": 62, "loss": 2.1682507369829263, "epoch_s": 23.9, "img_per_s": 246.5, "mean_kept": 29.0}
+[2026-11-03 08:10:59] {"epoch": 63, "loss": 2.2100972896036892, "epoch_s": 23.8, "img_per_s": 247.2, "mean_kept": 29.0}
+[2026-11-03 08:11:24] {"epoch": 64, "loss": 2.2045712367348047, "epoch_s": 23.9, "img_per_s": 246.4, "mean_kept": 29.0}
+[2026-11-03 08:11:48] {"epoch": 65, "loss": 2.1840095183123713, "epoch_s": 23.8, "img_per_s": 247.1, "mean_kept": 29.0, "val_acc": 64.85714316368103}
+[2026-11-03 08:12:12] {"epoch": 66, "loss": 2.2077782698299573, "epoch_s": 23.9, "img_per_s": 246.6, "mean_kept": 29.0}
+[2026-11-03 08:12:36] {"epoch": 67, "loss": 2.202076689056728, "epoch_s": 23.9, "img_per_s": 246.7, "mean_kept": 29.0}
+[2026-11-03 08:13:01] {"epoch": 68, "loss": 2.216876079206881, "epoch_s": 23.8, "img_per_s": 247.1, "mean_kept": 29.0}
+[2026-11-03 08:13:25] {"epoch": 69, "loss": 2.2114702748215715, "epoch_s": 23.8, "img_per_s": 247.7, "mean_kept": 29.0}
+[2026-11-03 08:13:49] {"epoch": 70, "loss": 2.2263292644334878, "epoch_s": 23.9, "img_per_s": 246.4, "mean_kept": 29.0, "val_acc": 66.28571152687073}
+[2026-11-03 08:14:13] {"epoch": 71, "loss": 2.216549215109452, "epoch_s": 23.7, "img_per_s": 248.3, "mean_kept": 29.0}
+[2026-11-03 08:14:38] {"epoch": 72, "loss": 2.1751148208327917, "epoch_s": 23.8, "img_per_s": 247.3, "mean_kept": 29.0}
+[2026-11-03 08:15:02] {"epoch": 73, "loss": 2.1557199073874433, "epoch_s": 23.9, "img_per_s": 245.9, "mean_kept": 29.0}
+[2026-11-03 08:15:26] {"epoch": 74, "loss": 2.258546101010364, "epoch_s": 23.9, "img_per_s": 246.1, "mean_kept": 29.0}
+[2026-11-03 08:15:51] {"epoch": 75, "loss": 2.1726288899131445, "epoch_s": 23.9, "img_per_s": 246.2, "mean_kept": 29.0, "val_acc": 67.00000166893005}
+[2026-11-03 08:15:53] flops per image (train step): {'total_gflops_per_img': 13.3457, 'selector_gflops_per_img': 0.4324, 'teacher_gflops_per_img': 5.3606, 'student_gflops_per_img': 7.5527, 'teacher_cache_gflops_per_img': 0.356, 'windows': 4}
+[2026-11-03 08:16:15] {"epoch": 76, "loss": 2.137326585209888, "epoch_s": 24.0, "img_per_s": 245.1, "mean_kept": 29.0}
+[2026-11-03 08:16:39] {"epoch": 77, "loss": 2.1972083682599277, "epoch_s": 23.9, "img_per_s": 246.4, "mean_kept": 29.0}
+[2026-11-03 08:17:04] {"epoch": 78, "loss": 2.229288927886797, "epoch_s": 23.8, "img_per_s": 247.0, "mean_kept": 29.0}
+[2026-11-03 08:17:28] {"epoch": 79, "loss": 2.1442572137583857, "epoch_s": 23.9, "img_per_s": 246.3, "mean_kept": 29.0}
+[2026-11-03 08:17:52] {"epoch": 80, "loss": 2.1596014033193174, "epoch_s": 23.9, "img_per_s": 246.5, "mean_kept": 29.0, "val_acc": 65.28571248054504}
+[2026-11-03 08:18:17] {"epoch": 81, "loss": 2.190022484115932, "epoch_s": 23.8, "img_per_s": 247.4, "mean_kept": 29.0}
+[2026-11-03 08:18:41] {"epoch": 82, "loss": 2.2076513093450796, "epoch_s": 23.9, "img_per_s": 246.8, "mean_kept": 29.0}
+[2026-11-03 08:19:05] {"epoch": 83, "loss": 2.22474138373914, "epoch_s": 23.8, "img_per_s": 247.3, "mean_kept": 29.0}
+[2026-11-03 08:19:29] {"epoch": 84, "loss": 2.1687434315681458, "epoch_s": 24.0, "img_per_s": 245.6, "mean_kept": 29.0}
+[2026-11-03 08:19:54] {"epoch": 85, "loss": 2.1468426481537195, "epoch_s": 23.8, "img_per_s": 247.4, "mean_kept": 29.0, "val_acc": 65.4285728931427}
+[2026-11-03 08:20:18] {"epoch": 86, "loss": 2.1380592066308726, "epoch_s": 23.8, "img_per_s": 247.0, "mean_kept": 29.0}
+[2026-11-03 08:20:42] {"epoch": 87, "loss": 2.1873120095418845, "epoch_s": 23.9, "img_per_s": 246.5, "mean_kept": 29.0}
+[2026-11-03 08:21:07] {"epoch": 88, "loss": 2.1541145832642266, "epoch_s": 23.8, "img_per_s": 246.9, "mean_kept": 29.0}
+[2026-11-03 08:21:31] {"epoch": 89, "loss": 2.134013813474904, "epoch_s": 23.9, "img_per_s": 246.1, "mean_kept": 29.0}
+[2026-11-03 08:21:55] {"epoch": 90, "loss": 2.176709024802498, "epoch_s": 23.6, "img_per_s": 249.5, "mean_kept": 29.0, "val_acc": 65.85714221000671}
+[2026-11-03 08:22:19] {"epoch": 91, "loss": 2.120740797208703, "epoch_s": 23.9, "img_per_s": 246.3, "mean_kept": 29.0}
+[2026-11-03 08:22:43] {"epoch": 92, "loss": 2.1694464864938157, "epoch_s": 23.8, "img_per_s": 247.4, "mean_kept": 29.0}
+[2026-11-03 08:23:08] {"epoch": 93, "loss": 2.155422057794488, "epoch_s": 23.8, "img_per_s": 247.2, "mean_kept": 29.0}
+[2026-11-03 08:23:28] {"epoch": 94, "loss": 2.018278681713602, "epoch_s": 20.2, "img_per_s": 292.0, "mean_kept": 29.0}
+[2026-11-03 08:23:53] {"epoch": 95, "loss": 2.182955125103826, "epoch_s": 24.0, "img_per_s": 244.9, "mean_kept": 29.0, "val_acc": 65.85714221000671}
+[2026-11-03 08:23:55] flops per image (train step): {'total_gflops_per_img': 13.3457, 'selector_gflops_per_img': 0.4324, 'teacher_gflops_per_img': 5.3606, 'student_gflops_per_img': 7.5527, 'teacher_cache_gflops_per_img': 0.356, 'windows': 5}
+[2026-11-03 08:24:17] {"epoch": 96, "loss": 2.191584454930347, "epoch_s": 23.5, "img_per_s": 250.2, "mean_kept": 29.0}
+[2026-11-03 08:24:35] {"epoch": 97, "loss": 2.171047171820765, "epoch_s": 17.8, "img_per_s": 330.4, "mean_kept": 29.0}
+[2026-11-03 08:24:54] {"epoch": 98, "loss": 2.1445430180300837, "epoch_s": 18.7, "img_per_s": 315.6, "mean_kept": 29.0}
+[2026-11-03 08:25:18] {"epoch": 99, "loss": 2.1708041610925095, "epoch_s": 23.7, "img_per_s": 248.8, "mean_kept": 29.0}
+[2026-11-03 08:25:42] {"epoch": 100, "loss": 2.2015285077302353, "epoch_s": 23.6, "img_per_s": 249.4, "mean_kept": 29.0, "val_acc": 65.71428775787354}
+[2026-11-03 08:25:42] done

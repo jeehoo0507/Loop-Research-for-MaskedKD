@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_trust_gap_1103_074928_b0d8",
+ "name": "aircraft_trust_gap",
+ "source_sha": "b0d8fbcc0835820d46c7885e978309124e9efd49b03bb7f254fe7a52ecb7751d",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft K=29, does student-teacher map agreement rise with training with a switch point where student-only picking catches the teacher filter, and do gap tokens hurt through masked-teacher fidelity or through distance from the student?",
+  "method": "attention rollout (student late blocks, teacher all blocks); keep-only masked teacher faithfulness (KL, top-1 agreement); KD target distance KL(masked teacher || student); image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Son et al. ECCV 2024 (MaskedKD); Cho & Hariharan ICCV 2019 (capacity gap: student cannot follow a far target)"
+ },
+ "seconds": 59.6
+}
