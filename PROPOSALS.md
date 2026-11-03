@@ -833,6 +833,8 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 예측 (한 번만, 판정은 seed 1·2·3 평균과 같은 seed 짝 차이의 t 95% CI(df 2)): Q1 rollout@29 − random@29 의 seed 평균 > 0 이고 CI 하한 > 0 — 확신 중간. Q2 maskedkd@29 − random@29 의 seed 평균 > 0 (CI 보고만) — 확신 낮음. Q3 random@29 − CE 의 seed 평균 < 0 (CI 보고만) — 확신 중간.
   - 해석: Q1 참 → "Aircraft K=29에서 rollout 선택은 무작위 토큰보다 낫다(seed 3개, 감사 전, 주장 아님)". Q1 평균 > 0 이지만 CI 0 포함 → "무작위보다 높은 경향, 차이는 불확실". 평균 ≤ 0 → "K=29에서 선택 규칙의 이득은 보이지 않는다". Q2·Q3는 기록만. 어느 쪽이든 H-A20 판정 규칙을 바꾸지 않는다.
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·seed·방법을 더하지 않는다. H-A20 job이 열리면 그쪽이 먼저다(이 job들은 기본 priority).
+  - 제출 (라운드 241, 등록 커밋 0776854 뒤): aircraft_final_random_k29_s2_1103_042255_db43 , aircraft_final_random_k29_s3_1103_042259_2272
+  - 판정 (라운드 242, 2 job 모두 done, 한 번만): random@29 seed 1·2·3 = 64.29/62.71/62.71 (평균 63.24). Q1 rollout − random +3.19 [+1.59, +4.79] 참. Q2 maskedkd − random +2.05 [+1.15, +2.94] 평균 > 0 참. Q3 random − CE −3.19 [−6.41, +0.03] 평균 < 0 참, CI 0 포함. → 등록 해석 "Aircraft K=29에서 rollout 선택은 무작위 토큰보다 낫다(seed 3개, 감사 전, 주장 아님)"를 RESULTS final 절에 적었다. 단서: rollout@29 평균 66.43 = CE 평균 66.43이라 KD 이득은 없다. 손 계산(t 0.975, df 2 = 4.303). K·seed·방법 추가 없음.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
