@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_kd_pull_1103_213452_8fe8",
+ "name": "wb_kd_pull",
+ "source_sha": "8fe85e9d5abe6ed53758589e571ee31ccb1475cad96a471b9bd33825490660f9",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does the minority-group KD pull p_T^mask(y) - p_S(y) of each run's own token rule on its epoch-25 student rank the 15 runs (5 methods x 3 seeds) like their final student WGA?",
+  "method": "attention rollout (teacher all blocks, student all / 6..11 blocks); last-block CLS attention; keep-only masked teacher; KD gradient sign at TAU 1 sliced by Waterbirds group; Spearman, run bootstrap",
+  "paper": "Hinton et al. 2015 (KD gradient); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 29.7
+}
