@@ -343,6 +343,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
+- maskedkd_frozen@29 vs full@196 [acc]: -2.09 %p, 95% CI [-2.09, -2.09], seeds 1,2, GFLOPs ratio 0.359 -> LOSS
 - suffdisc@12 vs maskedkd@12 [acc]: +5.42 %p, 95% CI [+4.18, +6.66], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
 - suffdisc@12 vs grid@12 [acc]: +6.53 %p, 95% CI [+5.51, +7.56], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
 - suffdisc@12 vs random@12 [acc]: +5.78 %p, 95% CI [+3.43, +8.14], seeds 1,2,3, GFLOPs ratio 1.489 -> WIN
@@ -357,6 +358,14 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
+- maskedkd_frozen@29 vs maskedkd@29 [acc]: +1.42 %p, 95% CI [-6.00, +8.84], seeds 1,2, GFLOPs ratio 1.183 -> no difference
+- maskedkd_frozen@29 vs rollout@29 [acc]: -0.50 %p, 95% CI [-2.62, +1.62], seeds 1,2, GFLOPs ratio 1.183 -> no difference
+- maskedkd_frozen@29 vs tome@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs full@196 [acc]: -2.09 %p, 95% CI [-2.09, -2.09], seeds 1,2, GFLOPs ratio 0.359 -> LOSS
+- maskedkd_frozen@29 vs maskedkd@29 [acc]: +1.42 %p, 95% CI [-6.00, +8.84], seeds 1,2, GFLOPs ratio 1.183 -> no difference
 - suffdisc@12 vs maskedkd@12 [acc]: +5.42 %p, 95% CI [+4.18, +6.66], seeds 1,2,3, GFLOPs ratio 1.491 -> WIN
 - suffdisc@12 vs rollout@12 [acc]: +1.53 %p, 95% CI [-2.52, +5.58], seeds 1,2,3, GFLOPs ratio 1.491 -> no difference
 - suffdisc@12 vs tome@12 [acc]: -0.33 %p, 95% CI [-2.57, +1.91], seeds 1,2,3, GFLOPs ratio 1.252 -> no difference
@@ -429,7 +438,7 @@ Total agent screen configs: 15
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 87.74 ± 0.55 | 38.59 ± 1.74 | 12.99 | 5.36 | 0.00 | 366 | waterbirds_final_maskedkd_k29_s2_1103_170931_92bd waterbirds_final_maskedkd_k29_s1_1031_201502_4be8 waterbirds_final_maskedkd_k29_s3_1103_170935_907a |
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 90.46 ± 0.39 | 64.16 ± 2.42 | 25.04 | 17.41 | 0.00 | 359 | waterbirds_final_maskedkd_k98_s3_1031_201502_0f31 waterbirds_final_maskedkd_k98_s1_1031_130203_5bef waterbirds_final_maskedkd_k98_s2_1031_201502_95ac |
-| final | maskedkd_frozen@0f7bcc |  | 29 | 29.0 | 1 | 89.24 ± 0.00 | 58.65 ± 0.00 | 15.36 | 5.36 | 2.36 | 249 | waterbirds_final_maskedkd_frozen_k29_s1_1103_171021_f885 |
+| final | maskedkd_frozen@0f7bcc |  | 29 | 29.0 | 1,2 | 88.87 ± 0.53 | 60.15 ± 2.12 | 15.36 | 5.36 | 2.36 | 250 | waterbirds_final_maskedkd_frozen_k29_s2_1103_171026_2b13 waterbirds_final_maskedkd_frozen_k29_s1_1103_171021_f885 |
 | final | oracle |  | 12 | 12.0 | 1 | 88.24 ± 0.00 | 52.63 ± 0.00 | 45.21 | 2.45 | 35.13 | 640 | waterbirds_final_oracle_k12_s1_1031_201502_7b51 |
 | final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
 | final | random |  | 29 | 29.0 | 1 | 81.57 ± 0.00 | 30.83 ± 0.00 | 13.00 | 5.36 | 0.00 | 1182 | waterbirds_final_random_k29_s1_1031_201502_830c |

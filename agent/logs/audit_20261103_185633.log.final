@@ -1,0 +1,4 @@
+CLAIM: P1 — Waterbirds final K=29, seeds 1–3: trustmask_v1 − teacher_topk val WGA = −2.01 [−6.32, +2.31]; teacher_topk is equal or better, with no superiority or novelty claimed.
+VERDICT: NEEDS-MORE
+REASON: Runs ending 170855_2e3c/170951_279c/170956_fdca versus 170914_f015/170918_4535/170923_d12a are done, matched at 100 epochs, and support the reported WGA difference and CI. However, that CI establishes neither equivalence nor teacher_topk superiority; “no demonstrated v1 advantage” is supported.
+The truncated metrics still omit per-run selector_sha; hashes copied into AUDIT_REQUEST are researcher assertions, not independent verification against each job’s selector_src. Required decomposition evidence is also absent. WGA remains diagnostic under this audit’s instructions. [MaskedKD](https://maskedkd.github.io/) and [attention rollout](https://aclanthology.org/2020.acl-main.385.pdf) confirm established ingredients, without establishing novelty of their combination.
