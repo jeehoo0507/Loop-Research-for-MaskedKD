@@ -1,0 +1,4 @@
+CLAIM: CUB K=29 lateroll achieves 81.39 versus MaskedKD 80.22 on final seeds 1–3 (+1.17 pp, paired 95% CI [+0.75,+1.58]), costing 12.9900 versus 12.9881 GFLOPs/img, without claiming meaningful improvement.
+VERDICT: NEEDS-MORE
+REASON: The six cited runs support the numerical comparison, including final_lateroll_k29_s1_1101_104303_ef38 versus final_maskedkd_k29_s1_1101_104303_b676; all six historical locks MATCH. However, the supplied locked-file diff, H-C2b outputs, and all-runs table remain truncated, preventing complete integrity, grounding, and search-selection checks.
+Supply those missing sections and evidence checking harness.test_eval use. Correct the caveat: final lateroll−rollout is +0.94, not +0.50 pp; both remain below 1.92. Novelty is weak: the implementation restricts established [attention rollout](https://aclanthology.org/2020.acl-main.385/) to selected layers.
