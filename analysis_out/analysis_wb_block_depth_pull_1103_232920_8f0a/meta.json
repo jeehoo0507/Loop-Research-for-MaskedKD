@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_block_depth_pull_1103_232920_8f0a",
+ "name": "wb_block_depth_pull",
+ "source_sha": "8f0a58f05e0915d938b6d307d49809008cd10764accaff37a8390e0c0429f59e",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, inside the same student, is the landbird pull of single-block CLS attention picks (vs blocks 6..11 rollout picks) specific to the last block or graded with depth?",
+  "method": "same-student depth profile of single-block CLS attention top-K vs rollout top-K; set differences; keep-only masked-teacher class probabilities; image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 479.5
+}
