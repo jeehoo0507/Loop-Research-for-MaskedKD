@@ -1,0 +1,19 @@
+{
+ "id": "aircraft_final_trustmask_v2_k29_s2_1103_095900_c4a8",
+ "kind": "train",
+ "dataset": "aircraft",
+ "stage2": "stage2_explore",
+ "method": "trustmask_v2",
+ "keep": 29.0,
+ "seed": 2,
+ "tier": "final",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"TrustMask v2 (H-A31, QUEUE 2026-11-03 18:40 \"how many?\"): graded per-image token counts from the cached teacher\nmap's concentration, inside the v1 selector.\n\nThe human's TrustMask note: an image whose teacher map sits on a few tokens needs fewer kept tokens, an image whose\nmap is spread needs more. Concentration = effective token count exp(entropy) of the (renormalised) cached teacher\nmap. Within the batch, images are ranked by it and split in thirds: the most concentrated third gets 2/3 K, the\nmiddle third K, the most spread third 4/3 K (`allocate`, batch mean K, kmin 1; every image gets the teacher).\nTokens inside each image are picked exactly as in v1 (late-block rollout, blocks 6..11) and v1's KD weight\n(teacher-map mass covered / batch mean) is kept, so only \"how many\" changes. Ranks and fixed ratios only: no\ndataset constant.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, allocate, keep_by_counts\n\nSTART = 6\nRATIOS = (2.0 / 3.0, 1.0, 4.0 / 3.0)\n\nMETA = {\n    \"method\": \"v1 (late-block attention rollout picks, cached teacher-map coverage as KD weight) with graded \"\n              \"per-image token counts from the cached teacher map's effective token count (batch thirds 2/3, 1, \"\n              \"4/3 of K)\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); human TrustMask note \"\n             \"2026-10-28 ('how many?')\",\n    \"why\": \"an image whose teacher evidence is concentrated keeps it with fewer tokens; a spread one loses it at a \"\n           \"fixed K, so moving tokens from concentrated to spread images should keep the masked teacher's target \"\n           \"closer to the full teacher at the same mean cost\",\n    \"vs_maskedkd\": \"late-block rollout instead of last-block CLS attention, a per-image KD weight and per-image \"\n                   \"token counts from the cached teacher map (same mean teacher cost)\",\n    \"prior_art\": \"Dynamic KD / DynKD allocate the teacher per sample all-or-nothing by student uncertainty; v2 \"\n                 \"grades token counts (no image without teacher) by the teacher's own attribution spread\",\n    \"parent\": \"trustmask_v1\",\n    \"uses_teacher_cache\": True,\n}\n\n\ndef _groups(score):\n    \"\"\"[B] ratio per image: lowest third of score -> 2/3, middle -> 1, highest -> 4/3.\"\"\"\n    B = score.shape[0]\n    rank = score.argsort().argsort().float()\n    g = (rank * 3 / B).floor().long().clamp(0, 2)\n    return torch.tensor(RATIOS, device=score.device)[g]\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(START, 12)), \"tokens\": []}\n\n    def order(self, ctx):\n        t = ctx.teacher_map.float().clamp_min(0)\n        p = t / t.sum(1, keepdim=True).clamp_min(1e-12)\n        return -(p * p.clamp_min(1e-12).log()).sum(1)   # entropy: higher = more spread\n\n    def select(self, ctx):\n        r = None\n        for a in ctx.out.attn[START:]:\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        counts = allocate(_groups(self.order(ctx)), ctx.budget, kmin=1, kmax=ctx.num_patches)\n        keep = keep_by_counts(r[:, 0, 1:], counts)\n        cov = (ctx.teacher_map.float() * keep).sum(1)\n        return keep, cov / cov.mean().clamp_min(1e-12)\n",
+ "selector_sha": "b2c3bb0b36ad7bde889b4f31c49e49b0307c0105947131381f7cb3fef7a69a20",
+ "note": "",
+ "by": "agent",
+ "priority": -10,
+ "submitted": "2026-11-03 09:59:00",
+ "lr": null
+}

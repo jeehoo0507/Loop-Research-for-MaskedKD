@@ -232,7 +232,7 @@ Total agent screen configs: 0
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
-| final | ent_weight |  | 29 | 29.0 | 1 | 66.86 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 270 | aircraft_final_ent_weight_k29_s1_1103_083827_9ace |
+| final | ent_weight |  | 29 | 29.0 | 1,2,3 | 66.48 ± 1.47 | - | 12.99 | 5.36 | 0.00 | 294 | aircraft_final_ent_weight_k29_s2_1103_083831_e884 aircraft_final_ent_weight_k29_s1_1103_083827_9ace aircraft_final_ent_weight_k29_s3_1103_083836_6aea |
 | final | full |  | 196 | 196.0 | 1,2,3 | 68.05 ± 0.54 | - | 42.77 | 35.13 | 0.00 | 252 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s3_1102_132227_69cc aircraft_final_full_k196_s2_1102_132227_123b |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 66.29 ± 1.78 | - | 12.99 | 5.36 | 0.08 | 380 | aircraft_final_lateroll_k29_s1_1103_065756_f0d9 aircraft_final_lateroll_k29_s3_1103_065805_2130 aircraft_final_lateroll_k29_s2_1103_065801_38e1 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.33 | - | 10.07 | 2.45 | 0.00 | 455 | aircraft_final_maskedkd_k12_s1_1102_132227_f01c aircraft_final_maskedkd_k12_s3_1103_024931_458c aircraft_final_maskedkd_k12_s2_1103_024925_555b |
