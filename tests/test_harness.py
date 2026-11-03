@@ -1,5 +1,6 @@
 """CPU tests for the harness. Run: MASKEDKD_FAKE_DATA=1 python -m pytest -q tests"""
 import json
+from pathlib import Path
 import os
 
 os.environ.setdefault("MASKEDKD_FAKE_DATA", "1")
@@ -949,3 +950,38 @@ def test_frozen_maskedkd_equals_maskedkd_at_step_zero(models):
         assert torch.equal(sel.select(ctx2), ref)                 # frozen: still the step-0 mask
         assert not torch.equal(MaskedKD().select(ctx2), ref)      # online: follows the changed student
     s.train()
+
+
+def test_celeba_split_groups_and_caps(tmp_path, monkeypatch):
+    """CelebA: official partition by image number, y = blond, group = 2*y + male, train = CELEBA_TRAIN_FRACTION of
+    official train, val/test groups capped at CELEBA_EVAL_CAP with minority groups whole; a non-strict held-out
+    dataset takes any method as a final run (robustness_check), the strict one keeps holdout_rule."""
+    import hashlib
+    from harness import prepare_data as P, submit
+    root = tmp_path / "celeba"
+    (root / "img").mkdir(parents=True)
+    rows = []
+    for n in range(1, 202600, 101):   # 2006 ids over the official numbering
+        rows.append((f"{n:06d}.jpg", 1 if n % 3 == 0 else -1, 1 if n % 2 == 0 else -1))
+    with open(root / "attrs.csv", "w", newline="") as fh:
+        import csv as _csv
+        w = _csv.writer(fh); w.writerow(["image_id", "blond", "male"]); w.writerows(rows)
+    monkeypatch.setattr(C, "CELEBA_EVAL_CAP", 30)
+    sp = P.splits_celeba(root)
+    n_train_official = sum(1 for n in range(1, 202600, 101) if n <= 162770)
+    assert len(sp["train"]) == round(C.CELEBA_TRAIN_FRACTION * n_train_official)
+    for split in ("val", "test"):
+        by_g = {g: sum(1 for _, _, gg in sp[split] if gg == g) for g in range(4)}
+        assert max(by_g.values()) == 30 and min(by_g.values()) > 0
+        assert all(int(Path(p).name.split(".")[0]) > 162770 for p, _, _ in sp[split])
+    assert all(g == 2 * y + (int(Path(p).name.split(".")[0]) % 2 == 0) for p, y, g in sp["train"])
+    assert {y for _, y, _ in sp["train"]} == {0, 1}
+
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    (tmp_path / "selectors").mkdir()
+    monkeypatch.setattr("harness.validate.SELECTORS_DIR", tmp_path / "selectors")
+    (tmp_path / "selectors" / "good.py").write_text(GOOD)
+    _fake_runs(tmp_path, monkeypatch, [])
+    assert submit.make_job("good", 29, 1, "final", dataset="celeba")["stage2"] == "robustness_check"
+    with pytest.raises(SystemExit, match="needs final seeds"):
+        submit.make_job("good", 29, 1, "final", dataset="caltech256")

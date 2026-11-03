@@ -174,6 +174,10 @@ while true; do
   for S2 in $($PY -c 'from harness import config as C; print(C.STAGE2, *C.HOLDOUT)' 2>/dev/null); do
     [ -f "$S/stage2_done_$S2" ] || [ -f "$S/stage2_failed_$S2" ] && continue
     tmux has-session -t stage2 2>/dev/null && break
+    # a dataset in config.BOOT_WHEN_IDLE waits until the queue is empty: its teacher fine-tune would hold every
+    # pending job back (2026-11-04: CelebA must not delay gate 2)
+    if $PY -c "from harness import config as C; import sys; sys.exit(0 if '$S2' in C.BOOT_WHEN_IDLE else 1)" 2>/dev/null \
+       && [ "$(ls queue/pending queue/running 2>/dev/null | grep -c '\.json$')" -gt 0 ]; then continue; fi
     echo "[loop] check dataset $S2 not set up yet; starting agent/stage2_boot.sh $S2" | tee -a agent/logs/loop.log
     tmux new-session -d -s stage2 "bash agent/stage2_boot.sh $S2"
     break

@@ -22,7 +22,7 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 # student, 100 epochs; CUB: KD - CE = +1.62 %p over 3 seeds), and on Waterbirds MaskedKD at 15 % of the tokens cost
 # 18.5 %p of worst-group accuracy against Full KD: token choice matters there. Recipe = aim-lab-test-5
 # docs/maskedkd_settings.md section 6, except that augmentation runs on the GPU from stored 256x256 images.
-DATASETS = ("waterbirds", "cub", "aircraft", "caltech256", "cub_lt")
+DATASETS = ("waterbirds", "cub", "aircraft", "caltech256", "cub_lt", "celeba")
 # 2026-10-31: the search moved to CUB. The aim is FLOPs-efficient KD, not robustness: Waterbirds was picked only because
 # KD > CE there, but with 2 classes the teacher's soft labels carry almost no class-relation information (the thing KD
 # transfers), so a token-selection result there says little about MaskedKD's multi-class setting. CUB (200 classes)
@@ -32,8 +32,8 @@ STAGE2 = "aircraft"          # check on a second dataset (fixed methods, fresh s
 # 2026-11-02: the check moved from Waterbirds to FGVC-Aircraft. Waterbirds (2 classes, spurious background) checks
 # robustness, not whether a token budget chosen on CUB transfers to another fine-grained, many-class task. Its runs stay
 # valid and stay in RESULTS_TABLE ("earlier check").
-NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100, "caltech256": 256, "cub_lt": 200}
-NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0, "caltech256": 0, "cub_lt": 2}   # Waterbirds group = 2*y + place; evaluation only, never used in training
+NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100, "caltech256": 256, "cub_lt": 200, "celeba": 2}
+NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0, "caltech256": 0, "cub_lt": 2, "celeba": 4}   # CelebA group = 2*blond + male   # Waterbirds group = 2*y + place; evaluation only, never used in training
 DATA_URLS = {
     "waterbirds": ["https://downloads.cs.stanford.edu/nlp/data/dro/waterbird_complete95_forest2water2.tar.gz",
                    "https://nlp.stanford.edu/data/dro/waterbird_complete95_forest2water2.tar.gz"],
@@ -46,10 +46,22 @@ DATA_URLS = {
                    # same archive (1,183,006,720 bytes) on Hugging Face; the official link refused automated download
                    "https://huggingface.co/datasets/xingslong/caltech256/resolve/main/256_ObjectCategories.tar"],
     "cub_lt": ["https://data.caltech.edu/records/65de6-vp158/files/CUB_200_2011.tgz?download=1"],   # the CUB archive
+    # CelebA (Liu et al. 2015) as 132 parquet shards with the 40 attributes and image_id (official numbering, so the
+    # official train/val/test partition is recovered from the id): the official Google Drive link refuses automated
+    # downloads. Shard i is this prefix + f"train-{i:05d}-of-00132.parquet".
+    "celeba": ["https://huggingface.co/datasets/huggan/CelebA-faces-with-attributes/resolve/main/data/"],
 }
+CELEBA_SHARDS = 132
+# CelebA spurious-correlation setting (Sagawa et al. ICLR 2020): y = Blond_Hair, spurious attribute = Male, group =
+# 2*y + male; the worst group is blond men. Official partition by image number: 1..162770 train, ..182637 val, rest
+# test. To fit the harness (every train image in RAM per job, 4 jobs) the train split is a random
+# CELEBA_TRAIN_FRACTION of the official train (correlation preserved) and val/test cap every group at CELEBA_EVAL_CAP
+# images (the minority groups are kept whole, so worst-group accuracy is measured on all of them).
+CELEBA_TRAIN_FRACTION, CELEBA_EVAL_CAP = 0.12, 2000
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
                   "cub_lt": {"val": 600, "test": 5794, "partial": True},   # train = CUB train with the tail cut (size logged)
+                  "celeba": {"train": 19532, "partial": True},   # round(0.12 * 162770); val/test sizes logged (group caps)
                   "aircraft": {"train": 5967, "val": 700, "test": 3333},  # Aircraft (100 variants): val = 10 % per
                   # class of official trainval (the CUB rule), official test
                   "caltech256": {"total": 29780}}  # 256 object classes (257.clutter dropped); per class 80/10/10
@@ -84,7 +96,7 @@ TAU = 1.0
 # Teacher fine-tune (no mixup, label smoothing 0: LS 0.1 flattened the teacher in aim-lab-test-4; best val epoch kept)
 TEACHER_BATCH = 64       # DeiT-B full fine-tune fits a 24 GB GPU at this batch
 TEACHER_EPOCHS = 100
-TEACHER_EPOCHS_BY = {"caltech256": 20}   # same number of images seen as 100 epochs of a ~6k-image set
+TEACHER_EPOCHS_BY = {"caltech256": 20, "celeba": 8}   # same number of images seen as 100 epochs of a ~6k-image set
 TEACHER_LR = 1e-4
 TEACHER_WARMUP_EPOCHS = 5
 
@@ -115,7 +127,9 @@ STAGE2_EXPLORE = True
 # method may run here only as a final-tier run of a selector source that already has final seeds 1-3 on both CUB and
 # Aircraft (submit.holdout_rule); no screen runs. Its epochs are set so a run sees about as many images as an
 # Aircraft run (~24k train images x 20 epochs vs ~6k x 100) and finishes within the day.
-HOLDOUT = ("caltech256",)
+HOLDOUT = ("caltech256", "celeba")   # set up by the loop like stage 2 (data, teacher, gate); no baseline grid
+HOLDOUT_STRICT = ("caltech256",)     # only these take agent selectors as frozen candidates (submit.holdout_rule)
+BOOT_WHEN_IDLE = ("celeba",)         # the loop sets these up only while no job is queued or running (QUEUE 11-04 09:30)
 # 2026-11-04 00:30 KST (human): nothing is retired. Waterbirds is the main analysis bed again (QUEUE 2026-11-04).
 RETIRED = ()
 # CUB long-tail (QUEUE 2026-11-04, gate 2): classes 0..99 keep every CUB train image, classes 100..199 keep
@@ -128,6 +142,7 @@ TEACHER_SHARED = {"cub_lt": "cub"}   # datasets that distil from another dataset
 TIER_EPOCHS = {
     "cub": {"smoke": 1, "screen": 100, "final": 100},
     "cub_lt": {"smoke": 1, "screen": 100, "final": 100},   # gate 2 (QUEUE 2026-11-04)
+    "celeba": {"smoke": 1, "screen": 30, "final": 30},     # 19.5k train images x 30 epochs ~ a Waterbirds run
     "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # earlier check
     "aircraft": {"smoke": 1, "screen": 100, "final": 100},     # stage 2: only harness jobs and audited methods
     "caltech256": {"smoke": 1, "final": 20},                   # held-out check: final tier only (see HOLDOUT)

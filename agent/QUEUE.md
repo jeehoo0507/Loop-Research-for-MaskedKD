@@ -293,3 +293,11 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - 게이트 2 이후 남는 GPU에 **Waterbirds K=29 ToMe seed 2·3** (2 job)을 낸다. 게이트 1 표에 ToMe가 빠져 있다.
 - **감사 STUCK(증거 묶음 selector_sha):** 사람이 harness/evidence.py를 고친다. 고친 뒤 게이트 1 감사를 다시 요청한다. 감사 기준: 주 지표 WGA, 사전 등록 P1·P2 + 사후 관찰(v0) 구분.
 - 09:00 아침 요약은 게이트 1·3 결과와 분석 H-A40~55의 핵심 다섯 줄로. 14:00 중간 요약에 게이트 2.
+
+## 2026-11-04 09:40 KST — 사람: 두 번째 강건성 데이터셋 CelebA (게이트 2가 끝나는 대로)
+- **CelebA** (Liu 2015; Sagawa 2020 설정): y = 금발, 지름길 = 남성, group = 2·y + male, 최악 그룹 = 금발 남성. 하네스 `celeba`: 공식 분할을 image_id로 복원, train은 공식 train의 12% 무작위(상관 유지, 19,532장), val/test는 그룹당 2,000장 상한(소수 그룹은 전부). final 30 epoch, teacher 8 epoch.
+- **루프가 자동으로 준비한다** (`config.HOLDOUT`에 추가, `BOOT_WHEN_IDLE`): 큐가 완전히 비면 데이터 다운로드(HF 미러, 약 1.3 GB) → teacher 미세조정 → 게이트(CE·Full·MaskedKD@98 seed 1). **게이트 2가 끝나기 전에는 시작하지 않는다.** BOOT_STATUS에 "celeba gate submitted"가 보이면 아래를 낸다. 게이트 통과 여부와 상관없이 낸다 (held-out 규칙 없음: `stage2 = robustness_check`).
+- **제출 (final, K=29, seed 1·2·3, 우선순위 순):** (1) `trustfilt`(v0), `teacher_topk`, `maskedkd`, `rollout` (12); (2) `maskedkd_frozen`, `trustmask_v1`, `tome` (9); (3) `ce`·`full` seed 2·3 (4). 합계 25 job, run당 약 60분.
+- **사전 등록 (결과 전·제출 전, H-A4x로):** 주 지표 val WGA(최악 그룹 = 금발 남성). P1 v0 − maskedkd CI 하한 > 0. P2 v0 − teacher_topk 평균 > 0 (CI 하한 > 0이면 "확인"). P3 online maskedkd − frozen 평균 < 0. 기록: v0 − full, v0 − rollout, clean acc. 예측: Waterbirds보다 효과가 작다 (지름길이 얼굴 전체에 퍼져 배경 토큰처럼 잘리지 않는다). 효과가 작거나 없으면 그대로 적는다: "지름길이 공간적으로 분리될 때만"이라는 조건이 된다.
+- 그 뒤 GPU가 남으면 (4) **Waterbirds v0 사후 관찰의 확인 실험**: 새 seed 4·5·6, K=29, `trustfilt`·`teacher_topk`·`full` (9 job). 사전 등록: v0 − teacher_topk CI 하한 > 0, v0 − full 평균 > 0. 이것이 통과해야 게이트 1의 v0 결과를 주장으로 쓴다. (5) Waterbirds `tome`@29 seed 2·3 (2 job).
+- 메모리: CelebA train은 job당 약 3.8 GB RAM (Caltech-256과 비슷). 4개 동시 실행 그대로.

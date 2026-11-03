@@ -132,8 +132,10 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         if tier == "final" and by == "agent":
             priority = max(priority, C.FINAL_PRIORITY)
     stage2 = None
-    if dataset in C.HOLDOUT and tier != "smoke":
+    if dataset in C.HOLDOUT_STRICT and tier != "smoke":
         stage2 = holdout_rule(method, sha, tier)
+    elif dataset in C.HOLDOUT and tier != "smoke":
+        stage2 = "robustness_check"   # second spurious-correlation dataset: any method, final tier (QUEUE 2026-11-04)
     if dataset == C.STAGE2 and tier != "smoke":
         stage2 = stage2_rule(method, sha)
         priority = min(priority, C.STAGE2_PRIORITY)

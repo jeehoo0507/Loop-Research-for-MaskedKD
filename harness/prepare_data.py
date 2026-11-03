@@ -28,7 +28,7 @@ import numpy as np
 from . import config as C
 
 FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011", "aircraft": "fgvc-aircraft-2013b",
-          "caltech256": "256_ObjectCategories", "cub_lt": "CUB_200_2011"}
+          "caltech256": "256_ObjectCategories", "cub_lt": "CUB_200_2011", "celeba": "celeba"}
 ARCHIVE = {"waterbirds": "waterbird_complete95_forest2water2.tar.gz", "cub": "CUB_200_2011.tgz",
            "aircraft": "fgvc-aircraft-2013b.tar.gz", "caltech256": "256_ObjectCategories.tar", "cub_lt": "CUB_200_2011.tgz"}
 
@@ -60,11 +60,44 @@ def _write(out, split, items, crop, workers, trim=0):
     return [len(items), 3, crop, crop]
 
 
+def _source_celeba(raw):
+    """CelebA from the parquet shards (config.DATA_URLS): images written as raw/celeba/img/<image_id> and the two
+    attributes this harness uses as raw/celeba/attrs.csv (image_id, blond, male; -1/1 as in the official file)."""
+    import pyarrow.parquet as pq
+    out, shards = raw / FOLDER["celeba"], raw / "celeba_parquet"
+    (out / "img").mkdir(parents=True, exist_ok=True)
+    shards.mkdir(parents=True, exist_ok=True)
+    base = C.DATA_URLS["celeba"][0]
+    rows = []
+    for i in range(C.CELEBA_SHARDS):
+        name = f"train-{i:05d}-of-{C.CELEBA_SHARDS:05d}.parquet"
+        f = shards / name
+        if not f.exists() or f.stat().st_size < 1 << 16:
+            print(f"downloading {name}", flush=True)
+            subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-A", "Mozilla/5.0",
+                            "-o", str(f), base + name])
+        if not f.exists() or f.stat().st_size < 1 << 16:
+            raise SystemExit(f"could not download {name}; put the shards in {shards} by hand")
+        t = pq.read_table(f, columns=["image", "image_id", "Blond_Hair", "Male"]).to_pylist()
+        for r in t:
+            img = out / "img" / r["image_id"]
+            if not img.exists():
+                img.write_bytes(r["image"]["bytes"])
+            rows.append((r["image_id"], int(r["Blond_Hair"]), int(r["Male"])))
+    with open(out / "attrs.csv", "w", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["image_id", "blond", "male"])
+        w.writerows(sorted(rows))
+    return out
+
+
 def _source(dataset):
     """Extracted dataset folder: aim-lab-test-5's if present, else download + extract into $DATA_ROOT/raw."""
     for root in (C.STAGE0_DATA / dataset, C.DATA_ROOT / "raw"):
-        if (root / FOLDER[dataset]).is_dir():
+        if (root / FOLDER[dataset]).is_dir() and (dataset != "celeba" or (root / FOLDER[dataset] / "attrs.csv").is_file()):
             return root / FOLDER[dataset]
+    if dataset == "celeba":
+        return _source_celeba(C.DATA_ROOT / "raw")
     raw = C.DATA_ROOT / "raw"
     raw.mkdir(parents=True, exist_ok=True)
     arc = raw / ARCHIVE[dataset]
@@ -172,8 +205,33 @@ def splits_cub_lt(root):
     return {"train": [grp(i) for i in train], "val": [grp(i) for i in sp["val"]], "test": [grp(i) for i in sp["test"]]}
 
 
+def splits_celeba(root):
+    """CelebA (config: CELEBA_*): y = blond, group = 2*y + male. Official partition by image number; train = random
+    CELEBA_TRAIN_FRACTION of official train (random.Random(CUB_VAL_SEED)); val/test keep at most CELEBA_EVAL_CAP
+    images per group (random.Random(CUB_VAL_SEED + 1 + group), minority groups whole)."""
+    parts = {"train": [], "val": [], "test": []}
+    with open(root / "attrs.csv") as f:
+        for row in csv.DictReader(f):
+            n = int(row["image_id"].split(".")[0])
+            y, a = int(row["blond"] == "1"), int(row["male"] == "1")
+            split = "train" if n <= 162770 else ("val" if n <= 182637 else "test")
+            parts[split].append((str(root / "img" / row["image_id"]), y, 2 * y + a))
+    out = {}
+    tr = sorted(parts["train"])
+    out["train"] = sorted(random.Random(C.CUB_VAL_SEED).sample(tr, round(C.CELEBA_TRAIN_FRACTION * len(tr))))
+    for split in ("val", "test"):
+        kept = []
+        for g in range(4):
+            items = sorted(it for it in parts[split] if it[2] == g)
+            if len(items) > C.CELEBA_EVAL_CAP:
+                items = sorted(random.Random(C.CUB_VAL_SEED + 1 + g).sample(items, C.CELEBA_EVAL_CAP))
+            kept += items
+        out[split] = kept
+    return out
+
+
 SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft, "caltech256": splits_caltech256,
-          "cub_lt": splits_cub_lt}
+          "cub_lt": splits_cub_lt, "celeba": splits_celeba}
 
 
 def prepare(dataset, workers):
