@@ -417,7 +417,7 @@ Total agent screen configs: 15
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
-| final | maskedkd |  | 29 | 29.0 | 1 | 87.24 ± 0.00 | 37.59 ± 0.00 | 12.99 | 5.36 | 0.00 | 544 | waterbirds_final_maskedkd_k29_s1_1031_201502_4be8 |
+| final | maskedkd |  | 29 | 29.0 | 1,2,3 | 87.74 ± 0.55 | 38.59 ± 1.74 | 12.99 | 5.36 | 0.00 | 366 | waterbirds_final_maskedkd_k29_s2_1103_170931_92bd waterbirds_final_maskedkd_k29_s1_1031_201502_4be8 waterbirds_final_maskedkd_k29_s3_1103_170935_907a |
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 90.46 ± 0.39 | 64.16 ± 2.42 | 25.04 | 17.41 | 0.00 | 359 | waterbirds_final_maskedkd_k98_s3_1031_201502_0f31 waterbirds_final_maskedkd_k98_s1_1031_130203_5bef waterbirds_final_maskedkd_k98_s2_1031_201502_95ac |
 | final | oracle |  | 12 | 12.0 | 1 | 88.24 ± 0.00 | 52.63 ± 0.00 | 45.21 | 2.45 | 35.13 | 640 | waterbirds_final_oracle_k12_s1_1031_201502_7b51 |
 | final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
