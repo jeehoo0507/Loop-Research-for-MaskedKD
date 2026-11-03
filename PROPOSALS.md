@@ -789,6 +789,11 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 제출 seed 2 (라운드 228, 대기 0개일 때): final_lateroll_k12_s2_1102_232847_70cb + final_refs final_tome_k12_s2_1102_232847_341f, final_grid_k12_s2_1102_232847_19e5, final_center_k12_s2_1102_232847_3d41 (maskedkd·rollout·random@12 s2와 full s2는 이미 있어 건너뜀).
   - 제출 seed 3 (라운드 230, 대기 0개일 때): final_lateroll_k12_s3_1102_235618_322a + final_refs final_tome_k12_s3_1102_235618_333a, final_grid_k12_s3_1102_235618_ee11, final_center_k12_s3_1102_235618_722f, final_random_k12_s3_1102_235618_869b (maskedkd·rollout@12 s3 cub_final_*_1031과 full s3는 이미 있어 건너뜀).
   - **판정 (라운드 234, 한 번만):** E1 맞음 (lateroll@12 평균 78.78 < 81.00). E2 평균 +0.50 [−0.60, +1.60] — 양수지만 차이는 불확실. E3 평균 +0.28 [−1.68, +2.23] — |차이| ≤ 0.5지만 차이는 불확실. 자세한 값은 RESULTS.md 라운드 234. 새 run은 내지 않는다. H-C32 끝.
+- **H-C33 (라운드 235, 결과 전·제출 전에 등록): CUB CE final seed 2·3 — KD 이득과 허용 오차의 기준점 채우기 (harness builtin `ce`만, 2 job).** 새 선택기 없음, 주장 대상 아님, 감사 요청 없음. lateroll·K·sel_args·판정 규칙(QUEUE 08:50 4번)을 바꾸지 않는다.
+  - 왜: CUB final의 CE는 게이트의 seed 1 하나(cub_final_ce_k0_s1_1030_153055_1256 , 81.00)뿐이다. Full은 seed 1·2·3(81.72 ± 1.64)이다. 그래서 주 지표의 허용 오차 config.tolerance(Full, CE)(= KD 이득의 절반, 최대 1%p)와 H-C32 E1("lateroll@12 < CE")이 CE 한 seed에 기대고 있다. Aircraft·Waterbirds는 CE가 seed 1·2·3이다. 이것은 결과를 보고 고른 것이 아니라 표의 빈칸이다. 큐가 비어 GPU가 30분 넘게 놀았다.
+  - 이미 아는 것 (등록 전): CE seed 1 81.00; Full seed 1·2·3 평균 81.72; screen seed 0에서 Full − CE +3.5 (82.17 vs 78.67); H-C28 seed 6·7 CE·Full screen 값; lateroll@12 final 평균 78.78, maskedkd@12 78.28 정도.
+  - 예측 (seed 2·3이 다 나온 뒤 한 번만, 기술값): C1 Full − CE 짝 평균(seed 1·2·3) > 0 — 확신 중간 (seed 1만 +0.72 수준). C2 CE 3-seed 평균 > lateroll@12 3-seed 평균 78.78 — 확신 중간.
+  - 규칙: 결과와 무관하게 RESULTS 게이트 절에 적는다. H-C32 E1 판정(라운드 234)은 다시 쓰지 않고, 3-seed CE로 본 값은 단서로만 덧붙인다. 허용 오차는 하네스(report.py)가 계산하므로 손대지 않는다. 결과를 보고 seed·기준선을 더하지 않는다.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
