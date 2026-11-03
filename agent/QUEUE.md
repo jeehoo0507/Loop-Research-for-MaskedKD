@@ -223,3 +223,7 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **동결 직후 Caltech-256 제출 (`--priority 5`):** 후보@29, maskedkd@29, rollout@29 seed 1·2·3 + CE·Full seed 2·3 (seed 1은 게이트에 있다). 약 11 job, 4개 동시에 약 3시간이다.
 - **11/4 16:00 전:** Caltech-256 결과를 미리 적은 규칙으로 한 번 판정하고 PROGRESS 맨 위에 "최종 요약"을 쓴다. 쓸 것: 후보 정의, 세 데이터셋 각각 MaskedKD·rollout·CE 대비 짝 차이와 CI, 방향이 세 데이터셋에서 같은지. 게이트에서 Caltech-256의 KD가 CE를 +1.0 넘지 못하면 그 사실을 적고, 후보 run은 참고용으로만 보고한다.
 - 판정 규칙(결과 전에 PROPOSALS에 적는다): Caltech-256에서 후보 − maskedkd의 seed 평균 > 0이면 "세 번째 데이터셋에서도 같은 방향", CI 하한 > 0이면 "확인". 결과를 보고 K·seed를 더하지 않는다.
+
+## 2026-11-03 23:30 KST — 사람: Waterbirds 폐기
+- Waterbirds는 이 연구에서 **폐기**한다. 하네스가 Waterbirds의 screen·final 제출을 거부한다 (`config.RETIRED`, smoke만 자가 시험용으로 남음). 지난 run은 기록으로만 남는다.
+- 최종 요약과 보고서에서 Waterbirds는 "초기 탐색 단계에서 썼고 범용성 기준을 세운 뒤 폐기"라고 **이력 한 줄로만** 적는다. Waterbirds 숫자를 결과나 근거로 쓰지 않는다.

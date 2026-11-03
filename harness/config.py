@@ -114,6 +114,8 @@ STAGE2_EXPLORE = True
 # Aircraft (submit.holdout_rule); no screen runs. Its epochs are set so a run sees about as many images as an
 # Aircraft run (~24k train images x 20 epochs vs ~6k x 100) and finishes within the day.
 HOLDOUT = ("caltech256",)
+# 2026-11-03 23:30 KST (human): Waterbirds is retired. Its past runs stay readable as history; no new screen/final runs.
+RETIRED = ("waterbirds",)
 
 # Epochs per dataset and tier: 100 everywhere (the aim-lab-test-5 recipe; a Waterbirds run takes minutes).
 TIER_EPOCHS = {

@@ -885,3 +885,13 @@ def test_caltech256_split_and_holdout_rule(tmp_path, monkeypatch):
                                         "selector_sha": sha, "dataset": ds, "epochs": C.TIER_EPOCHS[ds]["final"]}
                                        for ds in (C.STAGE1, C.STAGE2) for s in C.FINAL_SEEDS])
     assert submit.make_job("good", 29, 1, "final", dataset="caltech256")["stage2"] == "holdout"
+
+
+def test_retired_dataset_takes_no_new_runs(tmp_path, monkeypatch):
+    """Waterbirds is retired: screen/final submissions are refused (smoke stays for the harness self-test)."""
+    from harness import submit
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    _fake_runs(tmp_path, monkeypatch, [])
+    for tier, seed in (("screen", 0), ("final", 1)):
+        with pytest.raises(SystemExit, match="retired"):
+            submit.make_job("ce", 0, seed, tier, dataset="waterbirds")

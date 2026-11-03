@@ -100,6 +100,8 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         raise SystemExit("a job lr is only for the bootstrap lr sweep (CE); everything else uses state/recipe.json")
     if dataset not in C.DATASETS:
         raise SystemExit(f"dataset must be one of {C.DATASETS}")
+    if dataset in C.RETIRED and tier != "smoke":
+        raise SystemExit(f"{dataset} is retired (QUEUE 2026-11-03 23:30): no new runs; past runs are history only")
     epochs = C.TIER_EPOCHS[dataset].get(tier)
     if epochs is None:
         raise SystemExit(f"{dataset} tier '{tier}' has no epoch budget (a human sets it after harness.bench)")
