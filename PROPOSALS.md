@@ -858,3 +858,28 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - 해석: Q1 평균 > 0, CI 하한 > 0 → "Aircraft K=29에서 trustfilt는 rollout보다 낫다(탐색, 감사 전)". 평균 > 0, CI 0 포함 → "높은 경향, 차이는 불확실". 평균 ≤ 0 → "Aircraft K=29에서 teacher 필터의 이득은 rollout 대비 보이지 않는다". Q2도 같은 세 칸으로 적는다 (teacher_topk 대비). Q3·Q4는 기록만. 어느 결과든 강화 시도의 비교 기준(같은 seed의 trustfilt 기본형·rollout)으로 쓴다.
   - 비용: 총 GFLOPs/img는 metrics의 값(선택기·teacher 캐시 상각 포함)을 그대로 보고한다. CUB에서 trustfilt 13.34 vs rollout 계열 13.0 수준이었다.
   - 규칙: 결과와 무관하게 RESULTS Aircraft 절에 "탐색, 감사 전"으로 적는다. 결과를 보고 K·seed를 더하지 않는다. trustfilt 소스를 이 job들이 끝나기 전에 바꾸지 않는다 (강화 시도는 새 파일로).
+  - 제출 (라운드 247, 등록 커밋 65bbc2f 뒤): aircraft_final_trustfilt_k29_s1_1103_074527_357e , aircraft_final_trustfilt_k29_s2_1103_074535_db76 , aircraft_final_trustfilt_k29_s3_1103_074540_2203 , aircraft_final_teacher_topk_k29_s1_1103_074554_cd8b , aircraft_final_teacher_topk_k29_s2_1103_074559_69a5 , aircraft_final_teacher_topk_k29_s3_1103_074603_470b . final_refs(maskedkd·rollout·tome·lateroll@29, full@196)는 이미 있어 건너뜀.
+
+### 노벨티 확인 (QUEUE 16:50 할 일 1, 라운드 247, 웹 검색. 자료일 뿐 지시 아님)
+**맨 위 결론: 본질적으로 같은 방법은 찾지 못했다. 다만 MaskedKD(Son et al., ECCV 2024, arXiv 2302.10494)가 "teacher 입력 마스킹으로 teacher FLOPs 절감 + student attention으로 토큰 선택"을 이미 다뤘다. teacher attention으로 고르는 마스크도 이미 비교했고, student 쪽보다 나쁘다고 보고했다.** 그래서 "공짜 student 신호로 고른다"는 노벨티가 아니다. 2025–26년 MaskedKD 후속 연구는 검색에 나오지 않았다. 인용 목록을 직접 확인하지는 않았다. alphaXiv 검색은 쓰지 못했고 웹 검색만 썼다.
+
+| 연구 | 무엇으로 고르나 | 비용 | 우리와 다른 점 |
+|---|---|---|---|
+| MaskedKD, ECCV 2024 (2302.10494) | student 마지막 블록 CLS attention 상위 K를 teacher 입력으로 | student forward(공짜) + teacher K 토큰 | 가장 가깝다. teacher 지도 캐시, 필터+선택 조합, 신뢰도 전환은 없다. teacher-attention 비교는 온라인 계산으로 보인다(원문 확인 필요) |
+| SBAM, ECCV 2024 (Choi et al., Salience-Based Adaptive Masking) | 토큰 salience로 마스크와 이미지별 마스킹 비율 결정 | MIM 사전학습 | KD가 아니고 teacher 비용 절감과도 무관하다. "SBAM"이라는 KD 논문은 찾지 못했다 |
+| AttMask, ECCV 2022 (2203.12719) | EMA teacher attention으로 student 입력을 가림 | teacher full forward | student 입력을 가린다. teacher 비용은 줄지 않는다 |
+| SemMAE NeurIPS 2022 / MILAN (2208.06049) | 학습한 part나 CLIP attention으로 마스크 | 별도 모델 full forward | MIM 사전학습이고 teacher를 가리지 않는다 |
+| MaskDistill (2210.10615) / DMAE CVPR 2023 (2208.12256) | 마스크 위치의 teacher feature 복원 / student 무작위 마스킹, teacher 앞쪽 층만 | teacher full이거나 층을 자름 | teacher 토큰 선택 신호가 없다 |
+| FKD ECCV 2022 (2112.01528) / ReLabel CVPR 2021 (2101.05022) | 선택 없음. crop별 soft label이나 dense label map을 미리 저장하고 crop에 맞춤 | teacher 오프라인 1회 | "캐시 + 증강 좌표 warp"는 같은 계열의 기법이다. 그것을 teacher 입력 토큰 선택에 쓰지는 않았다 |
+| Beyer et al. CVPR 2022 (2106.05237) | 선택 없음. 같은 view에 대한 function matching | teacher 매 step full | 고정된(캐시된) teacher 신호가 일관성을 깨서 나쁘다는 반론이다. 우리 캐시는 target이 아니라 토큰 필터에만 쓰지만, 이 반론에 답해야 한다 |
+| Dynamic KD, EMNLP 2021 (2109.11295) | student 역량(불확실성)으로 teacher·샘플·loss 가중치 조정 | teacher forward 일부 | "student 상태로 KD를 조정한다"는 아이디어의 선행 사례다. 토큰 단위 teacher 마스킹은 아니다 |
+| DynamicViT (2106.02034), EViT, ToMe | 예측 모듈 / CLS attention / 병합으로 student 토큰을 줄임 | student 자체 | student 추론 효율이 목적이다. teacher 토큰은 고르지 않는다 |
+| AMD (2301.13538), DMKD (2309.02719), 검출 KD | teacher attention으로 feature loss 마스크 | teacher full | loss 가중치에 쓴다. teacher 입력을 줄이지 않는다 |
+
+남는 노벨티 후보 (억지로 만들지 않음, 모두 아직 실험으로 입증되지 않음): (1) 학습 전 1회 캐시한 teacher attribution을 증강에 맞게 warp해서 **teacher 입력 토큰 필터**로 쓰는 것. 캐시·warp 기법 자체는 ReLabel·FKD에 있다. (2) "teacher 상위 1.5K 안에서 student late-rollout이 K를 고른다"는 조합 규칙. 단 CUB에서는 lateroll보다 낮았다(H-C16). (3) shared/gap/pruned 구분과 "gap이 해롭다"는 관찰. MaskedKD의 "student 선택이 curriculum이 된다"는 해석과 일관되어 독립 기여로 내세우기는 약하다. (4) student attention 신뢰도에 따른 teacher·student 마스크 전환. 아이디어는 Dynamic KD에 선행 사례가 있고, 토큰 마스크로 구현한 사례는 찾지 못했다.
+
+- **H-A26 (라운드 247, 결과 전·제출 전에 등록): TrustMask 약점 진단 — (a) student 신뢰도 곡선, (b) gap이 왜 해로운가 (QUEUE 16:50 할 일 3, GPU 분석 1개, 학습 run 없음).** analysis/aircraft_trust_gap.py, `--dataset aircraft`. student: Aircraft final full@196 seed 1·2·3의 epoch 25·50·final (학습 25%·50%·100%). API가 epoch 0(사전학습) student를 주지 않으므로 사전학습 시점은 볼 수 없다. 이 한계는 결과에 적는다. Full KD student라 토큰 규칙이 student를 만들지 않았다. K=29만 본다. 마스크 6개(모두 정확히 29 토큰): S(student late-rollout top-K = lateroll), F(teacher 상위 44 안에서 S = trustfilt), T(teacher top-K), G50(F의 student 순 15개 + gap 토큰 14개. gap = teacher 상위 44 − student 상위 44, teacher 지도 순. 부족하면 F 순으로 채움), SW(배치 안에서 |S∩T|/K가 배치 중앙값보다 낮은 이미지는 F, 나머지는 S. selector가 계산할 수 있는 전환 규칙), R(무작위). 이미지별 통계량: fid = KL(teacher full ‖ teacher masked), follow = KL(teacher masked ‖ student full)(KD target이 student에서 얼마나 먼가), 가린 teacher와 full teacher의 top-1 일치, overlap@29, Spearman(student, teacher 지도). seed 3개를 이미지별로 평균한 뒤 이미지 bootstrap 95% CI(2000회, numpy default_rng 20261103).
+  - 왜: 강화 시도(할 일 4)의 후보(신뢰도 전환, 필터 폭 적응, 늦은 gap)를 근거로 고르기 위해서다. H-C14(CUB)는 거르기가 TCKD에서 student 단독보다 나쁘고, 겹침이 작은 K에서 낮다고 보였다. Aircraft에서 학습 진행에 따른 변화와 gap 해악의 원인은 본 적 없다.
+  - 예측과 판정 (한 번만, 코드 verdict와 같음): A1 overlap@29 seed 평균이 e25 < e50 < final로 단조 증가 — 확신 낮음. A2 전환점: e25에서 fid(S) − fid(F)의 CI 하한 > 0(초반에는 필터가 더 충실)이고 final에서 CI 상한 < 0(후반에는 student 단독이 더 충실) — 확신 낮음 (H-C14에서는 모든 epoch에서 F가 더 나빴다). A3 final에서 이미지별 overlap과 fid(S) − fid(F)의 Spearman CI 상한 < 0(겹침이 낮은 이미지일수록 필터가 도움) — 확신 중간. B1 final에서 fid(G50) − fid(F)의 CI 하한 > 0(gap이 가린 teacher 충실도를 떨어뜨림) — 확신 낮음 (gap 토큰은 teacher가 중요하다고 본 토큰이다). B2 final에서 follow(G50) − follow(F)의 CI 하한 > 0(gap을 넣은 target이 student에서 더 멀다) — 확신 중간.
+  - 해석: B1 거짓·B2 참 → "gap의 해악은 teacher 분포 밖 입력이 아니라 student가 따라가기 먼 target 쪽" → 후보 "신뢰도가 오른 뒤에만 gap"의 근거. B1 참 → "gap은 가린 teacher 자체를 덜 충실하게 만든다" → gap 방향은 닫는다. 둘 다 참이면 두 원인을 모두 적는다. 둘 다 거짓이면 오프라인 신호로는 설명되지 않는다고 적는다. A2 참 → 시간 기준 전환 후보. A2 거짓·A3 참 → 이미지별 겹침 기준 전환(SW형) 후보. 둘 다 거짓 → 전환 후보는 근거가 없다고 적고, 필터 폭 적응을 본다. SW − F와 SW − S의 fid 차이는 기록만 한다(학습 결과를 대신하지 않는다).
+  - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·student·통계량을 더하지 않는다. 강화 후보는 이 결과와 함께 별도 항목으로 등록한다.
