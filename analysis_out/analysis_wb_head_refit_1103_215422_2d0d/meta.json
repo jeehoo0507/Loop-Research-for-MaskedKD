@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_head_refit_1103_215422_2d0d",
+ "name": "wb_head_refit",
+ "source_sha": "2d0dd1249e4dd0e7bf62dc15b16414e0569287d3fbd91558d6407e1d4726eb94",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does refitting only the last linear layer with group-balanced weights (DFR) on the final students' features remove the WGA gap between methods?",
+  "method": "group-balanced closed-form ridge head on the pre-logit feature, 2-fold CV; spread of method means; Spearman rank correlation with run bootstrap",
+  "paper": "Kirichenko et al. ICLR 2023 (DFR, last layer re-training); Sagawa et al. ICLR 2020 (Waterbirds groups); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 13.0
+}
