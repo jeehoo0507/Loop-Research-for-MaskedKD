@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_kept_set_shape_1103_223942_aae1",
+ "name": "wb_kept_set_shape",
+ "source_sha": "aae13e973754902d44a5e690f33b3b91bf8354f5d864fbf0d9d6b589cd50ebc1",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29 group 2, does the Jaccard of a student's attention top-K with the teacher-rollout top-K explain masked-teacher correctness better than rollout-mass coverage, and is it lower for online than frozen-trained MaskedKD students?",
+  "method": "last-block CLS attention top-K; attention rollout top-K Jaccard; kept-set spatial dispersion; keep-only masked-teacher p(y); Spearman with image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 12.7
+}
