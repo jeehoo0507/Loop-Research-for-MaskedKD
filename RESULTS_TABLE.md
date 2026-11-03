@@ -25,9 +25,9 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - lateroll@12 vs maskedkd@12 [acc]: +0.33 %p, 95% CI [-3.90, +4.57], seeds 1,2, GFLOPs ratio 1.000 -> no difference
 - lateroll@12 vs rollout@12 [acc]: -0.17 %p, 95% CI [-2.28, +1.95], seeds 1,2, GFLOPs ratio 1.000 -> no difference
-- lateroll@12 vs tome@12 [acc]: missing (needs >= 2 shared seeds)
-- lateroll@12 vs grid@12 [acc]: missing (needs >= 2 shared seeds)
-- lateroll@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@12 vs tome@12 [acc]: -1.00 %p, 95% CI [-3.12, +1.12], seeds 1,2, GFLOPs ratio 0.840 -> no difference
+- lateroll@12 vs grid@12 [acc]: +3.08 %p, 95% CI [-2.21, +8.38], seeds 1,2, GFLOPs ratio 0.999 -> no difference
+- lateroll@12 vs center@12 [acc]: +2.58 %p, 95% CI [-0.59, +5.76], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@12 vs random@12 [acc]: +2.33 %p, 95% CI [-1.90, +6.57], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@12 vs full@196 [acc]: -2.58 %p, 95% CI [-20.58, +15.42], seeds 1,2, GFLOPs ratio 0.236 -> no difference
 - lateroll@12 vs rollout@12 [acc]: -0.17 %p, 95% CI [-2.28, +1.95], seeds 1,2, GFLOPs ratio 1.000 -> no difference
@@ -100,11 +100,11 @@ Total agent screen configs: 14
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
-| final | center |  | 12 | 12.0 | 1 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 305 | final_center_k12_s1_1102_225104_539f |
+| final | center |  | 12 | 12.0 | 1,2 | 76.17 ± 0.24 | - | 10.09 | 2.45 | 0.00 | 303 | final_center_k12_s2_1102_232847_3d41 final_center_k12_s1_1102_225104_539f |
 | final | center |  | 29 | 29.0 | 1,2,3 | 78.28 ± 1.08 | - | 13.00 | 5.36 | 0.00 | 279 | final_center_k29_s3_1101_140937_62e7 final_center_k29_s1_1101_104303_c1f7 final_center_k29_s2_1101_125958_d08b |
 | final | center |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.88 | - | 16.46 | 8.82 | 0.00 | 340 | final_center_k49_s2_1102_043001_d845 final_center_k49_s1_1102_034050_dbd2 final_center_k49_s3_1102_153530_7a3d |
 | final | full |  | 196 | 196.0 | 1,2,3 | 81.72 ± 1.64 | - | 42.77 | 35.13 | 0.00 | 227 | final_full_k196_s2_1101_125958_cc04 final_full_k196_s3_1101_140937_e8fa cub_final_full_k196_s1_1030_153055_d87b |
-| final | grid |  | 12 | 12.0 | 1 | 76.17 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 304 | final_grid_k12_s1_1102_225104_b379 |
+| final | grid |  | 12 | 12.0 | 1,2 | 75.67 ± 0.71 | - | 10.09 | 2.45 | 0.00 | 302 | final_grid_k12_s1_1102_225104_b379 final_grid_k12_s2_1102_232847_19e5 |
 | final | grid |  | 29 | 29.0 | 1,2,3 | 75.33 ± 0.60 | - | 13.00 | 5.36 | 0.00 | 281 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 final_grid_k29_s3_1101_140937_8b9f |
 | final | grid |  | 49 | 49.0 | 1,2,3 | 78.06 ± 0.38 | - | 16.46 | 8.82 | 0.00 | 313 | final_grid_k49_s2_1102_043001_e20e final_grid_k49_s3_1102_153530_d0e5 final_grid_k49_s1_1102_034050_f172 |
 | final | lateroll@69541b |  | 12 | 12.0 | 1,2 | 78.75 ± 0.12 | - | 10.08 | 2.45 | 0.08 | 328 | final_lateroll_k12_s2_1102_232847_70cb final_lateroll_k12_s1_1102_225104_b47e |
@@ -120,7 +120,7 @@ Total agent screen configs: 14
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 78.50 ± 0.73 | - | 10.08 | 2.45 | 0.17 | 739 | cub_final_rollout_k12_s3_1031_103013_2dcf cub_final_rollout_k12_s2_1031_102956_fadd final_rollout_k12_s1_1102_225104_31a8 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 80.44 ± 1.02 | - | 12.99 | 5.36 | 0.17 | 234 | final_rollout_k29_s1_1101_104303_3861 final_rollout_k29_s2_1101_125958_2ad2 final_rollout_k29_s3_1101_140937_8573 |
 | final | rollout |  | 49 | 49.0 | 1,2,3 | 82.11 ± 1.13 | - | 16.45 | 8.82 | 0.17 | 230 | final_rollout_k49_s1_1102_034050_c1e4 final_rollout_k49_s2_1102_043001_2aed final_rollout_k49_s3_1102_153530_4395 |
-| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 80.00 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 296 | final_tome_k12_s1_1102_225104_3037 |
+| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2 | 79.75 ± 0.35 | - | 12.00 | 4.36 | 0.00 | 305 | final_tome_k12_s1_1102_225104_3037 final_tome_k12_s2_1102_232847_341f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 79.78 ± 1.02 | - | 12.00 | 4.36 | 0.00 | 292 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s3_1101_140937_cdbb final_tome_k29_s2_1101_125958_ab06 |
 | final | tome |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.83 | - | 14.50 | 6.86 | 0.00 | 272 | final_tome_k49_s2_1102_043001_61ab final_tome_k49_s3_1102_153530_f477 final_tome_k49_s1_1102_034050_9b6d |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
