@@ -163,6 +163,7 @@ Total agent screen configs: 14
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 80.22 ± 1.08 | - | 12.99 | 5.36 | 0.00 | 278 | final_maskedkd_k29_s3_1101_140937_b00f final_maskedkd_k29_s2_1101_125958_5b02 final_maskedkd_k29_s1_1101_104303_b676 |
 | final | maskedkd |  | 49 | 49.0 | 1,2,3 | 81.67 ± 1.17 | - | 16.44 | 8.82 | 0.00 | 258 | final_maskedkd_k49_s3_1102_153530_68ef final_maskedkd_k49_s2_1102_043001_cd83 final_maskedkd_k49_s1_1102_034050_d0b8 |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.50 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 298 | cub_final_maskedkd_k98_s1_1030_153055_cdbc |
+| final | rand_alloc |  | 29 | 29.0 | 1,2,3 | 80.56 ± 0.69 | - | 12.99 | 5.37 | 0.00 | 129 | final_rand_alloc_k29_s3_1103_100031_f4ab final_rand_alloc_k29_s2_1103_100027_fe35 final_rand_alloc_k29_s1_1103_100019_837a |
 | final | random |  | 12 | 12.0 | 1,2,3 | 76.67 ± 0.60 | - | 10.09 | 2.45 | 0.00 | 734 | cub_final_random_k12_s2_1031_103009_1917 final_random_k12_s3_1102_235618_869b final_random_k12_s1_1102_225104_c1a9 |
 | final | random |  | 29 | 29.0 | 1,2,3 | 74.94 ± 0.25 | - | 13.00 | 5.36 | 0.00 | 279 | final_random_k29_s3_1101_140937_24cb final_random_k29_s1_1101_104303_9664 final_random_k29_s2_1101_125958_9495 |
 | final | random |  | 49 | 49.0 | 1,2,3 | 78.33 ± 0.87 | - | 16.46 | 8.82 | 0.00 | 434 | final_random_k49_s1_1102_034050_5828 final_random_k49_s3_1102_153530_ccb4 final_random_k49_s2_1102_043001_3091 |
@@ -246,6 +247,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - lateroll@29 vs random@29 [acc]: +3.05 %p, 95% CI [-1.33, +7.43], seeds 1,2,3, GFLOPs ratio 0.999 -> no difference
 - lateroll@29 vs full@196 [acc]: -1.76 %p, 95% CI [-4.86, +1.34], seeds 1,2,3, GFLOPs ratio 0.304 -> no difference
 - lateroll@29 vs rollout@29 [acc]: -0.14 %p, 95% CI [-3.53, +3.24], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- trustfilt@12 vs maskedkd@12 [acc]: +1.14 %p, 95% CI [-15.19, +17.48], seeds 1,3, GFLOPs ratio 1.036 -> no difference
+- trustfilt@12 vs rollout@12 [acc]: +1.21 %p, 95% CI [-14.21, +16.64], seeds 1,3, GFLOPs ratio 1.035 -> no difference
+- trustfilt@12 vs tome@12 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@12 vs grid@12 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@12 vs random@12 [acc]: +0.57 %p, 95% CI [-1.24, +2.39], seeds 1,3, GFLOPs ratio 1.034 -> no difference
+- trustfilt@12 vs full@196 [acc]: -4.29 %p, 95% CI [-15.18, +6.61], seeds 1,3, GFLOPs ratio 0.244 -> no difference
+- trustfilt@12 vs lateroll@12 (parent) [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs maskedkd@29 [acc]: +0.29 %p, 95% CI [-1.87, +2.44], seeds 1,2,3, GFLOPs ratio 1.028 -> no difference
 - trustfilt@29 vs rollout@29 [acc]: -0.86 %p, 95% CI [-1.92, +0.21], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustfilt@29 vs tome@29 [acc]: -0.62 %p, 95% CI [-2.98, +1.74], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
@@ -261,7 +270,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - trustmask_v1@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@12 vs random@12 [acc]: +1.00 %p, 95% CI [+0.65, +1.35], seeds 1,2,3, GFLOPs ratio 1.034 -> WIN
 - trustmask_v1@12 vs full@196 [acc]: -3.90 %p, 95% CI [-5.34, -2.47], seeds 1,2,3, GFLOPs ratio 0.244 -> LOSS
-- trustmask_v1@12 vs trustfilt@12 (parent) [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@12 vs trustfilt@12 (parent) [acc]: +0.43 %p, 95% CI [-3.20, +4.06], seeds 1,3, GFLOPs ratio 1.000 -> no difference
 - trustmask_v1@29 vs maskedkd@29 [acc]: +1.76 %p, 95% CI [-2.50, +6.03], seeds 1,2,3, GFLOPs ratio 1.028 -> no difference
 - trustmask_v1@29 vs rollout@29 [acc]: +0.62 %p, 95% CI [-1.17, +2.41], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs tome@29 [acc]: +0.86 %p, 95% CI [-0.08, +1.80], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
@@ -308,7 +317,7 @@ Total agent screen configs: 0
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 65.48 ± 0.86 | - | 13.36 | 5.36 | 0.36 | 401 | aircraft_final_teacher_topk_k29_s3_1103_074603_470b aircraft_final_teacher_topk_k29_s2_1103_074559_69a5 aircraft_final_teacher_topk_k29_s1_1103_074554_cd8b |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2 | 65.21 ± 0.51 | - | 12.00 | 4.36 | 0.00 | 299 | aircraft_final_tome_k12_s2_1103_093020_84da aircraft_final_tome_k12_s1_1102_132227_991f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 66.19 ± 0.33 | - | 12.00 | 4.36 | 0.00 | 398 | aircraft_final_tome_k29_s1_1102_132227_ccc7 aircraft_final_tome_k29_s2_1102_180330_3c69 aircraft_final_tome_k29_s3_1102_180345_552f |
-| final | trustfilt@27da28 |  | 12 | 12.0 | 1 | 64.86 ± 0.00 | - | 10.43 | 2.45 | 0.43 | 279 | aircraft_final_trustfilt_k12_s1_1103_093013_2336 |
+| final | trustfilt@27da28 |  | 12 | 12.0 | 1,3 | 63.57 ± 1.82 | - | 10.43 | 2.45 | 0.43 | 311 | aircraft_final_trustfilt_k12_s3_1103_093025_5a85 aircraft_final_trustfilt_k12_s1_1103_093013_2336 |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 65.57 ± 0.94 | - | 13.35 | 5.36 | 0.43 | 278 | aircraft_final_trustfilt_k29_s2_1103_074535_db76 aircraft_final_trustfilt_k29_s3_1103_074540_2203 aircraft_final_trustfilt_k29_s1_1103_074527_357e |
 | final | trustmask_v1@8186a4 |  | 12 | 12.0 | 1,2,3 | 64.14 ± 1.03 | - | 10.43 | 2.45 | 0.43 | 277 | aircraft_final_trustmask_v1_k12_s2_1103_093020_777f aircraft_final_trustmask_v1_k12_s1_1103_093013_330f aircraft_final_trustmask_v1_k12_s3_1103_093025_7076 |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 67.05 ± 0.70 | - | 13.35 | 5.36 | 0.43 | 252 | aircraft_final_trustmask_v1_k29_s3_1103_083822_5bcd aircraft_final_trustmask_v1_k29_s2_1103_083818_f341 aircraft_final_trustmask_v1_k29_s1_1103_083809_92a4 |
