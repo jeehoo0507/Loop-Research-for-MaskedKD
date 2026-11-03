@@ -69,9 +69,9 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - trustfilt@29 vs parent lateroll: acc +0.50 %p (threshold 1.92) -> added part UNPROVEN
 
 ## Primary metric (analysis-only methods excluded: oracle)
-### final: Full KD val 81.72 (seeds 1,2,3); KD gain +0.72, tolerance 0.36 %p; smallest mean kept tokens within it
+### final: Full KD val 81.72 (seeds 1,2,3); KD gain +0.50, tolerance 0.25 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
-  - lateroll@69541b : 29.0 (3 seeds)
+  - lateroll@69541b : 49.0 (3 seeds)
   - maskedkd : 49.0 (3 seeds)
   - rollout : 49.0 (3 seeds)
 - screening only (fewer seeds):
@@ -103,7 +103,7 @@ Total agent screen configs: 14
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1 | 81.00 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 511 | cub_final_ce_k0_s1_1030_153055_1256 |
+| final | ce |  | 0 | None | 1,2,3 | 81.22 ± 0.54 | - | 7.64 | 0.00 | 0.00 | 732 | final_ce_k0_s3_1103_013646_bb9a final_ce_k0_s2_1103_013642_841b cub_final_ce_k0_s1_1030_153055_1256 |
 | final | center |  | 12 | 12.0 | 1,2,3 | 76.17 ± 0.17 | - | 10.09 | 2.45 | 0.00 | 313 | final_center_k12_s2_1102_232847_3d41 final_center_k12_s1_1102_225104_539f final_center_k12_s3_1102_235618_722f |
 | final | center |  | 29 | 29.0 | 1,2,3 | 78.28 ± 1.08 | - | 13.00 | 5.36 | 0.00 | 279 | final_center_k29_s3_1101_140937_62e7 final_center_k29_s1_1101_104303_c1f7 final_center_k29_s2_1101_125958_d08b |
 | final | center |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.88 | - | 16.46 | 8.82 | 0.00 | 340 | final_center_k49_s2_1102_043001_d845 final_center_k49_s1_1102_034050_dbd2 final_center_k49_s3_1102_153530_7a3d |
