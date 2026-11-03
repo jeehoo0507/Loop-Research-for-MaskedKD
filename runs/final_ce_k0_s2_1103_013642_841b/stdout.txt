@@ -1,0 +1,9 @@
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+[2026-11-03 01:36:56] job final_ce_k0_s2_1103_013642_841b method=ce keep=0 seed=2 epochs=100 device=cuda
+[2026-11-03 01:36:57] flops per image (train step): {'total_gflops_per_img': 7.6422, 'selector_gflops_per_img': 0.0, 'teacher_gflops_per_img': 0.0, 'student_gflops_per_img': 7.6422, 'windows': 1}
+[2026-11-03 01:37:00] {"epoch": 1, "loss": 5.387722866875785, "epoch_s": 4.5, "img_per_s": 1191.5}
+[2026-11-03 01:37:04] {"epoch": 2, "loss": 5.31954288482666, "epoch_s": 3.5, "img_per_s": 1544.8}
+[2026-11-03 01:37:08] {"epoch": 3, "loss": 5.263587304524013, "epoch_s": 3.6, "img_per_s": 1506.7}
+[2026-11-03 01:37:11] {"epoch": 4, "loss": 5.127711523146856, "epoch_s": 3.6, "img_per_s": 1509.7}
+[2026-11-03 01:37:16] {"epoch": 5, "loss": 4.888138305573237, "epoch_s": 3.6, "img_per_s": 1490.5, "val_acc": 21.833333373069763}
