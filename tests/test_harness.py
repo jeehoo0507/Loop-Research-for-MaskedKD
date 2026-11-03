@@ -850,3 +850,38 @@ def test_digest_at_reproduces_the_lock_of_a_commit(tmp_path, monkeypatch):
     g("commit", "-qam", "two")
     assert lock.digest_at("HEAD") == lock.harness_digest() != first
     assert lock.digest_at("HEAD~1") == first and lock.digest_at("nope") is None
+
+
+def test_caltech256_split_and_holdout_rule(tmp_path, monkeypatch):
+    """Caltech-256: 256 classes (clutter dropped), per class 80/10/10. Held-out: a selector runs there only as a final
+    run of a source that already has final seeds 1-3 on CUB and Aircraft; baselines always."""
+    import hashlib
+    from harness import prepare_data as P, submit
+    root = tmp_path / "256_ObjectCategories"
+    for name, n in (("001.ak47", 20), ("002.bat", 11), ("257.clutter", 5)):
+        (root / name).mkdir(parents=True)
+        for i in range(n):
+            (root / name / f"{i:04d}.jpg").write_bytes(b"x")
+        (root / name / "notes.txt").write_text("not an image")
+    sp = P.splits_caltech256(root)
+    assert sum(map(len, sp.values())) == 31 and {y for _, y, _ in sp["train"]} == {0, 1}
+    assert (len(sp["val"]), len(sp["test"])) == (3, 3)          # round(2.0)=2 + round(1.1)=1 each
+    assert not {p for p, _, _ in sp["train"]} & {p for p, _, _ in sp["test"]}
+
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    (tmp_path / "selectors").mkdir()
+    monkeypatch.setattr("harness.validate.SELECTORS_DIR", tmp_path / "selectors")
+    (tmp_path / "selectors" / "good.py").write_text(GOOD)
+    sha = hashlib.sha256(GOOD.encode()).hexdigest()
+    _fake_runs(tmp_path, monkeypatch, [])
+    assert submit.make_job("ce", 0, 1, "final", dataset="caltech256")["stage2"] == "holdout_baseline"
+    with pytest.raises(SystemExit, match="needs final seeds"):
+        submit.make_job("good", 29, 1, "final", dataset="caltech256")
+    with pytest.raises(SystemExit):
+        submit.make_job("good", 29, 0, "screen", dataset="caltech256")
+    import shutil
+    shutil.rmtree(tmp_path / "runs", ignore_errors=True)
+    _fake_runs(tmp_path, monkeypatch, [{"method": "good", "keep": 29, "seed": s, "tier": "final", "val_acc_last": 70.0,
+                                        "selector_sha": sha, "dataset": ds, "epochs": C.TIER_EPOCHS[ds]["final"]}
+                                       for ds in (C.STAGE1, C.STAGE2) for s in C.FINAL_SEEDS])
+    assert submit.make_job("good", 29, 1, "final", dataset="caltech256")["stage2"] == "holdout"

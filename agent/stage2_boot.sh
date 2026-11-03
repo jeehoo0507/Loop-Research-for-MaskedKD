@@ -9,7 +9,9 @@ PY=.venv/bin/python
 S=agent/.state; LOG=agent/logs/stage2_boot.log
 say()  { echo "[stage2 $(date '+%m-%d %H:%M')] $*" | tee -a "$LOG"; }
 status() { echo "- $(date '+%Y-%m-%d %H:%M') [stage2] $*" >> agent/BOOT_STATUS.md; say "$*"; }
-S2=$($PY -c 'from harness import config as C; print(C.STAGE2)')
+# $1: the dataset to set up (default config.STAGE2; agent/loop.sh also passes the held-out datasets, config.HOLDOUT)
+S2="${1:-$($PY -c 'from harness import config as C; print(C.STAGE2)')}"
+HOLD=$($PY -c "from harness import config as C; print(int('$S2' in C.HOLDOUT))")
 # markers per dataset: agent/loop.sh starts this script again only while neither exists
 fail() { status "STOPPED: $*"; touch "$S/stage2_failed_$S2"; exit 1; }
 G2="$S/gate2_ids_$S2"; B2="$S/stage2_baseline_ids_$S2"
@@ -51,7 +53,9 @@ else
   status "$S2 gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: $msg"
 fi
 
-if [ ! -s "$B2" ]; then
+if [ "$HOLD" = 1 ]; then
+  status "$S2 is a held-out check: no baseline grid; the agent submits the frozen candidate and its references"
+elif [ ! -s "$B2" ]; then
   [ -s "$S/stage1_baseline_ids" ] && $PY -m harness.submit --wait $(cat "$S/stage1_baseline_ids") >/dev/null
   keeps=$($PY -m harness.boot pick-keeps)
   $PY -m harness.submit --baselines --dataset "$S2" --keeps "$keeps" > "$B2" 2>>"$LOG" ||

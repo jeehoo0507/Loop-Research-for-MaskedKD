@@ -52,6 +52,22 @@ def audit_passed(method):
     return False
 
 
+def holdout_rule(method, sha, tier):
+    """Held-out dataset (config.HOLDOUT): harness baselines, and an agent selector only as a final run of a source that
+    already has final seeds 1-3 on both CUB and Aircraft (the candidate is frozen before it sees this data)."""
+    if method in C.BASELINES:
+        return "holdout_baseline"
+    if tier != "final":
+        raise SystemExit("the held-out dataset takes final-tier runs only (it is not searched on)")
+    from .report import load_runs
+    runs = [r for r in load_runs() if r["tier"] == "final" and r["method"] == method and r.get("selector_sha") == sha]
+    for ds in (C.STAGE1, C.STAGE2):
+        if not set(C.FINAL_SEEDS) <= {r["seed"] for r in runs if r.get("dataset", C.STAGE1) == ds}:
+            raise SystemExit(f"'{method}' (this exact source) needs final seeds {C.FINAL_SEEDS} on {ds} before the "
+                             "held-out dataset")
+    return "holdout"
+
+
 def stage2_rule(method, sha):
     """Stage 2 admits harness baselines, and agent methods that finished stage-1 final on all fresh seeds and
     passed audit, only after the stage-2 gate passed. Returns a label."""
@@ -114,6 +130,8 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         if tier == "final" and by == "agent":
             priority = max(priority, C.FINAL_PRIORITY)
     stage2 = None
+    if dataset in C.HOLDOUT and tier != "smoke":
+        stage2 = holdout_rule(method, sha, tier)
     if dataset == C.STAGE2 and tier != "smoke":
         stage2 = stage2_rule(method, sha)
         priority = min(priority, C.STAGE2_PRIORITY)

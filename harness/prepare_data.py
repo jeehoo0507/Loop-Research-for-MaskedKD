@@ -27,9 +27,10 @@ import numpy as np
 
 from . import config as C
 
-FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011", "aircraft": "fgvc-aircraft-2013b"}
+FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011", "aircraft": "fgvc-aircraft-2013b",
+          "caltech256": "256_ObjectCategories"}
 ARCHIVE = {"waterbirds": "waterbird_complete95_forest2water2.tar.gz", "cub": "CUB_200_2011.tgz",
-           "aircraft": "fgvc-aircraft-2013b.tar.gz"}
+           "aircraft": "fgvc-aircraft-2013b.tar.gz", "caltech256": "256_ObjectCategories.tar"}
 
 
 def _load(args):
@@ -136,7 +137,23 @@ def splits_aircraft(root):
     return {"train": [item(i) for i in train], "val": [item(i) for i in val], "test": [item(i) for i, _ in test]}
 
 
-SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft}
+def splits_caltech256(root):
+    """256 object classes (folders 001..256; 257.clutter is not a class), per class 80 / 10 / 10 train / val / test
+    with random.Random(CUB_VAL_SEED) over the sorted file names."""
+    out = {"train": [], "val": [], "test": []}
+    for d in sorted(p for p in root.iterdir() if p.is_dir()):
+        c = int(d.name.split(".", 1)[0]) - 1
+        if c >= 256:
+            continue
+        files = sorted(str(f) for f in d.iterdir() if f.suffix.lower() == ".jpg")
+        random.Random(C.CUB_VAL_SEED + c).shuffle(files)
+        n_val = n_test = max(1, round(0.1 * len(files)))
+        for i, f in enumerate(files):
+            out["test" if i < n_test else "val" if i < n_test + n_val else "train"].append((f, c, -1))
+    return out
+
+
+SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft, "caltech256": splits_caltech256}
 
 
 def prepare(dataset, workers):
@@ -147,7 +164,8 @@ def prepare(dataset, workers):
     root = _source(dataset)
     sp = SPLITS[dataset](root)
     sizes = {k: len(v) for k, v in sp.items()}
-    if sizes != C.EXPECTED_SIZES[dataset]:
+    exp = C.EXPECTED_SIZES[dataset]
+    if ("total" in exp and sum(sizes.values()) != exp["total"]) or ("total" not in exp and sizes != exp):
         raise SystemExit(f"{dataset} split sizes {sizes} != expected {C.EXPECTED_SIZES[dataset]}")
     out.mkdir(parents=True, exist_ok=True)
     trim = C.TRIM_BOTTOM.get(dataset, 0)

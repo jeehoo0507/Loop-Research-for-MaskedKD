@@ -22,7 +22,7 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 # student, 100 epochs; CUB: KD - CE = +1.62 %p over 3 seeds), and on Waterbirds MaskedKD at 15 % of the tokens cost
 # 18.5 %p of worst-group accuracy against Full KD: token choice matters there. Recipe = aim-lab-test-5
 # docs/maskedkd_settings.md section 6, except that augmentation runs on the GPU from stored 256x256 images.
-DATASETS = ("waterbirds", "cub", "aircraft")
+DATASETS = ("waterbirds", "cub", "aircraft", "caltech256")
 # 2026-10-31: the search moved to CUB. The aim is FLOPs-efficient KD, not robustness: Waterbirds was picked only because
 # KD > CE there, but with 2 classes the teacher's soft labels carry almost no class-relation information (the thing KD
 # transfers), so a token-selection result there says little about MaskedKD's multi-class setting. CUB (200 classes)
@@ -32,8 +32,8 @@ STAGE2 = "aircraft"          # check on a second dataset (fixed methods, fresh s
 # 2026-11-02: the check moved from Waterbirds to FGVC-Aircraft. Waterbirds (2 classes, spurious background) checks
 # robustness, not whether a token budget chosen on CUB transfers to another fine-grained, many-class task. Its runs stay
 # valid and stay in RESULTS_TABLE ("earlier check").
-NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100}
-NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0}   # Waterbirds group = 2*y + place; evaluation only, never used in training
+NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100, "caltech256": 256}
+NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0, "caltech256": 0}   # Waterbirds group = 2*y + place; evaluation only, never used in training
 DATA_URLS = {
     "waterbirds": ["https://downloads.cs.stanford.edu/nlp/data/dro/waterbird_complete95_forest2water2.tar.gz",
                    "https://nlp.stanford.edu/data/dro/waterbird_complete95_forest2water2.tar.gz"],
@@ -42,11 +42,15 @@ DATA_URLS = {
                  # the server cannot reach robots.ox.ac.uk (2026-11-02, curl 28); a Hugging Face copy of the same
                  # archive (2,753,340,328 bytes); prepare_data checks the split sizes against EXPECTED_SIZES
                  "https://huggingface.co/datasets/xingslong/fgvc-aircraft-2013b/resolve/main/fgvc-aircraft-2013b.tar.gz"],
+    "caltech256": ["https://data.caltech.edu/records/nyy15-4j048/files/256_ObjectCategories.tar?download=1",
+                   # same archive (1,183,006,720 bytes) on Hugging Face; the official link refused automated download
+                   "https://huggingface.co/datasets/xingslong/caltech256/resolve/main/256_ObjectCategories.tar"],
 }
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
-                  "aircraft": {"train": 5967, "val": 700, "test": 3333}}  # Aircraft (100 variants): val = 10 % per
+                  "aircraft": {"train": 5967, "val": 700, "test": 3333},  # Aircraft (100 variants): val = 10 % per
                   # class of official trainval (the CUB rule), official test
+                  "caltech256": {"total": 29780}}  # 256 object classes (257.clutter dropped); per class 80/10/10
 CUB_VAL_FRACTION, CUB_VAL_SEED = 0.10, 0     # same split rule as aim-lab-test-5 (teachers are interchangeable)
 TRIM_BOTTOM = {"aircraft": 20}               # Aircraft images carry a 20-px copyright banner (removed, as is standard)
 STAGE0_OUTPUTS = Path(os.environ.get("STAGE0_OUTPUTS", Path.home() / "stage0" / "outputs"))  # aim-lab-test-5 results
@@ -78,6 +82,7 @@ TAU = 1.0
 # Teacher fine-tune (no mixup, label smoothing 0: LS 0.1 flattened the teacher in aim-lab-test-4; best val epoch kept)
 TEACHER_BATCH = 64       # DeiT-B full fine-tune fits a 24 GB GPU at this batch
 TEACHER_EPOCHS = 100
+TEACHER_EPOCHS_BY = {"caltech256": 20}   # same number of images seen as 100 epochs of a ~6k-image set
 TEACHER_LR = 1e-4
 TEACHER_WARMUP_EPOCHS = 5
 
@@ -104,12 +109,18 @@ STAGE2_PREAUDIT = {"lateroll": "2026-11-03 human: run unchanged on Aircraft befo
 # Aircraft (KD gain +1.62). While True, any agent method may run on stage 2; its runs are labelled "stage2_explore"
 # and are search results, not a transfer check: a claim needs the unchanged method on a held-out dataset later.
 STAGE2_EXPLORE = True
+# 2026-11-03 human: a held-out general-object dataset for the final TrustMask candidate (not searched on). An agent
+# method may run here only as a final-tier run of a selector source that already has final seeds 1-3 on both CUB and
+# Aircraft (submit.holdout_rule); no screen runs. Its epochs are set so a run sees about as many images as an
+# Aircraft run (~24k train images x 20 epochs vs ~6k x 100) and finishes within the day.
+HOLDOUT = ("caltech256",)
 
 # Epochs per dataset and tier: 100 everywhere (the aim-lab-test-5 recipe; a Waterbirds run takes minutes).
 TIER_EPOCHS = {
     "cub": {"smoke": 1, "screen": 100, "final": 100},
     "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # earlier check
     "aircraft": {"smoke": 1, "screen": 100, "final": 100},     # stage 2: only harness jobs and audited methods
+    "caltech256": {"smoke": 1, "final": 20},                   # held-out check: final tier only (see HOLDOUT)
 }
 TIER_MAX_STEPS = {"smoke": 30}   # smoke = a few minutes: catches CUDA/shape errors, nothing else
 SMOKE_VAL_LIMIT = 500

@@ -208,3 +208,18 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **Waterbirds에 맞춘 설계를 제안하지 않는다:** 배경/편향(spurious) 대응, worst-group accuracy(WGA)나 group 정보를 쓰는 규칙, 2클래스 가정, Waterbirds 실험에서 고른 값(예: 사람 노트의 Waterbirds 숫자, suffdisc의 ±2 탐색 범위)을 근거로 한 선택. 그런 근거로 나온 구성요소는 Aircraft·CUB 결과로 다시 정당화되지 않으면 쓰지 않는다.
 - 사람 노트(TrustMask)는 Waterbirds에서 나왔다. 노트에서는 **아이디어(신호 두 종류, shared/gap/pruned, 이미지별 토큰 수)만** 가져오고, 수치·하이퍼파라미터는 가져오지 않는다.
 - 보고(아침 요약·RESULTS)에는 데이터셋마다 결과를 따로 적고, 두 데이터셋에서 방향이 같은지 한 줄로 적는다.
+
+## 2026-11-03 20:50 KST — 사람: 마감 계획 (11/4) + 세 번째 데이터셋 Caltech-256 (held-out)
+목표: **11/4 중으로 TrustMask를 최대한 발전시키고, 최종 후보를 Caltech-256에서 11/4 16:00 KST 전에 확인한다.** 무리해서 다 하기보다 이 시각을 지키는 쪽을 택한다.
+
+### 하네스 (사람, 이 커밋)
+- `caltech256` 추가: 일반 물체 256클래스 (clutter 제외, 29,780장), 클래스별 80/10/10. `config.HOLDOUT`. 한 run이 Aircraft run과 비슷한 수의 이미지를 보도록 **final 20 epoch**, teacher 미세조정도 20 epoch.
+- 루프가 자동으로 준비한다 (`agent/stage2_boot.sh caltech256`): 데이터 → teacher (GPU를 비우고, 약 1시간) → relock → 게이트 (CE·Full·MaskedKD@98 final seed 1). 기준선 격자는 내지 않는다. 그동안 루프가 잠깐 멈춘다.
+- **held-out 규칙 (`submit.holdout_rule`):** 여기서는 탐색하지 않는다. 기준선은 언제나 가능하다. agent 선택기는 **같은 소스가 CUB와 Aircraft에서 final seed 1·2·3을 모두 가진 경우에만** final로 낼 수 있다. screen은 안 된다.
+
+### 일정 (KST)
+- **지금 ~ 11/4 11:00:** TrustMask 발전 (v2 판정, 필요하면 v3). 18:40 범용성 기준과 20:20 Waterbirds 금지를 그대로 지킨다.
+- **11/4 11:00 (늦어도 12:00): 최종 후보를 동결한다.** CUB·Aircraft 둘 다에서 MaskedKD 대비 가장 좋은 버전 하나다. 채택 기준을 통과한 버전이 없으면 가장 나은 버전을 "미채택 후보"로 명시하고 그대로 낸다. PROGRESS에 동결 사실과 소스 sha를 적는다.
+- **동결 직후 Caltech-256 제출 (`--priority 5`):** 후보@29, maskedkd@29, rollout@29 seed 1·2·3 + CE·Full seed 2·3 (seed 1은 게이트에 있다). 약 11 job, 4개 동시에 약 3시간이다.
+- **11/4 16:00 전:** Caltech-256 결과를 미리 적은 규칙으로 한 번 판정하고 PROGRESS 맨 위에 "최종 요약"을 쓴다. 쓸 것: 후보 정의, 세 데이터셋 각각 MaskedKD·rollout·CE 대비 짝 차이와 CI, 방향이 세 데이터셋에서 같은지. 게이트에서 Caltech-256의 KD가 CE를 +1.0 넘지 못하면 그 사실을 적고, 후보 run은 참고용으로만 보고한다.
+- 판정 규칙(결과 전에 PROPOSALS에 적는다): Caltech-256에서 후보 − maskedkd의 seed 평균 > 0이면 "세 번째 데이터셋에서도 같은 방향", CI 하한 > 0이면 "확인". 결과를 보고 K·seed를 더하지 않는다.

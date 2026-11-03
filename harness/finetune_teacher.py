@@ -58,7 +58,7 @@ def finetune(dataset, out, device):
     model = make_teacher(dataset, pretrained=True).to(device)
     crit = SoftTargetCrossEntropy()
     opt = torch.optim.AdamW(model.parameters(), lr=C.TEACHER_LR, weight_decay=C.WEIGHT_DECAY)
-    E, spe, best, hist = C.TEACHER_EPOCHS, len(loader), -1.0, []
+    E, spe, best, hist = C.TEACHER_EPOCHS_BY.get(dataset, C.TEACHER_EPOCHS), len(loader), -1.0, []
     for ep in range(E):
         t0 = time.time()
         for step, (xb, yb) in enumerate(loader):
