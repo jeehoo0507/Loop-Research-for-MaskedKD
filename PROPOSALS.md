@@ -841,6 +841,8 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 예측 (한 번만, seed 1·2·3 평균과 같은 seed 짝 차이의 t 95% CI(df 2)): Q1 rollout@49 − CE 평균 > 0 (CI 보고만) — 확신 중간. Q2 rollout@49 − random@49 평균 > 0 이고 CI 하한 > 0 — 확신 낮음. Q3 rollout@49 − maskedkd@49 평균 > 0 (CI 보고만) — 확신 낮음.
   - 해석: Q1 평균 > 0, CI 하한 > 0 → "Aircraft K=49에서 rollout 가린 teacher KD는 CE보다 낫다(감사 전, 주장 아님)". 평균 > 0 이고 CI 0 포함 → "CE보다 높은 경향, 차이는 불확실". 평균 ≤ 0 → "K=49에서도 가린 teacher KD 이득은 보이지 않는다". Q2·Q3는 기록만. 어느 쪽이든 H-A20 판정 규칙을 바꾸지 않는다.
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 K·seed·방법을 더하지 않는다. H-A20 job이 열리면 그쪽이 먼저다(이 job들은 기본 priority).
+  - 제출 (라운드 243, 등록 커밋 5dc9c48 뒤): aircraft_final_rollout_k49_s1_1103_051925_1dd0 , aircraft_final_rollout_k49_s2_1103_051932_f37d , aircraft_final_rollout_k49_s3_1103_051937_47c7 , aircraft_final_random_k49_s1_1103_051941_6b71 , aircraft_final_random_k49_s2_1103_051945_0e0b , aircraft_final_random_k49_s3_1103_051949_322a
+  - 판정 (라운드 244, 6 job 모두 done, 한 번만): rollout@49 68.57/68.71/67.14 (평균 68.14), random@49 66.57/65.57/64.43 (평균 65.52). Q1 rollout − CE +1.71 [−0.61, +4.04], 평균 > 0이고 CI 0 포함. Q2 rollout − random +2.62 [+1.19, +4.05] 참. Q3 rollout − maskedkd +1.19 [−1.30, +3.68] 평균 > 0 참(CI 보고만). → 등록 해석 "Aircraft K=49에서 rollout 가린 teacher KD는 CE보다 높은 경향, 차이는 불확실"을 RESULTS final 절에 적었다(감사 전, 주장 아님). 손 계산(t 0.975, df 2 = 4.303). K·seed·방법 추가 없음.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
