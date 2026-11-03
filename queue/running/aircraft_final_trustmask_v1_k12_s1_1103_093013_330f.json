@@ -1,0 +1,19 @@
+{
+ "id": "aircraft_final_trustmask_v1_k12_s1_1103_093013_330f",
+ "kind": "train",
+ "dataset": "aircraft",
+ "stage2": "stage2_explore",
+ "method": "trustmask_v1",
+ "keep": 12.0,
+ "seed": 1,
+ "tier": "final",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"TrustMask v1 (H-A27 / H-A28, QUEUE 2026-11-03 17:25): the cached teacher map moves from a token filter to a\nper-image trust weight.\n\nv0 (trustfilt) used the teacher map as an allowed region for the student's picks; H-A26 showed this makes the masked\nteacher less faithful than student-only picking at every epoch. v1 keeps the student's late-block rollout picks\n(lateroll, blocks 6..11) and uses the teacher-map mass covered by those K tokens to weight each image's KD term\n(weight = coverage / batch mean, mean 1): an image whose kept tokens hold little of the teacher's own evidence gets a\nmasked-teacher target that H-A27 found less faithful, so it is trusted less. No constants beyond lateroll's.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, topk_mask\n\nSTART = 6\n\nMETA = {\n    \"method\": \"student late-block attention rollout picks the K teacher tokens; the cached teacher rollout's mass \"\n              \"inside them weights the image's KD term (mean 1)\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS \"\n             \"2019 (keep-only faithfulness)\",\n    \"why\": \"H-A26: the teacher-map filter lowers masked-teacher fidelity; H-A27: teacher-map coverage of the kept \"\n           \"tokens predicts per image how faithful the masked teacher is, so it can down-weight unfaithful targets\",\n    \"vs_maskedkd\": \"late-block rollout instead of last-block CLS attention, plus a per-image KD weight from the \"\n                   \"cached teacher map (teacher cost unchanged)\",\n    \"prior_art\": \"ent_weight / EGAD weight KD by student entropy; v1 weights by the teacher's attribution covered\",\n    \"parent\": \"trustfilt\",\n    \"uses_teacher_cache\": True,\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(START, 12)), \"tokens\": []}\n\n    def select(self, ctx):\n        r = None\n        for a in ctx.out.attn[START:]:\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        keep = topk_mask(r[:, 0, 1:], int(ctx.budget))\n        cov = (ctx.teacher_map.float() * keep).sum(1)\n        return keep, cov / cov.mean().clamp_min(1e-12)\n",
+ "selector_sha": "8186a44460ef2bea84605cb8efb46ec07611a59236d995019d79ed28a2520c8e",
+ "note": "",
+ "by": "agent",
+ "priority": -10,
+ "submitted": "2026-11-03 09:30:13",
+ "lr": null
+}
