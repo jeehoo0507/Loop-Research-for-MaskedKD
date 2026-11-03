@@ -193,6 +193,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 68.05 (seeds 1,2,3); KD gain +1.62, tolerance 0.81 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
+  - rollout : 49.0 (3 seeds)
   - maskedkd : 98.0 (3 seeds)
 - screening only (fewer seeds): none
 
@@ -214,8 +215,10 @@ Total agent screen configs: 0
 | final | oracle |  | 12 | 12.0 | 1 | 63.71 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 172 | aircraft_final_oracle_k12_s1_1102_132227_86cd |
 | final | random |  | 12 | 12.0 | 1,2,3 | 63.14 ± 1.17 | - | 10.09 | 2.45 | 0.00 | 401 | aircraft_final_random_k12_s3_1103_024939_6b93 aircraft_final_random_k12_s2_1103_024935_e173 aircraft_final_random_k12_s1_1102_132227_c818 |
 | final | random |  | 29 | 29.0 | 1,2,3 | 63.24 ± 0.91 | - | 13.00 | 5.36 | 0.00 | 543 | aircraft_final_random_k29_s2_1103_042255_db43 aircraft_final_random_k29_s3_1103_042259_2272 aircraft_final_random_k29_s1_1102_132227_7454 |
+| final | random |  | 49 | 49.0 | 1,2,3 | 65.52 ± 1.07 | - | 16.46 | 8.82 | 0.00 | 373 | aircraft_final_random_k49_s3_1103_051949_322a aircraft_final_random_k49_s2_1103_051945_0e0b aircraft_final_random_k49_s1_1103_051941_6b71 |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.46 | - | 10.08 | 2.45 | 0.17 | 358 | aircraft_final_rollout_k12_s3_1103_024948_a6c2 aircraft_final_rollout_k12_s2_1103_024944_52f8 aircraft_final_rollout_k12_s1_1102_132227_d6d1 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 66.43 ± 0.52 | - | 12.99 | 5.36 | 0.17 | 335 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 aircraft_final_rollout_k29_s3_1102_180341_8606 aircraft_final_rollout_k29_s2_1102_180325_20b6 |
+| final | rollout |  | 49 | 49.0 | 1,2,3 | 68.14 ± 0.87 | - | 16.45 | 8.82 | 0.17 | 296 | aircraft_final_rollout_k49_s1_1103_051925_1dd0 aircraft_final_rollout_k49_s3_1103_051937_47c7 aircraft_final_rollout_k49_s2_1103_051932_f37d |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 65.57 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 297 | aircraft_final_tome_k12_s1_1102_132227_991f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 66.19 ± 0.33 | - | 12.00 | 4.36 | 0.00 | 398 | aircraft_final_tome_k29_s1_1102_132227_ccc7 aircraft_final_tome_k29_s2_1102_180330_3c69 aircraft_final_tome_k29_s3_1102_180345_552f |
 
