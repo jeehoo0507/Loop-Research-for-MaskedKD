@@ -184,6 +184,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - trustfilt@29 vs random@29 [acc]: +2.33 %p, 95% CI [+0.86, +3.81], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustfilt@29 vs full@196 [acc]: -2.48 %p, 95% CI [-3.82, -1.13], seeds 1,2,3, GFLOPs ratio 0.312 -> LOSS
+- trustmask_v1@29 vs random@29 [acc]: +3.81 %p, 95% CI [+0.44, +7.18], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - lateroll@29 vs maskedkd@29 [acc]: +1.00 %p, 95% CI [-3.97, +5.97], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
@@ -202,6 +203,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - trustfilt@29 vs random@29 [acc]: +2.33 %p, 95% CI [+0.86, +3.81], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustfilt@29 vs full@196 [acc]: -2.48 %p, 95% CI [-3.82, -1.13], seeds 1,2,3, GFLOPs ratio 0.312 -> LOSS
 - trustfilt@29 vs lateroll@29 (parent) [acc]: -0.71 %p, 95% CI [-3.62, +2.19], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
+- trustmask_v1@29 vs maskedkd@29 [acc]: +1.76 %p, 95% CI [-2.50, +6.03], seeds 1,2,3, GFLOPs ratio 1.028 -> no difference
+- trustmask_v1@29 vs rollout@29 [acc]: +0.62 %p, 95% CI [-1.17, +2.41], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
+- trustmask_v1@29 vs tome@29 [acc]: +0.86 %p, 95% CI [-0.08, +1.80], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
+- trustmask_v1@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs random@29 [acc]: +3.81 %p, 95% CI [+0.44, +7.18], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v1@29 vs full@196 [acc]: -1.00 %p, 95% CI [-2.28, +0.28], seeds 1,2,3, GFLOPs ratio 0.312 -> no difference
+- trustmask_v1@29 vs trustfilt@29 (parent) [acc]: +1.48 %p, 95% CI [-1.09, +4.04], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - no child selectors yet
@@ -223,6 +232,7 @@ Total agent screen configs: 0
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
+| final | ent_weight |  | 29 | 29.0 | 1 | 66.86 ± 0.00 | - | 12.99 | 5.36 | 0.00 | 270 | aircraft_final_ent_weight_k29_s1_1103_083827_9ace |
 | final | full |  | 196 | 196.0 | 1,2,3 | 68.05 ± 0.54 | - | 42.77 | 35.13 | 0.00 | 252 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s3_1102_132227_69cc aircraft_final_full_k196_s2_1102_132227_123b |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 66.29 ± 1.78 | - | 12.99 | 5.36 | 0.08 | 380 | aircraft_final_lateroll_k29_s1_1103_065756_f0d9 aircraft_final_lateroll_k29_s3_1103_065805_2130 aircraft_final_lateroll_k29_s2_1103_065801_38e1 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.33 | - | 10.07 | 2.45 | 0.00 | 455 | aircraft_final_maskedkd_k12_s1_1102_132227_f01c aircraft_final_maskedkd_k12_s3_1103_024931_458c aircraft_final_maskedkd_k12_s2_1103_024925_555b |
@@ -236,10 +246,11 @@ Total agent screen configs: 0
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.46 | - | 10.08 | 2.45 | 0.17 | 358 | aircraft_final_rollout_k12_s3_1103_024948_a6c2 aircraft_final_rollout_k12_s2_1103_024944_52f8 aircraft_final_rollout_k12_s1_1102_132227_d6d1 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 66.43 ± 0.52 | - | 12.99 | 5.36 | 0.17 | 335 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 aircraft_final_rollout_k29_s3_1102_180341_8606 aircraft_final_rollout_k29_s2_1102_180325_20b6 |
 | final | rollout |  | 49 | 49.0 | 1,2,3 | 68.14 ± 0.87 | - | 16.45 | 8.82 | 0.17 | 296 | aircraft_final_rollout_k49_s1_1103_051925_1dd0 aircraft_final_rollout_k49_s3_1103_051937_47c7 aircraft_final_rollout_k49_s2_1103_051932_f37d |
-| final | teacher_topk |  | 29 | 29.0 | 1 | 65.57 ± 0.00 | - | 13.36 | 5.36 | 0.36 | 272 | aircraft_final_teacher_topk_k29_s1_1103_074554_cd8b |
+| final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 65.48 ± 0.86 | - | 13.36 | 5.36 | 0.36 | 401 | aircraft_final_teacher_topk_k29_s3_1103_074603_470b aircraft_final_teacher_topk_k29_s2_1103_074559_69a5 aircraft_final_teacher_topk_k29_s1_1103_074554_cd8b |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 65.57 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 297 | aircraft_final_tome_k12_s1_1102_132227_991f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 66.19 ± 0.33 | - | 12.00 | 4.36 | 0.00 | 398 | aircraft_final_tome_k29_s1_1102_132227_ccc7 aircraft_final_tome_k29_s2_1102_180330_3c69 aircraft_final_tome_k29_s3_1102_180345_552f |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 65.57 ± 0.94 | - | 13.35 | 5.36 | 0.43 | 278 | aircraft_final_trustfilt_k29_s2_1103_074535_db76 aircraft_final_trustfilt_k29_s3_1103_074540_2203 aircraft_final_trustfilt_k29_s1_1103_074527_357e |
+| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 67.05 ± 0.70 | - | 13.35 | 5.36 | 0.43 | 252 | aircraft_final_trustmask_v1_k29_s3_1103_083822_5bcd aircraft_final_trustmask_v1_k29_s2_1103_083818_f341 aircraft_final_trustmask_v1_k29_s1_1103_083809_92a4 |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
 
