@@ -23,14 +23,14 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - lateroll@49 vs random@49 [acc]: +3.83 %p, 95% CI [+2.40, +5.27], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- lateroll@12 vs maskedkd@12 [acc]: +0.33 %p, 95% CI [-3.90, +4.57], seeds 1,2, GFLOPs ratio 1.000 -> no difference
-- lateroll@12 vs rollout@12 [acc]: -0.17 %p, 95% CI [-2.28, +1.95], seeds 1,2, GFLOPs ratio 1.000 -> no difference
+- lateroll@12 vs maskedkd@12 [acc]: +0.50 %p, 95% CI [-0.60, +1.60], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- lateroll@12 vs rollout@12 [acc]: +0.28 %p, 95% CI [-1.68, +2.23], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 - lateroll@12 vs tome@12 [acc]: -1.00 %p, 95% CI [-3.12, +1.12], seeds 1,2, GFLOPs ratio 0.840 -> no difference
 - lateroll@12 vs grid@12 [acc]: +3.08 %p, 95% CI [-2.21, +8.38], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@12 vs center@12 [acc]: +2.58 %p, 95% CI [-0.59, +5.76], seeds 1,2, GFLOPs ratio 0.999 -> no difference
 - lateroll@12 vs random@12 [acc]: +2.33 %p, 95% CI [-1.90, +6.57], seeds 1,2, GFLOPs ratio 0.999 -> no difference
-- lateroll@12 vs full@196 [acc]: -2.58 %p, 95% CI [-20.58, +15.42], seeds 1,2, GFLOPs ratio 0.236 -> no difference
-- lateroll@12 vs rollout@12 [acc]: -0.17 %p, 95% CI [-2.28, +1.95], seeds 1,2, GFLOPs ratio 1.000 -> no difference
+- lateroll@12 vs full@196 [acc]: -2.94 %p, 95% CI [-6.79, +0.90], seeds 1,2,3, GFLOPs ratio 0.236 -> no difference
+- lateroll@12 vs rollout@12 [acc]: +0.28 %p, 95% CI [-1.68, +2.23], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 - lateroll@29 vs maskedkd@29 [acc]: +1.17 %p, 95% CI [+0.75, +1.58], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +0.94 %p, 95% CI [+0.71, +1.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs tome@29 [acc]: +1.61 %p, 95% CI [+1.37, +1.85], seeds 1,2,3, GFLOPs ratio 1.083 -> WIN
@@ -107,7 +107,7 @@ Total agent screen configs: 14
 | final | grid |  | 12 | 12.0 | 1,2 | 75.67 ± 0.71 | - | 10.09 | 2.45 | 0.00 | 302 | final_grid_k12_s1_1102_225104_b379 final_grid_k12_s2_1102_232847_19e5 |
 | final | grid |  | 29 | 29.0 | 1,2,3 | 75.33 ± 0.60 | - | 13.00 | 5.36 | 0.00 | 281 | final_grid_k29_s1_1101_104303_0ce5 final_grid_k29_s2_1101_125958_44d7 final_grid_k29_s3_1101_140937_8b9f |
 | final | grid |  | 49 | 49.0 | 1,2,3 | 78.06 ± 0.38 | - | 16.46 | 8.82 | 0.00 | 313 | final_grid_k49_s2_1102_043001_e20e final_grid_k49_s3_1102_153530_d0e5 final_grid_k49_s1_1102_034050_f172 |
-| final | lateroll@69541b |  | 12 | 12.0 | 1,2 | 78.75 ± 0.12 | - | 10.08 | 2.45 | 0.08 | 328 | final_lateroll_k12_s2_1102_232847_70cb final_lateroll_k12_s1_1102_225104_b47e |
+| final | lateroll@69541b |  | 12 | 12.0 | 1,2,3 | 78.78 ± 0.10 | - | 10.08 | 2.45 | 0.08 | 310 | final_lateroll_k12_s3_1102_235618_322a final_lateroll_k12_s2_1102_232847_70cb final_lateroll_k12_s1_1102_225104_b47e |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 81.39 ± 1.00 | - | 12.99 | 5.36 | 0.08 | 284 | final_lateroll_k29_s2_1101_125958_6470 final_lateroll_k29_s1_1101_104303_ef38 final_lateroll_k29_s3_1101_140937_ec98 |
 | final | lateroll@69541b |  | 49 | 49.0 | 1,2,3 | 82.17 ± 0.29 | - | 16.45 | 8.82 | 0.08 | 294 | final_lateroll_k49_s2_1102_043001_b758 final_lateroll_k49_s1_1102_034050_9f5a final_lateroll_k49_s3_1102_153530_c96e |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 78.28 ± 0.48 | - | 10.07 | 2.45 | 0.00 | 690 | cub_final_maskedkd_k12_s2_1031_103004_2d8c cub_final_maskedkd_k12_s3_1031_103017_3c57 final_maskedkd_k12_s1_1102_225104_7267 |
