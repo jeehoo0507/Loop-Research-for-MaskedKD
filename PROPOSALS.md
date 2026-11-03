@@ -805,6 +805,10 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 seed·student·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
   - 제출 (라운드 237, 등록 커밋 b0914a1 뒤): analysis_kd_gain_resolution_1103_022913_d9fe (cub, 이번 라운드 안에 끝남)
   - 결과 (라운드 237, 한 번만): 일관성 확인 통과 (6개 student 정확도 = val_acc_last). **R1 참**: seed 평균 Full − CE +0.50 [−0.56, +1.56]. **R2 거짓**: 불일치율 비 0.63 (같은 seed Full 대 CE 4.5/6.0/6.0%, 같은 방법 다른 seed 7.5~9.7%). **R3 거짓**: teacher 일치 Full − CE +1.17 [−0.67, +3.00], +1.33 [−0.50, +3.17], +1.33 [−0.83, +3.50]. **R4 참**: KL(T‖S) Full − CE −0.129 / −0.130 / −0.130, CI 모두 0 아래. **R5 참** (점추정): teacher 맞힌 이미지 +0.79, 틀린 이미지 −1.09 %p (차이 CI [−2.13, +5.56]). 해석(등록대로): R3 거짓 → "CUB final에서 KD 신호 전달 자체가 불확실"; 단서로 분포 수준(KL) 전달은 뚜렷하다. RESULTS 라운드 237 참고. 더 내지 않는다.
+- **H-A20 (라운드 238, 결과 전·제출 전에 등록): CUB에서 정한 lateroll@29가 Aircraft final로 이전되는가 (QUEUE 2026-11-03 12:10 사람 결정, `config.STAGE2_PREAUDIT`, 감사 PASS 전).** 학습 run 3개: `python -m harness.submit --method lateroll --keep 29 --seed <s> --tier final --dataset aircraft`, s = 1·2·3. selectors/lateroll.py·sel_args·K는 CUB 그대로(`stage2_untouched`). final_refs의 maskedkd·rollout·tome@29 seed 1·2·3은 이미 있어 건너뛴다.
+  - 판정 규칙 (QUEUE 08:50 4번 그대로, 결과 보고 바꾸지 않음): lateroll − maskedkd@29, lateroll − rollout@29의 같은 seed 짝 3개 평균과 짝지은 95% CI(t, df=2). 둘 다 평균 > 0이고 CI가 0을 포함하지 않으면 "CUB에서 고른 lateroll이 Aircraft로 이전된다". 평균 > 0이지만 CI가 0을 포함하면 "경향은 같으나 불확실". 평균 ≤ 0이면 "CUB 특화"로 기록하고 주장 범위를 CUB로 줄인다. 두 비교가 다른 칸에 들면 각각 적는다.
+  - 예측 (한 번만): lateroll − maskedkd 평균 > 0 (확신 중간, H-A12 대리 Q1 근거), lateroll − rollout 평균 > 0 (확신 낮음). 가장 가능성 높은 칸: "경향은 같으나 불확실".
+  - 규칙: 결과를 보고 K·seed를 더하지 않는다. 감사 전 결과이므로 RESULTS "확정"이 아니라 Aircraft 절에 "감사 전"으로 적는다. 판정 뒤 lateroll 수정(`stage2_tuned`)은 별도 항목으로만.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
