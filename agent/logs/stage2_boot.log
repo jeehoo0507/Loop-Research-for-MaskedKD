@@ -162,3 +162,27 @@ stage2: 1 windows (created Mon Nov  2 11:56:01 2026)
 [stage2 11-02 13:22] aircraft gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: [aircraft final, 100 epochs, mean of seeds [1]] Full KD 68.29 vs CE 66.00 (need +1.0): PASS; MaskedKD@98 67.14 vs Full 68.29 (need >= Full - 0.5): FAIL
 [stage2 11-02 13:22] aircraft baselines queued at K=29,12 (15 jobs)
 downloading https://data.caltech.edu/records/nyy15-4j048/files/256_ObjectCategories.tar?download=1
+caltech256: {'train': 23838, 'val': 2971, 'test': 2971} -> /home/coder/Loop-Research-for-MaskedKD/data/caltech256
+[stage2 11-03 11:50] caltech256 teacher: pausing the loop and new job starts until the running jobs finish, then fine-tune (about 1-2 h)
+/home/coder/Loop-Research-for-MaskedKD/harness/data.py:47: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  return torch.from_numpy(np.ascontiguousarray(x)), y, g
+recipe: {"student_lr": 0.0001, "source": "config.STUDENT_LR_DEFAULT (no aim-lab-test-5 sweep found)"}
+{'epoch': 5, 'val_acc': 88.45506310462952, 'epoch_s': 71.1}
+{'epoch': 10, 'val_acc': 91.04678630828857, 'epoch_s': 71.0}
+{'epoch': 15, 'val_acc': 91.7536199092865, 'epoch_s': 71.0}
+{'epoch': 20, 'val_acc': 92.59508848190308, 'epoch_s': 71.1}
+/home/coder/Loop-Research-for-MaskedKD/harness/finetune_teacher.py:80: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  model.load_state_dict(torch.load(out, map_location="cpu"))
+{"val_acc": 92.6, "source": "fine-tuned here", "sha256": "fad99e147023143f526069fd048f3a8eaab6d0afea50be3da445c51d95e01327"}
+[stage2 11-03 12:30] caltech256 teacher: fine-tuned here val acc 92.6
+...............................................                          [100%]
+47 passed in 32.45s
+locked: 8821ba8964ac8fa1ad03a334890025b2983a60437cf9f659651cd346e52f4739
+If agent/loop.sh is running, restart it so its revert point (LOCK_REF) is this commit.
+agent: 1 windows (created Tue Nov  3 12:31:16 2026)
+boot: 1 windows (created Sat Oct 31 10:46:16 2026)
+gatewatch: 1 windows (created Sat Oct 31 13:17:07 2026)
+sched: 1 windows (created Sun Nov  1 12:22:22 2026)
+stage2: 1 windows (created Tue Nov  3 11:48:09 2026)
+[stage2 11-03 12:31] loop restarted after stage-2 relock
+[stage2 11-03 12:31] caltech256 gate submitted (one GPU slot)
