@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_rule_vs_student_1103_231927_bae0",
+ "name": "wb_rule_vs_student",
+ "source_sha": "bae07785a26ad80e5cfff20591bedec4a19f02d9c44d719f4275cd738e0177ab",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, inside the same student, do last-block CLS attention picks (vs blocks 6..11 rollout picks) pull the masked teacher toward landbird, in maskedkd- and trustmask_v1-trained students alike?",
+  "method": "same-student 2x2 of token rule x training method; set differences; keep-only masked-teacher class probabilities; image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 92.8
+}
