@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_method_targets_1103_210529_5746",
+ "name": "wb_method_targets",
+ "source_sha": "57468b9297c07b896ddfa859e39d1765a79a1f5c0934d956ca330e1db6c8543a",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does the per-group quality of each method's masked-teacher KD target (accuracy, KL, coverage) rank maskedkd, rollout, teacher_topk, trustmask_v1 and trustfilt in the same order as their student WGA, and is trustfilt's WGA lead over teacher_topk a more correct target or a target closer to what the student attends to?",
+  "method": "attention rollout (teacher all blocks, student all / 6..11 blocks); last-block CLS attention; keep-only masked-teacher faithfulness sliced by Waterbirds group; within-group image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 47.9
+}
