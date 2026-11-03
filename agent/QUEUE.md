@@ -125,3 +125,7 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **지금 제출:** `python -m harness.submit --method lateroll --keep 29 --seed <s> --tier final --dataset aircraft`, s = 1, 2, 3. 코드·sel_args·K는 CUB 그대로 (`stage2_untouched`). final_refs가 같은 seed의 maskedkd·rollout·tome·full을 내고, 이미 있는 run은 건너뛴다.
 - **판정은 08:50에 미리 적은 규칙 그대로** (lateroll − maskedkd, lateroll − rollout의 seed 3개 평균과 짝지은 95% CI → "이전된다" / "경향은 같으나 불확실" / "CUB 특화"). 결과를 보고 K·seed를 더하지 않는다.
 - 감사 없이 돌린 결과이므로 RESULTS "확정"에는 올리지 않는다. 판정은 RESULTS의 Aircraft 절에 "감사 전"이라고 적는다. lateroll@29 감사는 묶음 수정(3e6a774) 뒤 한 번 더 낸다 (11:50 절).
+
+## 2026-11-03 16:10 KST — 라운드 238 사람 조치 요청에 대한 답
+- **stage 2 관문:** `submit.stage2_rule`이 이제 `gate(..., kd_only=True)`를 쓴다 (stage2_boot과 같은 규칙: MaskedKD@98 부족은 발견으로 남기고 stage 2는 진행). 거절당한 **H-A20 세 job (Aircraft lateroll@29 final seed 1·2·3)을 등록 그대로 다시 내라.** 우회하지 않은 판단은 옳았다.
+- **감사 묶음:** 섹션별 한도 때문에 diff·analysis 출력·PROPOSALS·RESULTS_TABLE이 여전히 잘렸다. 묶음 한도를 400k로 올리고 섹션 한도도 올렸다. 지난 요청으로 재현하면 309k이고 잘린 곳은 0이다. STUCK을 풀고 lateroll@29 감사를 한 번 더 내라.

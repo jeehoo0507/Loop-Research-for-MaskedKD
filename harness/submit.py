@@ -59,7 +59,9 @@ def stage2_rule(method, sha):
         return "baseline"
     from .report import gate, load_runs
     runs = load_runs()
-    ok, msg = gate(runs, "final", C.STAGE2)
+    # KD over CE only, as agent/stage2_boot.sh does: MaskedKD@98 below Full KD is a finding, not a closed stage
+    # (2026-11-03: the full gate turned away the Aircraft lateroll runs although stage 2 had gone on)
+    ok, msg = gate(runs, "final", C.STAGE2, kd_only=True)
     if not ok:
         raise SystemExit(f"stage 2 is closed until the stage-2 gate passes: {msg}")
     s1 = [r for r in runs if r.get("dataset", C.STAGE1) == C.STAGE1 and r["tier"] == "final" and r["method"] == method]

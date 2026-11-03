@@ -13,7 +13,7 @@ import sys
 
 from . import config as C
 
-LIMIT = 180_000      # characters per bundle
+LIMIT = 400_000      # characters per bundle (~110k tokens; 180k cut the cited diff, analyses and tables, 2026-11-03)
 FILE_LIMIT = 12_000  # characters per attached file (the job history gets more: it must be complete)
 
 
@@ -147,19 +147,19 @@ def audit():
     for aid in sorted(set(re.findall(r"\banalysis_[A-Za-z0-9_]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req))):
         d = C.ROOT / "analysis_out" / aid
         files = sorted(d.glob("*.json")) if d.is_dir() else []
-        out.append(section(f"analysis_out/{aid}", "\n".join(f"--- {f.name}\n{f.read_text()[:6000]}" for f in files)
-                           or "(missing)", limit=20_000))
+        out.append(section(f"analysis_out/{aid}", "\n".join(f"--- {f.name}\n{f.read_text()[:60_000]}" for f in files)
+                           or "(missing)", limit=80_000))
     agent_methods = {m for m in shas.values() if m not in C.BASELINES}
     cited_methods = set(shas.values()) | {json.loads((C.RUNS / r / "metrics.json").read_text()).get("method")
                                           for r in run_ids if (C.RUNS / r / "metrics.json").exists()} - {None}
     out += [section("proposal and code history of the cited agent methods", method_history(agent_methods, req),
-                    limit=40_000),
-            section("past locks of the cited runs (harness.lock.digest_at)", past_locks(run_ids), limit=25_000),
+                    limit=100_000),
+            section("past locks of the cited runs (harness.lock.digest_at)", past_locks(run_ids), limit=60_000),
             section("agent/INVALID.md", read("agent/INVALID.md")),
             section("git log -- harness tests (must show no agent commits)",
                     run("git", "log", "-10", "--format=%h %ci %s", "--", "harness", "tests")),
-            section("RESULTS_TABLE.md", read("RESULTS_TABLE.md")),
-            section("git log -25 --stat (who changed what)", run("git", "log", "-25", "--stat", "--format=%h %ci %s")),
+            section("RESULTS_TABLE.md", read("RESULTS_TABLE.md"), limit=60_000),
+            section("git log -25 --stat (who changed what)", run("git", "log", "-25", "--stat", "--format=%h %ci %s"), limit=20_000),
             section(f"complete job history of the cited methods (all states): {', '.join(sorted(cited_methods))}",
                     history(cited_methods), limit=40_000)]
     return "".join(out)
