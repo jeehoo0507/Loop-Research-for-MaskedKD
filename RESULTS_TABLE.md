@@ -151,6 +151,7 @@ Total agent screen configs: 14
 | final | tome |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.83 | - | 14.50 | 6.86 | 0.00 | 272 | final_tome_k49_s2_1102_043001_61ab final_tome_k49_s3_1102_153530_f477 final_tome_k49_s1_1102_034050_9b6d |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 80.89 ± 0.25 | - | 13.34 | 5.36 | 0.43 | 256 | final_trustfilt_k29_s2_1103_095842_42fd final_trustfilt_k29_s3_1103_095847_a7af final_trustfilt_k29_s1_1103_095835_0073 |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 81.28 ± 0.25 | - | 13.34 | 5.36 | 0.43 | 246 | final_trustmask_v1_k29_s2_1103_095842_a161 final_trustmask_v1_k29_s3_1103_095847_3c94 final_trustmask_v1_k29_s1_1103_095834_2518 |
+| final | trustmask_v2@b2c3bb |  | 29 | 29.0 | 1 | 81.00 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 228 | final_trustmask_v2_k29_s1_1103_095927_e7db |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
 | screen | ce |  | 0 | None | 0,4,5,6,7 | 80.80 ± 1.45 | - | 7.64 | 0.00 | 0.00 | 1041 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 screen_ce_k0_s7_1101_230304_50d4 screen_ce_k0_s6_1101_230256_cb6e |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
