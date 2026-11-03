@@ -1,0 +1,247 @@
+{
+ "lam": 100.0,
+ "n_val": 1199,
+ "n_runs": 21,
+ "teacher_place_bacc": 0.9528,
+ "rho": {
+  "place_bacc_vs_wga": [
+   -0.1805,
+   -0.5182,
+   0.2598,
+   21
+  ],
+  "place_bacc_vs_wga_without_maskedkd": [
+   -0.1641,
+   -0.5377,
+   0.3582,
+   18
+  ]
+ },
+ "by_method": {
+  "maskedkd": {
+   "val_wga": 38.5933,
+   "val_acc": 87.7398,
+   "place_bacc": 0.9437,
+   "n_seeds": 3
+  },
+  "maskedkd_frozen": {
+   "val_wga": 61.4033,
+   "val_acc": 89.1298,
+   "place_bacc": 0.9464,
+   "n_seeds": 3
+  },
+  "rollout": {
+   "val_wga": 62.1567,
+   "val_acc": 89.5746,
+   "place_bacc": 0.9456,
+   "n_seeds": 3
+  },
+  "teacher_topk": {
+   "val_wga": 64.41,
+   "val_acc": 89.7136,
+   "place_bacc": 0.9493,
+   "n_seeds": 3
+  },
+  "trustmask_v1": {
+   "val_wga": 62.4033,
+   "val_acc": 90.6033,
+   "place_bacc": 0.9232,
+   "n_seeds": 3
+  },
+  "trustfilt": {
+   "val_wga": 72.68,
+   "val_acc": 90.9369,
+   "place_bacc": 0.9453,
+   "n_seeds": 3
+  },
+  "ce": {
+   "val_wga": 68.42,
+   "val_acc": 89.7971,
+   "place_bacc": 0.9233,
+   "n_seeds": 3
+  }
+ },
+ "runs": [
+  {
+   "method": "ce",
+   "seed": 1,
+   "run": "waterbirds_final_ce_k0_s1_1031_130203_4b89",
+   "val_wga": 68.42,
+   "val_acc": 90.07506370544434,
+   "place_bacc": 0.927
+  },
+  {
+   "method": "ce",
+   "seed": 2,
+   "run": "waterbirds_final_ce_k0_s2_1031_201229_603c",
+   "val_wga": 69.17,
+   "val_acc": 89.15762901306152,
+   "place_bacc": 0.9233
+  },
+  {
+   "method": "ce",
+   "seed": 3,
+   "run": "waterbirds_final_ce_k0_s3_1031_201502_f7a9",
+   "val_wga": 67.67,
+   "val_acc": 90.15846252441406,
+   "place_bacc": 0.9195
+  },
+  {
+   "method": "maskedkd_frozen",
+   "seed": 1,
+   "run": "waterbirds_final_maskedkd_frozen_k29_s1_1103_171021_f885",
+   "val_wga": 58.65,
+   "val_acc": 89.24103379249573,
+   "place_bacc": 0.9501
+  },
+  {
+   "method": "maskedkd_frozen",
+   "seed": 2,
+   "run": "waterbirds_final_maskedkd_frozen_k29_s2_1103_171026_2b13",
+   "val_wga": 61.65,
+   "val_acc": 88.49040865898132,
+   "place_bacc": 0.9437
+  },
+  {
+   "method": "maskedkd_frozen",
+   "seed": 3,
+   "run": "waterbirds_final_maskedkd_frozen_k29_s3_1103_171031_b65e",
+   "val_wga": 63.91,
+   "val_acc": 89.6580457687378,
+   "place_bacc": 0.9453
+  },
+  {
+   "method": "maskedkd",
+   "seed": 1,
+   "run": "waterbirds_final_maskedkd_k29_s1_1031_201502_4be8",
+   "val_wga": 37.59,
+   "val_acc": 87.23936676979065,
+   "place_bacc": 0.9536
+  },
+  {
+   "method": "maskedkd",
+   "seed": 2,
+   "run": "waterbirds_final_maskedkd_k29_s2_1103_170931_92bd",
+   "val_wga": 37.59,
+   "val_acc": 87.65637874603271,
+   "place_bacc": 0.9415
+  },
+  {
+   "method": "maskedkd",
+   "seed": 3,
+   "run": "waterbirds_final_maskedkd_k29_s3_1103_170935_907a",
+   "val_wga": 40.6,
+   "val_acc": 88.32360506057739,
+   "place_bacc": 0.9359
+  },
+  {
+   "method": "rollout",
+   "seed": 1,
+   "run": "waterbirds_final_rollout_k29_s1_1031_201502_e135",
+   "val_wga": 63.16,
+   "val_acc": 89.90825414657593,
+   "place_bacc": 0.9539
+  },
+  {
+   "method": "rollout",
+   "seed": 2,
+   "run": "waterbirds_final_rollout_k29_s2_1103_170940_2b72",
+   "val_wga": 59.4,
+   "val_acc": 88.82402181625366,
+   "place_bacc": 0.9434
+  },
+  {
+   "method": "rollout",
+   "seed": 3,
+   "run": "waterbirds_final_rollout_k29_s3_1103_170944_dd2c",
+   "val_wga": 63.91,
+   "val_acc": 89.99165892601013,
+   "place_bacc": 0.9394
+  },
+  {
+   "method": "teacher_topk",
+   "seed": 1,
+   "run": "waterbirds_final_teacher_topk_k29_s1_1103_170914_f015",
+   "val_wga": 64.66,
+   "val_acc": 89.741450548172,
+   "place_bacc": 0.9493
+  },
+  {
+   "method": "teacher_topk",
+   "seed": 2,
+   "run": "waterbirds_final_teacher_topk_k29_s2_1103_170918_4535",
+   "val_wga": 63.91,
+   "val_acc": 89.49124217033386,
+   "place_bacc": 0.9549
+  },
+  {
+   "method": "teacher_topk",
+   "seed": 3,
+   "run": "waterbirds_final_teacher_topk_k29_s3_1103_170923_d12a",
+   "val_wga": 64.66,
+   "val_acc": 89.90825414657593,
+   "place_bacc": 0.9437
+  },
+  {
+   "method": "trustfilt",
+   "seed": 1,
+   "run": "waterbirds_final_trustfilt_k29_s1_1103_171121_24be",
+   "val_wga": 72.18,
+   "val_acc": 91.49290919303894,
+   "place_bacc": 0.949
+  },
+  {
+   "method": "trustfilt",
+   "seed": 2,
+   "run": "waterbirds_final_trustfilt_k29_s2_1103_171126_b33d",
+   "val_wga": 72.18,
+   "val_acc": 90.40867686271667,
+   "place_bacc": 0.9455
+  },
+  {
+   "method": "trustfilt",
+   "seed": 3,
+   "run": "waterbirds_final_trustfilt_k29_s3_1103_171130_db65",
+   "val_wga": 73.68,
+   "val_acc": 90.90909361839294,
+   "place_bacc": 0.9413
+  },
+  {
+   "method": "trustmask_v1",
+   "seed": 1,
+   "run": "waterbirds_final_trustmask_v1_k29_s1_1103_170855_2e3c",
+   "val_wga": 61.65,
+   "val_acc": 90.24186730384827,
+   "place_bacc": 0.9386
+  },
+  {
+   "method": "trustmask_v1",
+   "seed": 2,
+   "run": "waterbirds_final_trustmask_v1_k29_s2_1103_170951_279c",
+   "val_wga": 60.9,
+   "val_acc": 90.24186730384827,
+   "place_bacc": 0.9203
+  },
+  {
+   "method": "trustmask_v1",
+   "seed": 3,
+   "run": "waterbirds_final_trustmask_v1_k29_s3_1103_170956_fdca",
+   "val_wga": 64.66,
+   "val_acc": 91.32610559463501,
+   "place_bacc": 0.9106
+  }
+ ],
+ "verdict": {
+  "P1_rho_place_bacc_vs_wga_le_-0.5": false,
+  "P2_maskedkd_highest_place_bacc": false,
+  "R_highest_place_bacc_method": "teacher_topk",
+  "R_kd_methods_below_ce": {
+   "maskedkd": false,
+   "maskedkd_frozen": false,
+   "rollout": false,
+   "teacher_topk": false,
+   "trustmask_v1": true,
+   "trustfilt": false
+  }
+ }
+}

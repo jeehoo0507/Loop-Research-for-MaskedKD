@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_student_place_probe_1103_214434_3809",
+ "name": "wb_student_place_probe",
+ "source_sha": "3809c27b5718ceb2b40860462dc1a1d8f330bd4450782746e5ec558912ce9c77",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, across methods, does the place (background) information a trained student's feature carries inside each class rank the runs inversely to their student WGA?",
+  "method": "linear probe (class-balanced closed-form ridge, 2-fold CV) on the pre-logit feature, per class; Spearman rank correlation with run bootstrap",
+  "paper": "Alain & Bengio ICLR-W 2017 (linear probes); Kirichenko et al. ICLR 2023 (DFR, spurious feature decodability); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 13.4
+}
