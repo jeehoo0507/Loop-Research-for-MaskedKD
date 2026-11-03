@@ -441,3 +441,31 @@ Total agent screen configs: 15
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
 
+# Held-out check: caltech256
+
+Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
+
+Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
+
+## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- none yet
+
+## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
+- no agent method has >= 2 final seeds yet
+
+## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
+- no child selectors yet
+
+## Primary metric (analysis-only methods excluded: oracle)
+
+## Where token choice matters (screen seed 0, each baseline vs Full KD)
+- not measured yet
+
+## Search effort (screen)
+Total agent screen configs: 0
+
+## All finished runs
+| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | ce |  | 0 | None | 1 | 83.31 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 512 | caltech256_final_ce_k0_s1_1103_123120_2db8 |
+
