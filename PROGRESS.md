@@ -1,4 +1,10 @@
 STUCK: 게이트 2 — `.venv/bin/python -m harness.prepare_data --datasets cub_lt`가 무인 모드 권한에서 두 번 거부됐다(라운드 277, 278). data/cub_lt가 없어 H-A39 18 job을 낼 수 없다. 사람이 cub_lt 준비를 돌리거나 그 명령을 허용해 달라.
+요약 (라운드 281, [claude], 18:50 UTC): **게이트 1 (H-A37) 판정 완료** — v1@29 s2·s3가 끝나 seed 1·2·3이 다 모였다. 새 사람 지시 없음, git 정상, 위 STUCK 그대로(prepare_data 재시도 안 함).
+- 끝난 run: waterbirds_final_trustmask_v1_k29_s2_1103_170951_279c WGA 60.90 / acc 90.24, waterbirds_final_trustmask_v1_k29_s3_1103_170956_fdca WGA 64.66 / acc 91.33 (13.35 GFLOPs/img).
+- 판정 (val WGA, 같은 seed 짝, 95% t CI df 2, 손 계산; clean acc는 harness.compare): **P1 v1 − teacher_topk = −2.01 [−6.32, +2.31] → 불성립 → "뻔한 수정도 된다, 노벨티 없음".** **P2 v1 − maskedkd = +23.81 [+22.73, +24.88] → 성립.** 기록: v1 − rollout +0.25 [−3.65, +4.14] → "처방은 rollout이지 신뢰 가중치가 아니다". acc: v1 − maskedkd +2.86 [+2.27, +3.46], v1 − teacher_topk +0.89 [−0.29, +2.07], v1 − rollout +1.03 [−0.47, +2.53]. 자세한 것은 RESULTS.md "final" 절 첫 줄.
+- 감사 요청: agent/AUDIT_REQUEST.md (P2 주장 + P1 음성 결과, run 9개).
+- [claude] 결정: 게이트 1 해석 틀상 P1 거짓이므로 남은 K=12·trustfilt job은 등록대로 기록용으로만 돌리고, v1을 고치거나 seed를 더하지 않는다(가장 보수적).
+- 실행 중: frozen@29 s1(epoch 99, 곧 끝남)·s2·s3(epoch 18), teacher_topk@12 s1. 대기 11개. 게이트 3 판정은 frozen s1·2·3이 다 끝난 뒤(s3 약 27분 뒤 이후). 09:00 KST(00:00 UTC) 아침 요약을 쓸 것.
 요약 (라운드 280, [claude], 18:21 UTC): 감사된 결과는 아직 없다. 새 사람 지시는 없다(pull "Already up to date", QUEUE 마지막 = 11-04 01:40 KST 세 게이트). git 정상. data/cub_lt 여전히 없음 → 위 STUCK 그대로, prepare_data 재시도 안 함.
 - 끝난 run (게이트 1, K=29, val, 판정 아님): waterbirds_final_rollout_k29_s2_1103_170940_2b72 WGA 59.40 / acc 88.82; waterbirds_final_rollout_k29_s3_1103_170944_dd2c WGA 63.91 / acc 89.99. 총 12.99 GFLOPs/img (selector 0.17). rollout@29 seed 1·2·3 = 63.16/59.40/63.91 (평균 62.16). 기록(판정 아님): teacher_topk − rollout 짝 평균 +2.25, rollout − maskedkd 짝 평균 +23.6.
 - 실행 4개: v1@29 s2(epoch 38)·s3(epoch 33) → 약 22~25분 뒤 끝남, frozen@29 s1(epoch 15, val WGA 57.1 중간값)·s2. 대기 13개. GPU 100%. P1·P2 판정은 v1 s2·s3가 끝난 다음 라운드에 harness.compare로 한 번만.
