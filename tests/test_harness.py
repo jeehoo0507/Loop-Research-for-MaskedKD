@@ -516,7 +516,8 @@ def test_evidence_bundle_attaches_cited_runs(tmp_path, monkeypatch):
     rid = "final_mysel_k25_s1_1030_120000_abcd"
     (tmp_path / "runs" / rid).mkdir(parents=True)
     (tmp_path / "runs" / rid / "metrics.json").write_text(json.dumps(
-        {"id": rid, "val_acc_last": 80.1, "history": [{"epoch": 1, "loss": 2.0}, {"epoch": 2, "val_acc": 80.1}]}))
+        {"id": rid, "val_acc_last": 80.1, "val_wga_last": 61.5, "selector_sha": "f" * 64, "teacher_sha": "t" * 64,
+         "harness_digest": "d" * 12, "history": [{"epoch": 1, "loss": 2.0}, {"epoch": 2, "val_acc": 80.1}]}))
     (tmp_path / "q" / "done").mkdir(parents=True)
     (tmp_path / "q" / "done" / f"{rid}.json").write_text(json.dumps(
         {"method": "mysel", "selector_sha": "f" * 64, "selector_src": "META = {'parent': 'none'}"}))
@@ -525,6 +526,8 @@ def test_evidence_bundle_attaches_cited_runs(tmp_path, monkeypatch):
     text = evidence.audit()
     assert f"runs/{rid}/metrics.json" in text and '"val_acc": 80.1' in text and '"loss"' not in text
     assert "selector source mysel" in text and "META = {'parent': 'none'}" in text
+    summ = text.split("cited runs: summary and identity")[1].split("runs/")[0]   # the summary comes before the metrics
+    assert f"{rid} | mysel" in summ and "f" * 64 in summ and "| match |" in summ and "61.5" in summ
     assert "complete job history" in text and f"{rid} | done" in text and "listed 1 jobs of mysel" in text
     assert "selector_api" in evidence.ideas() or "missing: harness/selector_api.py" in evidence.ideas()
 

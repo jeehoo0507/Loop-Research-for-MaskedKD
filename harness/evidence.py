@@ -44,6 +44,30 @@ def run_metrics(rid):
     return json.dumps(d, indent=1)
 
 
+def run_summary(run_ids):
+    """One row per cited run, outside any truncation: the fields an audit checks first (method, dataset, K, seed,
+    tier, epochs, val acc / WGA, total GFLOPs) and the identity chain — selector_sha as recorded in metrics.json and
+    in the job snapshot (match or MISMATCH), teacher_sha, harness_digest. On 2026-11-03 the 6k-char metrics cut hid
+    selector_sha and the audit returned NEEDS-MORE twice for that alone."""
+    cols = ["id", "method", "dataset", "keep", "seed", "tier", "epochs_done", "val_acc_last", "val_wga_last",
+            "total_gflops", "selector_sha(metrics)", "selector_sha(job)", "sha match", "teacher_sha", "harness_digest"]
+    lines = [" | ".join(cols)]
+    for rid in run_ids:
+        m = C.RUNS / rid / "metrics.json"
+        d = json.loads(m.read_text()) if m.exists() else {}
+        job = C.QUEUE / "done" / f"{rid}.json"
+        j = json.loads(job.read_text()) if job.exists() else {}
+        sm, sj = str(d.get("selector_sha", "-")), str(j.get("selector_sha", "-"))
+        match = "match" if sm == sj else ("MISMATCH" if m.exists() and job.exists() else "-")
+        lines.append(" | ".join(str(v) for v in [
+            rid, d.get("method", j.get("method", "-")), d.get("dataset", j.get("dataset", "-")),
+            d.get("keep", j.get("keep", "-")), d.get("seed", j.get("seed", "-")), d.get("tier", j.get("tier", "-")),
+            d.get("epochs_done", "-"), d.get("val_acc_last", "-"), d.get("val_wga_last", "-"),
+            (d.get("flops") or {}).get("total_gflops_per_img", "-"), sm, sj, match, str(d.get("teacher_sha", "-"))[:12],
+            str(d.get("harness_digest", "-"))[:12]]))
+    return "\n".join(lines)
+
+
 def history(methods=None):
     """Every job ever queued, in submission order, whatever happened to it: the auditor can see that no run of a
     cited method (failed, timed out, killed, still running) was left out. methods: only jobs of these methods (all
@@ -133,7 +157,9 @@ def audit():
     out = [section("AUDIT_REQUEST.md", req),
            section("python -m harness.lock (current digest)", run(py, "-m", "harness.lock")),
            section("python -m harness.lock --check", run(py, "-m", "harness.lock", "--check"))]
-    run_ids = sorted(set(re.findall(r"\b(?:in100_|aircraft_|waterbirds_)?(?:screen|final)_[A-Za-z0-9_.-]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req)))
+    run_ids = sorted(set(re.findall(r"\b(?:in100_|aircraft_|waterbirds_|caltech256_|cub_lt_)?(?:screen|final)_[A-Za-z0-9_.-]+_\d{4}_\d{6}_[0-9a-f]{4}\b", req)))
+    out.append(section("cited runs: summary and identity (complete; metrics.json below are cut at 6k chars)",
+                       run_summary(run_ids)))
     shas = {}
     for rid in run_ids:
         out.append(section(f"runs/{rid}/metrics.json", run_metrics(rid), limit=6_000))
