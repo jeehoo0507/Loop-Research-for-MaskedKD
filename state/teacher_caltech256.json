@@ -1,0 +1,32 @@
+{
+ "model": "deit_base_patch16_224.fb_in1k",
+ "dataset": "caltech256",
+ "label_smoothing": 0.0,
+ "val_acc": 92.6,
+ "source": "fine-tuned here",
+ "epochs": 20,
+ "lr": 0.0001,
+ "history": [
+  {
+   "epoch": 5,
+   "val_acc": 88.45506310462952,
+   "epoch_s": 71.1
+  },
+  {
+   "epoch": 10,
+   "val_acc": 91.04678630828857,
+   "epoch_s": 71.0
+  },
+  {
+   "epoch": 15,
+   "val_acc": 91.7536199092865,
+   "epoch_s": 71.0
+  },
+  {
+   "epoch": 20,
+   "val_acc": 92.59508848190308,
+   "epoch_s": 71.1
+  }
+ ],
+ "sha256": "fad99e147023143f526069fd048f3a8eaab6d0afea50be3da445c51d95e01327"
+}
