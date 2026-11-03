@@ -176,3 +176,10 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - trustfilt 기본형은 기대가 낮은 출발점이다. 이겨야 할 대상이 아니라 "무엇을 고쳐서 얼마나 좋아졌나"를 보는 기준점이다.
 - rollout·lateroll·teacher_topk·random·CE·Full은 맥락으로 함께 보고한다. 판정 조건은 아니다. 다만 rollout에 지면 그 사실을 숨기지 않고 적는다 ("해석 기반 선택 자체의 이득인지, TrustMask만의 이득인지" 구분).
 - K는 29를 먼저 본다. MaskedKD가 무너지는 낮은 K(노트: 15%에서 붕괴)가 TrustMask가 이길 수 있는 곳이다. 여유가 있으면 K=12·49도 같은 규칙으로 본다 (K를 결과 보고 고르지 않도록, 볼 K를 먼저 적는다).
+
+### 정정 2 (17:25 KST, 사람): TrustMask가 이제 이 연구의 구조(architecture)다
+- 앞으로 만드는 모든 선택기는 **TrustMask 틀 안에서** 만든다. 틀 = (1) 공짜 신호(student forward)와 상각 신호(캐시된 teacher attribution)만 쓴다, (2) 토큰을 shared / gap / pruned로 나눈다, (3) 이미지별 토큰 수를 조절할 수 있다, (4) 선택기 비용은 FLOPs에 넣는다. 이 틀 밖의 새 계열(rollout 층 바꾸기, 이미지별 몰아주기 등 이미 닫은 방향)은 만들지 않는다.
+- 너의 일은 **TrustMask를 계속 강해지게 하는 것**이다. 매번: 약점 하나를 진단한다 → 그 약점을 고치는 구성요소 하나를 설계한다 (PROPOSALS에 근거와 판정 규칙을 먼저 적는다) → 같은 seed 짝으로 이전 TrustMask 버전과 MaskedKD에 비교한다 → 이기면 그 버전을 새 기준 TrustMask로 삼는다 (`selectors/trustmask_v<N>.py`, parent는 이전 버전). 지면 이유를 적고 다른 약점으로 간다.
+- 기본형(trustfilt)은 v0이다. 기대가 낮은 출발점이므로 Aircraft seed 1·2·3을 한 번만 돌려 기준점으로 쓰고, 그 뒤로는 고치는 데 GPU를 쓴다.
+- 먼저 볼 약점 (사람 노트에서): gap이 해롭다 (원래 아이디어의 절반이 빠짐), student attention 신뢰도에 따라 방식이 달라야 한다 (전환점), 이미지별 토큰 수 조절이 아직 없다 (노트의 "얼마나?" 절). 순서는 진단 결과로 네가 정한다.
+- 판정은 정정 1 그대로 MaskedKD 대비다. 각 버전의 변경 이력(무엇을 왜 바꿨고 결과가 어땠나)을 RESULTS에 "TrustMask 버전" 표로 남긴다. 이 표가 나중에 "왜 이렇게 설계했나"의 근거가 된다.
