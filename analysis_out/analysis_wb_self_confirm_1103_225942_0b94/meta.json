@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_self_confirm_1103_225942_0b94",
+ "name": "wb_self_confirm",
+ "source_sha": "0b944634b4cec1d47b312545e95436f1c13d9d9b9a0a204fdb8aab8c32409b65",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, do online-only MaskedKD tokens push the masked teacher toward the online student's own prediction, and is their group-2 harm concentrated where the online student is wrong?",
+  "method": "last-block CLS attention top-K; set differences vs frozen-trained student; keep-only masked-teacher probability of the student's own argmax; image (cluster) bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 27.8
+}
