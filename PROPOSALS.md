@@ -803,6 +803,8 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 예측 (한 번만): R1 seed 평균 Full − CE의 이미지 bootstrap 95% CI가 0을 포함한다 — 확신 중간. R2 같은 seed Full 대 CE 불일치율 평균 ÷ 같은 방법 seed 짝 불일치율 평균이 0.8~1.25 안이다(KD와 CE의 이미지별 차이가 seed 잡음 수준) — 확신 낮음. R3 teacher argmax 일치율 Full − CE의 CI 하한 > 0 이 seed 3개 모두 — 확신 높음. R4 KL(T‖S) Full − CE의 CI 상한 < 0 이 seed 3개 모두 — 확신 높음. R5 teacher가 맞힌 이미지의 Full − CE가 틀린 이미지의 것보다 크다(점추정) — 확신 중간.
   - 해석: R3·R4 참 → "CUB final에서 정확도 이득은 불확실하지만 KD는 teacher 출력을 student에 옮긴다"로 RESULTS에 적는다 (토큰 선택의 신호 측 판정 무대로는 유효, 정확도 판정 무대로는 측정력이 약함). R1 참이고 R2 참 → "KD 이득의 불확실성은 seed 잡음과 같은 크기의 이미지별 뒤섞임"으로 적는다. R3 또는 R4 거짓 → "CUB final에서 KD 신호 전달 자체가 불확실"로 적고 사람 판단 요청 (4)에 덧붙인다. 어느 쪽이든 CUB를 버리거나 데이터셋을 바꾸는 결정은 하지 않는다(사람 결정).
   - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 seed·student·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
+  - 제출 (라운드 237, 등록 커밋 b0914a1 뒤): analysis_kd_gain_resolution_1103_022913_d9fe (cub, 이번 라운드 안에 끝남)
+  - 결과 (라운드 237, 한 번만): 일관성 확인 통과 (6개 student 정확도 = val_acc_last). **R1 참**: seed 평균 Full − CE +0.50 [−0.56, +1.56]. **R2 거짓**: 불일치율 비 0.63 (같은 seed Full 대 CE 4.5/6.0/6.0%, 같은 방법 다른 seed 7.5~9.7%). **R3 거짓**: teacher 일치 Full − CE +1.17 [−0.67, +3.00], +1.33 [−0.50, +3.17], +1.33 [−0.83, +3.50]. **R4 참**: KL(T‖S) Full − CE −0.129 / −0.130 / −0.130, CI 모두 0 아래. **R5 참** (점추정): teacher 맞힌 이미지 +0.79, 틀린 이미지 −1.09 %p (차이 CI [−2.13, +5.56]). 해석(등록대로): R3 거짓 → "CUB final에서 KD 신호 전달 자체가 불확실"; 단서로 분포 수준(KL) 전달은 뚜렷하다. RESULTS 라운드 237 참고. 더 내지 않는다.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.

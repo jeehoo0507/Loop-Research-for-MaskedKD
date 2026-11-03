@@ -1,0 +1,12 @@
+{
+ "id": "analysis_kd_gain_resolution_1103_022913_d9fe",
+ "name": "kd_gain_resolution",
+ "source_sha": "d9fea533de58a9f29888768393ad75830029ada1db5ba7d2f41094859ef298c4",
+ "status": "done",
+ "meta": {
+  "question": "on CUB final seeds 1, 2, 3, is the Full KD - CE accuracy difference resolvable on 600 val images (per-image discordance vs seed noise), and do Full KD students agree with the teacher more than CE?",
+  "method": "per-image paired correctness (McNemar), same-method seed-pair discordance as noise reference, image bootstrap of seed-averaged difference, teacher-argmax agreement and KL(T||S)",
+  "paper": "Hinton et al. 2015 (KD); Stanton et al. NeurIPS 2021 (student-teacher fidelity); Dietterich 1998 (McNemar for classifier comparison); Bouthillier et al. MLSys 2021 (variance sources)"
+ },
+ "seconds": 6.2
+}
