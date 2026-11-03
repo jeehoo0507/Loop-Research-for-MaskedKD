@@ -286,3 +286,10 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **새 선택기(v3 등)는 만들지 않는다.** 이번 단계는 판정이다.
 - 분석 (학습 없음, 게이트 제출 뒤 GPU가 비면): Waterbirds에서 epoch 스냅샷별 그룹별 "가린 teacher 정확도"와 "고른 토큰과 teacher 지도의 coverage"를 MaskedKD vs v1로. FG/BG 라벨은 사람이 나중에 넣는다.
 - **09:00 KST 아침 요약**과 **14:00 KST 중간 요약**을 PROGRESS 맨 위에 쓴다 (16:00 발표용). 각 게이트의 끝난 seed 수, 지금까지의 짝 차이(판정은 규칙대로 3 seed가 다 끝난 뒤에만).
+
+## 2026-11-04 08:50 KST — 사람: 게이트 1·3 결과 반영, 게이트 2 목록 수정
+- **cub_lt 데이터는 사람이 준비했다** (`data/cub_lt`). 게이트 2(H-A39)를 **지금** 낸다. 목록에 둘을 더한다 (final, K=29, seed 1·2·3): **`trustfilt`(v0)**와 **`tome`**. 합계 24 job. v0는 게이트 1에서 가장 좋았던 방법이고, ToMe는 clean acc에서 가장 강한 기준선이다. 사전 등록에 둘의 예측을 한 줄씩 더한다 (v0 − maskedkd tail CI 하한 > 0; tome 기록).
+- **게이트 1 해석 정정:** 등록 P1(v1 − teacher_topk)은 불성립이 맞다. 그러나 게이트 1의 결과는 "노벨티 없음"이 아니라 **"답은 v1(가중치)이 아니라 v0(teacher 필터 ∩ student 선택)"**이다. v0@29 WGA 72.7은 teacher 단독(64.4)·student 단독(62.2)·Full KD(67.4)·CE(68.4)보다 높다. 이것을 RESULTS에 "게이트 1 사후 관찰(등록 밖, 주장 아님)"로 적고, **후보를 v0로 바꾼다.** v0 − teacher_topk, v0 − rollout, v0 − full의 짝 차이와 CI를 기록한다 (판정 아님, 등록 밖).
+- 게이트 2 이후 남는 GPU에 **Waterbirds K=29 ToMe seed 2·3** (2 job)을 낸다. 게이트 1 표에 ToMe가 빠져 있다.
+- **감사 STUCK(증거 묶음 selector_sha):** 사람이 harness/evidence.py를 고친다. 고친 뒤 게이트 1 감사를 다시 요청한다. 감사 기준: 주 지표 WGA, 사전 등록 P1·P2 + 사후 관찰(v0) 구분.
+- 09:00 아침 요약은 게이트 1·3 결과와 분석 H-A40~55의 핵심 다섯 줄로. 14:00 중간 요약에 게이트 2.
