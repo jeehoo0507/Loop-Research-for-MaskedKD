@@ -185,7 +185,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - none yet
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- no agent method has >= 2 final seeds yet
+- lateroll@29 vs maskedkd@29 [acc]: +1.00 %p, 95% CI [-3.97, +5.97], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- lateroll@29 vs rollout@29 [acc]: -0.14 %p, 95% CI [-3.53, +3.24], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- lateroll@29 vs tome@29 [acc]: +0.10 %p, 95% CI [-3.81, +4.00], seeds 1,2,3, GFLOPs ratio 1.083 -> no difference
+- lateroll@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@29 vs random@29 [acc]: +3.05 %p, 95% CI [-1.33, +7.43], seeds 1,2,3, GFLOPs ratio 0.999 -> no difference
+- lateroll@29 vs full@196 [acc]: -1.76 %p, 95% CI [-4.86, +1.34], seeds 1,2,3, GFLOPs ratio 0.304 -> no difference
+- lateroll@29 vs rollout@29 [acc]: -0.14 %p, 95% CI [-3.53, +3.24], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - no child selectors yet
@@ -208,6 +215,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 66.43 ± 0.43 | - | 7.64 | 0.00 | 0.00 | 481 | aircraft_final_ce_k0_s2_1102_132227_80b7 aircraft_final_ce_k0_s3_1102_132227_55cb aircraft_final_ce_k0_s1_1102_123044_6d5f |
 | final | full |  | 196 | 196.0 | 1,2,3 | 68.05 ± 0.54 | - | 42.77 | 35.13 | 0.00 | 252 | aircraft_final_full_k196_s1_1102_123044_ed5d aircraft_final_full_k196_s3_1102_132227_69cc aircraft_final_full_k196_s2_1102_132227_123b |
+| final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 66.29 ± 1.78 | - | 12.99 | 5.36 | 0.08 | 380 | aircraft_final_lateroll_k29_s1_1103_065756_f0d9 aircraft_final_lateroll_k29_s3_1103_065805_2130 aircraft_final_lateroll_k29_s2_1103_065801_38e1 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.33 | - | 10.07 | 2.45 | 0.00 | 455 | aircraft_final_maskedkd_k12_s1_1102_132227_f01c aircraft_final_maskedkd_k12_s3_1103_024931_458c aircraft_final_maskedkd_k12_s2_1103_024925_555b |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 65.29 ± 1.25 | - | 12.99 | 5.36 | 0.00 | 384 | aircraft_final_maskedkd_k29_s2_1102_180321_52e2 aircraft_final_maskedkd_k29_s3_1102_180336_347e aircraft_final_maskedkd_k29_s1_1102_132227_6542 |
 | final | maskedkd |  | 49 | 49.0 | 1,2,3 | 66.95 ± 1.76 | - | 16.44 | 8.82 | 0.00 | 398 | aircraft_final_maskedkd_k49_s3_1102_193521_573d aircraft_final_maskedkd_k49_s1_1102_193509_429e aircraft_final_maskedkd_k49_s2_1102_193516_9d71 |
