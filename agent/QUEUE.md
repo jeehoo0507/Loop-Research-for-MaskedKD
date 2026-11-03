@@ -167,3 +167,12 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **MaskedKD (ECCV 2024, arXiv 2302.10494):** student 마지막 층 CLS attention으로 teacher 입력을 가린다. 저자는 이것이 "커리큘럼"처럼 작동한다고 해석한다 (초반에는 쉽고 나중에는 어려운 teacher 감독). → student 신뢰도 곡선(할 일 3a)은 이 해석과 직접 맞닿는다. 그 주장을 확인하거나 반박하는 쪽으로 설계한다.
 - **Distilling Token-Pruned Pose Transformer (arXiv 2304.05548):** teacher attention으로 학습 초반 student의 토큰 위치 찾기를 돕는다 ("초반에는 teacher 신호가 낫다"는 주장과 가까움).
 - 웹 검색 몇 번으로는 "student attention 신뢰도에 따라 teacher/student 신호를 바꾸는 KD 토큰 선택"과 "teacher-student 합의로 teacher 입력 토큰을 고르는 효율 KD"는 찾지 못했다. 네 검색으로 더 확인하고, 찾으면 그대로 적는다.
+
+### 정정 (17:15 KST, 사람): TrustMask 판정의 비교 대상은 MaskedKD다
+위 16:50 절 할 일 4의 기준("trustfilt 기본형과 rollout을 모두 이길 것")을 아래로 바꾼다. 아직 결과를 보기 전의 정정이다.
+- **주 비교 = MaskedKD** (사람 노트의 성공 기준 그대로):
+  - 같은 토큰 수에서 MaskedKD보다 정확도가 높고, 차이가 seed 편차보다 크다 (seed 1·2·3, 같은 seed 짝 차이와 95% CI).
+  - 또는 같은 정확도에서 MaskedKD보다 토큰이 적다 (평균 teacher GFLOPs 기준, 선택기·캐시 비용 포함).
+- trustfilt 기본형은 기대가 낮은 출발점이다. 이겨야 할 대상이 아니라 "무엇을 고쳐서 얼마나 좋아졌나"를 보는 기준점이다.
+- rollout·lateroll·teacher_topk·random·CE·Full은 맥락으로 함께 보고한다. 판정 조건은 아니다. 다만 rollout에 지면 그 사실을 숨기지 않고 적는다 ("해석 기반 선택 자체의 이득인지, TrustMask만의 이득인지" 구분).
+- K는 29를 먼저 본다. MaskedKD가 무너지는 낮은 K(노트: 15%에서 붕괴)가 TrustMask가 이길 수 있는 곳이다. 여유가 있으면 K=12·49도 같은 규칙으로 본다 (K를 결과 보고 고르지 않도록, 볼 K를 먼저 적는다).
