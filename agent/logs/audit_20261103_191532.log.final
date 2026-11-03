@@ -1,0 +1,4 @@
+CLAIM: P1 — Waterbirds final K=29, seeds 1–3: trustmask_v1 − teacher_topk validation WGA is −2.01 pp [−6.32, +2.31]; no demonstrated v1 advantage, equivalence, or teacher_topk superiority.
+VERDICT: NEEDS-MORE
+REASON: All six runs are done with matching budgets, epochs and seeds; their values support the stated arithmetic and cautious interpretation (including waterbirds_final_trustmask_v1_k29_s1_1103_170855_2e3c versus waterbirds_final_teacher_topk_k29_s1_1103_170914_f015).
+However, truncated metrics omit per-run selector_sha verification against each job snapshot; the researcher’s table does not establish that match. The required analysis_out decomposition is also absent. [MaskedKD](https://maskedkd.github.io/) and [attention rollout](https://aclanthology.org/2020.acl-main.385/) confirm prior foundations, not novelty. This diagnostic alone establishes no FLOPs-efficiency result.
