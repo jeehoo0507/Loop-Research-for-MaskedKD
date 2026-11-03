@@ -423,7 +423,7 @@ Total agent screen configs: 15
 | final | random |  | 12 | 12.0 | 1,2,3 | 83.85 ± 0.91 | 37.34 ± 1.89 | 10.09 | 2.45 | 0.00 | 320 | final_random_k12_s2_1030_212126_b5bc final_random_k12_s1_1030_201811_19bf final_random_k12_s3_1030_220958_e1db |
 | final | random |  | 29 | 29.0 | 1 | 81.57 ± 0.00 | 30.83 ± 0.00 | 13.00 | 5.36 | 0.00 | 1182 | waterbirds_final_random_k29_s1_1031_201502_830c |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 88.10 ± 1.17 | 50.88 ± 1.74 | 10.08 | 2.45 | 0.17 | 237 | final_rollout_k12_s1_1030_201811_6293 final_rollout_k12_s3_1030_220958_d961 final_rollout_k12_s2_1030_212126_33d1 |
-| final | rollout |  | 29 | 29.0 | 1 | 89.91 ± 0.00 | 63.16 ± 0.00 | 12.99 | 5.36 | 0.17 | 913 | waterbirds_final_rollout_k29_s1_1031_201502_e135 |
+| final | rollout |  | 29 | 29.0 | 1,2,3 | 89.57 ± 0.65 | 62.16 ± 2.42 | 12.99 | 5.36 | 0.17 | 459 | waterbirds_final_rollout_k29_s2_1103_170940_2b72 waterbirds_final_rollout_k29_s1_1031_201502_e135 waterbirds_final_rollout_k29_s3_1103_170944_dd2c |
 | final | suffdisc@0f0600 |  | 12 | 12.0 | 1,2,3 | 89.63 ± 0.46 | 62.40 ± 2.60 | 15.02 | 2.45 | 4.93 | 192 | final_suffdisc_k12_s3_1031_002453_9ebe final_suffdisc_k12_s1_1031_002441_5d86 final_suffdisc_k12_s2_1031_002448_664e |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 89.71 ± 0.21 | 64.41 ± 0.43 | 13.36 | 5.36 | 0.36 | 294 | waterbirds_final_teacher_topk_k29_s1_1103_170914_f015 waterbirds_final_teacher_topk_k29_s3_1103_170923_d12a waterbirds_final_teacher_topk_k29_s2_1103_170918_4535 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
