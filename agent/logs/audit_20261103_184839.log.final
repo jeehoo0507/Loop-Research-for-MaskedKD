@@ -1,0 +1,9 @@
+CLAIM: P2 — Waterbirds final K=29, seeds 1–3: trustmask_v1 WGA 62.40 versus maskedkd 38.59; difference +23.81 [+22.73, +24.88]; cost ratio 1.028.
+VERDICT: FAIL
+REASON: The six completed runs support the means and cost ratio, but the stated formula gives CI [+22.73, +24.89]. Examples: waterbirds_final_trustmask_v1_k29_s1_1103_170855_2e3c and waterbirds_final_maskedkd_k29_s1_1031_201502_4be8. WGA improvement alone does not establish the required efficiency result.
+The cached-teacher method fails the mandatory teacher_topk superiority condition; rollout superiority is also unestablished. Required final tome/grid/center/random/parent comparisons, decomposition, CUB PASS/untouched-transfer evidence, and matched-total-cost comparison are absent. The truncated historical training diff also prevents completing the old-lock integrity check.
+
+CLAIM: P1 — trustmask_v1 minus teacher_topk WGA is −2.01 [−6.32, +2.31]; no superiority or novelty is claimed.
+VERDICT: NEEDS-MORE
+REASON: All six runs are done with matching final tier, 100 epochs and seeds 1–3; their values reproduce this negative comparison, including waterbirds_final_trustmask_v1_k29_s3_1103_170956_fdca and waterbirds_final_teacher_topk_k29_s3_1103_170923_d12a. However, truncated metrics omit the per-run selector_sha needed to verify correspondence with job snapshots.
+The CI supports “superiority unestablished,” not equivalence or proof of no novelty. Teacher-guided masking already appears in [MaskedKD §5.1](https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/08449.pdf), and [attention rollout](https://aclanthology.org/2020.acl-main.385/) is established prior work; neither establishes that the complete weighting method is identical to prior work.
