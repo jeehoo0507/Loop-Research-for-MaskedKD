@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_frozen_attention_1103_211510_4fc9",
+ "name": "wb_frozen_attention",
+ "source_sha": "4fc94b888879b7a3cb3aa4eb97531fbfc190665f4dfff8981954db1961a9b8ee",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, is the masked teacher fed the top-K of a student's own last-block CLS attention less correct on the minority groups when that student was trained by online MaskedKD than when it was trained with the frozen step-0 selector, and is the gap already there at epoch 25?",
+  "method": "last-block CLS attention top-K; attention rollout (teacher all blocks) for coverage; keep-only masked-teacher faithfulness sliced by Waterbirds group; within-group image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 24.5
+}
