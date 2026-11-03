@@ -325,6 +325,7 @@ def test_stage2_rules(tmp_path, monkeypatch):
     submit.make_job("ce", 0, 1, "final", dataset=C.STAGE2)                 # baselines always allowed
     with pytest.raises(SystemExit, match="gate"):
         submit.make_job("good", 25, 1, "final", dataset=C.STAGE2)         # stage 2 closed before its gate
+    monkeypatch.setattr(C, "STAGE2_EXPLORE", False)
     gate = [{"method": m, "keep": k, "seed": 1, "tier": "final", "val_acc_last": v, "dataset": C.STAGE2}
             for m, k, v in (("ce", 0, 70.0), ("full", 196, 75.0), ("maskedkd", 98, 74.8))]
     cifar = [{"method": "good", "keep": 25, "seed": s, "tier": "final", "val_acc_last": 70.0, "selector_sha": sha}

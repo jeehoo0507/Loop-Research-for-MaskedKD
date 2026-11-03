@@ -64,6 +64,8 @@ def stage2_rule(method, sha):
     ok, msg = gate(runs, "final", C.STAGE2, kd_only=True)
     if not ok:
         raise SystemExit(f"stage 2 is closed until the stage-2 gate passes: {msg}")
+    if C.STAGE2_EXPLORE:
+        return "stage2_explore"
     s1 = [r for r in runs if r.get("dataset", C.STAGE1) == C.STAGE1 and r["tier"] == "final" and r["method"] == method]
     passed_shas = {r["selector_sha"] for r in s1
                    if set(C.FINAL_SEEDS) <= {x["seed"] for x in s1 if x["selector_sha"] == r["selector_sha"]}}

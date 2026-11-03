@@ -129,3 +129,35 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 ## 2026-11-03 16:10 KST — 라운드 238 사람 조치 요청에 대한 답
 - **stage 2 관문:** `submit.stage2_rule`이 이제 `gate(..., kd_only=True)`를 쓴다 (stage2_boot과 같은 규칙: MaskedKD@98 부족은 발견으로 남기고 stage 2는 진행). 거절당한 **H-A20 세 job (Aircraft lateroll@29 final seed 1·2·3)을 등록 그대로 다시 내라.** 우회하지 않은 판단은 옳았다.
 - **감사 묶음:** 섹션별 한도 때문에 diff·analysis 출력·PROPOSALS·RESULTS_TABLE이 여전히 잘렸다. 묶음 한도를 400k로 올리고 섹션 한도도 올렸다. 지난 요청으로 재현하면 309k이고 잘린 곳은 0이다. STUCK을 풀고 lateroll@29 감사를 한 번 더 내라.
+
+## 2026-11-03 16:50 KST — 사람 결정: 새 방향 = TrustMask 강화 (Aircraft에서 탐색, 11/4 09:00 KST까지 1차 결과)
+지금까지의 lateroll·이미지별 예산 방향은 닫는다 (H-A20: Aircraft lateroll@29는 rollout 대비 −0.14 → CUB 특화로 기록됨). 사람의 이전 실험 노트 "TrustMask"를 기반으로 강화한다. 루프의 `selectors/trustfilt.py`(H-C14)가 그 기본형이다.
+
+### TrustMask 요약 (사람 노트, Waterbirds, 10/28)
+- 신호 두 종류만 쓴다: **공짜**(student forward에서 이미 계산된 attention·rollout)와 **상각**(학습 전 이미지당 1회 계산해 캐시한 teacher attribution, `ctx.teacher_map`). 선택기 비용은 FLOPs에 포함한다.
+- 토큰 분류: shared (teacher 중요 + student 이미 봄) 유지 / gap (teacher 중요 + student 아직 못 봄) 유지 / pruned (teacher 중요하지 않음) 제거.
+- Waterbirds 결과: 토큰 15%에서 rollout 대비 seed 5개 clean +0.61 (5/5), WGA +1.87 (4/5), corruption +2.75 (5/5). **gap을 넣으면 오히려 나빠짐** (gap 50% −6.28, 10→50% −5.14, gap 0% +1.40) → 지금 TrustMask는 "teacher로 거르는 필터"뿐이다.
+- 사람의 관찰: "student attention의 신뢰도(사전학습 여부)에 따라 마스킹 방식이 달라야 한다. 전환 시점을 찾는 것이 중요하다."
+- CUB에서 trustfilt@29는 seed 0·4·5 평균 81.33 < lateroll 82.00 (H-C14·16). 단 CUB는 KD 이득이 불확실해 이 비교는 노트의 전제("Full KD가 CE보다 확실히 높은 환경")를 어겼다.
+
+### 하네스 변경 (사람, 이 커밋)
+- `config.STAGE2_EXPLORE = True`: Aircraft에서 agent 방법을 바로 돌릴 수 있다 (라벨 `stage2_explore`). 이것은 **탐색 결과**다. 나중의 주장에는 바꾸지 않은 방법을 다른 데이터셋(CUB 또는 Waterbirds)에서 다시 확인해야 한다. Aircraft val로 고른 하이퍼파라미터는 그 사실을 적는다.
+- `STAGE2_MAX_RUNNING` 3 → 4 (GPU 전부).
+
+### 할 일 (순서대로, 11/4 00:00 UTC = 09:00 KST에 1차 정리)
+1. **노벨티 확인 (지금, 웹 검색, GPU와 병행):** TrustMask와 가까운 선행 연구를 찾아 PROPOSALS에 표로 적는다. 최소: teacher-guided token masking/selection for KD, teacher·student attention 합의(agreement) 기반 토큰 선택, 캐시된 teacher attribution을 쓰는 KD, student attention 신뢰도에 따른 전환, MaskedKD(ECCV 2024)·SBAM(ECCV 2024)·Dynamic KD. 표: 연구 / 무엇으로 고르나 / 비용 / 우리와 다른 점. 같은 것이 있으면 그 사실을 맨 위에 적고, 남는 차이를 노벨티 후보로 적는다. 억지로 차이를 만들지 않는다.
+2. **기준 재현 (GPU, Aircraft final K=29 seed 1·2·3):** `trustfilt` 기본형(H-C14 소스 그대로)과 `teacher_topk`(teacher만으로 고름, 비교에 필요). 같은 seed의 maskedkd·rollout·lateroll·CE·Full은 이미 있다.
+3. **약점 진단 (분석 채널, GPU 짧게):** 판정 규칙을 결과 전에 PROPOSALS에 적는다.
+   - (a) **student 신뢰도 곡선:** 학습 진행에 따라 student rollout과 teacher map이 얼마나 겹치는가 (top-K 겹침, 순위 상관), 그리고 student가 고른 토큰으로 가린 teacher의 fidelity(정답·soft label 유지). 사전학습 student와 그 snapshot(25%·50%)으로 본다. 전환점이 있는지가 질문이다.
+   - (b) **gap이 왜 해로운가:** gap 토큰이 가린 teacher의 fidelity를 떨어뜨리는지(teacher 분포 밖 입력), 아니면 student가 그 토큰을 못 따라가는지 분리한다.
+4. **강화 시도 (GPU, 한 번에 하나, 같은 seed 짝 비교):** 3의 근거로 고른다. 후보 예시 (강제 아님):
+   - 신뢰도 기반 전환: student-teacher 겹침이 문턱보다 낮은 동안(또는 이미지)에는 teacher 필터를 강하게, 높아지면 student만.
+   - 필터 폭 적응: 고정 1.5K 대신 이미지별 겹침으로 폭을 정함 (평균 K는 같게).
+   - gap을 신뢰도가 오른 뒤에만 조금 넣기.
+   기준: 같은 K·같은 seed에서 trustfilt 기본형과 rollout을 모두 이기고, 차이가 seed 편차보다 클 것.
+5. **09:00 KST 아침 요약:** PROGRESS 맨 위에 "아침 요약" 한 덩어리: 노벨티 표 결론, 기준 재현 숫자, 진단 결과, 강화 시도 판정, 다음 할 일. 숫자는 RESULTS_TABLE·compare 출력만.
+
+### 지키는 것
+- 판정 규칙은 결과 전에 적고 결과를 보고 바꾸지 않는다. 결과 보고 seed를 더하지 않는다.
+- 데이터셋별 상수·분기를 selector에 넣지 않는다.
+- 비용은 선택기 FLOPs 포함 (캐시 상각 포함)으로 비교한다.
