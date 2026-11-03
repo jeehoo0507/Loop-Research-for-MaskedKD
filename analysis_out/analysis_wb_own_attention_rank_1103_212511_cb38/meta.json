@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_own_attention_rank_1103_212511_cb38",
+ "name": "wb_own_attention_rank",
+ "source_sha": "cb387183ade86b9fb8e0c3f4c4d8d5e01a25682904d9c95f9387dc013fc5b57c",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, across methods, does the masked-teacher accuracy on the worst group when the teacher is fed the top-K of a trained student's own last-block CLS attention rank the runs like their student WGA?",
+  "method": "last-block CLS attention top-K; attention rollout (teacher all blocks) for coverage; keep-only masked-teacher faithfulness sliced by Waterbirds group; Spearman rank correlation, run bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 19.7
+}
