@@ -888,10 +888,61 @@ def test_caltech256_split_and_holdout_rule(tmp_path, monkeypatch):
 
 
 def test_retired_dataset_takes_no_new_runs(tmp_path, monkeypatch):
-    """Waterbirds is retired: screen/final submissions are refused (smoke stays for the harness self-test)."""
+    """A retired dataset (config.RETIRED) refuses screen/final submissions; smoke stays for the harness self-test."""
     from harness import submit
+    monkeypatch.setattr(C, "RETIRED", ("waterbirds",))
     monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
     _fake_runs(tmp_path, monkeypatch, [])
     for tier, seed in (("screen", 0), ("final", 1)):
         with pytest.raises(SystemExit, match="retired"):
             submit.make_job("ce", 0, seed, tier, dataset="waterbirds")
+
+
+def test_cub_lt_split_and_shared_teacher(tmp_path, monkeypatch):
+    """CUB long-tail: tail classes keep LT_TAIL_FRACTION of their CUB train images (at least 1), val/test are CUB's,
+    group = 1 for a tail class; the teacher is CUB's."""
+    from harness import prepare_data as P
+    from harness.train import teacher_paths
+    root = tmp_path / "CUB_200_2011"
+    (root / "images").mkdir(parents=True)
+    rows, i = [], 1
+    for c in range(200):
+        for j in range(10):            # 10 per class: 8 train (CUB val takes 10 % -> 1), 2 test
+            rows.append((i, f"{c:03d}/{j}.jpg", c + 1, 1 if j < 8 else 0)); i += 1
+    (root / "images.txt").write_text("".join(f"{i} {p}\n" for i, p, _, _ in rows))
+    (root / "image_class_labels.txt").write_text("".join(f"{i} {c}\n" for i, _, c, _ in rows))
+    (root / "train_test_split.txt").write_text("".join(f"{i} {t}\n" for i, _, _, t in rows))
+    cub, lt = P.splits_cub(root), P.splits_cub_lt(root)
+    assert lt["val"] == [(p, y, int(y >= 100)) for p, y, _ in cub["val"]] and len(lt["test"]) == len(cub["test"])
+    head = [it for it in lt["train"] if it[1] < 100]
+    tail = [it for it in lt["train"] if it[1] >= 100]
+    assert len(head) == 700 and len(tail) == 100 and all(g == 1 for _, _, g in tail)   # 7 per head, round(0.2*7)=1 per tail
+    assert set(tail) <= {(p, y, 1) for p, y, _ in cub["train"]}
+    assert teacher_paths("cub_lt") == teacher_paths("cub")
+
+
+def test_frozen_maskedkd_equals_maskedkd_at_step_zero(models):
+    """selectors/maskedkd_frozen.py: at its first call the snapshot is the live student, so its mask equals
+    MaskedKD's (eval mode: no drop-path); after the live student changes, the frozen mask does not follow."""
+    import importlib.util
+    from harness.validate import check_source
+    src = (C.ROOT / "selectors" / "maskedkd_frozen.py").read_text()
+    check_source(src, "maskedkd_frozen")
+    spec = importlib.util.spec_from_file_location("sel_frozen", C.ROOT / "selectors" / "maskedkd_frozen.py")
+    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+    s, _ = models
+    s.eval()
+    x = torch.randn(2, 3, 224, 224)
+    with torch.no_grad():
+        out = student_forward(s, x, attn_layers=[-1])
+        ctx = Context(images=x, student=s, out=out, budget=29, num_patches=196, epoch=0, progress=0.0)
+        ref = MaskedKD().select(ctx)
+        sel = mod.Selector()
+        assert torch.equal(sel.select(ctx), ref)
+        with torch.no_grad():
+            s.blocks[-1].attn.qkv.weight.add_(torch.randn_like(s.blocks[-1].attn.qkv.weight))
+        out2 = student_forward(s, x, attn_layers=[-1])
+        ctx2 = Context(images=x, student=s, out=out2, budget=29, num_patches=196, epoch=1, progress=0.5)
+        assert torch.equal(sel.select(ctx2), ref)                 # frozen: still the step-0 mask
+        assert not torch.equal(MaskedKD().select(ctx2), ref)      # online: follows the changed student
+    s.train()

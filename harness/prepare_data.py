@@ -28,9 +28,9 @@ import numpy as np
 from . import config as C
 
 FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011", "aircraft": "fgvc-aircraft-2013b",
-          "caltech256": "256_ObjectCategories"}
+          "caltech256": "256_ObjectCategories", "cub_lt": "CUB_200_2011"}
 ARCHIVE = {"waterbirds": "waterbird_complete95_forest2water2.tar.gz", "cub": "CUB_200_2011.tgz",
-           "aircraft": "fgvc-aircraft-2013b.tar.gz", "caltech256": "256_ObjectCategories.tar"}
+           "aircraft": "fgvc-aircraft-2013b.tar.gz", "caltech256": "256_ObjectCategories.tar", "cub_lt": "CUB_200_2011.tgz"}
 
 
 def _load(args):
@@ -153,7 +153,27 @@ def splits_caltech256(root):
     return out
 
 
-SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft, "caltech256": splits_caltech256}
+def splits_cub_lt(root):
+    """CUB long-tail: the CUB split with classes C.LT_TAIL_CLASSES cut to C.LT_TAIL_FRACTION of their train images
+    (random.Random(C.CUB_VAL_SEED + 1000 + class), at least 1). val/test unchanged. Group = 1 for a tail class."""
+    sp = splits_cub(root)
+    tail = set(C.LT_TAIL_CLASSES)
+    by_class = defaultdict(list)
+    for item in sp["train"]:
+        by_class[item[1]].append(item)
+    train = []
+    for c in sorted(by_class):
+        items = by_class[c]
+        if c in tail:
+            rng = random.Random(C.CUB_VAL_SEED + 1000 + c)
+            items = rng.sample(items, max(1, round(C.LT_TAIL_FRACTION * len(items))))
+        train += items
+    grp = lambda item: (item[0], item[1], int(item[1] in tail))   # noqa: E731
+    return {"train": [grp(i) for i in train], "val": [grp(i) for i in sp["val"]], "test": [grp(i) for i in sp["test"]]}
+
+
+SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft, "caltech256": splits_caltech256,
+          "cub_lt": splits_cub_lt}
 
 
 def prepare(dataset, workers):
@@ -164,8 +184,12 @@ def prepare(dataset, workers):
     root = _source(dataset)
     sp = SPLITS[dataset](root)
     sizes = {k: len(v) for k, v in sp.items()}
-    exp = C.EXPECTED_SIZES[dataset]
-    if ("total" in exp and sum(sizes.values()) != exp["total"]) or ("total" not in exp and sizes != exp):
+    exp = dict(C.EXPECTED_SIZES[dataset])
+    if exp.pop("partial", False):   # only the listed splits are checked (a derived train split logs its size)
+        sizes_checked = {k: v for k, v in sizes.items() if k in exp}
+    else:
+        sizes_checked = sizes
+    if ("total" in exp and sum(sizes.values()) != exp["total"]) or ("total" not in exp and sizes_checked != exp):
         raise SystemExit(f"{dataset} split sizes {sizes} != expected {C.EXPECTED_SIZES[dataset]}")
     out.mkdir(parents=True, exist_ok=True)
     trim = C.TRIM_BOTTOM.get(dataset, 0)

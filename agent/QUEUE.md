@@ -248,3 +248,41 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - 20:50 항목의 11:00 동결과 Caltech-256 제출도 **보류**한다. 새 계획이 QUEUE에 오면 그때 따른다.
 - 이유: 멘토 피드백을 받아 연구 질문을 다시 정한다. 지금까지의 결과(CUB·Aircraft에서 ±1, Waterbirds 15%에서 WGA +18)를 보면 주장의 중심이 "같은 비용에 더 정확"이 아니라 "student 주도 마스킹이 student 편향을 teacher 신호에 되먹인다"는 실패 모드 쪽이다. 23:30의 Waterbirds 폐기는 이 틀에서 다시 볼 것이므로 **적용을 미룬다** (하네스 RETIRED는 그대로 두되, 새 계획에서 되돌릴 수 있다).
 - 이 항목 뒤에 새 계획이 올 때까지, 라운드마다 할 일은 실행 중 job 기록과 PROGRESS 갱신뿐이다.
+
+## 2026-11-04 01:40 KST — 사람: 새 연구 틀과 세 게이트 (일시 정지 해제)
+23:30 일시 정지를 푼다. 20:50의 동결·Caltech 계획과 23:15의 A·B·C는 **취소**다. 23:30의 Waterbirds 폐기도 취소다 (`config.RETIRED = ()`): Waterbirds는 **주 분석 무대**로 돌아온다. 단, 20:20 규칙 "Waterbirds에 맞춘 설계 금지"는 그대로다. 방법(선택기)에 Waterbirds 전용 부품이 있으면 안 된다. 평가 무대로만 쓴다.
+
+### 연구 질문 (바뀜)
+이전 "같은 비용에서 MaskedKD보다 정확한가"는 CUB·Aircraft에서 ±1로 답이 안 나왔다. 새 질문:
+**student attention으로 teacher 입력을 고르면 student의 편향이 teacher 신호에 되먹여 소수 그룹이 무너지는가. 그렇다면 teacher 쪽 신호(캐시한 teacher 지도)를 "선택"이 아니라 "신뢰 가중치"로 쓰는 것이 고리를 끊는가.**
+근거: Waterbirds 15%에서 MaskedKD WGA 55.5, rollout 71.9, TrustMask 73.3, Full KD 74.0 (사람 노트, 5 seed). 편향 없는 CUB·Aircraft에서는 모두 ±1. 네 설정에서 "teacher가 고른 토큰"(teacher_topk, v0 필터, gap 토큰)이 "student가 고르고 teacher가 가중"(v1)보다 나빴다 (방향만, CI 미확정).
+
+### 게이트 1 — "teacher가 고르면 더 나쁘다" (Waterbirds final, seed 1·2·3, 주 지표 WGA)
+- 제출 (없는 것만; 있는 run은 그대로 쓴다). **우선순위 순서대로**:
+  1. K=29: `trustmask_v1` s1·s2·s3, `teacher_topk` s1·s2·s3, `maskedkd` s2·s3, `rollout` s2·s3 (10)
+  2. 게이트 3의 `maskedkd_frozen`@29 s1·s2·s3 (3)
+  3. K=12: `trustmask_v1` s1·s2·s3, `teacher_topk` s1·s2·s3 (6)
+  4. K=29·12: `trustfilt`(v0) s1·s2·s3 (6)
+- 사전 등록 (결과 전, 제출 전, PROPOSALS에 그대로): 같은 seed 짝 차이, t 95% CI (df 2). **판정은 K=29에서 한 번만.**
+  - P1 v1 − teacher_topk (WGA) CI 하한 > 0 → "teacher가 고르는 것은 뻔한 수정이지만 안 된다" 성립.
+  - P2 v1 − maskedkd (WGA) CI 하한 > 0 → 처방 성립.
+  - 기록 (판정 아님): v1 − rollout. 0 근처면 "처방은 rollout이지 신뢰 가중치가 아니다"라고 적는다. v0 − rollout, teacher_topk − rollout도 적는다. clean acc도 같이.
+  - K=12는 기록용 (극단). 결과를 보고 K·seed를 더하지 않는다.
+- 해석 틀: P1 참 + P2 참 → 노벨티 근거 있음. P1 거짓 → "뻔한 수정도 된다" → 노벨티 없음, 그대로 적는다.
+
+### 게이트 3 — "되먹임 고리인가, 물려받음인가" (Waterbirds, K=29, seed 1·2·3)
+- `selectors/maskedkd_frozen.py` (사람이 씀): MaskedKD와 같은 점수 규칙·같은 K인데, attention을 **step 0의 student 스냅샷**으로 계산한다. 학습 중인 student를 따라가지 않는다. 스냅샷 forward 비용은 선택기 FLOPs로 잡힌다.
+- 사전 등록: online maskedkd@29 − frozen@29 (WGA) CI 상한 < 0 → "고리" (학습 중인 student의 지름길이 teacher가 보는 것을 끌고 간다). CI가 0 포함 → "물려받음"으로 축소해 적는다 (사전학습 student의 attention 자체가 편향).
+
+### 게이트 2 — "다른 편향에서도 같다" (CUB long-tail, 게이트 1·3 제출 뒤)
+- 새 데이터셋 `cub_lt` (사람이 하네스에 추가): CUB와 같은 파일·teacher·val·test. train만 클래스 100–199를 각 20%로 줄였다 (`config.LT_TAIL_CLASSES/FRACTION`). group 0 = head, 1 = tail. metrics의 `wga` = tail 정확도.
+- 준비: `python -m harness.prepare_data --datasets cub_lt` (CUB 원본이 있어 수 분). teacher 캐시(`teacher_map_cub_lt.pt`)는 첫 캐시 사용 job이 자동으로 만든다. 게이트(KD>CE) 절차는 **생략**한다. CE·Full이 목록에 있어 기록이 된다.
+- 제출 (final, K=29, seed 1·2·3, 우선순위 게이트 1·3 뒤): `ce`(k0), `full`(196), `maskedkd`, `rollout`, `teacher_topk`, `trustmask_v1` = 18.
+- 사전 등록: 주 지표 **tail 정확도** (metrics `wga`, group 1). P1 v1 − maskedkd CI 하한 > 0. P2 v1 − teacher_topk 평균 > 0. 기록: head 정확도, 전체, Full − CE (KD 이득이 tail에 있는지).
+- 예측 (한 번만): tail에서 maskedkd < rollout ≈ teacher_topk < v1 ≤ full. 위험: 균형 teacher가 강해 student 편향이 작을 수 있다 → 효과가 작으면 "편향 강도에 비례"로 적는다.
+
+### 규칙
+- 세 게이트 모두 결과 전·제출 전에 PROPOSALS에 위 규칙을 적는다. 결과를 보고 seed·K·방법을 더하지 않는다. 효과가 없으면 그대로 적는다.
+- **새 선택기(v3 등)는 만들지 않는다.** 이번 단계는 판정이다.
+- 분석 (학습 없음, 게이트 제출 뒤 GPU가 비면): Waterbirds에서 epoch 스냅샷별 그룹별 "가린 teacher 정확도"와 "고른 토큰과 teacher 지도의 coverage"를 MaskedKD vs v1로. FG/BG 라벨은 사람이 나중에 넣는다.
+- **09:00 KST 아침 요약**과 **14:00 KST 중간 요약**을 PROGRESS 맨 위에 쓴다 (16:00 발표용). 각 게이트의 끝난 seed 수, 지금까지의 짝 차이(판정은 규칙대로 3 seed가 다 끝난 뒤에만).

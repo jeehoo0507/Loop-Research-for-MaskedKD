@@ -51,6 +51,7 @@ def sha256_file(path):
 
 
 def teacher_paths(dataset=C.STAGE1):
+    dataset = C.TEACHER_SHARED.get(dataset, dataset)   # cub_lt distils from the CUB teacher (QUEUE 2026-11-04)
     tag = "" if dataset == "waterbirds" else f"_{dataset}"   # file names fixed when Waterbirds was stage 1
     return C.STATE / f"teacher{tag}.pt", C.STATE / f"teacher{tag}.json"
 

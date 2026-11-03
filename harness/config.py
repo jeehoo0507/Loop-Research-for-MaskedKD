@@ -22,7 +22,7 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 # student, 100 epochs; CUB: KD - CE = +1.62 %p over 3 seeds), and on Waterbirds MaskedKD at 15 % of the tokens cost
 # 18.5 %p of worst-group accuracy against Full KD: token choice matters there. Recipe = aim-lab-test-5
 # docs/maskedkd_settings.md section 6, except that augmentation runs on the GPU from stored 256x256 images.
-DATASETS = ("waterbirds", "cub", "aircraft", "caltech256")
+DATASETS = ("waterbirds", "cub", "aircraft", "caltech256", "cub_lt")
 # 2026-10-31: the search moved to CUB. The aim is FLOPs-efficient KD, not robustness: Waterbirds was picked only because
 # KD > CE there, but with 2 classes the teacher's soft labels carry almost no class-relation information (the thing KD
 # transfers), so a token-selection result there says little about MaskedKD's multi-class setting. CUB (200 classes)
@@ -32,8 +32,8 @@ STAGE2 = "aircraft"          # check on a second dataset (fixed methods, fresh s
 # 2026-11-02: the check moved from Waterbirds to FGVC-Aircraft. Waterbirds (2 classes, spurious background) checks
 # robustness, not whether a token budget chosen on CUB transfers to another fine-grained, many-class task. Its runs stay
 # valid and stay in RESULTS_TABLE ("earlier check").
-NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100, "caltech256": 256}
-NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0, "caltech256": 0}   # Waterbirds group = 2*y + place; evaluation only, never used in training
+NUM_CLASSES = {"waterbirds": 2, "cub": 200, "aircraft": 100, "caltech256": 256, "cub_lt": 200}
+NUM_GROUPS = {"waterbirds": 4, "cub": 0, "aircraft": 0, "caltech256": 0, "cub_lt": 2}   # Waterbirds group = 2*y + place; evaluation only, never used in training
 DATA_URLS = {
     "waterbirds": ["https://downloads.cs.stanford.edu/nlp/data/dro/waterbird_complete95_forest2water2.tar.gz",
                    "https://nlp.stanford.edu/data/dro/waterbird_complete95_forest2water2.tar.gz"],
@@ -45,9 +45,11 @@ DATA_URLS = {
     "caltech256": ["https://data.caltech.edu/records/nyy15-4j048/files/256_ObjectCategories.tar?download=1",
                    # same archive (1,183,006,720 bytes) on Hugging Face; the official link refused automated download
                    "https://huggingface.co/datasets/xingslong/caltech256/resolve/main/256_ObjectCategories.tar"],
+    "cub_lt": ["https://data.caltech.edu/records/65de6-vp158/files/CUB_200_2011.tgz?download=1"],   # the CUB archive
 }
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
+                  "cub_lt": {"val": 600, "test": 5794, "partial": True},   # train = CUB train with the tail cut (size logged)
                   "aircraft": {"train": 5967, "val": 700, "test": 3333},  # Aircraft (100 variants): val = 10 % per
                   # class of official trainval (the CUB rule), official test
                   "caltech256": {"total": 29780}}  # 256 object classes (257.clutter dropped); per class 80/10/10
@@ -114,12 +116,18 @@ STAGE2_EXPLORE = True
 # Aircraft (submit.holdout_rule); no screen runs. Its epochs are set so a run sees about as many images as an
 # Aircraft run (~24k train images x 20 epochs vs ~6k x 100) and finishes within the day.
 HOLDOUT = ("caltech256",)
-# 2026-11-03 23:30 KST (human): Waterbirds is retired. Its past runs stay readable as history; no new screen/final runs.
-RETIRED = ("waterbirds",)
+# 2026-11-04 00:30 KST (human): nothing is retired. Waterbirds is the main analysis bed again (QUEUE 2026-11-04).
+RETIRED = ()
+# CUB long-tail (QUEUE 2026-11-04, gate 2): classes 0..99 keep every CUB train image, classes 100..199 keep
+# LT_TAIL_FRACTION of theirs (same CUB val/test, same CUB teacher). Group 0 = head class, 1 = tail class (evaluation
+# only): "wga" of a cub_lt run is the tail-class accuracy.
+LT_TAIL_CLASSES, LT_TAIL_FRACTION = range(100, 200), 0.20
+TEACHER_SHARED = {"cub_lt": "cub"}   # datasets that distil from another dataset's teacher (same classes)
 
 # Epochs per dataset and tier: 100 everywhere (the aim-lab-test-5 recipe; a Waterbirds run takes minutes).
 TIER_EPOCHS = {
     "cub": {"smoke": 1, "screen": 100, "final": 100},
+    "cub_lt": {"smoke": 1, "screen": 100, "final": 100},   # gate 2 (QUEUE 2026-11-04)
     "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # earlier check
     "aircraft": {"smoke": 1, "screen": 100, "final": 100},     # stage 2: only harness jobs and audited methods
     "caltech256": {"smoke": 1, "final": 20},                   # held-out check: final tier only (see HOLDOUT)
