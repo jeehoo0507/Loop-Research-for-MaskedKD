@@ -227,3 +227,16 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 ## 2026-11-03 23:30 KST — 사람: Waterbirds 폐기
 - Waterbirds는 이 연구에서 **폐기**한다. 하네스가 Waterbirds의 screen·final 제출을 거부한다 (`config.RETIRED`, smoke만 자가 시험용으로 남음). 지난 run은 기록으로만 남는다.
 - 최종 요약과 보고서에서 Waterbirds는 "초기 탐색 단계에서 썼고 범용성 기준을 세운 뒤 폐기"라고 **이력 한 줄로만** 적는다. Waterbirds 숫자를 결과나 근거로 쓰지 않는다.
+
+## 2026-11-03 23:15 KST — 사람: 동결 전 세 실험 (H-A32로 v3 자리가 비었다)
+배경: 지금까지 두 데이터셋 모두에서 MaskedKD보다 평균이 높은 구성요소는 v1의 **이미지별 신뢰 가중치**(캐시 teacher 지도 coverage → KD 가중치)뿐이다. 이미지별 토큰 수 배분은 CUB v2 ≈ v2r, H-A32 대리 지표에서 고정 K보다 낮다. 그래서 동결 전 남은 GPU는 (1) 가중치가 그 자체로 효과가 있는지, (2) 신호가 진짜인지, (3) 토큰을 줄여도 되는지에 쓴다. 각각 **결과 전·제출 전에 PROPOSALS에 등록**(예측, 판정 규칙, harness.compare 짝 차이 t 95% CI)하고, 결과를 보고 seed·K를 더하지 않는다. 모두 final K 표기대로, CUB와 Aircraft 각각 seed 1·2·3.
+
+- **A. 가중치를 MaskedKD에 꽂기 (`trustmask_v1m`, parent `maskedkd`, 6 job, 우선 1순위):** 토큰은 MaskedKD 그대로(student 마지막 블록 CLS attention 상위 K), KD 가중치만 v1과 같은 식(남긴 토큰 안 캐시 teacher 지도 질량 / 배치 평균). K=29. 주 비교: v1m − maskedkd@29. 질문: 신뢰 가중치가 선택기와 무관하게 MaskedKD를 개선하는 "꽂는 부품"인가. 맥락: v1 − lateroll (가중치의 기여, lateroll 위에서).
+- **B. 토큰 줄이기 (`trustmask_v1`@20과 `maskedkd`@20, 12 job, 2순위):** 질문: v1@20이 maskedkd@29만큼 정확한가(FLOPs 효율 주장의 조건). 주 비교: v1@20 − maskedkd@29 (등록할 때 "같다"의 기준을 먼저 정한다, 예: 평균 차이 ≥ −0.5이고 CI 하한), 보조: v1@20 − maskedkd@20. 총 GFLOPs/img(캐시 상각 포함)를 같이 적는다.
+- **C. 신호 대조군 (`trustmask_v1s`, parent `trustmask_v1`, 6 job, 3순위):** v1과 같은 토큰, 같은 가중치 분포인데 **배치 안에서 가중치를 무작위로 섞어** 다른 이미지에 준다. K=29. 주 비교: v1 − v1s. 질문: 효과가 "어떤 이미지를 덜 믿는가"에서 오는지, 가중치를 흔드는 것 자체(정규화 효과)에서 오는지.
+
+규칙:
+- 우선순위 A > B > C로 제출한다. 이미 대기 중인 job(H-A31 Aircraft 등)의 순서는 바꾸지 않는다.
+- **A의 v1m은 H-A33의 후보 집합에 들어간다** (결과 전에 추가하는 것이므로 규칙 변경이 아니다. PROPOSALS H-A33에 한 줄로 적는다). B·C는 분석용이고 후보가 아니다 (B의 K=20은 Caltech 후보 K=29와 다르다).
+- 11:00 동결 시각에 끝나지 않은 job은 "미완료"로 적고 동결을 미루지 않는다. Caltech-256 제출이 우선이다.
+- 아침 요약(09:00 KST 무렵)에 A·B·C 진행 상황을 적는다.
