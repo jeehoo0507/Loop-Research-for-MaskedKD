@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_pull_growth_1103_230949_88eb",
+ "name": "wb_pull_growth",
+ "source_sha": "88ebb14526a0ce942865b61a80047325c57a2db6365180740d6bd07f481c4b02",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does the landbird pull of online-only MaskedKD tokens (vs frozen-trained-only tokens) grow from epoch 25 to the final epoch?",
+  "method": "last-block CLS attention top-K at epoch snapshots; set differences; keep-only masked-teacher class probabilities; per-image epoch contrasts; image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 71.1
+}
