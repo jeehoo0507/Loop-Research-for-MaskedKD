@@ -116,3 +116,6 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 
 ## 2026-11-02 14:30 KST — 감사 묶음 보강 (04:55 NEEDS-MORE에 대한 사람 조치)
 `harness/evidence.py` audit 묶음에 (a) 인용 run 커밋 → HEAD의 잠금 파일 전체 diff 본문(tests 제외), (b) 인용된 agent 방법의 PROPOSALS 항목 전부와 `git log --follow selectors/<method>.py`를 넣었다. STUCK을 풀고 lateroll@29 감사를 한 번 더 내라. 이번에도 묶음 구성 때문에 막히면 다시 내지 말고 PROGRESS에 무엇이 빠졌는지 적어라.
+
+## 2026-11-03 11:50 KST — 감사 묶음 잘림 수정 (12:32 NEEDS-MORE에 대한 사람 조치)
+`harness/evidence.py` audit 묶음 순서를 바꿨다: 요청 → 잠금 → 인용 run metrics·selector 원본 → **인용 analysis 출력 전문** → PROPOSALS(요청이 id로 인용한 항목 H-C2b 등 전문 + 방법 이름이 나오는 항목) → past locks → 나머지. job 이력은 인용된 방법의 job만 모두 싣는다(전체 개수 줄은 유지). 지난 요청으로 재현해 보니 172k자로 180k 한도 안에 전부 들어간다. STUCK을 풀고 lateroll@29 감사를 한 번 더 내라. 요청서에 analysis id와 H-id를 그대로 적으면 묶음에 들어간다.
