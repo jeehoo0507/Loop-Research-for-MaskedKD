@@ -788,6 +788,7 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 제출 seed 1 (라운드 226, 등록 커밋 0343e81 뒤): final_lateroll_k12_s1_1102_225104_b47e + final_refs final_maskedkd_k12_s1_1102_225104_7267, final_rollout_k12_s1_1102_225104_31a8, final_tome_k12_s1_1102_225104_3037, final_grid_k12_s1_1102_225104_b379, final_center_k12_s1_1102_225104_539f, final_random_k12_s1_1102_225104_c1a9 (full@196 s1은 이미 있어 건너뜀).
   - 제출 seed 2 (라운드 228, 대기 0개일 때): final_lateroll_k12_s2_1102_232847_70cb + final_refs final_tome_k12_s2_1102_232847_341f, final_grid_k12_s2_1102_232847_19e5, final_center_k12_s2_1102_232847_3d41 (maskedkd·rollout·random@12 s2와 full s2는 이미 있어 건너뜀).
   - 제출 seed 3 (라운드 230, 대기 0개일 때): final_lateroll_k12_s3_1102_235618_322a + final_refs final_tome_k12_s3_1102_235618_333a, final_grid_k12_s3_1102_235618_ee11, final_center_k12_s3_1102_235618_722f, final_random_k12_s3_1102_235618_869b (maskedkd·rollout@12 s3 cub_final_*_1031과 full s3는 이미 있어 건너뜀).
+  - **판정 (라운드 234, 한 번만):** E1 맞음 (lateroll@12 평균 78.78 < 81.00). E2 평균 +0.50 [−0.60, +1.60] — 양수지만 차이는 불확실. E3 평균 +0.28 [−1.68, +2.23] — |차이| ≤ 0.5지만 차이는 불확실. 자세한 값은 RESULTS.md 라운드 234. 새 run은 내지 않는다. H-C32 끝.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
