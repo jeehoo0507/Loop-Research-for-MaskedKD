@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_trust_weight_1103_083603_2c5c",
+ "name": "aircraft_trust_weight",
+ "source_sha": "2c5cf5a90be234fe3a76ad9c453112ce3ed7e6fd1119c385a0f2017fe3795784",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft K=29 with lateroll students, does teacher-map mass inside the kept tokens (or overlap, student mass, entropy) predict per image how faithful the masked teacher will be, before the teacher forward?",
+  "method": "attention rollout (student late blocks, teacher all blocks); keep-only masked teacher faithfulness (KL, top-1 agreement); per-image Spearman with image bootstrap; weighted-fidelity proxy",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Son et al. ECCV 2024 (MaskedKD); EGAD arXiv 2605.01732 (entropy-weighted distillation)"
+ },
+ "seconds": 33.6
+}
