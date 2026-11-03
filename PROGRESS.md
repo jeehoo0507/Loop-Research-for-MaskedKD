@@ -1,4 +1,10 @@
 STUCK: 게이트 2 — `.venv/bin/python -m harness.prepare_data --datasets cub_lt`가 무인 모드 권한에서 두 번 거부됐다(라운드 277, 278). data/cub_lt가 없어 H-A39 18 job을 낼 수 없다. 사람이 cub_lt 준비를 돌리거나 그 명령을 허용해 달라.
+STUCK: 감사 P1 (H-A37 v1 − teacher_topk 음성 결과) — 두 번 연속 NEEDS-MORE(18:56, 19:15 agent/logs/audit_20261103_191532.log). 같은 이유: 묶음의 metrics가 잘려 run별 selector_sha가 감사자에게 안 보이고, 연구자가 쓴 sha 표는 독립 증거로 인정되지 않는다(+ "analysis_out 분해 없음"). 묶음 내용은 harness/evidence.py(잠금 파일) 몫이라 연구자가 고칠 수 없다. 다시 내지 않는다. 사람이 evidence.py에 selector_sha를 metrics 잘림 밖에 넣거나, 게이트 판정의 감사 기준(WGA 주 지표, 분해 요구)을 정해 달라.
+요약 (라운드 284, [claude], 19:25 UTC): 새 사람 지시 없음(QUEUE 마지막 = 11-04 01:40 KST 세 게이트), git 정상, data/cub_lt 여전히 없음 → 게이트 2 STUCK 그대로(재시도 안 함).
+- 감사 19:15: P1 다시 NEEDS-MORE → 위 STUCK. 숫자·설정·해석 문구는 감사자가 지지했다("support the stated arithmetic and cautious interpretation").
+- 기록 (K=12, 판정 아님): waterbirds_final_teacher_topk_k12_s2_1103_171051_3651 WGA 54.89 / acc 88.41, waterbirds_final_teacher_topk_k12_s3_1103_171055_5959 WGA 60.90 / acc 89.24 → teacher_topk@12 seed 1·2·3 평균 WGA 57.64 (10.44 GFLOPs/img). RESULTS.md에 적었다.
+- 실행 4개: v1@12 s1(epoch 33)·s2(막 끝남, metrics 대기)·s3(epoch 18), trustfilt@29 s1(epoch 14). 대기 5개(trustfilt@29 s2·s3, @12 ×3). GPU 100%. 남은 9 job ≈ 1.5시간.
+- [claude] 결정: 새 job·분석 없음. QUEUE 01:40은 새 선택기를 금지하고, 스냅샷 분석은 "GPU가 빈 뒤"다. 09:00 KST(00:00 UTC) 아침 요약을 쓸 것.
 요약 (라운드 283, [claude], 19:15 UTC): **게이트 3 (H-A38) 판정 완료** — frozen@29 s3가 끝났다 (waterbirds_final_maskedkd_frozen_k29_s3_1103_171031_b65e WGA 63.91 / acc 89.66). 새 사람 지시 없음, git 정상, data/cub_lt 여전히 없음 → 위 STUCK 그대로(재시도 안 함).
 - 판정 (val WGA, 같은 seed 짝, 95% t CI df 2, 손 계산): **online maskedkd − frozen = −22.81 [−26.69, −18.93] → CI 상한 < 0 → "고리" 성립.** 기록: frozen − rollout −0.75 [−9.30, +7.80] (차이 불확실). acc (harness.compare): online − frozen −1.39 [−2.85, +0.07]. frozen 비용 15.36 vs 12.99 GFLOPs/img (같은 비용 비교 아님, 메커니즘 시험). RESULTS.md·PROPOSALS H-A38에 적었다.
 - 감사 11-03 18:56: P1 NEEDS-MORE — "CI는 동등도 teacher_topk 우위도 보이지 않는다, 'v1 우위 없음'만 지지됨". RESULTS.md H-A37 문구를 그렇게 정정하고 AUDIT_REQUEST에 P1만 고친 문구로 다시 냈다.
