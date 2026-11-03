@@ -65,7 +65,7 @@ def stage2_rule(method, sha):
     s1 = [r for r in runs if r.get("dataset", C.STAGE1) == C.STAGE1 and r["tier"] == "final" and r["method"] == method]
     passed_shas = {r["selector_sha"] for r in s1
                    if set(C.FINAL_SEEDS) <= {x["seed"] for x in s1 if x["selector_sha"] == r["selector_sha"]}}
-    if not passed_shas or not audit_passed(method):
+    if not passed_shas or not (audit_passed(method) or method in C.STAGE2_PREAUDIT):
         raise SystemExit(f"'{method}' needs stage-1 final on seeds {C.FINAL_SEEDS} and an audit PASS before stage 2")
     if sha in passed_shas:
         return "stage2_untouched"

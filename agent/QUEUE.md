@@ -119,3 +119,9 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 
 ## 2026-11-03 11:50 KST — 감사 묶음 잘림 수정 (12:32 NEEDS-MORE에 대한 사람 조치)
 `harness/evidence.py` audit 묶음 순서를 바꿨다: 요청 → 잠금 → 인용 run metrics·selector 원본 → **인용 analysis 출력 전문** → PROPOSALS(요청이 id로 인용한 항목 H-C2b 등 전문 + 방법 이름이 나오는 항목) → past locks → 나머지. job 이력은 인용된 방법의 job만 모두 싣는다(전체 개수 줄은 유지). 지난 요청으로 재현해 보니 172k자로 180k 한도 안에 전부 들어간다. STUCK을 풀고 lateroll@29 감사를 한 번 더 내라. 요청서에 analysis id와 H-id를 그대로 적으면 묶음에 들어간다.
+
+## 2026-11-03 12:10 KST — 사람 결정: lateroll을 감사 PASS 전에 Aircraft에서 돌린다
+감사가 결과가 아니라 증거 묶음 문제로 하루 넘게 막혀 Aircraft 이전 검증(08:50 할 일 4)을 막고 있었다. `config.STAGE2_PREAUDIT`에 lateroll을 넣어 stage 2 제출을 허용했다 (CUB final seed 1·2·3 조건은 그대로).
+- **지금 제출:** `python -m harness.submit --method lateroll --keep 29 --seed <s> --tier final --dataset aircraft`, s = 1, 2, 3. 코드·sel_args·K는 CUB 그대로 (`stage2_untouched`). final_refs가 같은 seed의 maskedkd·rollout·tome·full을 내고, 이미 있는 run은 건너뛴다.
+- **판정은 08:50에 미리 적은 규칙 그대로** (lateroll − maskedkd, lateroll − rollout의 seed 3개 평균과 짝지은 95% CI → "이전된다" / "경향은 같으나 불확실" / "CUB 특화"). 결과를 보고 K·seed를 더하지 않는다.
+- 감사 없이 돌린 결과이므로 RESULTS "확정"에는 올리지 않는다. 판정은 RESULTS의 Aircraft 절에 "감사 전"이라고 적는다. lateroll@29 감사는 묶음 수정(3e6a774) 뒤 한 번 더 낸다 (11:50 절).

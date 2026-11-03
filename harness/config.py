@@ -96,6 +96,10 @@ def student_lr(dataset):
 STAGE2_MAX_RUNNING = 3     # stage-2 jobs share the GPU with the search: at most this many at once (was 1 while the
                            # CUB search filled the GPU; 2026-11-02 the CUB search is done and Aircraft is the main work)
 STAGE2_PRIORITY = -10      # and they start only when nothing else is waiting
+# Agent methods a human let onto stage 2 before an audit PASS (the stage-1 final on all fresh seeds is still required).
+# This only admits the runs; a claim still needs an audit PASS. 2026-11-03: the lateroll@29 audit kept failing on the
+# evidence bundle, not on the result, and blocked the Aircraft transfer check for a day.
+STAGE2_PREAUDIT = {"lateroll": "2026-11-03 human: run unchanged on Aircraft before the audit PASS"}
 
 # Epochs per dataset and tier: 100 everywhere (the aim-lab-test-5 recipe; a Waterbirds run takes minutes).
 TIER_EPOCHS = {

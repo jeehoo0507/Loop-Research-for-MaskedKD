@@ -334,6 +334,9 @@ def test_stage2_rules(tmp_path, monkeypatch):
     _fake_runs(tmp_path, monkeypatch, gate + cifar)
     with pytest.raises(SystemExit, match="audit"):
         submit.make_job("good", 25, 1, "final", dataset=C.STAGE2)         # no audit PASS yet
+    with monkeypatch.context() as m:                                     # a human let it on before the audit
+        m.setattr(C, "STAGE2_PREAUDIT", {"good": "test"})
+        assert submit.make_job("good", 25, 2, "final", dataset=C.STAGE2)["stage2"] == "stage2_untouched"
     (tmp_path / "AUDIT.md").write_text("# AUDIT\n\n## x audit by claude\nclaim good K=25\nVERDICT: PASS\n")
     job = submit.make_job("good", 25, 1, "final", dataset=C.STAGE2)
     assert job["stage2"] == "stage2_untouched" and job["priority"] <= C.STAGE2_PRIORITY
