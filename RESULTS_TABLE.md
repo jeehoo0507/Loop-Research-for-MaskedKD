@@ -75,6 +75,7 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
   - maskedkd : 49.0 (3 seeds)
   - rollout : 49.0 (3 seeds)
 - screening only (fewer seeds):
+  - trustmask_v1@8186a4 : 29.0 (1 seeds)
   - maskedkd : 98.0 (1 seeds)
 ### screen: Full KD val 82.17 (seeds 0,4,5,6,7); KD gain +1.37, tolerance 0.68 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
@@ -127,6 +128,8 @@ Total agent screen configs: 14
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 79.83 ± 0.29 | - | 12.00 | 4.36 | 0.00 | 305 | final_tome_k12_s1_1102_225104_3037 final_tome_k12_s3_1102_235618_333a final_tome_k12_s2_1102_232847_341f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 79.78 ± 1.02 | - | 12.00 | 4.36 | 0.00 | 292 | final_tome_k29_s1_1101_104303_ff82 final_tome_k29_s3_1101_140937_cdbb final_tome_k29_s2_1101_125958_ab06 |
 | final | tome |  | 49 | 49.0 | 1,2,3 | 79.67 ± 0.83 | - | 14.50 | 6.86 | 0.00 | 272 | final_tome_k49_s2_1102_043001_61ab final_tome_k49_s3_1102_153530_f477 final_tome_k49_s1_1102_034050_9b6d |
+| final | trustfilt@27da28 |  | 29 | 29.0 | 1 | 80.67 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 254 | final_trustfilt_k29_s1_1103_095835_0073 |
+| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1 | 81.50 ± 0.00 | - | 13.34 | 5.36 | 0.43 | 245 | final_trustmask_v1_k29_s1_1103_095834_2518 |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
 | screen | ce |  | 0 | None | 0,4,5,6,7 | 80.80 ± 1.45 | - | 7.64 | 0.00 | 0.00 | 1041 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 screen_ce_k0_s7_1101_230304_50d4 screen_ce_k0_s6_1101_230256_cb6e |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
