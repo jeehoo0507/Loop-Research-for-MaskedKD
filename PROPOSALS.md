@@ -794,6 +794,7 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 이미 아는 것 (등록 전): CE seed 1 81.00; Full seed 1·2·3 평균 81.72; screen seed 0에서 Full − CE +3.5 (82.17 vs 78.67); H-C28 seed 6·7 CE·Full screen 값; lateroll@12 final 평균 78.78, maskedkd@12 78.28 정도.
   - 예측 (seed 2·3이 다 나온 뒤 한 번만, 기술값): C1 Full − CE 짝 평균(seed 1·2·3) > 0 — 확신 중간 (seed 1만 +0.72 수준). C2 CE 3-seed 평균 > lateroll@12 3-seed 평균 78.78 — 확신 중간.
   - 규칙: 결과와 무관하게 RESULTS 게이트 절에 적는다. H-C32 E1 판정(라운드 234)은 다시 쓰지 않고, 3-seed CE로 본 값은 단서로만 덧붙인다. 허용 오차는 하네스(report.py)가 계산하므로 손대지 않는다. 결과를 보고 seed·기준선을 더하지 않는다.
+  - 제출 (라운드 235, 등록 커밋 c7dbafc 뒤): final_ce_k0_s2_1103_013642_841b , final_ce_k0_s3_1103_013646_bb9a
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
