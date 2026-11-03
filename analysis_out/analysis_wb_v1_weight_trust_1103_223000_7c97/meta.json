@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_v1_weight_trust_1103_223000_7c97",
+ "name": "wb_v1_weight_trust",
+ "source_sha": "7c9718425b50d2d69a5125c52e07f2432ffd8c6799f526ffaa9d47bd663c329b",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does trustmask_v1's teacher-map coverage weight put less KD weight on images whose masked-teacher target is wrong (overall and in the minority groups)?",
+  "method": "attention rollout (teacher all blocks, student blocks 6..11); last-block CLS attention; keep-only masked teacher; coverage weight; Spearman of weight vs masked-teacher p(y); weighted vs unweighted target accuracy sliced by Waterbirds group; image bootstrap",
+  "paper": "Hinton et al. 2015 (KD soft targets); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Sagawa et al. ICLR 2020 (Waterbirds groups); Zhou et al. ICLR 2021 (weighted soft labels)"
+ },
+ "seconds": 23.9
+}
