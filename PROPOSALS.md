@@ -949,3 +949,23 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **예측 (한 번만, seed 1·2·3 평균과 같은 seed 짝 차이의 t 95% CI, df 2):** H1(주 판정) 후보 − maskedkd@29 평균 > 0 — 확신 중간(CUB·Aircraft에서 v1이 +1.06·+1.76이지만 둘 다 CI 0 포함). H1의 CI 하한 > 0 — 확신 낮음. H2(기록·맥락) 후보 − rollout@29, 후보 − CE, 후보 − Full, 총 GFLOPs/img(캐시 상각 포함).
   - **해석 (QUEUE 20:50 문구 그대로):** H1 평균 > 0 → "세 번째 데이터셋에서도 같은 방향". CI 하한 > 0 → "확인". 평균 ≤ 0 → "세 번째 데이터셋에서는 같은 방향이 아니다". 후보 − rollout 평균 ≤ 0이면 숨기지 않고 "rollout 대비 이득은 보이지 않는다(해석 기반 선택 자체의 이득과 TrustMask만의 이득을 구분할 수 없다)"고 적는다. 최종 요약에는 세 데이터셋 각각의 후보 − maskedkd, − rollout, − CE(짝 차이와 CI)와 방향이 세 데이터셋에서 같은지 한 줄을 쓴다.
   - 규칙: Caltech-256에서 아무것도 고르지 않는다(held-out). 동결 뒤 후보 소스를 바꾸지 않는다(`holdout_rule`이 같은 sha를 요구).
+  - 추가 (라운드 263, H-A34 결과 전, QUEUE 11-03 23:15 지시): **후보 집합에 `trustmask_v1m`(H-A34)을 넣는다.** 같은 동결 규칙(1)(2)를 그대로 적용한다. 규칙 (2)의 "구성요소가 적은 버전" 동점 처리에서 v1m은 v1과 같은 수(가중치 하나)로 본다. H-A35(v1@20)·H-A36(v1s)은 후보가 아니다.
+
+- **H-A34 (라운드 263, 결과 전·제출 전에 등록, QUEUE 11-03 23:15 A): 신뢰 가중치를 MaskedKD 토큰에 꽂기 — `trustmask_v1m`@29 (학습 run: CUB·Aircraft × seed 1·2·3 = 6개).** `python -m harness.submit --method trustmask_v1m --keep 29 --seed <s> --tier final --dataset <cub|aircraft>`. 소스 selectors/trustmask_v1m.py: 토큰 = MaskedKD 그대로(마지막 블록 head 평균 CLS attention 상위 K), kd_weight = 남긴 토큰 안 캐시 teacher 지도 질량 / 배치 평균(v1과 같은 식), parent maskedkd. 상수 없음. final_refs가 낼 같은 K 기준선은 두 데이터셋 모두 이미 있다.
+  - 이미 아는 것 (등록 전, harness.compare final): v1 − maskedkd@29 = CUB +1.06 [−1.03, +3.14], Aircraft +1.76 [−2.50, +6.03]. v1 − lateroll@29(가중치만의 차이, lateroll 토큰 위) = CUB −0.11 [−1.98, +1.76], Aircraft +0.76 [−2.54, +4.06]. lateroll − maskedkd@29 Aircraft +1.00 [−3.97, +5.97]. 즉 v1의 이득 중 가중치 몫은 CUB에서 보이지 않았다. H-A27(Aircraft 분석): cov 가중은 가린 teacher 충실도와 약하게만 연결된다(ρ −0.18).
+  - 예측 (한 번만, seed 1·2·3 평균과 같은 seed 짝 차이의 t 95% CI, df 2): M1(주 판정) v1m − maskedkd@29 평균이 두 데이터셋 모두 > 0 — 확신 낮음(위 CUB 가중치 몫 −0.11). M1의 CI 하한 > 0 (하나 이상) — 확신 낮음. M2(맥락, 기록만) v1 − v1m(토큰 규칙의 몫, 같은 가중치) 두 데이터셋. M3(기록) v1m − ent_weight@29(Aircraft만 있음: 같은 MaskedKD 토큰, 가중 신호만 다름).
+  - 해석 (QUEUE 18:40 채택 기준): M1 두 데이터셋 평균 > 0이고 하나 이상 CI 하한 > 0 → "신뢰 가중치는 MaskedKD에 꽂는 부품으로 개선한다(탐색, 감사 전)", H-A33 후보 규칙(1) 통과. 두 데이터셋 평균 > 0이나 CI 모두 0 포함 → "두 데이터셋에서 같은 방향, 차이는 불확실". 한 데이터셋에서만 > 0 → "데이터셋 의존". 두 데이터셋 모두 ≤ 0 → "가중치는 MaskedKD 토큰 위에서는 개선하지 않는다; v1의 이득(있다면)은 토큰 규칙(lateroll)에서 온다".
+  - 비용: kd_weight는 teacher 비용을 바꾸지 않는다. 총 GFLOPs/img(캐시 상각 포함)를 metrics 그대로 적는다.
+  - 규칙: 결과를 보고 K·seed·가중 형태를 바꾸지 않는다.
+
+- **H-A35 (라운드 263, 결과 전·제출 전에 등록, QUEUE 11-03 23:15 B): 토큰 줄이기 — `trustmask_v1`@20과 `maskedkd`@20 (학습 run: 두 데이터셋 × 2 방법 × seed 1·2·3 = 12개). 분석용, 후보 아님.** v1 소스는 H-A28 그대로(같은 sha). maskedkd@20은 하네스 기준선. QUEUE가 12 job으로 정했으므로 v1@20의 final_refs(rollout·tome·grid·center·random·trustfilt@20)는 내지 않는다(아래 [claude] 결정, PROGRESS 라운드 263).
+  - 이미 아는 것: maskedkd@29 = CUB 81.33/79.17/80.17 (80.22), Aircraft 66.71/64.43/64.71 (65.28), 12.99 GFLOPs/img. v1@29 13.35, v1@12 10.43 GFLOPs/img. K=20 값은 두 방법 모두 final로 본 적 없다(CUB screen seed 0 maskedkd@20·rollout@20만 있음).
+  - **"같다"의 기준 (결과 전):** S1(주 판정) v1@20 − maskedkd@29 짝 차이 평균 ≥ −0.5 %p → "평균으로 같다(비열등 경향)". **확인**은 CI 하한 ≥ −0.5일 때만 쓴다. seed 3개 t CI(df 2)는 폭이 ±2 %p 이상이어서 확인은 거의 나오지 않는다는 것을 미리 적는다. 둘 다 데이터셋마다 따로 판정하고, FLOPs 효율 주장의 조건은 두 데이터셋 모두 S1 평균 ≥ −0.5다.
+  - 예측 (한 번만): S1 평균 ≥ −0.5 — CUB 확신 낮음, Aircraft 확신 중간(v1@12 64.14가 maskedkd@29 65.28보다 −1.14였고 K=20은 그 사이). S1 확인(CI 하한 ≥ −0.5) — 확신 낮음. S2(보조) v1@20 − maskedkd@20 평균 > 0 — 확신 중간(K=12·29에서 모두 > 0). 총 GFLOPs/img: v1@20 대략 11.8(K=12·29 사이, metrics 값으로 적는다).
+  - 해석: 두 데이터셋 모두 S1 평균 ≥ −0.5 → "v1@20은 maskedkd@29와 평균으로 같은 정확도를 약 (13.0 − x)/13.0 적은 학습 GFLOPs로 낸다(탐색, 차이는 불확실)". 하나만 → "데이터셋 의존". 둘 다 < −0.5 → "K=20에서는 같은 정확도를 내지 못한다". S2는 기록만.
+  - 규칙: 결과를 보고 K·seed를 더하지 않는다.
+
+- **H-A36 (라운드 263, 결과 전·제출 전에 등록, QUEUE 11-03 23:15 C): 신호 대조군 — `trustmask_v1s`@29 (학습 run: 두 데이터셋 × seed 1·2·3 = 6개). 분석용, 후보 아님.** 소스 selectors/trustmask_v1s.py: v1과 같은 토큰·같은 가중치 계산, 마지막에 배치 안에서 가중치를 torch.randperm으로 섞는다(같은 분포, 이미지와의 연결만 끊음). parent trustmask_v1(K=29 두 데이터셋 seed 1·2·3 이미 있음).
+  - 예측 (한 번만, 짝 차이 t 95% CI): C1(주 판정) v1 − v1s@29 평균이 두 데이터셋 모두 > 0 — 확신 낮음(CUB에서 가중치 몫 v1 − lateroll −0.11). C1 CI 하한 > 0 (하나 이상) — 확신 낮음. C2(기록) v1s − lateroll@29(가중치를 흔드는 것 자체의 효과).
+  - 해석: C1 두 데이터셋 평균 > 0, 하나 이상 CI 하한 > 0 → "효과는 어떤 이미지를 덜 믿는가(신호)에서 온다". 두 데이터셋 평균 > 0, CI 모두 0 포함 → "신호 쪽 경향, 차이는 불확실". 한쪽이라도 ≤ 0 → "그 데이터셋에서 v1의 가중치 효과는 신호와 구별되지 않는다(가중치를 흔드는 것 자체와 같다)". C2 평균 > 0이면 "가중치 흔들기 자체가 lateroll을 개선한다"고 함께 적는다.
+  - 규칙: 결과를 보고 K·seed를 더하지 않는다. 제출 순서 A(H-A34) > B(H-A35) > C(H-A36).
