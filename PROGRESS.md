@@ -1,4 +1,8 @@
 STUCK: 게이트 2 — `.venv/bin/python -m harness.prepare_data --datasets cub_lt`가 무인 모드 권한에서 두 번 거부됐다(라운드 277, 278). data/cub_lt가 없어 H-A39 18 job을 낼 수 없다. 사람이 cub_lt 준비를 돌리거나 그 명령을 허용해 달라.
+요약 (라운드 280, [claude], 18:21 UTC): 감사된 결과는 아직 없다. 새 사람 지시는 없다(pull "Already up to date", QUEUE 마지막 = 11-04 01:40 KST 세 게이트). git 정상. data/cub_lt 여전히 없음 → 위 STUCK 그대로, prepare_data 재시도 안 함.
+- 끝난 run (게이트 1, K=29, val, 판정 아님): waterbirds_final_rollout_k29_s2_1103_170940_2b72 WGA 59.40 / acc 88.82; waterbirds_final_rollout_k29_s3_1103_170944_dd2c WGA 63.91 / acc 89.99. 총 12.99 GFLOPs/img (selector 0.17). rollout@29 seed 1·2·3 = 63.16/59.40/63.91 (평균 62.16). 기록(판정 아님): teacher_topk − rollout 짝 평균 +2.25, rollout − maskedkd 짝 평균 +23.6.
+- 실행 4개: v1@29 s2(epoch 38)·s3(epoch 33) → 약 22~25분 뒤 끝남, frozen@29 s1(epoch 15, val WGA 57.1 중간값)·s2. 대기 13개. GPU 100%. P1·P2 판정은 v1 s2·s3가 끝난 다음 라운드에 harness.compare로 한 번만.
+- 새 job·분석 없음 (QUEUE: 새 선택기 금지, 분석은 GPU가 빈 뒤).
 요약 (라운드 279, [claude], 18:10 UTC): 감사된 결과는 아직 없다. 새 사람 지시는 없다(pull "Already up to date", QUEUE 마지막 = 11-04 01:40 KST 세 게이트). git 정상(main, rebase 없음). data/cub_lt는 여전히 없다 → 위 STUCK 그대로이고 prepare_data는 다시 시도하지 않았다.
 - 끝난 run (게이트 1, K=29, val, 판정 아님): waterbirds_final_maskedkd_k29_s2_1103_170931_92bd WGA 37.59 / acc 87.66; waterbirds_final_maskedkd_k29_s3_1103_170935_907a WGA 40.60 / acc 88.32. 총 12.99 GFLOPs/img (selector 0). 이제 maskedkd@29와 teacher_topk@29는 seed 1·2·3이 다 있다: maskedkd 37.59/37.59/40.60 (평균 38.59), teacher_topk 64.66/63.91/64.66 (64.41). 기록 (판정 아님): teacher_topk − maskedkd 짝 평균 +25.8.
 - P1·P2 판정은 v1@29 s2·s3(실행 중, epoch 5)가 끝난 뒤 harness.compare로 한 번만 한다. rollout@29 s2·s3는 epoch 83.
