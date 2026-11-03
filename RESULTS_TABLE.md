@@ -447,7 +447,7 @@ Total agent screen configs: 15
 
 # Held-out check: caltech256
 
-Gate: gate incomplete: ce seeds [1], full seeds [1], maskedkd seeds []
+Gate: [caltech256 final, 20 epochs, mean of seeds [1]] Full KD 84.35 vs CE 83.31 (need +1.0): PASS; MaskedKD@98 83.81 vs Full 84.35 (need >= Full - 0.5): FAIL
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -476,4 +476,5 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 83.31 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 512 | caltech256_final_ce_k0_s1_1103_123120_2db8 |
 | final | full |  | 196 | 196.0 | 1 | 84.35 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 252 | caltech256_final_full_k196_s1_1103_123120_d6de |
+| final | maskedkd |  | 98 | 98.0 | 1 | 83.81 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 305 | caltech256_final_maskedkd_k98_s1_1103_123120_9e43 |
 

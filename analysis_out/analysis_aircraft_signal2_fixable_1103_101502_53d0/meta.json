@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_signal2_fixable_1103_101502_53d0",
+ "name": "aircraft_signal2_fixable",
+ "source_sha": "53d032f09024b4818c05ec2e2c7e3f4432ad3ce947814df7c0695095655bf690",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft with v1 students, does the masked teacher's error history at K=29 (epochs 25, 50) predict the final masked-teacher error, and does moving tokens to high-error images (2/3, 1, 4/3 K thirds, mean K fixed) raise masked-teacher accuracy and fidelity over uniform and random thirds?",
+  "method": "attention rollout (student late blocks, teacher all blocks); keep-only masked teacher accuracy and KL at three budgets; budget-neutral reallocation proxy; image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Son et al. ECCV 2024 (MaskedKD); human TrustMask note 2026-10-28 ('how many?', signal 2)"
+ },
+ "seconds": 28.9
+}
