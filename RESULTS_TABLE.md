@@ -34,6 +34,10 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - trustmask_v2@29 vs grid@29 [acc]: +5.83 %p, 95% CI [+2.04, +9.63], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustmask_v2@29 vs center@29 [acc]: +2.89 %p, 95% CI [+2.26, +3.52], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustmask_v2@29 vs random@29 [acc]: +6.22 %p, 95% CI [+4.14, +8.31], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs grid@29 [acc]: +5.94 %p, 95% CI [+0.67, +11.22], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs center@29 [acc]: +3.00 %p, 95% CI [+0.41, +5.59], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs random@29 [acc]: +6.33 %p, 95% CI [+1.85, +10.81], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs full@196 [acc]: -0.44 %p, 95% CI [-0.68, -0.21], seeds 1,2,3, GFLOPs ratio 0.312 -> LOSS
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - lateroll@12 vs maskedkd@12 [acc]: +0.50 %p, 95% CI [-0.60, +1.60], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
@@ -84,14 +88,14 @@ Noise: acc seed sigma 0.96 %p (pooled, dof 8) -> threshold 1.92 %p
 - trustmask_v2@29 vs random@29 [acc]: +6.22 %p, 95% CI [+4.14, +8.31], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustmask_v2@29 vs full@196 [acc]: -0.56 %p, 95% CI [-3.49, +2.38], seeds 1,2,3, GFLOPs ratio 0.312 -> no difference
 - trustmask_v2@29 vs trustmask_v1@29 (parent) [acc]: -0.11 %p, 95% CI [-2.15, +1.93], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
-- trustmask_v2r@29 vs maskedkd@29 [acc]: +0.67 %p, 95% CI [-5.69, +7.02], seeds 1,2, GFLOPs ratio 1.027 -> no difference
-- trustmask_v2r@29 vs rollout@29 [acc]: +0.58 %p, 95% CI [-6.83, +8.00], seeds 1,2, GFLOPs ratio 1.027 -> no difference
-- trustmask_v2r@29 vs tome@29 [acc]: +1.25 %p, 95% CI [-6.16, +8.66], seeds 1,2, GFLOPs ratio 1.112 -> no difference
-- trustmask_v2r@29 vs grid@29 [acc]: +5.25 %p, 95% CI [-16.99, +27.49], seeds 1,2, GFLOPs ratio 1.026 -> no difference
-- trustmask_v2r@29 vs center@29 [acc]: +3.17 %p, 95% CI [-9.54, +15.87], seeds 1,2, GFLOPs ratio 1.026 -> no difference
-- trustmask_v2r@29 vs random@29 [acc]: +6.08 %p, 95% CI [-16.15, +28.32], seeds 1,2, GFLOPs ratio 1.026 -> no difference
-- trustmask_v2r@29 vs full@196 [acc]: -0.42 %p, 95% CI [-1.48, +0.64], seeds 1,2, GFLOPs ratio 0.312 -> no difference
-- trustmask_v2r@29 vs trustmask_v1@29 (parent) [acc]: -0.33 %p, 95% CI [-17.27, +16.61], seeds 1,2, GFLOPs ratio 1.000 -> no difference
+- trustmask_v2r@29 vs maskedkd@29 [acc]: +1.06 %p, 95% CI [-1.03, +3.14], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
+- trustmask_v2r@29 vs rollout@29 [acc]: +0.83 %p, 95% CI [-0.97, +2.64], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
+- trustmask_v2r@29 vs tome@29 [acc]: +1.50 %p, 95% CI [-0.30, +3.30], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
+- trustmask_v2r@29 vs grid@29 [acc]: +5.94 %p, 95% CI [+0.67, +11.22], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs center@29 [acc]: +3.00 %p, 95% CI [+0.41, +5.59], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs random@29 [acc]: +6.33 %p, 95% CI [+1.85, +10.81], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
+- trustmask_v2r@29 vs full@196 [acc]: -0.44 %p, 95% CI [-0.68, -0.21], seeds 1,2,3, GFLOPs ratio 0.312 -> LOSS
+- trustmask_v2r@29 vs trustmask_v1@29 (parent) [acc]: +0.00 %p, 95% CI [-3.61, +3.61], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - align_dyn@12 vs parent rand_dyn: acc +0.67 %p (threshold 1.92) -> added part UNPROVEN
@@ -171,7 +175,7 @@ Total agent screen configs: 14
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 80.89 ± 0.25 | - | 13.34 | 5.36 | 0.43 | 256 | final_trustfilt_k29_s2_1103_095842_42fd final_trustfilt_k29_s3_1103_095847_a7af final_trustfilt_k29_s1_1103_095835_0073 |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 81.28 ± 0.25 | - | 13.34 | 5.36 | 0.43 | 246 | final_trustmask_v1_k29_s2_1103_095842_a161 final_trustmask_v1_k29_s3_1103_095847_3c94 final_trustmask_v1_k29_s1_1103_095834_2518 |
 | final | trustmask_v2@b2c3bb |  | 29 | 29.0 | 1,2,3 | 81.17 ± 0.93 | - | 13.34 | 5.36 | 0.43 | 240 | final_trustmask_v2_k29_s1_1103_095927_e7db final_trustmask_v2_k29_s3_1103_095936_ddb7 final_trustmask_v2_k29_s2_1103_095932_58e7 |
-| final | trustmask_v2r@ef2d38 |  | 29 | 29.0 | 1,2 | 80.92 ± 2.24 | - | 13.34 | 5.36 | 0.43 | 468 | final_trustmask_v2r_k29_s2_1103_095946_94d8 final_trustmask_v2r_k29_s1_1103_095941_713b |
+| final | trustmask_v2r@ef2d38 |  | 29 | 29.0 | 1,2,3 | 81.28 ± 1.70 | - | 13.34 | 5.36 | 0.43 | 419 | final_trustmask_v2r_k29_s3_1103_095950_3bf0 final_trustmask_v2r_k29_s2_1103_095946_94d8 final_trustmask_v2r_k29_s1_1103_095941_713b |
 | screen | align_dyn@a5a498 |  | 12 | 9.2 | 0,4,5 | 80.50 ± 0.33 | - | 9.63 | 1.65 | 0.52 | 353 | screen_align_dyn_k12_s4_1101_174735_5d50 screen_align_dyn_k12_s0_1101_174726_2df8 screen_align_dyn_k12_s5_1101_174743_56e0 |
 | screen | ce |  | 0 | None | 0,4,5,6,7 | 80.80 ± 1.45 | - | 7.64 | 0.00 | 0.00 | 1041 | screen_ce_k0_s4_1031_114911_08b9 screen_ce_k0_s5_1031_114911_5fdb screen_ce_k0_s0_1031_111002_24e1 screen_ce_k0_s7_1101_230304_50d4 screen_ce_k0_s6_1101_230256_cb6e |
 | screen | center |  | 12 | 12.0 | 0 | 76.00 ± 0.00 | - | 10.09 | 2.45 | 0.00 | 1264 | screen_center_k12_s0_1031_130151_50b4 |
@@ -443,7 +447,7 @@ Total agent screen configs: 15
 
 # Held-out check: caltech256
 
-Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1], full seeds [1], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 
@@ -457,6 +461,9 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - no child selectors yet
 
 ## Primary metric (analysis-only methods excluded: oracle)
+### final: Full KD val 84.35 (seeds 1); KD gain +1.04, tolerance 0.52 %p; smallest mean kept tokens within it
+- claim-grade (>= 3 seeds): none
+- screening only (fewer seeds): none
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -468,4 +475,5 @@ Total agent screen configs: 0
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1 | 83.31 ± 0.00 | - | 7.64 | 0.00 | 0.00 | 512 | caltech256_final_ce_k0_s1_1103_123120_2db8 |
+| final | full |  | 196 | 196.0 | 1 | 84.35 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 252 | caltech256_final_full_k196_s1_1103_123120_d6de |
 
