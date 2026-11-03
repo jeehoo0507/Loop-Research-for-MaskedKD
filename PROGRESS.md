@@ -1,4 +1,9 @@
 STUCK: 게이트 2 — `.venv/bin/python -m harness.prepare_data --datasets cub_lt`가 무인 모드 권한에서 두 번 거부됐다(라운드 277, 278). data/cub_lt가 없어 H-A39 18 job을 낼 수 없다. 사람이 cub_lt 준비를 돌리거나 그 명령을 허용해 달라.
+요약 (라운드 279, [claude], 18:10 UTC): 감사된 결과는 아직 없다. 새 사람 지시는 없다(pull "Already up to date", QUEUE 마지막 = 11-04 01:40 KST 세 게이트). git 정상(main, rebase 없음). data/cub_lt는 여전히 없다 → 위 STUCK 그대로이고 prepare_data는 다시 시도하지 않았다.
+- 끝난 run (게이트 1, K=29, val, 판정 아님): waterbirds_final_maskedkd_k29_s2_1103_170931_92bd WGA 37.59 / acc 87.66; waterbirds_final_maskedkd_k29_s3_1103_170935_907a WGA 40.60 / acc 88.32. 총 12.99 GFLOPs/img (selector 0). 이제 maskedkd@29와 teacher_topk@29는 seed 1·2·3이 다 있다: maskedkd 37.59/37.59/40.60 (평균 38.59), teacher_topk 64.66/63.91/64.66 (64.41). 기록 (판정 아님): teacher_topk − maskedkd 짝 평균 +25.8.
+- P1·P2 판정은 v1@29 s2·s3(실행 중, epoch 5)가 끝난 뒤 harness.compare로 한 번만 한다. rollout@29 s2·s3는 epoch 83.
+- 큐: 실행 4개(rollout@29 s2·s3, v1@29 s2·s3), 대기 15개(frozen@29 ×3, K=12 ×6, trustfilt ×6). GPU 100%. 1 run 약 29분 → 남은 약 2.5~3시간. 09:00 KST(00:00 UTC) 아침 요약을 쓸 것.
+- 새 job·분석 없음: QUEUE의 분석은 "GPU가 비면"이고, 새 선택기는 금지다.
 요약 (라운드 278, [claude]): 감사된 결과는 아직 없다. 새 사람 지시는 없다(QUEUE 마지막 = 11-04 01:40 KST 세 게이트). git 정상.
 - 끝난 run (게이트 1, K=29, val, 판정 아님 — 3 seed 다 끝난 뒤에만 판정): waterbirds_final_trustmask_v1_k29_s1_1103_170855_2e3c WGA 61.65 / acc 90.24; waterbirds_final_teacher_topk_k29_s1_1103_170914_f015 WGA 64.66 / acc 89.74; waterbirds_final_teacher_topk_k29_s2_1103_170918_4535 WGA 63.91 / acc 89.49; waterbirds_final_teacher_topk_k29_s3_1103_170923_d12a WGA 64.66 / acc 89.91. 기존 s1: maskedkd@29 37.59, rollout@29 63.16. 지금까지 s1 짝: v1 − teacher_topk = −3.0, v1 − maskedkd = +24.1, v1 − rollout = −1.5 (seed 1개, 방향만). P1(v1 > teacher_topk)은 s1에서 반대 방향이다. 판정은 규칙대로 기다린다.
 - 총 GFLOPs/img: v1@29 13.35 (teacher 5.36, selector 0.43, 캐시 상각 0.36, student 7.55).
