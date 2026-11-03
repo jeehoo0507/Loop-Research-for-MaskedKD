@@ -147,7 +147,22 @@ while true; do
   if [[ ! "$(date +%F)" < "$END_DATE" ]]; then echo "[loop] reached $END_DATE, exiting"; break; fi
   # --autostash: job results land in the tree between rounds, and a plain rebase pull refused them (2026-10-31: no
   # push reached GitHub for hours because the local branch kept diverging)
-  git pull --rebase --autostash "$REMOTE" main >>agent/logs/pull.log 2>&1 || true
+  # 2026-11-04: a rebase that stopped on a conflict left .git/rebase-merge behind and every later pull failed with
+  # "already a rebase-merge directory" (the loop ran 30 rounds on a detached HEAD, pushing nothing). Abort a stuck
+  # rebase first; if the rebase pull still fails, keep the local commits on a rescue branch and fall back to a merge
+  # that prefers the remote (the human's locked files win), so the loop never stays detached.
+  if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+    echo "[loop] stuck rebase found; aborting it" | tee -a agent/logs/loop.log
+    git rebase --abort >>agent/logs/pull.log 2>&1 || rm -rf .git/rebase-merge .git/rebase-apply
+    git checkout -q main 2>>agent/logs/pull.log || true
+  fi
+  if ! git pull --rebase --autostash "$REMOTE" main >>agent/logs/pull.log 2>&1; then
+    echo "[loop] rebase pull failed; falling back to a merge that prefers $REMOTE" | tee -a agent/logs/loop.log
+    git rebase --abort >>agent/logs/pull.log 2>&1 || true
+    git checkout -q main 2>>agent/logs/pull.log || true
+    git branch -f "rescue_$(date +%Y%m%d_%H%M%S)" HEAD >>agent/logs/pull.log 2>&1 || true
+    git pull --no-rebase --no-edit -X theirs --autostash "$REMOTE" main >>agent/logs/pull.log 2>&1 || true
+  fi
   if ! $PY -m harness.lock --check >/dev/null 2>&1; then
     echo "[loop] lock mismatch after pull; pausing until a human runs agent/relock.sh" | tee -a agent/logs/loop.log
     sleep "$POLL"; continue
