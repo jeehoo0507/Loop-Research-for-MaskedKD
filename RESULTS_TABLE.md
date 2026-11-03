@@ -213,7 +213,7 @@ Total agent screen configs: 0
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 67.43 ± 0.62 | - | 25.04 | 17.41 | 0.00 | 398 | aircraft_final_maskedkd_k98_s2_1102_132227_2f10 aircraft_final_maskedkd_k98_s1_1102_123044_bd9b aircraft_final_maskedkd_k98_s3_1102_132227_c979 |
 | final | oracle |  | 12 | 12.0 | 1 | 63.71 ± 0.00 | - | 45.21 | 2.45 | 35.13 | 172 | aircraft_final_oracle_k12_s1_1102_132227_86cd |
 | final | random |  | 12 | 12.0 | 1,2,3 | 63.14 ± 1.17 | - | 10.09 | 2.45 | 0.00 | 401 | aircraft_final_random_k12_s3_1103_024939_6b93 aircraft_final_random_k12_s2_1103_024935_e173 aircraft_final_random_k12_s1_1102_132227_c818 |
-| final | random |  | 29 | 29.0 | 1 | 64.29 ± 0.00 | - | 13.00 | 5.36 | 0.00 | 371 | aircraft_final_random_k29_s1_1102_132227_7454 |
+| final | random |  | 29 | 29.0 | 1,2,3 | 63.24 ± 0.91 | - | 13.00 | 5.36 | 0.00 | 543 | aircraft_final_random_k29_s2_1103_042255_db43 aircraft_final_random_k29_s3_1103_042259_2272 aircraft_final_random_k29_s1_1102_132227_7454 |
 | final | rollout |  | 12 | 12.0 | 1,2,3 | 62.62 ± 0.46 | - | 10.08 | 2.45 | 0.17 | 358 | aircraft_final_rollout_k12_s3_1103_024948_a6c2 aircraft_final_rollout_k12_s2_1103_024944_52f8 aircraft_final_rollout_k12_s1_1102_132227_d6d1 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 66.43 ± 0.52 | - | 12.99 | 5.36 | 0.17 | 335 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 aircraft_final_rollout_k29_s3_1102_180341_8606 aircraft_final_rollout_k29_s2_1102_180325_20b6 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 65.57 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 297 | aircraft_final_tome_k12_s1_1102_132227_991f |
