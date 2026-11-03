@@ -184,6 +184,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
 - trustfilt@29 vs random@29 [acc]: +2.33 %p, 95% CI [+0.86, +3.81], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustfilt@29 vs full@196 [acc]: -2.48 %p, 95% CI [-3.82, -1.13], seeds 1,2,3, GFLOPs ratio 0.312 -> LOSS
+- trustmask_v1@12 vs random@12 [acc]: +0.93 %p, 95% CI [+0.02, +1.84], seeds 1,2, GFLOPs ratio 1.034 -> WIN
 - trustmask_v1@29 vs random@29 [acc]: +3.81 %p, 95% CI [+0.44, +7.18], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
@@ -203,6 +204,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines)
 - trustfilt@29 vs random@29 [acc]: +2.33 %p, 95% CI [+0.86, +3.81], seeds 1,2,3, GFLOPs ratio 1.026 -> WIN
 - trustfilt@29 vs full@196 [acc]: -2.48 %p, 95% CI [-3.82, -1.13], seeds 1,2,3, GFLOPs ratio 0.312 -> LOSS
 - trustfilt@29 vs lateroll@29 (parent) [acc]: -0.71 %p, 95% CI [-3.62, +2.19], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
+- trustmask_v1@12 vs maskedkd@12 [acc]: +2.00 %p, 95% CI [-5.26, +9.26], seeds 1,2, GFLOPs ratio 1.036 -> no difference
+- trustmask_v1@12 vs rollout@12 [acc]: +1.93 %p, 95% CI [-6.24, +10.10], seeds 1,2, GFLOPs ratio 1.035 -> no difference
+- trustmask_v1@12 vs tome@12 [acc]: -0.50 %p, 95% CI [-1.41, +0.41], seeds 1,2, GFLOPs ratio 0.869 -> no difference
+- trustmask_v1@12 vs grid@12 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@12 vs center@12 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@12 vs random@12 [acc]: +0.93 %p, 95% CI [+0.02, +1.84], seeds 1,2, GFLOPs ratio 1.034 -> WIN
+- trustmask_v1@12 vs full@196 [acc]: -3.64 %p, 95% CI [-8.18, +0.89], seeds 1,2, GFLOPs ratio 0.244 -> no difference
+- trustmask_v1@12 vs trustfilt@12 (parent) [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs maskedkd@29 [acc]: +1.76 %p, 95% CI [-2.50, +6.03], seeds 1,2,3, GFLOPs ratio 1.028 -> no difference
 - trustmask_v1@29 vs rollout@29 [acc]: +0.62 %p, 95% CI [-1.17, +2.41], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs tome@29 [acc]: +0.86 %p, 95% CI [-0.08, +1.80], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
@@ -247,9 +256,11 @@ Total agent screen configs: 0
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 66.43 ± 0.52 | - | 12.99 | 5.36 | 0.17 | 335 | aircraft_final_rollout_k29_s1_1102_132227_c3d7 aircraft_final_rollout_k29_s3_1102_180341_8606 aircraft_final_rollout_k29_s2_1102_180325_20b6 |
 | final | rollout |  | 49 | 49.0 | 1,2,3 | 68.14 ± 0.87 | - | 16.45 | 8.82 | 0.17 | 296 | aircraft_final_rollout_k49_s1_1103_051925_1dd0 aircraft_final_rollout_k49_s3_1103_051937_47c7 aircraft_final_rollout_k49_s2_1103_051932_f37d |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 65.48 ± 0.86 | - | 13.36 | 5.36 | 0.36 | 401 | aircraft_final_teacher_topk_k29_s3_1103_074603_470b aircraft_final_teacher_topk_k29_s2_1103_074559_69a5 aircraft_final_teacher_topk_k29_s1_1103_074554_cd8b |
-| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1 | 65.57 ± 0.00 | - | 12.00 | 4.36 | 0.00 | 297 | aircraft_final_tome_k12_s1_1102_132227_991f |
+| final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2 | 65.21 ± 0.51 | - | 12.00 | 4.36 | 0.00 | 299 | aircraft_final_tome_k12_s2_1103_093020_84da aircraft_final_tome_k12_s1_1102_132227_991f |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 66.19 ± 0.33 | - | 12.00 | 4.36 | 0.00 | 398 | aircraft_final_tome_k29_s1_1102_132227_ccc7 aircraft_final_tome_k29_s2_1102_180330_3c69 aircraft_final_tome_k29_s3_1102_180345_552f |
+| final | trustfilt@27da28 |  | 12 | 12.0 | 1 | 64.86 ± 0.00 | - | 10.43 | 2.45 | 0.43 | 279 | aircraft_final_trustfilt_k12_s1_1103_093013_2336 |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 65.57 ± 0.94 | - | 13.35 | 5.36 | 0.43 | 278 | aircraft_final_trustfilt_k29_s2_1103_074535_db76 aircraft_final_trustfilt_k29_s3_1103_074540_2203 aircraft_final_trustfilt_k29_s1_1103_074527_357e |
+| final | trustmask_v1@8186a4 |  | 12 | 12.0 | 1,2 | 64.71 ± 0.40 | - | 10.43 | 2.45 | 0.43 | 261 | aircraft_final_trustmask_v1_k12_s2_1103_093020_777f aircraft_final_trustmask_v1_k12_s1_1103_093013_330f |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 67.05 ± 0.70 | - | 13.35 | 5.36 | 0.43 | 252 | aircraft_final_trustmask_v1_k29_s3_1103_083822_5bcd aircraft_final_trustmask_v1_k29_s2_1103_083818_f341 aircraft_final_trustmask_v1_k29_s1_1103_083809_92a4 |
 
 # Earlier check: waterbirds (no new runs; kept for the record)
