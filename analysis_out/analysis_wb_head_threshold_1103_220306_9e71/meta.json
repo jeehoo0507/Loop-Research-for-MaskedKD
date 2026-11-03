@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_head_threshold_1103_220306_9e71",
+ "name": "wb_head_threshold",
+ "source_sha": "9e71637c894af7184661c77d87949876320f14b467e08f687c0cd6793c3f5e6a",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, does shifting only the threshold of the original head's logit difference (class-balanced, no groups) remove the WGA gap between methods that a full head refit removed?",
+  "method": "original head logit difference, class-balanced threshold chosen by 2-fold CV; spread of method means; Spearman rank correlation with run bootstrap",
+  "paper": "Kirichenko et al. ICLR 2023 (DFR, last layer re-training); Menon et al. ICLR 2021 (logit adjustment); Sagawa et al. ICLR 2020 (Waterbirds groups); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 11.9
+}
