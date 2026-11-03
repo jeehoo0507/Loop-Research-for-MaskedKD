@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_token_swap_1103_224939_ca8c",
+ "name": "wb_token_swap",
+ "source_sha": "ca8c268eb1f0283c41935393712e6983d2fc0df8082909a1df876218aff174f1",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29 group 2, is the masked-teacher p(y) drop of online vs frozen-trained MaskedKD kept sets due to the online-only tokens (harmful addition) or the missing frozen-only tokens?",
+  "method": "last-block CLS attention top-K; set decomposition into shared core and set differences; keep-only masked-teacher p(y) on each part; image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 39.9
+}
