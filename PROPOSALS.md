@@ -809,6 +809,14 @@ IDEA 2: Factorized concept coverage — From student block-8 patch vectors \(X\)
   - 판정 규칙 (QUEUE 08:50 4번 그대로, 결과 보고 바꾸지 않음): lateroll − maskedkd@29, lateroll − rollout@29의 같은 seed 짝 3개 평균과 짝지은 95% CI(t, df=2). 둘 다 평균 > 0이고 CI가 0을 포함하지 않으면 "CUB에서 고른 lateroll이 Aircraft로 이전된다". 평균 > 0이지만 CI가 0을 포함하면 "경향은 같으나 불확실". 평균 ≤ 0이면 "CUB 특화"로 기록하고 주장 범위를 CUB로 줄인다. 두 비교가 다른 칸에 들면 각각 적는다.
   - 예측 (한 번만): lateroll − maskedkd 평균 > 0 (확신 중간, H-A12 대리 Q1 근거), lateroll − rollout 평균 > 0 (확신 낮음). 가장 가능성 높은 칸: "경향은 같으나 불확실".
   - 규칙: 결과를 보고 K·seed를 더하지 않는다. 감사 전 결과이므로 RESULTS "확정"이 아니라 Aircraft 절에 "감사 전"으로 적는다. 판정 뒤 lateroll 수정(`stage2_tuned`)은 별도 항목으로만.
+  - 제출 시도 (라운드 238): 세 job 모두 `submit.stage2_rule`에서 거절됐다 — "stage 2 is closed until the stage-2 gate passes: [aircraft final, mean of seeds [1, 2, 3]] Full KD 68.05 vs CE 66.43: PASS; MaskedKD@98 67.43 vs Full 68.05 (need >= Full − 0.5): FAIL". `stage2_rule`이 `gate()`를 `kd_only` 없이 부르기 때문이다(BOOT_STATUS는 같은 부족을 "kept as a finding, stage 2 goes on"으로 처리). 잠금 파일이라 고치지 않는다. 사람 조치 대기. 제출된 run 없음.
+- **H-A21 (라운드 238, 결과 전·제출 전에 등록): Aircraft final val 700장이 KD 이득을 가를 수 있는가, 그리고 Full KD student는 CE보다 teacher를 더 따르는가 (GPU 분석 1개: `--dataset aircraft`, 학습 run 없음).** analysis/kd_gain_resolution.py를 그대로 쓴다(코드 변경 없음, `api.dataset`으로 데이터셋을 받는다). student: Aircraft final seed 1·2·3의 ce(k0)·full(k196) 6개. 통계량 (1)~(5)·bootstrap 2000회·default_rng(0)은 H-A19와 같다. 아무것도 고르거나 조정하지 않는다. lateroll·K·H-A20 판정 규칙을 바꾸지 않는다. 주장 대상 아님.
+  - 왜: H-A19는 CUB final에서 KD 이득이 val 표본 잡음 안이고 teacher argmax 전달도 불확실함을 보였다(KL 전달만 뚜렷). 라운드 237에서 "Aircraft도 같은 한계가 있는지는 확인하지 않았다"고 적었다. H-A20 판정 무대가 Aircraft이므로, 그 무대의 측정력을 판정 전에 알아 둔다. GPU가 40분 넘게 비어 있고 H-A20 job은 하네스 관문 때문에 제출되지 않았다.
+  - 이미 아는 것 (등록 전): val_acc_last CE 66.00/66.86/66.43, Full 68.29/68.43/67.43 (seed 평균 Full − CE +1.62, seed별 +2.29/+1.57/+1.00). 이미지별 값은 본 적 없다.
+  - 일관성 확인: 다시 잰 val 정확도가 student마다 val_acc_last와 ±0.2%p 안이어야 한다. 다르면 판정하지 않는다.
+  - 예측 (한 번만): R1' seed 평균 Full − CE의 이미지 bootstrap 95% CI 하한 > 0 — 확신 중간. R2 같은 seed Full 대 CE 불일치율 평균 ÷ 같은 방법 seed 짝 불일치율 평균이 0.8~1.25 안 — 확신 낮음. R3 teacher argmax 일치율 Full − CE의 CI 하한 > 0 이 seed 3개 모두 — 확신 중간. R4 KL(T‖S) Full − CE의 CI 상한 < 0 이 seed 3개 모두 — 확신 높음. R5 teacher가 맞힌 이미지의 Full − CE가 틀린 이미지의 것보다 크다(점추정) — 확신 중간.
+  - 해석: R1' 참 → "Aircraft final은 seed 평균 KD 이득을 val 표본 잡음 밖에서 가른다(CUB와 다름)". R1' 거짓 → "Aircraft도 CUB처럼 KD 이득이 val 표본 잡음 안". R3·R4 참 → "Aircraft에서 KD는 teacher 출력을 student에 옮긴다". 어느 쪽이든 H-A20 판정 규칙·데이터셋 선택은 바꾸지 않는다(사람 결정).
+  - 규칙: 결과와 무관하게 RESULTS에 적는다. 결과를 보고 seed·student·통계량을 더하지 않는다. 결과로 새 run을 고르지 않는다.
 
 ## 2026-11-03 ideas from Codex (independent)
 IDEA 1: Predictive Value Zeroing — From cached penultimate student tokens and final-block attention, reconstruct each patch’s CLS contribution \(c_i=\sum_h A^h_{\mathrm{CLS},i}W_O^hv_i^h\); let \(u\) be CLS after the attention residual.
