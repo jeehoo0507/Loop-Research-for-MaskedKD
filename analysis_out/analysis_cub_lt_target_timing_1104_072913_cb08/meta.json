@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_target_timing_1104_072913_cb08",
+ "name": "cub_lt_target_timing",
+ "source_sha": "cb08d1e39b8158ecd54e4964b2e7e60af43760f30c46390d4746c820be9c764c",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, is the v1 - maskedkd masked-teacher target accuracy gap already present at e25, and does it grow by the final epoch?",
+  "method": "attention rollout (student blocks 6..11); last-block CLS attention; keep-only masked-teacher accuracy at epoch snapshots sliced by head/tail class; within-group image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 15.0
+}
