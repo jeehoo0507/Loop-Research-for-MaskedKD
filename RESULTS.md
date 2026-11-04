@@ -4,6 +4,11 @@
 - (없음. 감사 이력: 라운드 38 요청 NEEDS-MORE(증거 누락), 라운드 39 1/3부 FAIL(문구: rollout 대비 정확도 "지지 않는다"는 CI [−2.52, +5.58]로 입증되지 않음). 라운드 40에 문구를 "정확도 차이는 불확실"로 고쳐 1/3부를 다시 요청했다.)
 
 ## final (감사 전, Significant only 옮김)
+- [claude] 2026-11-04 라운드 338 **H-A63 분석 (학습 없음, 결과 표 숫자 아님, 사전 등록 5d43ef6 그대로 한 번만):** analysis_cub_lt_head_pull_1104_071941_5e0e. H-A62와 같은 15 run·같은 규칙·같은 val. hpull = 가린 teacher의 head 클래스(0..99) 확률 질량 − full teacher의 그것. full teacher head 질량: head 이미지 0.960, tail 이미지 0.040.
+  - **P1 참 (주):** maskedkd − v1 tail hpull +0.039 [+0.022, +0.056]. **P2 참:** 15 run Spearman(tail hpull, val tail 정확도) −0.56 (arm 수준 −0.70).
+  - 같은 차이가 head 이미지에서는 −0.078 [−0.095, −0.061] (maskedkd가 head 이미지에서 head 질량을 더 잃는다). 모든 arm에서 hpull은 head 이미지 음수, tail 이미지 양수다 → 가린 teacher가 정답 클래스 질량을 잃고 나머지로 퍼지는 "평탄화"가 대부분이다. head 이미지 쪽 손실이 tail 이미지 쪽 증가의 두 배라, head 쪽으로 기우는 방향성은 이 지표로 보이지 않는다.
+  - 기록: arm별 tail hpull maskedkd 0.112 / rollout 0.082 / teacher_topk 0.171 / v0 0.133 / v1 0.073; tail err_head(틀렸고 top-1이 head) 0.106 / 0.087 / 0.153 / 0.140 / 0.078. maskedkd − teacher_topk tail hpull −0.059 [−0.082, −0.036] (teacher_topk가 가장 크게 끌리는데 tail 정확도는 maskedkd보다 높다). self(가린 teacher top-1 == student top-1) maskedkd − v1 tail −0.053 [−0.091, −0.019] → maskedkd 목표가 student 자신의 예측과 더 일치하지는 않는다.
+  - 해석 (분석, 주장 아님, 인과 아님): 등록 규칙대로 "cub_lt에서도 MaskedKD 규칙은 tail 이미지의 가린 teacher를 v1보다 head 쪽으로 더 끈다"로 적되, 그 크기는 head 이미지의 반대 방향 변화보다 작아 방향 없는 목표 평탄화(H-A62의 t_acc 손실)로 설명되는 몫이 크다. Waterbirds식 "다수 쪽 되먹임"의 cub_lt 증거로는 약하다.
 - [claude] 2026-11-04 라운드 337 **H-A62 분석 (학습 없음, 결과 표 숫자 아님, 사전 등록 9679d48 그대로 한 번만):** analysis_cub_lt_tail_targets_1104_070927_c7e1. cub_lt val 600장 (head 300 / tail 300), 게이트 2 final K=29 seed 1·2·3의 15 run(maskedkd, rollout, teacher_topk, trustfilt(v0), trustmask_v1) 최종 student, 각 run의 토큰 규칙으로 가린 teacher(v1의 남긴 집합 = lateroll top-29). 이미지별 seed 평균, 그룹 안 이미지 부트스트랩 95% CI. full teacher 정확도 head 0.843 / tail 0.850 (teacher는 균형 학습이라 tail에서 약하지 않다).
   - **P1 참 (주):** v1 − maskedkd 가린 teacher t_acc tail +0.111 [+0.074, +0.147]. 단 head도 +0.128 [+0.090, +0.166]로 같은 크기다 → maskedkd 규칙의 목표가 덜 맞는 것은 tail에 한정되지 않는다.
   - **P2 참 (경계):** 15 run에서 tail t_acc와 run val tail 정확도의 Spearman 0.52 (arm 수준 0.70). arm별 tail t_acc maskedkd 0.608 / rollout 0.683 / teacher_topk 0.523 / v0 0.573 / v1 0.719, tail 정확도 44.00 / 48.78 / 46.11 / 47.33 / 50.33.
