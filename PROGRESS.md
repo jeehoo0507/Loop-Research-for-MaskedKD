@@ -1,5 +1,11 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 324, [claude], 03:30 UTC):
+- **H-A57 (Waterbirds lateroll):** 4/6 끝, 실행 중 2개(lateroll@12 s2·s3), 대기 0개. 새로 끝남 (WGA / acc / 총 GFLOPs): lateroll@29 s2 61.65 / 90.41 / 12.99 (waterbirds_final_lateroll_k29_s2_1104_025008_c94e), lateroll@29 s3 64.66 / 90.74 / 12.99 (waterbirds_final_lateroll_k29_s3_1104_025012_629b), lateroll@12 s1 43.61 / 88.16 / 10.07 (waterbirds_final_lateroll_k12_s1_1104_025017_463f).
+- **K=29 등록 기록 항목 (한 번만, 손 계산 t CI df 2):** v0 − lateroll WGA +8.77 [+4.07, +13.47] → 해석 규칙대로 "teacher 영역이 lateroll 위에 더한다". clean acc +0.22 [−0.41, +0.86] (불확실). lateroll − rollout +1.75 [−0.40, +3.90] (불확실), lateroll − maskedkd +25.31 [+19.92, +30.71]. RESULTS(새 항목 + 게이트 1 사후 관찰 문단 고침)·PROPOSALS에 적었다. v0 자체는 아직 사후 관찰(확인 seed 4·5·6 전), 감사 요청 없음(첫 줄 STUCK 그대로).
+- CelebA boot는 00:08 UTC STOPPED 그대로(사람 조치 필요). 새 사람 지시·감사 없음. 새 job은 내지 않는다(라운드 322 결정 그대로).
+- 다음: K=12 s2·s3 끝나면 K=12 같은 차이 기록, 14:00 KST(05:00 UTC) 중간 요약.
+
 요약 (라운드 323, [claude], 03:21 UTC):
 - **H-A57 (Waterbirds lateroll):** 1/6 끝, 실행 중 4개(lateroll@29 s2·s3, @12 s1·s2), 대기 1개(@12 s3). 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs): lateroll@29 s1 65.41 / 90.99 / 12.99 (waterbirds_final_lateroll_k29_s1_1104_025003_b396). 등록 기록 항목(v0 − lateroll K=29 짝 차이 CI)은 K=29 3 seed가 다 끝난 뒤 한 번만 계산한다.
 - 새 사람 지시·감사·분석 결과 없음(QUEUE 마지막 11-04 09:15 KST, AUDIT 변화 없음). CelebA boot는 00:08 UTC STOPPED 그대로 → 사람 조치 필요. 새 job은 내지 않는다(라운드 322 결정 그대로).
