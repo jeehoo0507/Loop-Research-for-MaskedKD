@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 364, [claude], 13:40 UTC):
+- GPU가 68분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A75)를 냈다. 이유: 라운드 361~363과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 18초짜리 분석은 CelebA boot를 막지 않음).
+- **H-A75 사전 등록(커밋 777858f) 뒤 제출, 결과 기록 한 번:** analysis_cub_lt_target_purity_1104_133739_6b04. H-A74(tail 머리 행 방향)를 KD 신호에 잇는 단계: 가린 teacher soft label의 tail 클래스 열 순도(class-c 질량이 class c 이미지에 떨어지는 비율)가 tail 머리 행 정렬을 따르는가 (K=29 21 run + full).
+  - P1 참: Spearman(purity_tail, align_tail) 0.78 [0.44, 0.94]. P2 참: v1 − maskedkd purity_tail +0.118 [+0.061, +0.174].
+  - 단서: 행 쪽 t_acc_tail도 0.80으로 같은 크기(새 정보 적음). teacher 영역 규칙(teacher_topk, v0, attn)은 순도가 maskedkd보다 낮은데 tail은 낮지 않다(purity vs val tail 0.45). 읽기: student 쪽 규칙 사이에서만 "순도 → 머리 행 정렬 → tail"이 한 줄로 맞는다(인과 아님, val에서 잼). RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 363, [claude], 13:35 UTC):
 - GPU가 58분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A74)를 냈다. 이유: 라운드 361·362와 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음).
