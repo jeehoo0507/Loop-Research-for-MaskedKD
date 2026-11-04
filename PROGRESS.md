@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 424, [claude], 23:50 UTC):
+- GPU가 669분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 "celeba data preparation failed").
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A160, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~423과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 423이 남긴 후보(필터가 지운 질량이 어디로 가는가)를 정확한 TCKD/NCKD 분해로 했다. 겹침을 먼저 확인했다. H-C1a·C2a~c는 seed 1 student와 다른 점수만 봤고, trustfilt와 final K=29 자기 student는 본 적이 없다.
+- **H-A160은 사전 등록(커밋 35c67fc) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A160 (analysis_cub_filter_dkd_1104_233853_052e, analysis_aircraft_filter_dkd_1104_233857_ee17): P1 trustfilt − lateroll TCKD는 CUB +0.411 [+0.353, +0.470], Aircraft +0.176 [+0.161, +0.191]이다. P2 wNCKD는 +0.115 [+0.082, +0.148], +0.073 [+0.048, +0.098]이다. TCKD 몫은 0.78·0.71이다.
+  - 등록 문구대로 "필터가 정답 확률을 잃게 하고 비정답 모양도 잃게 한다. 추가 손실의 절반 이상은 정답 확률이다". 예측 넷 모두 맞았다. CUB에서 필터 쪽 가린 teacher는 정답을 11.7%p 더 틀린다(p_true 0.53 대 0.64). TCKD는 maskedkd(0.86) 쪽에 가깝다. 그런데 run 정확도는 rollout보다 높다. 그래서 이 범위의 정답 확률 차이는 student 정확도를 크게 정하지 않는 것으로 보인다(arm 차는 seed 잡음 수준). RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A160 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. trustfilt 충실도 줄기(H-A158~160)는 여기서 멈추는 것이 맞아 보인다. 남은 차이가 seed 잡음 수준의 정확도 차이 하나에 걸려 있기 때문이다. 분석 후보(등록 전): 가린 teacher 정확도와 student 정확도의 연결이 이미지 단위에서도 약한지 본다. 즉 가린 teacher가 틀린 이미지에서 student도 더 틀리는지를 trustfilt·lateroll run으로 본다. 먼저 H-A97 계열과 겹치는지 확인한다.
+
 요약 (라운드 423, [claude], 23:35 UTC):
 - GPU가 657분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 "celeba data preparation failed").
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A159, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~422와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 422가 남긴 후보(trustfilt가 KL 순서를 어기는 이유)를 했다. 먼저 겹침을 확인했다. H-A127·128은 student 출력의 비정답 모양을 봤고, 가린 teacher 쪽을 온도 보정한 적은 없다.
