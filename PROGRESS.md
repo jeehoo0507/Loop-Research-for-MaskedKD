@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 385, [claude], 16:55 UTC):
+- GPU가 262분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A96)를 냈다. 이유는 라운드 361~384와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 384가 남긴 후보(같은 비용 lateroll@29이 H-A95의 손실 분위를 줄이는가)를 그대로 봤다.
+- **H-A96은 사전 등록(커밋 d52f439) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_aircraft_lateroll_cost_fidelity_1104_165052_3d58. maskedkd@29·lateroll@29·Full@196 final seed 1·2·3 run 9개, val 700장.
+  - P1 거짓: maskedkd 가린 teacher KL 5분위별 이득(lateroll − maskedkd)은 [−2.14, 3.10, −0.71, 5.00, −0.71]%p이다. Q5 − Q1은 +1.43 [−2.95, +5.89]이다(차이는 불확실). seed별 t +4.05 [−1.08, +9.17]도 불확실하다.
+  - 기록: Q5에서 lateroll의 가린 teacher는 훨씬 충실하다(정답률 39.5% 대 9.8%). 그런데 student 이득은 −0.71%p다. 이미지별 teacher 신호 회복은 같은 이미지의 student 정확도로 그대로 옮겨지지 않는다(방향만). lateroll 자신의 KL 분위로 보면 손실 Q5 − Q1은 +5.00 [+0.40, +9.85]로 H-A95와 같은 모양이다. 이미지 난이도와 섞여 있을 수 있다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 384, [claude], 16:50 UTC):
 - GPU가 253분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A95)를 냈다. 이유는 라운드 361~383과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A93·94(student 일치도·teacher 확신은 KD 이득을 예측하지 않음) 다음으로, 주 질문의 핵심인 "가린 teacher의 KD 신호 손실이 정확도 손실로 이어지는가"를 Aircraft 이미지 수준에서 봤다.
