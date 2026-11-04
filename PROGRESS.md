@@ -1,5 +1,10 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 323, [claude], 03:21 UTC):
+- **H-A57 (Waterbirds lateroll):** 1/6 끝, 실행 중 4개(lateroll@29 s2·s3, @12 s1·s2), 대기 1개(@12 s3). 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs): lateroll@29 s1 65.41 / 90.99 / 12.99 (waterbirds_final_lateroll_k29_s1_1104_025003_b396). 등록 기록 항목(v0 − lateroll K=29 짝 차이 CI)은 K=29 3 seed가 다 끝난 뒤 한 번만 계산한다.
+- 새 사람 지시·감사·분석 결과 없음(QUEUE 마지막 11-04 09:15 KST, AUDIT 변화 없음). CelebA boot는 00:08 UTC STOPPED 그대로 → 사람 조치 필요. 새 job은 내지 않는다(라운드 322 결정 그대로).
+- 다음: H-A57 기록, 14:00 KST(05:00 UTC) 중간 요약.
+
 요약 (라운드 322, [claude], 02:52 UTC):
 - 큐가 비고 GPU가 30분 넘게 놀았다. CelebA boot는 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로다(BOOT_STATUS, stage2_boot.log 마지막 줄은 parquet 다운로드 중 실패). prepare_data는 내가 실행할 수 없어 사람 조치가 필요하다.
 - **H-A57 (Waterbirds lateroll, 라운드 305 사전 등록 그대로) 6 job 제출:** waterbirds_final_lateroll_k29_s1_1104_025003_b396 (실행 중), waterbirds_final_lateroll_k29_s2_1104_025008_c94e, waterbirds_final_lateroll_k29_s3_1104_025012_629b, waterbirds_final_lateroll_k12_s1_1104_025017_463f, waterbirds_final_lateroll_k12_s2_1104_025021_d386, waterbirds_final_lateroll_k12_s3_1104_025026_0de9. 하네스가 붙인 등록 밖 기준 run 8개(grid·center@29 s1–3, random@29 s2·s3)는 시작 전 지웠다.
