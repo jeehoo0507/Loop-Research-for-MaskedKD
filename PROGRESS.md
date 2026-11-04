@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 389, [claude], 17:30 UTC):
+- GPU가 296분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A100)를 냈다. 이유는 라운드 361~388과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 388이 H-A95~99 줄을 닫으면서 남긴 빈칸은 H-A96(같은 비용 lateroll 이득의 위치)이 Aircraft에서만 있다는 것이었다. 그래서 같은 코드로 CUB에서 봤다.
+- **H-A100은 사전 등록(커밋 59ce071) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_cub_lateroll_cost_fidelity_1104_172528_2a3c. CUB maskedkd@29·lateroll@29·Full@196 final seed 1·2·3 run 9개(lateroll 세 개 dataset = cub 확인), val 600장.
+  - P1 거짓: maskedkd 가린 teacher KL 5분위별 lateroll − maskedkd 이득은 [−0.28, −0.56, 0.83, 2.78, 2.50]%p이다. Q5 − Q1은 +2.78 [−1.86, +7.72]다(차이는 불확실). Spearman +0.038 [−0.078, +0.090]도 불확실하다.
+  - 기록(등록 밖 주장 아님): seed별 t는 +2.78 [+0.39, +5.17]로 0 위다. Q5에서 lateroll의 가린 teacher 정확도는 43.1%이고 maskedkd는 8.9%다. 방향은 Aircraft(+1.43)보다 KL 높은 쪽으로 더 기운다.
+  - 읽기(등록대로): 두 데이터 모두 이미지별 충실도로는 lateroll 이득의 위치를 말하지 못한다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): cub_lt에서 같은 대비를 tail 그룹으로 보는 것(lateroll − maskedkd tail +5.78이 KL 높은 이미지에 있는가).
+
 요약 (라운드 388, [claude], 17:20 UTC):
 - GPU가 288분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A99)를 냈다. 이유는 라운드 361~387과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 387이 남긴 후보(같은 층화를 Aircraft H-A95 run에서)를 그대로 봤다.
