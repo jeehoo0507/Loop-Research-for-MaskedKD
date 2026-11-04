@@ -1118,6 +1118,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **기록 항목 (판정 아님, H-A57과 같은 해석 규칙):** v0 − lateroll tail. CI 하한 > 0 → "cub_lt에서도 teacher 영역이 lateroll 위에 더한다"; CI가 0 포함 → "cub_lt에서 v0와 lateroll의 차이는 불확실"; CI 상한 < 0 → "cub_lt에서는 teacher 영역이 lateroll을 깎는다". 함께 기록: lateroll − rollout, lateroll − maskedkd (tail), head·전체 정확도, 총 GFLOPs/img.
   - 예측 (한 번만): v0 − lateroll 평균 > 0 확신 낮음(게이트 2에서 v0 − maskedkd도 CI가 0 포함). lateroll − maskedkd 평균 > 0 확신 중간(rollout − maskedkd가 cub_lt에서 양수).
   - 결과를 보고 seed·K·방법을 더하지 않는다. 하네스가 자동으로 붙이는 등록 밖 기준 run은 시작 전 지운다.
+  - **[라운드 345] 제출:** cub_lt_final_lateroll_k29_s1_1104_084157_2b15, cub_lt_final_lateroll_k29_s2_1104_084204_9f09, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8. 등록 밖 기준 run 가운데 pending 7개(center s2·s3, grid s2·s3, random s1·s2·s3)는 시작 전 지웠다. cub_lt_final_center_k29_s1_1104_084157_57ad는 이미 시작돼 그대로 두고 기록만 한다(판정에 쓰지 않음).
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.

@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 345, [claude], 08:43 UTC):
+- GPU가 31분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 STOPPED 그대로(00:08 UTC). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 마지막은 여전히 P1 NEEDS-MORE).
+  - [claude] 결정: **학습 job 3개**를 냈다: H-A67 = cub_lt `lateroll`@29 seed 1·2·3. 이유: (1) QUEUE 09:10은 "v0 = teacher 영역 + lateroll이라 lateroll 단독 없이는 영역의 몫을 잴 수 없다"며 lateroll을 Waterbirds·CelebA 목록에 넣었다. cub_lt 게이트 2에는 lateroll이 없어 v0 − lateroll을 잴 수 없다. (2) 사람이 쓴 기존 선택기·기본 인자이고 새 선택기가 아니다(QUEUE 01:40). (3) 3 job(약 21분/run, 한 바퀴)이라 큐가 금방 비어 사람이 CelebA를 고치면 boot가 늦지 않는다. 같은 계열 분석을 또 내는 것보다 빠진 대조군 쪽이 정보가 많다.
+- **H-A67 사전 등록(커밋 603e950) 뒤 제출:** cub_lt_final_lateroll_k29_s1_1104_084157_2b15, cub_lt_final_lateroll_k29_s2_1104_084204_9f09, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8. 기록 항목(판정 아님): v0 − lateroll tail CI, lateroll − rollout, lateroll − maskedkd.
+  - 등록 밖 기준 run pending 7개는 시작 전 지웠다. cub_lt_final_center_k29_s1_1104_084157_57ad는 이미 시작돼 그대로 두고 기록만 한다.
+- 다음: H-A67 3/3 끝나면 등록대로 기록, RESULTS·PROPOSALS. 시작이 안 됐으면 `ps aux`로 좀비 슬롯 확인. CelebA·AUDIT_PROMPT는 계속 사람 조치 대기.
+
 요약 (라운드 344, [claude], 08:15 UTC):
 - **H-A66 3/3 끝 → 사전 등록(5138a20)대로 판정 한 번 (손 계산 t CI df 2).** frozen tail: cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 43.33, cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c 40.67, cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d 41.33. online maskedkd tail은 세 seed 모두 44.00.
   - P1 (주) online − frozen tail +2.22 [−1.22, +5.66] → 불성립(차이는 불확실). 평균 ≥ 0 → 등록 문구대로 "cub_lt에서 MaskedKD의 tail 손실은 물려받음에 가깝다". 예측(평균 < 0) 틀림.
