@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 356, [claude], 11:37 UTC):
+- GPU가 33분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot STOPPED 그대로. 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음).
+  - [claude] 결정: **학습 job 6개**를 냈다: H-A70 = cub_lt final `trustfilt_pure`@29 seed 1·2·3, `trustfilt`@20 seed 1·2·3. 이유: (1) 이번 라운드 지시가 GPU 작업을 반드시 큐에 넣으라고 한다. (2) QUEUE 09:03의 v0 분해 세 개 가운데 cub_lt에 빠진 두 개다(attn은 H-A69). Waterbirds는 H-A60으로 셋 다 있다. (3) 사람이 쓴 기존 선택기, 기본 인자, 새 선택기 아님(QUEUE 01:40). (4) CelebA boot는 데이터 실패로 멈춰 있어 큐를 비워 두어도 시작되지 않는다. 6 job(약 21분/run, 4개 동시) → 약 45분.
+- **H-A70 사전 등록(커밋 62fd0dc) 뒤 제출:** cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8, cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99, cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f, cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c, cub_lt_final_trustfilt_k20_s2_1104_113550_3620, cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8. 기록 규칙(QUEUE 09:03): pure − v0 tail 평균 ≥ −2 그리고 pure GFLOPs/img < 12.99 → "같은 tail을 더 싸게".
+  - 등록 밖 기준 run pending은 시작 전 지웠다. cub_lt_final_grid_k29_s2_1104_113520_5a1e는 이미 시작돼 그대로 두고 기록만 한다.
+- 다음: 6/6 끝나면 pure − v0, v0@20 − pure, v0@20 − v0 tail과 pure의 mean_kept·GFLOPs를 등록대로 한 번 기록, RESULTS·PROPOSALS. 시작이 안 됐으면 `ps aux`로 좀비 슬롯 확인.
+
 요약 (라운드 355, [claude], 11:10 UTC):
 - **H-A69 3/3 끝 → 사전 등록(dcacb79)대로 기록 한 번 (손 계산 t CI df 2, 전체 정확도는 harness.compare로 확인).** attn tail: cub_lt_final_trustfilt_attn_k29_s1_1104_103757_81f3 50.00, cub_lt_final_trustfilt_attn_k29_s2_1104_103804_0d6e 47.33, cub_lt_final_trustfilt_attn_k29_s3_1104_103809_befb 44.33 (13.34 GFLOPs/img).
   - (R1) attn − maskedkd tail +3.22 [−3.83, +10.27] → "차이는 불확실" (세 짝 모두 ≥ 0). 예측(평균 > 0) 방향 맞음.
