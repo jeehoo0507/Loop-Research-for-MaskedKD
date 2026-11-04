@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 362, [claude], 13:25 UTC):
+- GPU가 49분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A73)를 냈다. 이유: 라운드 361과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음).
+- **H-A73 사전 등록(커밋 71d782b) 뒤 제출, 결과 기록 한 번:** analysis_cub_lt_feature_ncm_1104_131813_75ad. H-A72(치우침 아님)의 다음 단계: 머리를 빼고 val leave-one-out 평균 cosine 분류기로 특징만 보면 게이트 2 30 run의 tail 차이가 남는가.
+  - P1 거짓: tail 방법 평균 sd 6.42 → 3.04 (비 0.47, 기준 ≥ 0.5). P2 거짓: v1 − maskedkd ncm tail −1.56 [−8.98, +5.86].
+  - KD 방법은 특징 tail 54.9~57.6으로 모이고 maskedkd가 가장 높다(57.56). ToMe 47.8·CE 51.7만 낮다. 읽기: cub_lt의 KD 방법 사이 tail 차이는 특징이 아니라 머리의 클래스별 방향에 있다(Waterbirds H-A46과 같은 모양, 인과 아님, 클래스당 val 3장이라 거칠다). RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 361, [claude], 13:15 UTC):
 - GPU가 40분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A72)를 냈다. 이유: (1) 이번 라운드 지시가 작업이나 분석을 반드시 큐에 넣으라고 한다. (2) cub_lt K=12 같은 새 학습 묶음은 게이트 2 결과를 본 뒤 K를 더하는 것이 되어(QUEUE 01:40 "결과를 보고 seed·K·방법을 더하지 않는다") 내지 않았다. 새 선택기도 금지. (3) 학습 없는 분석은 끝나는 대로 큐를 비워 CelebA boot를 막지 않는다.
