@@ -1139,6 +1139,12 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
     - 기록: 전체 정확도 attn − maskedkd +1.22 [−1.69, +4.13], attn − v0 −1.11 [−3.15, +0.93] (둘 다 불확실). head 평균 차이 attn − maskedkd −0.78, attn − v0 −2.11 (CI 계산 안 함, 기록만). GFLOPs/img attn 13.34 = v0 13.34, maskedkd 12.99 (1.027배).
     - 읽기: Waterbirds(H-A60)에서는 attn − v0 −3.51 [−5.67, −1.35]로 lateroll도 필요했지만, cub_lt에서는 v0의 tail이 영역 필터만으로 설명된다. 다만 영역이 MaskedKD 선택 위에 더하는지(R1)는 이 3 seed로는 불확실하다. 닫음.
 
+- **H-A70 (v0 분해의 남은 두 변형 `trustfilt_pure`@29·`trustfilt`@20을 cub_lt에서, 라운드 356 등록 — 결과 전·제출 전): cub_lt에서 teacher 영역 ∩ lateroll 교집합만 쓰면 v0의 tail을 더 싸게 얻는가.** 근거: QUEUE 09:03이 CelebA·Waterbirds 목록에 분해 세 개(`trustfilt_attn`, `trustfilt_pure`, `trustfilt`@20)를 넣었다. Waterbirds는 H-A60으로 셋 다 있고(pure − v0 −4.76 [−7.61, −1.91], GFLOPs 10.22), cub_lt에는 H-A69의 attn만 있다. CelebA는 00:08 UTC부터 데이터 준비 실패로 멈춰 있다. 제출: cub_lt final `trustfilt_pure`@29 seed 1·2·3, `trustfilt`@20 seed 1·2·3 (6 job, 사람이 쓴 기존 선택기, 기본 인자, 새 선택기 아님). 짝 v0@29 = cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3, cub_lt_final_trustfilt_k29_s2_1103_234647_43e9, cub_lt_final_trustfilt_k29_s3_1103_234704_8732. 주 지표 tail 정확도(metrics wga, group 1, val_wga_last). 같은 seed 짝 차이, t 95% CI (df 2, t 4.303).
+  - **기록 규칙 (QUEUE 09:03 그대로, 6 job이 다 끝난 뒤 한 번만):** pure − v0 tail 평균 ≥ −2 그리고 pure 총 GFLOPs/img < 12.99 (cub_lt maskedkd@29)이면 "같은 tail을 더 싸게"; 아니면 그렇지 않다고 적는다. CI도 함께 적는다.
+  - **기록 (판정 아님):** v0@20 − pure tail, v0@20 − v0@29 tail, pure의 평균 토큰 수(mean_kept)와 총 GFLOPs/img, 전체·head 정확도.
+  - **예측 (한 번만):** pure GFLOPs < 12.99 확신 높음. pure − v0 ≥ −2 확신 낮음(Waterbirds −4.76; 다만 cub_lt에서는 영역이 전부였으므로 교집합 손실이 작을 수 있다).
+  - 결과를 보고 seed·K·방법을 더하지 않는다. 하네스가 자동으로 붙이는 등록 밖 기준 run은 시작 전 지운다. 기제 기록이지 방법 주장이 아니다(v0는 사후 관찰).
+
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
 IDEA 2: CLS reconstruction pursuit — Recover last-block values \(v_{hi}\) from student penultimate tokens and value-projection weights; read CLS attention \(a_{hi}\). Define the full message \(u_h=\sum_{i=0}^{196}a_{hi}v_{hi}\) and subset message \(\hat u_h(S)=\frac{\sum_{i\in S\cup\{0\}}a_{hi}v_{hi}}{\sum_{i\in S\cup\{0\}}a_{hi}}\), with \(0=\mathrm{CLS}\).
