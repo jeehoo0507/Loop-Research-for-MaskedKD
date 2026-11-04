@@ -1132,6 +1132,12 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - 예측 (한 번만): R1 평균 > 0 확신 중간(cub_lt에서 teacher_topk·v0·v1 모두 maskedkd보다 tail이 높았다). R2 평균 < 0 확신 낮음.
   - 결과를 보고 seed·K·방법을 더하지 않는다. 하네스가 자동으로 붙이는 등록 밖 기준 run은 시작 전 지운다.
   - **[라운드 352] 제출 (사전 등록 dcacb79 뒤):** cub_lt_final_trustfilt_attn_k29_s1_1104_103757_81f3, cub_lt_final_trustfilt_attn_k29_s2_1104_103804_0d6e, cub_lt_final_trustfilt_attn_k29_s3_1104_103809_befb. 등록 밖 기준 run 가운데 pending 6개(center·grid·random s2·s3)는 시작 전 지웠다. cub_lt_final_random_k29_s1_1104_103758_b521은 이미 시작돼 그대로 두고 기록만 한다(판정에 쓰지 않음). v0 − lateroll +7.76 [+3.06, +12.47] → CI 하한 > 0 → "seed 4·5·6에서도 teacher 영역이 lateroll 위에 더한다". 예측(평균 > 0) 맞음. 기록: lateroll − teacher_topk −1.75 [−10.18, +6.68], trustfilt_attn − lateroll +4.26 [−1.15, +9.66], clean acc v0 − lateroll −0.06 [−1.53, +1.41], GFLOPs/img v0 13.35 vs lateroll 12.99. 닫음.
+  - (라운드 355 메모: 바로 위 줄의 "v0 − lateroll +7.76 … 닫음." 부분은 H-A68 결과이고, 라운드 351에 잘못된 줄에 붙었다. H-A69와 무관하다.)
+  - **[라운드 355] 결과 (3/3, 등록대로 한 번만 기록, 손 계산 t CI df 2; 전체 정확도는 harness.compare로 확인):** attn tail 50.00/47.33/44.33, 전체 65.17/63.17/62.33, head 80.33/79.00/80.33, 13.34 GFLOPs/img.
+    - (R1) attn − maskedkd tail +3.22 [−3.83, +10.27] → 등록 문구대로 "차이는 불확실". 세 seed 짝 +6.00/+3.33/+0.33으로 모두 ≥ 0. 예측(평균 > 0) 방향은 맞았다.
+    - (R2) attn − v0 tail −0.11 [−1.83, +1.60] → CI가 ±3 안 → 등록(QUEUE 09:03) 규칙대로 "영역이 전부" (cub_lt tail에서 lateroll 부분은 몫이 보이지 않는다; H-A67 v0 − lateroll −2.44 불확실과 같은 방향). 예측(평균 < 0)은 크기가 0에 가까워 판단할 수 없다.
+    - 기록: 전체 정확도 attn − maskedkd +1.22 [−1.69, +4.13], attn − v0 −1.11 [−3.15, +0.93] (둘 다 불확실). head 평균 차이 attn − maskedkd −0.78, attn − v0 −2.11 (CI 계산 안 함, 기록만). GFLOPs/img attn 13.34 = v0 13.34, maskedkd 12.99 (1.027배).
+    - 읽기: Waterbirds(H-A60)에서는 attn − v0 −3.51 [−5.67, −1.35]로 lateroll도 필요했지만, cub_lt에서는 v0의 tail이 영역 필터만으로 설명된다. 다만 영역이 MaskedKD 선택 위에 더하는지(R1)는 이 3 seed로는 불확실하다. 닫음.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
