@@ -617,11 +617,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - maskedkd_frozen@29 vs tome@29 [acc]: +6.50 %p, 95% CI [+5.40, +7.60], seeds 1,2,3, GFLOPs ratio 1.280 -> WIN
 - maskedkd_frozen@29 vs full@196 [acc]: -2.72 %p, 95% CI [-4.59, -0.86], seeds 1,2,3, GFLOPs ratio 0.359 -> LOSS
 - maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
+- trustfilt@20 vs full@196 [acc]: -2.50 %p, 95% CI [-4.69, -0.31], seeds 1,2,3, GFLOPs ratio 0.276 -> LOSS
 - trustfilt@29 vs tome@29 [acc]: +10.06 %p, 95% CI [+5.87, +14.24], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
 - trustfilt@29 vs grid@29 [acc]: +8.83 %p, 95% CI [+8.83, +8.83], seeds 1,2, GFLOPs ratio 1.026 -> WIN
 - trustfilt_attn@29 vs tome@29 [acc]: +8.94 %p, 95% CI [+5.42, +12.47], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
+- trustfilt_pure@29 vs tome@29 [acc]: +6.94 %p, 95% CI [+2.88, +11.01], seeds 1,2,3, GFLOPs ratio 0.879 -> WIN
 - trustfilt_pure@29 vs grid@29 [acc]: +5.67 %p, 95% CI [+5.67, +5.67], seeds 1,2, GFLOPs ratio 0.811 -> WIN
-- trustfilt_pure@29 vs trustfilt@29 (parent) [acc]: -3.17 %p, 95% CI [-3.17, -3.17], seeds 1,2, GFLOPs ratio 0.790 -> LOSS
+- trustfilt_pure@29 vs full@196 [acc]: -2.28 %p, 95% CI [-3.95, -0.60], seeds 1,2,3, GFLOPs ratio 0.247 -> LOSS
+- trustfilt_pure@29 vs trustfilt@29 (parent) [acc]: -3.11 %p, 95% CI [-3.35, -2.87], seeds 1,2,3, GFLOPs ratio 0.790 -> LOSS
 - trustmask_v1@29 vs maskedkd@29 [acc]: +3.50 %p, 95% CI [+0.60, +6.40], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
 - trustmask_v1@29 vs tome@29 [acc]: +11.22 %p, 95% CI [+7.70, +14.74], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
 - trustmask_v1@29 vs grid@29 [acc]: +10.17 %p, 95% CI [+1.70, +18.64], seeds 1,2, GFLOPs ratio 1.026 -> WIN
@@ -643,6 +646,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - maskedkd_frozen@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
 - maskedkd_frozen@29 vs full@196 [acc]: -2.72 %p, 95% CI [-4.59, -0.86], seeds 1,2,3, GFLOPs ratio 0.359 -> LOSS
 - maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
+- trustfilt@20 vs maskedkd@20 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@20 vs rollout@20 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@20 vs tome@20 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@20 vs grid@20 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@20 vs center@20 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@20 vs random@20 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@20 vs full@196 [acc]: -2.50 %p, 95% CI [-4.69, -0.31], seeds 1,2,3, GFLOPs ratio 0.276 -> LOSS
+- trustfilt@20 vs lateroll@20 (parent) [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs maskedkd@29 [acc]: +2.33 %p, 95% CI [-1.25, +5.92], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustfilt@29 vs rollout@29 [acc]: +0.11 %p, 95% CI [-4.14, +4.36], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustfilt@29 vs tome@29 [acc]: +10.06 %p, 95% CI [+5.87, +14.24], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
@@ -659,14 +670,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - trustfilt_attn@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt_attn@29 vs full@196 [acc]: -0.28 %p, 95% CI [-3.19, +2.63], seeds 1,2,3, GFLOPs ratio 0.312 -> no difference
 - trustfilt_attn@29 vs trustfilt@29 (parent) [acc]: -1.11 %p, 95% CI [-3.15, +0.93], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
-- trustfilt_pure@29 vs maskedkd@29 [acc]: -0.42 %p, 95% CI [-16.30, +15.47], seeds 1,2, GFLOPs ratio 0.812 -> no difference
-- trustfilt_pure@29 vs rollout@29 [acc]: -2.33 %p, 95% CI [-17.16, +12.49], seeds 1,2, GFLOPs ratio 0.812 -> no difference
-- trustfilt_pure@29 vs tome@29 [acc]: +7.42 %p, 95% CI [-10.58, +25.42], seeds 1,2, GFLOPs ratio 0.879 -> no difference
+- trustfilt_pure@29 vs maskedkd@29 [acc]: -0.78 %p, 95% CI [-4.25, +2.69], seeds 1,2,3, GFLOPs ratio 0.812 -> no difference
+- trustfilt_pure@29 vs rollout@29 [acc]: -3.00 %p, 95% CI [-7.08, +1.08], seeds 1,2,3, GFLOPs ratio 0.812 -> no difference
+- trustfilt_pure@29 vs tome@29 [acc]: +6.94 %p, 95% CI [+2.88, +11.01], seeds 1,2,3, GFLOPs ratio 0.879 -> WIN
 - trustfilt_pure@29 vs grid@29 [acc]: +5.67 %p, 95% CI [+5.67, +5.67], seeds 1,2, GFLOPs ratio 0.811 -> WIN
 - trustfilt_pure@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt_pure@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
-- trustfilt_pure@29 vs full@196 [acc]: -1.92 %p, 95% CI [-5.09, +1.26], seeds 1,2, GFLOPs ratio 0.247 -> no difference
-- trustfilt_pure@29 vs trustfilt@29 (parent) [acc]: -3.17 %p, 95% CI [-3.17, -3.17], seeds 1,2, GFLOPs ratio 0.790 -> LOSS
+- trustfilt_pure@29 vs full@196 [acc]: -2.28 %p, 95% CI [-3.95, -0.60], seeds 1,2,3, GFLOPs ratio 0.247 -> LOSS
+- trustfilt_pure@29 vs trustfilt@29 (parent) [acc]: -3.11 %p, 95% CI [-3.35, -2.87], seeds 1,2,3, GFLOPs ratio 0.790 -> LOSS
 - trustmask_v1@29 vs maskedkd@29 [acc]: +3.50 %p, 95% CI [+0.60, +6.40], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
 - trustmask_v1@29 vs rollout@29 [acc]: +1.28 %p, 95% CI [-2.74, +5.30], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs tome@29 [acc]: +11.22 %p, 95% CI [+7.70, +14.74], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
@@ -710,8 +721,9 @@ Total agent screen configs: 0
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 64.56 ± 0.79 | 48.78 ± 1.26 | 12.99 | 5.36 | 0.17 | 346 | cub_lt_final_rollout_k29_s3_1103_234704_0edf cub_lt_final_rollout_k29_s1_1103_234609_8382 cub_lt_final_rollout_k29_s2_1103_234647_9b4c |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 63.39 ± 1.51 | 46.11 ± 2.71 | 13.35 | 5.36 | 0.35 | 289 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 54.61 ± 0.38 | 29.33 ± 0.88 | 12.00 | 4.36 | 0.00 | 296 | cub_lt_final_tome_k29_s2_1103_234647_6467 cub_lt_final_tome_k29_s3_1103_234704_41ee cub_lt_final_tome_k29_s1_1103_234609_6b58 |
+| final | trustfilt@27da28 |  | 20 | 20.0 | 1,2,3 | 61.33 ± 0.73 | 42.89 ± 1.02 | 11.80 | 3.81 | 0.43 | 450 | cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c cub_lt_final_trustfilt_k20_s2_1104_113550_3620 cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8 |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 64.67 ± 1.89 | 47.33 ± 2.73 | 13.34 | 5.36 | 0.43 | 247 | cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3 cub_lt_final_trustfilt_k29_s3_1103_234704_8732 cub_lt_final_trustfilt_k29_s2_1103_234647_43e9 |
 | final | trustfilt_attn@8fd44d |  | 29 | 29.0 | 1,2,3 | 63.56 ± 1.46 | 47.22 ± 2.84 | 13.34 | 5.36 | 0.35 | 352 | cub_lt_final_trustfilt_attn_k29_s3_1104_103809_befb cub_lt_final_trustfilt_attn_k29_s1_1104_103757_81f3 cub_lt_final_trustfilt_attn_k29_s2_1104_103804_0d6e |
-| final | trustfilt_pure@2e6797 |  | 29 | 12.8 | 1,2 | 61.92 ± 2.47 | 42.84 ± 5.42 | 10.55 | 2.57 | 0.43 | 181 | cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99 cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8 |
+| final | trustfilt_pure@2e6797 |  | 29 | 12.8 | 1,2,3 | 61.56 ± 1.86 | 42.22 ± 3.98 | 10.54 | 2.56 | 0.43 | 180 | cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99 cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8 |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 65.83 ± 1.48 | 50.33 ± 1.85 | 13.34 | 5.36 | 0.43 | 288 | cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79 cub_lt_final_trustmask_v1_k29_s3_1103_234704_d748 cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
 
