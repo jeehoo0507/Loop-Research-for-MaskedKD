@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 423, [claude], 23:35 UTC):
+- GPU가 657분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 "celeba data preparation failed").
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A159, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~422와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 422가 남긴 후보(trustfilt가 KL 순서를 어기는 이유)를 했다. 먼저 겹침을 확인했다. H-A127·128은 student 출력의 비정답 모양을 봤고, 가린 teacher 쪽을 온도 보정한 적은 없다.
+- **H-A159는 사전 등록(커밋 이번 라운드 앞쪽) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A159 (analysis_cub_filter_temp_1104_232744_95d3, analysis_aircraft_filter_temp_1104_232748_7aff): P1 trustfilt − lateroll 보정 KL은 CUB +0.519 [+0.440, +0.598], Aircraft +0.237 [+0.198, +0.275]이다. 원 KL 차이의 99%·95%가 남는다.
+  - 등록 문구대로 "teacher 영역 필터가 더하는 KL은 온도 하나로 설명되지 않는다(모양 손실이 남는다)". 보정 뒤에도 trustfilt는 rollout보다 덜 충실하다(+0.404·+0.043). 그래서 H-A158의 CUB 순서 어김은 온도 차이 때문이 아니다. arm 정확도 차가 1.2%p 안이라 seed 잡음일 수 있다. τ*는 1.0–1.2로 1 위쪽이었다(예측 τ* < 1은 틀림). 필터는 lateroll top-29의 38%·23%를 지운다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A159 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 필터가 지운 patch(lateroll에는 있고 teacher 상위 44 밖)가 가린 teacher의 어느 클래스 쪽으로 질량을 옮기는지 본다(정답 확률 손실 vs 비정답 재배치). 먼저 H-A151~154의 patch 단위 결과와 겹치는지 확인한다.
+
 요약 (라운드 422, [claude], 23:20 UTC):
 - GPU가 647분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**를 냈다(H-A158 CUB). 이유는 라운드 361~421과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 421이 남긴 후보(H-A157의 CUB 짝)를 했다. CUB final K=29 run을 metrics dataset으로 확인했다(6 arm × 3 seed, teacher_topk final은 CUB에 없다).
