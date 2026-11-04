@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_ttopk_sink_diff_1104_222123_3ad5",
+ "name": "cub_lt_ttopk_sink_diff",
+ "source_sha": "3ad54afd5478f4eb1aa2a0a65096235f11889afbbd4f1ba65afb5c9cb24a8de7",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt (final Rollout@29, seeds 1-3), are the patches only in the teacher's own rollout top-29 (not in the student's rollout top-29) the teacher's high-norm sink tokens more often than the student-only patches, and does the set difference explain the extra masked-teacher non-target signal loss after controlling for spatial spread?",
+  "method": "teacher and student attention rollout maps on clean val; top-29 sets and their differences; teacher high-norm token detection (per-image median+3MAD of block-10 output norms); non-target KL(full teacher || masked teacher); image bootstrap; partial Spearman on ranks; seed t CI",
+  "paper": "Darcet et al. ICLR 2024 (ViT register/sink tokens); Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 9.3
+}

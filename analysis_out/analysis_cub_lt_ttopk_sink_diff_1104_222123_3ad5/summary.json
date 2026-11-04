@@ -1,0 +1,82 @@
+{
+ "n_val": 600,
+ "K": 29,
+ "n_images_P1": 600,
+ "P1_mean_dSink_teacher_only_minus_student_only": [
+  -0.0146,
+  -0.0324,
+  0.0025
+ ],
+ "P2_partial_spearman_1mJaccard_dG_given_dSpread": [
+  0.2794,
+  0.2006,
+  0.352
+ ],
+ "record": {
+  "mean_sinks_per_image": 22.1983,
+  "mean_sink_share_T29": 0.2156,
+  "mean_sink_share_R29": 0.2191,
+  "teacher_last_block_cls_attn_mass_on_sinks": 0.5008,
+  "mean_dG": [
+   0.6197,
+   0.5248,
+   0.7212
+  ],
+  "spearman_1mJaccard_dG_raw": [
+   0.3078,
+   0.2321,
+   0.38
+  ],
+  "spearman_dSink_dG": [
+   0.0595,
+   -0.028,
+   0.1367
+  ],
+  "spearman_dNsinks_T_minus_R_dG": [
+   0.0672,
+   -0.0245,
+   0.1421
+  ],
+  "signal_nt_kl_T": 1.8638,
+  "signal_acc_T": 56.67,
+  "per_seed_t_dSink": [
+   -0.0146,
+   -0.0266,
+   -0.0027,
+   3
+  ]
+ },
+ "per_seed": {
+  "1": {
+   "n_images_with_diff": 600,
+   "mean_sink_frac_DT": 0.1626,
+   "mean_sink_frac_DR": 0.1761,
+   "dSink": -0.0135,
+   "mean_sink_share_R29": 0.2191,
+   "mean_jaccard_T_R": 0.4312,
+   "dG": 0.6079
+  },
+  "2": {
+   "n_images_with_diff": 599,
+   "mean_sink_frac_DT": 0.159,
+   "mean_sink_frac_DR": 0.1789,
+   "dSink": -0.0199,
+   "mean_sink_share_R29": 0.2206,
+   "mean_jaccard_T_R": 0.4391,
+   "dG": 0.6208
+  },
+  "3": {
+   "n_images_with_diff": 599,
+   "mean_sink_frac_DT": 0.1651,
+   "mean_sink_frac_DR": 0.1756,
+   "dSink": -0.0105,
+   "mean_sink_share_R29": 0.2176,
+   "mean_jaccard_T_R": 0.4334,
+   "dG": 0.6304
+  }
+ },
+ "verdict": {
+  "P1": "uncertain",
+  "P2": "positive"
+ }
+}
