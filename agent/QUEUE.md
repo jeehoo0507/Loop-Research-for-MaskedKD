@@ -309,3 +309,9 @@ v0(trustfilt)는 두 부품(teacher 상위 1.5K 영역 + lateroll 선택)이 함
 - `trustfilt`@**20**: pure와 비용을 맞춘 대조 (토큰 20개 고정).
 우선순위: 08:58의 (1) 뒤, (2) 앞. CelebA 합계 34 job. 사전 등록에 한 줄씩: attn − v0 (WGA), pure − v0 (WGA)와 pure의 GFLOPs/토큰 수, v0@20 − pure. 판정 규칙: |attn − v0| CI가 ±3 안이면 "영역이 전부"; pure − v0 ≥ −2이고 GFLOPs가 maskedkd@29 아래면 "같은 강건성을 더 싸게".
 - Waterbirds에서도 같은 세 변형을 **(4) 확인 실험 묶음**(seed 4·5·6)에 함께 넣는다: `trustfilt_attn`·`trustfilt_pure`·`trustfilt`@20 seed 4·5·6 (9 job 추가, 합계 18).
+
+## 2026-11-04 09:10 KST — 사람: 빠진 대조군 lateroll (게이트 2 바로 뒤, CelebA 앞)
+- Waterbirds에 `lateroll` run이 없다. v0 = teacher 영역 + lateroll이므로, lateroll 단독이 없으면 "영역이 더한 것"을 잴 수 없다 (지금은 rollout 62.2와만 비교된다).
+- **제출 (게이트 2 제출 직후, 우선순위 게이트 2 다음, CelebA boot 전):** Waterbirds final `lateroll`@29 seed 1·2·3, `lateroll`@12 seed 1·2·3 (6 job).
+- 사전 등록 (결과 전): 기록 항목. v0 − lateroll (WGA, K=29) 짝 차이 CI. 해석: CI 하한 > 0이면 "teacher 영역이 lateroll 위에 더한다"; 0 포함이면 "v0의 이득은 대부분 lateroll(블록 6–11 선택)에서 온다"로 적는다. 판정이 아니라 기록이지만, 게이트 1의 v0 해석을 이 결과에 맞춰 고친다.
+- CelebA(08:58 항목)의 목록에도 `lateroll`@29 seed 1·2·3을 (1) 묶음에 넣는다 (합계 37 job).
