@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 376, [claude], 15:35 UTC):
+- GPU가 180분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A87)를 냈다. 이유는 라운드 361~375와 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기를 만들거나 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A86의 바깥 쪽 이동이 고리의 표지인지, 아니면 online과 frozen 사이의 일반적인 차이인지 가르려고 고리가 없던 cub_lt에서 음성 대조를 했다.
+- **H-A87은 사전 등록(커밋 9b98c84) 뒤 제출했고, 결과는 한 번만 기록했다:** analysis_cub_lt_swap_position_1104_152849_2393. H-A82와 같은 cub_lt run 6개를 썼다.
+  - P1 참: 전체 dist(M∖F) − dist(F∖M)은 −0.020 [−0.057, +0.016]이다(차이는 불확실). P2 참: tail은 −0.050 [−0.117, +0.018]이다.
+  - 읽기(등록대로): 바깥 쪽 이동은 고리가 있던 Waterbirds에서만 크다. 그래서 H-A86의 배경 읽기를 유지한다. cub_lt에서는 online만 남긴 토큰도 teacher를 돕는다(d_M +0.112). RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다. Waterbirds 고리 내용 줄(H-A83~87)은 여기서 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 375, [claude], 15:25 UTC):
 - GPU가 171분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A86)를 냈다. 이유는 라운드 361~374와 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기와 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A85의 "배경 토큰" 해석을 FG/BG 라벨 없이 시험했다. 분석 API에는 파일 접근이 없어 data/raw의 CUB bounding box를 쓸 수 없으므로, 격자 중심 거리를 대리 지표로 썼다(통계에만 썼고 마스크에는 넣지 않았다).
