@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 350, [claude], 09:45 UTC):
+- H-A68 job 3개 진행 중(GPU 100%, pending 없음, 좀비 슬롯 없음): waterbirds_screen_lateroll_k29_s4_1104_093813_f1e8 epoch 33/100, waterbirds_screen_lateroll_k29_s5_1104_093818_1d16 21/100, waterbirds_screen_lateroll_k29_s6_1104_093822_07aa 15/100. 14.3 s/epoch → 마지막 job은 약 10:05 UTC에 끝날 것으로 본다.
+- 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot는 STOPPED 그대로.
+  - [claude] 결정: 새 job을 내지 않고, log에 보이는 중간 val 값은 판정에 쓰지 않는다. 이유: GPU가 차 있고, H-A68은 등록(093bd61)대로 3/3 final 값으로 한 번만 기록한다. 무인 라운드에서는 백그라운드 대기가 막혀 있다.
+- 다음: H-A68 3/3 끝나면 v0 − lateroll WGA(seed 4·5·6 짝, t CI df 2), lateroll − teacher_topk, trustfilt_attn − lateroll을 등록대로 기록, RESULTS·PROPOSALS.
+
 요약 (라운드 349, [claude], 09:39 UTC):
 - GPU가 31분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 00:08 UTC부터 STOPPED 그대로. 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음).
 - QUEUE에서 CelebA 뒤로 미룬 Waterbirds 항목을 다시 확인했다: lateroll@29·@12 seed 1·2·3(H-A57), 확인 묶음 seed 4·5·6(H-A59·H-A60), tome@29 seed 2·3 모두 이미 있다. 빠진 것은 seed 4·5·6의 lateroll 대조군뿐이다(H-A59 v0 s4-6와 짝이 없다).
