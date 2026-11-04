@@ -467,13 +467,12 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - screening only (fewer seeds): none
 ### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
+  - trustfilt@27da28 : 20.0 (3 seeds)
   - suffdisc@0f0600 : 29.0 (7 seeds)
-  - trustfilt@27da28 : 29.0 (3 seeds)
   - trustfilt_attn@8fd44d : 29.0 (3 seeds)
   - center : 49.0 (4 seeds)
   - maskedkd : 98.0 (3 seeds)
 - screening only (fewer seeds):
-  - trustfilt@27da28 : 20.0 (2 seeds)
   - adaroll@069f50 : 48.5 (1 seeds)
   - suffdisc@0f0600 : 49.0 (1 seeds)
 
@@ -563,7 +562,7 @@ Total agent screen configs: 19
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0,4,5,6 | 89.57 ± 0.69 | 49.44 ± 1.67 | 12.00 | 4.36 | 0.00 | 311 | screen_tome_k12_s0_1030_135953_84af screen_tome_k12_s4_1031_051120_5c90 screen_tome_k12_s6_1031_054505_d130 screen_tome_k12_s5_1031_051124_f881 |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
-| screen | trustfilt@27da28 |  | 20 | 20.0 | 4,5 | 90.33 ± 0.12 | 68.42 ± 1.06 | 11.80 | 3.81 | 0.43 | 301 | waterbirds_screen_trustfilt_k20_s4_1104_050339_b2dd waterbirds_screen_trustfilt_k20_s5_1104_050343_9a6d |
+| screen | trustfilt@27da28 |  | 20 | 20.0 | 4,5,6 | 90.27 ± 0.13 | 67.92 ± 1.15 | 11.80 | 3.81 | 0.43 | 398 | waterbirds_screen_trustfilt_k20_s4_1104_050339_b2dd waterbirds_screen_trustfilt_k20_s5_1104_050343_9a6d waterbirds_screen_trustfilt_k20_s6_1104_050347_3cfa |
 | screen | trustfilt@27da28 |  | 29 | 29.0 | 4,5,6 | 90.69 ± 0.50 | 69.42 ± 0.87 | 13.35 | 5.36 | 0.43 | 295 | waterbirds_screen_trustfilt_k29_s6_1104_041254_004f waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 waterbirds_screen_trustfilt_k29_s5_1104_041250_8224 |
 | screen | trustfilt_attn@8fd44d |  | 29 | 29.0 | 4,5,6 | 90.19 ± 0.46 | 65.91 ± 0.87 | 13.34 | 5.36 | 0.36 | 337 | waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0 waterbirds_screen_trustfilt_attn_k29_s6_1104_050321_808a waterbirds_screen_trustfilt_attn_k29_s5_1104_050317_860f |
 | screen | trustfilt_pure@2e6797 |  | 29 | 11.0 | 4,5,6 | 89.88 ± 0.35 | 64.66 ± 0.75 | 10.22 | 2.24 | 0.43 | 177 | waterbirds_screen_trustfilt_pure_k29_s5_1104_050330_15c1 waterbirds_screen_trustfilt_pure_k29_s6_1104_050334_db07 waterbirds_screen_trustfilt_pure_k29_s4_1104_050326_25d1 |
