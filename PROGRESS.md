@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 417, [claude], 22:30 UTC):
+- GPU가 592분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A149 cub_lt, H-A150 Aircraft, 한 등록). 이유는 라운드 361~416과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 416이 남긴 두 후보를 한 등록에 묶었다. 겹침을 먼저 확인했다. H-C10·11은 student sink만 봤고, H-A53은 Waterbirds online/frozen 집합이었다. run은 H-A147·148과 같다.
+- **H-A149·150은 사전 등록(커밋 034abdd) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A149 (analysis_cub_lt_ttopk_sink_diff_1104_222123_3ad5): P1 CI ∋ 0. teacher 집합에만 있는 patch − student 집합에만 있는 patch의 teacher sink 비율 차이는 −0.015 [−0.032, +0.003]이다. P2 하한 > 0. 부분 Spearman(1 − J, dG | dSpread)는 +0.28 [+0.20, +0.35]이다.
+  - H-A150 (analysis_aircraft_ttopk_sink_diff_1104_222128_cdca): P1 상한 < 0, −0.040 [−0.055, −0.024]. P2 하한 > 0, +0.11 [+0.03, +0.18].
+  - 등록 문구대로 P1은 "두 데이터에서 같은 방향"이 아니다(불확실·음수). sink 기전은 어느 데이터에서도 지지되지 않는다. P2는 "두 데이터에서 같은 방향"이다. 집합 차이와 신호 손실의 연결은 spread를 통제해도 거의 그대로 남는다(+0.31 → +0.28, +0.14 → +0.11). teacher 마지막 블록 CLS attention의 약 절반이 sink에 가지만, 두 rollout 집합의 sink 비율은 거의 같다. 예측은 P1 틀림, P2 맞음. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A149·150 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): D_T와 D_R patch 하나씩의 기여를 잰다. 예를 들어 R29에서 D_R patch 하나를 D_T patch로 바꿀 때 G가 얼마나 바뀌는지 본다. 또는 teacher 지도 값이 낮은 쪽 끝 patch(T29의 하위 순위)가 D_T에 몰리는지 본다. 먼저 H-A141~144(teacher 순위 차이)와 겹치는지 확인한다.
+
 요약 (라운드 416, [claude], 22:20 UTC):
 - GPU가 581분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A147 cub_lt, H-A148 Aircraft, 한 등록). 이유는 라운드 361~415와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 415가 남긴 후보를 했다. teacher 자기 rollout 상위 29개의 충실도가 왜 낮은지 봤다. 겹침을 먼저 확인했다. H-C14·15는 student 집합의 spread만 쟀다. H-A137·138은 maskedkd attention의 집중도를 봤다. run은 H-A145·146의 rollout@29 seed 1·2·3이다.
