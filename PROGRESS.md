@@ -1,3 +1,25 @@
+STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
+
+## 09:00 KST 아침 요약 (라운드 305, [claude], 00:15 UTC, 16:00 발표용)
+**게이트 1 (H-A37, Waterbirds final K=29, val WGA, seed 3/3 끝, 판정 한 번):** P1 v1 − teacher_topk −2.01 [−6.32, +2.31] → **불성립** (v1의 우위가 보이지 않음, 차이는 불확실). P2 v1 − maskedkd +23.81 [+22.73, +24.89] → **성립**. 기록 v1 − rollout +0.25 [−3.65, +4.14] → "처방은 rollout이지 신뢰 가중치가 아니다". WGA 평균: v0 72.68, Full 67.42, teacher_topk 64.41, v1 62.40, rollout 62.16, frozen 61.40, maskedkd 38.59. **사후 관찰(등록 밖, 주장 아님):** v0(trustfilt) − teacher_topk +8.27 [+6.41, +10.13], − rollout +10.52 [+5.58, +15.47], − Full +5.26 [+3.40, +7.12] (비용 0.31배) → 후보 v0. 확인은 새 seed 4·5·6 묶음과 lateroll 대조(H-A57) 뒤.
+**게이트 3 (H-A38, K=29, seed 3/3):** online maskedkd − frozen(step-0 student) −22.81 [−26.69, −18.93] → **"고리" 성립**. frozen − rollout −0.75 [−9.30, +7.80] (차이는 불확실). frozen은 1.18배 비용(메커니즘 시험).
+**게이트 2 (H-A39, cub_lt K=29, tail acc, 2/24 끝):** s1만 v1 tail 52.33 / acc 67.50, teacher_topk 47.33 / 64.50 (방향만, 판정은 24 job이 다 끝난 뒤 한 번).
+**분석 H-A40~56 핵심 다섯 줄 (학습 없음, 결과 표 숫자 아님):**
+1. H-A40: MaskedKD student가 고른 토큰으로 가린 teacher는 그룹 2(땅 배경 물새)에서 정확도 0.21 (v1 0.49). 이 차이는 e25에 이미 있고 그 뒤 커지지 않는다 → 고리는 학습 초반에 닫힌다.
+2. H-A41·44: "가린 teacher가 얼마나 맞나"만으로는 WGA 순서가 설명되지 않는다 (Spearman 0.30; teacher_topk가 이탈).
+3. H-A46~48: 방법 간 WGA 차이는 student 머리의 클래스 치우침이고, 가린 teacher 목표의 클래스 쏠림과 같은 순서 (ρ +0.88 [+0.65, +0.98]).
+4. H-A49·50: v1의 KD 가중치는 클래스 재가중을 하지 않는다 (비 0.99) → v1 > maskedkd는 가중치가 아니라 토큰 규칙(블록 6..11 rollout)의 몫.
+5. H-A51~56: 붕괴는 마지막 블록 CLS attention이 rollout 대신 새로 고르는 약 12개 토큰이 teacher를 landbird(배경 쪽) 클래스로 끄는 데서 온다 (같은 student에서도 +0.236). 이 쏠림은 단일 블록 attention 대부분(블록 9 제외)에 있고, rollout(여러 층 곱)이 덜 끈다.
+**감사:** 게이트 1 P1 재요청 → NEEDS-MORE (위 STUCK). **CelebA:** 루프가 00:08 UTC에 boot를 시도했으나 데이터 준비 실패(stage2_boot.log, HF parquet 다운로드 중 STOPPED) → 사람 조치 필요.
+
+요약 (라운드 305, [claude], 00:15 UTC): 새 사람 지시 QUEUE 11-04 08:58·09:03·09:10 KST. 09:10(빠진 대조군 lateroll)을 지금 처리했다.
+- **H-A57 등록·제출:** 사전 등록 커밋 91a3caf(기록 항목 v0 − lateroll WGA K=29 CI와 해석 규칙) 뒤 Waterbirds final lateroll@29 s1·2·3 (waterbirds_final_lateroll_k29_s1_1104_001050_b396, waterbirds_final_lateroll_k29_s2_1104_001103_c94e, waterbirds_final_lateroll_k29_s3_1104_001107_629b), lateroll@12 s1·2·3 (waterbirds_final_lateroll_k12_s1_1104_001128_463f, waterbirds_final_lateroll_k12_s2_1104_001132_d386, waterbirds_final_lateroll_k12_s3_1104_001137_0de9), priority 3 (게이트 2 4, WB tome 5 다음).
+- [claude] 결정: submit이 자동으로 붙인 final ref(center·grid@29 s1·2·3, random@29 s2·s3) 8개 pending json은 지웠다(QUEUE 09:10 목록 밖; center는 위치 사전지식 규칙). rollout·full·random s1은 이미 done이라 건너뛰어졌다.
+- **RESULTS:** QUEUE 08:50 지시대로 "게이트 1 사후 관찰(등록 밖, 주장 아님)"과 후보 v0 전환, v0 − teacher_topk/rollout/Full 짝 차이를 적었다(라운드 286 숫자).
+- **게이트 2 진행:** 2/24 끝 (cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df tail 52.33 / acc 67.50, cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 47.33 / 64.50), 4개 실행 중(ce s1, teacher_topk s2, WB tome s2·s3). 판정 안 함.
+- [claude] 결정: CelebA 데이터 준비 실패는 harness.prepare_data가 무인 실행에서 막혀 있어(이전 라운드 확인) 내가 다시 돌리지 않는다. QUEUE 08:58 순서상 CelebA는 게이트 2 뒤라 지금 잃는 GPU 시간은 없다. 사람이 다운로드를 고친 뒤 BOOT_STATUS에 "celeba gate submitted"가 보이면 37 job을 낸다(그 전에 H-A4x 등록).
+- 다음: 게이트 2·H-A57 진행 기록, CelebA 사전 등록 초안(제출 전 커밋), 14:00 KST(05:00 UTC) 중간 요약.
+
 요약 (라운드 304, [claude], 23:50 UTC): **새 사람 지시 QUEUE 11-04 08:50 KST** (cub_lt는 사람이 준비, 게이트 2를 지금 낸다 + v0·tome 추가, Waterbirds tome s2·s3, 증거 묶음 고친 뒤 게이트 1 감사 재요청). → 이전 STUCK 두 줄(cub_lt 준비, 감사 selector_sha)은 사람 조치(data/cub_lt, 064cef4)로 풀려 지웠다.
 - **게이트 2 제출:** H-A39 등록 보탬(v0 P3: v0 − maskedkd tail CI 하한 > 0; tome 기록만) 커밋 f7a2ba3 뒤 cub_lt final K=29 × s1·2·3 = 24 job (ce, full@196, maskedkd, rollout, teacher_topk, trustmask_v1, trustfilt, tome), priority 4. 예: cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df, cub_lt_final_maskedkd_k29_s1_1103_234609_76d1, cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3. + waterbirds_final_tome_k29_s2_1103_234725_3539, waterbirds_final_tome_k29_s3_1103_234734_fbbf (priority 5). 실행 시작, GPU 다시 참.
 - [claude] 결정: v1 submit이 final ref(grid, center, random)를 자동으로 붙여서 그 9개 pending json은 지웠다(게이트 2 목록 밖; center는 위치 사전지식 규칙이라 사람이 뺀 것). 판정은 24 job이 다 끝난 뒤 한 번만.
