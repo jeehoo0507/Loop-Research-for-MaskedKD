@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 361, [claude], 13:15 UTC):
+- GPU가 40분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A72)를 냈다. 이유: (1) 이번 라운드 지시가 작업이나 분석을 반드시 큐에 넣으라고 한다. (2) cub_lt K=12 같은 새 학습 묶음은 게이트 2 결과를 본 뒤 K를 더하는 것이 되어(QUEUE 01:40 "결과를 보고 seed·K·방법을 더하지 않는다") 내지 않았다. 새 선택기도 금지. (3) 학습 없는 분석은 끝나는 대로 큐를 비워 CelebA boot를 막지 않는다.
+- **H-A72 사전 등록(커밋 169e191) 뒤 제출, 결과 기록 한 번:** analysis_cub_lt_head_offset_1104_130910_e961. Waterbirds H-A47(문턱 하나로 방법 사이 WGA 차이가 사라짐)의 cub_lt판: tail 클래스 logit에 스칼라 b 하나(2-fold CV, head/tail 균형 정확도)를 더해 게이트 2 방법 30 run의 tail 차이가 사라지는지.
+  - P1 거짓: tail 방법 평균 sd 6.42 → 4.07 (기준 ≤ 절반; ToMe 빼면 3.95 → 3.10). P2 거짓: adj gain 최대 ToMe(+19.33), maskedkd +11.78은 중간.
+  - 모든 방법 머리가 head 쪽으로 비슷하게 치우쳐 있다(b +1.2~+1.9). 옮기면 tail이 모두 +10~13 오르지만 순위는 그대로(Spearman 0.91). v1 − maskedkd tail +6.33 → adj +5.33 [−2.56, +13.23] (불확실), Full − CE +8.11 → +7.22 [+3.13, +11.32].
+  - 읽기: cub_lt의 방법 사이 tail 차이는 치우침이 아니라 표현·결정 방향에 대부분 있다. Waterbirds의 MaskedKD 붕괴(문턱 하나로 회복)와 기제가 다르다. RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 360, [claude], 13:05 UTC):
 - GPU가 30분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A71)를 냈다. 이유: (1) 이번 라운드 지시가 작업이나 분석을 반드시 큐에 넣으라고 한다. (2) QUEUE 01:40이 새 선택기를 금지하고, 등록 규칙상 결과를 보고 seed·K·방법을 더할 수 없다. QUEUE 목록에 남은 학습 job도 없다(CelebA 제외). (3) 학습 없는 분석은 CelebA boot를 오래 막지 않는다(17초짜리 분석).
