@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_filter_image_link_1104_235036_2084",
+ "name": "aircraft_filter_image_link",
+ "source_sha": "20845f3e0360dc060d03899bc850e2010aab47ad4e09729ff6819e6f3927fa88",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft final K=29 runs, are images where the teacher-area filter turns the masked teacher wrong (trustfilt vs lateroll) also images where the trustfilt student is wrong more often?",
+  "method": "per-image seed-averaged masked-teacher and student error differences, group contrast with image bootstrap CI, seed-wise contrast t CI",
+  "paper": "Zhao et al. CVPR 2022 (decoupled KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD)"
+ },
+ "seconds": 9.5
+}

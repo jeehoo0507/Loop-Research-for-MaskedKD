@@ -1,0 +1,116 @@
+{
+ "n_val": 600,
+ "K": 29,
+ "n_runs": 6,
+ "P1_contrast_dS_Gplus_minus_Gzero_pp_boot": [
+  1.4424,
+  -2.0418,
+  5.0986
+ ],
+ "record": {
+  "mean_dT_pp": 11.6667,
+  "mean_dS_pp": 0.5,
+  "pearson_dT_dS": 0.0586,
+  "pearson_dT_dS_boot": [
+   0.0586,
+   -0.0283,
+   0.146
+  ],
+  "seedwise_contrast_pp": [
+   -0.4774,
+   0.409,
+   3.0892
+  ],
+  "seedwise_contrast_t": [
+   1.0069,
+   -3.6061,
+   5.6199
+  ],
+  "groups": {
+   "G_plus": {
+    "n": 128,
+    "mean_dS_pp": 1.8229,
+    "mean_dT_pp": 71.6146,
+    "full_teacher_wrong_rate": 0.0938,
+    "lateroll_student_wrong": 0.1927,
+    "trustfilt_student_wrong": 0.2109
+   },
+   "G_zero": {
+    "n": 438,
+    "mean_dS_pp": 0.3805,
+    "mean_dT_pp": 0.0,
+    "full_teacher_wrong_rate": 0.1712,
+    "lateroll_student_wrong": 0.1788,
+    "trustfilt_student_wrong": 0.1826
+   },
+   "G_minus": {
+    "n": 34,
+    "mean_dS_pp": -2.9412,
+    "mean_dT_pp": -63.7255,
+    "full_teacher_wrong_rate": 0.1471,
+    "lateroll_student_wrong": 0.2549,
+    "trustfilt_student_wrong": 0.2255
+   }
+  }
+ },
+ "per_run": {
+  "final_lateroll_k29_s1_1101_104303_ef38": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 82.33333230018616,
+   "student_acc_remeasured": 82.33,
+   "masked_teacher_acc": 73.0,
+   "p_student_wrong_given_mt_wrong": 0.4877,
+   "p_student_wrong_given_mt_right": 0.0616
+  },
+  "final_lateroll_k29_s2_1101_125958_6470": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 80.33333420753479,
+   "student_acc_remeasured": 80.33,
+   "masked_teacher_acc": 71.17,
+   "p_student_wrong_given_mt_wrong": 0.526,
+   "p_student_wrong_given_mt_right": 0.0632
+  },
+  "final_lateroll_k29_s3_1101_140937_ec98": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 81.49999976158142,
+   "student_acc_remeasured": 81.5,
+   "masked_teacher_acc": 70.17,
+   "p_student_wrong_given_mt_wrong": 0.4804,
+   "p_student_wrong_given_mt_right": 0.0594
+  },
+  "final_trustfilt_k29_s1_1103_095835_0073": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 80.66666722297668,
+   "student_acc_remeasured": 80.67,
+   "masked_teacher_acc": 59.83,
+   "p_student_wrong_given_mt_wrong": 0.4108,
+   "p_student_wrong_given_mt_right": 0.0474
+  },
+  "final_trustfilt_k29_s2_1103_095842_42fd": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 80.83333373069763,
+   "student_acc_remeasured": 80.83,
+   "masked_teacher_acc": 60.0,
+   "p_student_wrong_given_mt_wrong": 0.4167,
+   "p_student_wrong_given_mt_right": 0.0417
+  },
+  "final_trustfilt_k29_s3_1103_095847_a7af": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 81.16666674613953,
+   "student_acc_remeasured": 81.17,
+   "masked_teacher_acc": 59.5,
+   "p_student_wrong_given_mt_wrong": 0.3868,
+   "p_student_wrong_given_mt_right": 0.0532
+  }
+ },
+ "verdict": {
+  "P1": "uncertain"
+ },
+ "note": "CI entries are [mean, low, high]; dT, dS = trustfilt - lateroll error rates (seed mean); groups fixed on the full sample by dT sign; seed-wise contrast pairs seed s of the two arms"
+}

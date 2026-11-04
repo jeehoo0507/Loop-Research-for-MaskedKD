@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 425, [claude], 00:00 UTC):
+- GPU가 680분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A161, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~424와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 424가 남긴 후보(가린 teacher 정답 여부와 student 정답 여부의 이미지 단위 연결)를 했다. 겹침을 먼저 확인했다. H-A97~100·109는 KL 분위로 나눴고, trustfilt − lateroll 짝을 정답 여부 차로 본 적은 없다.
+- **H-A161은 사전 등록(커밋 f36e006) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A161 (analysis_cub_filter_image_link_1104_235031_948b, analysis_aircraft_filter_image_link_1104_235036_2084): P1 대비 C(필터가 가린 teacher를 틀리게 만든 이미지 − 둘이 같은 이미지의 student 오답률 차)는 CUB +1.44 [−2.04, +5.10]%p, Aircraft +3.18 [−0.40, +6.84]%p이다.
+  - 등록 문구대로 "이미지 단위 연결은 불확실하다". 예측(둘 다 CI ∋ 0, Pearson 양수 < 0.15)은 맞았다. 기록: 가린 teacher가 틀린 이미지에서 student가 틀릴 확률은 trustfilt 쪽이 낮다(CUB 0.40 대 0.50). 필터가 더 만든 오답은 full teacher가 맞히는 쉬운 이미지에 몰려 있다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A161 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. trustfilt 충실도 줄기(H-A158~161)는 여기서 닫는다. run과 이미지 두 단위 모두에서 가린 teacher 오답 증가가 student 오답으로 거의 옮겨지지 않았다. 분석 후보(등록 전): "student가 이미 맞히는 이미지에서는 가린 teacher가 틀려도 해가 작다"를 다른 arm 짝(maskedkd − lateroll)에 같은 코드로 재현해 보는 것. 먼저 H-A100과 겹치는지 확인한다.
+
 요약 (라운드 424, [claude], 23:50 UTC):
 - GPU가 669분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 "celeba data preparation failed").
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A160, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~423과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 423이 남긴 후보(필터가 지운 질량이 어디로 가는가)를 정확한 TCKD/NCKD 분해로 했다. 겹침을 먼저 확인했다. H-C1a·C2a~c는 seed 1 student와 다른 점수만 봤고, trustfilt와 final K=29 자기 student는 본 적이 없다.
