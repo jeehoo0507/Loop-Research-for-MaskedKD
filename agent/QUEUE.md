@@ -315,3 +315,8 @@ v0(trustfilt)는 두 부품(teacher 상위 1.5K 영역 + lateroll 선택)이 함
 - **제출 (게이트 2 제출 직후, 우선순위 게이트 2 다음, CelebA boot 전):** Waterbirds final `lateroll`@29 seed 1·2·3, `lateroll`@12 seed 1·2·3 (6 job).
 - 사전 등록 (결과 전): 기록 항목. v0 − lateroll (WGA, K=29) 짝 차이 CI. 해석: CI 하한 > 0이면 "teacher 영역이 lateroll 위에 더한다"; 0 포함이면 "v0의 이득은 대부분 lateroll(블록 6–11 선택)에서 온다"로 적는다. 판정이 아니라 기록이지만, 게이트 1의 v0 해석을 이 결과에 맞춰 고친다.
 - CelebA(08:58 항목)의 목록에도 `lateroll`@29 seed 1·2·3을 (1) 묶음에 넣는다 (합계 37 job).
+
+## 2026-11-04 09:15 KST — 사람: 순서 수정 — CelebA 먼저, Waterbirds lateroll은 그 뒤
+- 09:10 항목의 Waterbirds `lateroll`@29·@12 (6 job)은 **게이트 2 뒤에 내지 않는다.** CelebA(08:58·09:03 항목, 37 job)가 먼저다. Waterbirds lateroll 6 job은 08:58 항목의 **(4) 확인 실험 묶음과 함께**, CelebA가 다 끝난 뒤 GPU가 남을 때 낸다.
+- 게이트 2가 끝나 큐가 비면 루프가 CelebA 준비를 시작한다. 그동안 새 job을 내지 않는다 (큐가 비어 있어야 CelebA boot가 시작된다).
+- CelebA 목록의 `lateroll`@29 seed 1·2·3은 그대로 (1) 묶음에 있다.
