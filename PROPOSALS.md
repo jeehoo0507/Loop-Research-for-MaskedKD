@@ -1112,6 +1112,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - 판정 (3/3 끝난 뒤 한 번만): **P1 (주)** maskedkd − frozen tail CI 상한 < 0 → "cub_lt에서도 고리". CI가 0 포함 → "고리인지 물려받음인지 cub_lt에서는 불확실"(차이는 불확실). 평균 ≥ 0이면 "cub_lt에서 MaskedKD의 tail 손실은 물려받음에 가깝다". 기록: frozen − rollout tail, head·전체 정확도, frozen 총 GFLOPs(스냅샷 forward 포함, 같은 비용 비교가 아니라 기제 시험).
   - 예측 (한 번만): P1 평균 < 0, 확신 낮음. Waterbirds보다 효과가 작을 것이다(cub_lt maskedkd − rollout tail 차이가 Waterbirds의 WGA 차이보다 작다).
   - 결과를 보고 seed·K·방법을 더하지 않는다. 새 선택기는 만들지 않는다(QUEUE 01:40).
+  - **결과 (라운드 344, 3/3 끝, 판정 한 번):** maskedkd − frozen tail +2.22 [−1.22, +5.66] (seed +0.67/+3.33/+2.67) → P1 불성립(차이는 불확실), 평균 ≥ 0 → 등록 문구대로 "물려받음에 가깝다". 예측(평균 < 0) 틀림. 기록: frozen − rollout tail −7.00 [−10.00, −4.00], 전체 정확도 maskedkd − frozen +1.22 [+0.59, +1.85], frozen 15.36 vs maskedkd 12.99 GFLOPs/img. 닫음. RESULTS 라운드 344.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.

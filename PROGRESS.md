@@ -4,10 +4,19 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 모든 차이는 같은 seed 짝 차이, t 95% CI (df 2), 주 지표 val WGA(cub_lt는 tail 정확도). 감사 PASS는 아직 없다(첫 줄 STUCK).
 1. **게이트 1 (Waterbirds final K=29, 3/3 seed, 등록 H-A37):** P1 v1 − teacher_topk −2.01 [−6.32, +2.31] → 불성립(차이는 불확실). P2 v1 − maskedkd +23.81 [+22.73, +24.89] → 성립. MaskedKD WGA 38.6, 다른 선택(rollout, teacher_topk, v1)은 62~64.
 2. **게이트 1 사후 관찰 (등록 밖, 주장 아님):** v0(trustfilt) WGA 72.68. v0 − teacher_topk +8.27 [+6.41, +10.13], v0 − Full@196 +5.26 [+3.40, +7.12] (Full 대비 GFLOPs 0.31배), v0 − tome +21.30 [+12.67, +29.93]. H-A57: v0 − lateroll K=29 +8.77 [+4.07, +13.47], K=12 +17.04 [+14.19, +19.89] → v0의 몫은 lateroll이 아니라 teacher 영역 필터. **확인 실험 H-A59 (seed 4·5·6): 6/6 끝, 판정 불성립** (05:05 UTC 갱신): v0 − teacher_topk WGA +6.01 [−0.46, +12.48] (세 seed 모두 양수, CI 하한 < 0), v0 − full +3.00 [−9.25, +15.26] → 등록 문구대로 "게이트 1의 v0 우위는 seed 4·5·6에서 재현되지 않았다". v0는 사후 관찰로 남는다. 분해 H-A60 (9/9 끝, 라운드 335 판정): attn − v0 −3.51 [−5.67, −1.35] → "lateroll도 필요"; pure − v0 −4.76 [−7.61, −1.91] → 더 싸게 같은 강건성은 아님.
-3. **게이트 3 (Waterbirds K=29, 3/3, 등록 H-A38):** online maskedkd − frozen −22.81 [−26.69, −18.93] → "고리" 성립(학습 중 student의 마지막 층 attention을 따라가는 것이 소수 그룹 붕괴를 만든다). frozen − rollout −0.75 [−9.30, +7.80] (불확실). frozen은 비용 1.18배라 메커니즘 시험이다.
+3. **게이트 3 (Waterbirds K=29, 3/3, 등록 H-A38):** online maskedkd − frozen −22.81 [−26.69, −18.93] → "고리" 성립(학습 중 student의 마지막 층 attention을 따라가는 것이 소수 그룹 붕괴를 만든다). frozen − rollout −0.75 [−9.30, +7.80] (불확실). frozen은 비용 1.18배라 메커니즘 시험이다. **cub_lt 재시험 H-A66 (3/3, 라운드 344 갱신):** online − frozen tail +2.22 [−1.22, +5.66] → 불성립(차이는 불확실), 평균 ≥ 0 → 등록 문구대로 "cub_lt에서는 물려받음에 가깝다". frozen − rollout tail −7.00 [−10.00, −4.00]. 즉 "고리"는 Waterbirds에서만 보였다.
 4. **게이트 2 (cub_lt final K=29, 24/24, 등록 H-A39, tail 정확도):** P1 v1 − maskedkd +6.33 [+1.72, +10.94] → 성립. P2 v1 − teacher_topk +4.22 [−0.63, +9.08] → 평균 > 0으로 성립(CI 0 포함). P3 v0 − maskedkd +3.33 [−3.44, +10.11] → 불성립(차이는 불확실) → v0 사후 관찰은 cub_lt에서 재현되지 않았다. Full − CE tail +8.11 [+4.66, +11.57].
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
+
+요약 (라운드 344, [claude], 08:15 UTC):
+- **H-A66 3/3 끝 → 사전 등록(5138a20)대로 판정 한 번 (손 계산 t CI df 2).** frozen tail: cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 43.33, cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c 40.67, cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d 41.33. online maskedkd tail은 세 seed 모두 44.00.
+  - P1 (주) online − frozen tail +2.22 [−1.22, +5.66] → 불성립(차이는 불확실). 평균 ≥ 0 → 등록 문구대로 "cub_lt에서 MaskedKD의 tail 손실은 물려받음에 가깝다". 예측(평균 < 0) 틀림.
+  - 기록: frozen − rollout tail −7.00 [−10.00, −4.00]; 전체 정확도 online − frozen +1.22 [+0.59, +1.85]; head +0.23 [−2.17, +2.62]; frozen 15.36 vs online 12.99 GFLOPs/img (기제 시험, 같은 비용 아님).
+  - RESULTS·PROPOSALS에 적고 닫았다. 14:00 요약 3번에 한 줄 더했다. 감사 요청 없음(첫 줄 STUCK).
+- 큐 비어 있음(pending·running 없음), GPU 놂. CelebA는 data/에 없고 boot는 STOPPED 그대로(00:08 UTC). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST).
+  - [claude] 결정: 이번 라운드에는 새 job을 내지 않는다. 이유: (1) QUEUE 09:15는 CelebA boot를 위해 큐를 비워 두라고 한다. (2) QUEUE에 CelebA와 무관하게 지금 낼 학습 항목이 남아 있지 않다(Waterbirds lateroll·확인 묶음은 CelebA 뒤). (3) 같은 계열 분석(H-A61~65)은 이미 다섯 번 냈고 새로 물을 질문이 약하다. 가장 보수적인 선택은 사람 지시를 기다리는 것이다.
+- 다음: 사람 지시(CelebA 데이터, AUDIT_PROMPT 정렬) 대기. 16:00 발표용 요약은 14:00 절에 반영돼 있다.
 
 요약 (라운드 343, [claude], 08:04 UTC):
 - H-A66 3개 job 진행 중(GPU 100%, pending 없음): cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 epoch 80/100, cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c 71/100, cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d 65/100. grid 슬롯이 비어 약 10 s/epoch → 마지막 job은 약 08:10 UTC에 끝난다.
