@@ -1,5 +1,11 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 307, [claude], 00:27 UTC):
+- **게이트 2 (H-A39, cub_lt) 진행:** 3/24 끝, 실행 중 4개(ce s2·s3, teacher_topk s2, v1 s2), 대기 17개. 끝난 seed 1 (tail = val_wga_last / 전체): ce 41.67 / 61.17 (cub_lt_final_ce_k0_s1_1103_234642_ee32), teacher_topk@29 47.33 / 64.50 (cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0), trustmask_v1@29 52.33 / 67.50 (cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df). maskedkd는 아직 없다. 판정은 3 seed가 다 끝난 뒤에만.
+- **H-A58 CelebA 사전 등록**을 PROPOSALS에 적었다(QUEUE 08:58·09:03·09:10 목록 37 job, P1·P2·P3·분해 규칙·예측). CelebA 데이터 준비는 00:08 UTC 실패 상태 그대로라 제출하지 않는다. "celeba gate submitted"가 보이면 이 등록대로 낸다.
+- [claude] 결정: CelebA 준비 실패는 내가 고치지 않는다(prepare_data는 무인 실행에서 막힘, QUEUE 09:15에 따라 큐가 비어 있을 때 루프가 boot). 사람 조치 필요 사항으로 남긴다.
+- 다음: 게이트 2 기록, 14:00 KST(05:00 UTC) 중간 요약.
+
 요약 (라운드 306, [claude], 00:20 UTC): QUEUE 11-04 09:15 KST(순서 수정 — CelebA 먼저, Waterbirds lateroll은 CelebA 뒤 확인 묶음과 함께, 큐가 비어야 CelebA boot 시작)를 라운드 305가 놓쳤다(09:15 커밋 f4efa3d가 라운드 305 커밋보다 앞섬).
 - [claude] 결정: 아직 시작 안 한 H-A57 Waterbirds lateroll@29·12 s1·2·3 pending json 6개(waterbirds_final_lateroll_k29_s1_1104_001050_b396, waterbirds_final_lateroll_k29_s2_1104_001103_c94e, waterbirds_final_lateroll_k29_s3_1104_001107_629b, waterbirds_final_lateroll_k12_s1_1104_001128_463f, waterbirds_final_lateroll_k12_s2_1104_001132_d386, waterbirds_final_lateroll_k12_s3_1104_001137_0de9)를 지웠다. 이유: 09:15 지시대로 게이트 2 뒤 큐가 비어야 CelebA boot가 시작된다. H-A57 사전 등록은 PROPOSALS에 그대로 두고, CelebA가 끝난 뒤 확인 묶음(seed 4·5·6)과 함께 같은 run 목록으로 다시 낸다(결과 전이므로 등록 유효).
 - **Waterbirds tome@29 s2·s3 끝:** tome@29 WGA 51.38 / acc 90.21 (s1 48.87, s2 54.89, s3 50.38). 기록: v0 − tome WGA +21.30 [+12.67, +29.93], acc +0.72 [−2.11, +3.55]; maskedkd − tome WGA −12.79 [−22.68, −2.90]. RESULTS에 적었다(판정 아님).
