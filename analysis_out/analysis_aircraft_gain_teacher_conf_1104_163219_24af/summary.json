@@ -1,0 +1,104 @@
+{
+ "n_val": 700,
+ "kd_gain_mean_pct": 1.619,
+ "val_acc": {
+  "ce": {
+   "1": 66.0,
+   "2": 66.86,
+   "3": 66.43
+  },
+  "full": {
+   "1": 68.29,
+   "2": 68.43,
+   "3": 67.43
+  }
+ },
+ "teacher_acc_pct": 77.43,
+ "conf_quintile_edges": [
+  0.8152,
+  0.9722,
+  0.9978,
+  0.9998
+ ],
+ "quintile_kd_gain_pct": [
+  -0.238,
+  3.81,
+  2.143,
+  1.19,
+  1.19
+ ],
+ "quintile_ce_acc_pct": [
+  25.95,
+  43.33,
+  73.81,
+  90.95,
+  98.1
+ ],
+ "quintile_teacher_acc_pct": [
+  41.43,
+  62.86,
+  85.0,
+  97.86,
+  100.0
+ ],
+ "quintile_teacher_conf": [
+  0.5573,
+  0.9101,
+  0.9903,
+  0.9991,
+  0.9999
+ ],
+ "quintile_nontarget_entropy": [
+  1.2692,
+  0.7945,
+  0.8913,
+  1.1522,
+  2.1485
+ ],
+ "q1_minus_q5_pct_boot": [
+  -1.429,
+  -4.889,
+  1.948
+ ],
+ "spearman_conf_gain_boot": [
+  -0.0368,
+  -0.0637,
+  0.0835
+ ],
+ "per_seed_quintile_gain_pct": {
+  "1": [
+   1.429,
+   -1.429,
+   8.571,
+   1.429,
+   1.429
+  ],
+  "2": [
+   2.143,
+   6.429,
+   -2.143,
+   0.714,
+   0.714
+  ],
+  "3": [
+   -4.286,
+   6.429,
+   0.0,
+   1.429,
+   1.429
+  ]
+ },
+ "per_seed_q1_minus_q5_t": [
+  -1.4286,
+  -10.8185,
+  7.9613,
+  3
+ ],
+ "gain_teacher_correct_pct": 1.968,
+ "gain_teacher_wrong_pct": 0.422,
+ "n_teacher_wrong": 158,
+ "verdict": {
+  "q1_minus_q5": "uncertain",
+  "P1_low_conf_gain": false
+ }
+}
