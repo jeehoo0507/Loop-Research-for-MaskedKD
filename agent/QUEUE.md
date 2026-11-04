@@ -301,3 +301,11 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **사전 등록 (결과 전·제출 전, H-A4x로):** 주 지표 val WGA(최악 그룹 = 금발 남성). P1 v0 − maskedkd CI 하한 > 0. P2 v0 − teacher_topk 평균 > 0 (CI 하한 > 0이면 "확인"). P3 online maskedkd − frozen 평균 < 0. 기록: v0 − full, v0 − rollout, clean acc. 예측: Waterbirds보다 효과가 작다 (지름길이 얼굴 전체에 퍼져 배경 토큰처럼 잘리지 않는다). 효과가 작거나 없으면 그대로 적는다: "지름길이 공간적으로 분리될 때만"이라는 조건이 된다.
 - 그 뒤 GPU가 남으면 (4) **Waterbirds v0 사후 관찰의 확인 실험**: 새 seed 4·5·6, K=29, `trustfilt`·`teacher_topk`·`full` (9 job). 사전 등록: v0 − teacher_topk CI 하한 > 0, v0 − full 평균 > 0. 이것이 통과해야 게이트 1의 v0 결과를 주장으로 쓴다. (5) Waterbirds `tome`@29 seed 2·3 (2 job).
 - 메모리: CelebA train은 job당 약 3.8 GB RAM (Caltech-256과 비슷). 4개 동시 실행 그대로.
+
+## 2026-11-04 10:05 KST — 사람: CelebA 제출 목록에 v0 분해 세 개 추가 (09:40 항목 수정)
+v0(trustfilt)는 두 부품(teacher 상위 1.5K 영역 + lateroll 선택)이 함께 있어 어느 쪽이 고리를 끊는지 모른다. CelebA 제출에 아래를 더한다 (final, K=29, seed 1·2·3). 사람이 선택기 두 개를 추가했다.
+- `trustfilt_attn`: teacher 영역 그대로 + **MaskedKD 규칙(마지막 블록 CLS attention)**으로 29개. v0 ≈ attn이면 "영역이 전부", attn ≪ v0이면 "lateroll도 필요".
+- `trustfilt_pure`: teacher top-29 ∩ lateroll top-29 **교집합만** (최소 1개, 채우지 않음). 토큰 수가 이미지마다 다르고 평균 < 29 → teacher 비용이 MaskedKD@29보다 낮다. 기록: 평균 토큰 수, 총 GFLOPs.
+- `trustfilt`@**20**: pure와 비용을 맞춘 대조 (토큰 20개 고정).
+우선순위: 09:40의 (1) 뒤, (2) 앞. CelebA 합계 34 job. 사전 등록에 한 줄씩: attn − v0 (WGA), pure − v0 (WGA)와 pure의 GFLOPs/토큰 수, v0@20 − pure. 판정 규칙: |attn − v0| CI가 ±3 안이면 "영역이 전부"; pure − v0 ≥ −2이고 GFLOPs가 maskedkd@29 아래면 "같은 강건성을 더 싸게".
+- Waterbirds에서도 같은 세 변형을 **(4) 확인 실험 묶음**(seed 4·5·6)에 함께 넣는다: `trustfilt_attn`·`trustfilt_pure`·`trustfilt`@20 seed 4·5·6 (9 job 추가, 합계 18).
