@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 415, [claude], 22:10 UTC):
+- GPU가 569분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A145 cub_lt, H-A146 Aircraft, 한 등록). 이유는 라운드 361~414와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 414가 남긴 후보(teacher_topk 비교)를 했다. CUB에는 teacher_topk final run이 없다. 그래서 같은 CUB val·teacher를 쓰는 cub_lt run을 썼다. 겹침을 먼저 확인했다. H-A131~136은 maskedkd − rollout 짝만 봤다.
+- **H-A145·146은 사전 등록(커밋 754982b) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A145 (analysis_cub_lt_signal_student_nt_link_ttopk_1104_215908_9f20): P1 참. Spearman(dS, dG) (maskedkd − teacher_topk)는 +0.14 [+0.06, +0.22]이다. P2는 상한 < 0이다. dG는 −0.195 [−0.316, −0.078]이다. 즉 cub_lt에서는 teacher_topk의 가린 teacher가 maskedkd보다 비정답 모양을 더 잃는다.
+  - H-A146 (analysis_aircraft_signal_student_nt_link_ttopk_1104_215913_f206): P1 참, +0.20 [+0.13, +0.27]. P2 참, +0.196 [+0.089, +0.307].
+  - 등록 문구대로 P1은 "두 데이터에서 같은 방향"이다. P2는 갈린다. 기록: 두 데이터 모두 student rollout 집합이 teacher 자기 rollout 상위 29개보다 가린 teacher 신호를 더 잘 지킨다(dG −0.62·−0.28, 상한 < 0). 그런데 student 쪽 차이(dS)는 작다(−0.043·−0.010). 예측은 P1 맞음, P2 반만 맞음, rollout − teacher_topk 예측은 틀림. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A145·146 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): teacher 자기 rollout 상위 집합이 왜 가린 teacher 충실도가 낮은지 본다. 예를 들어 teacher rollout이 몇 patch(또는 배경 sink)에 몰리는지를 student rollout과 비교한다. 먼저 H-A137·138(집중도)과 겹치는지 확인한다.
+
 요약 (라운드 414, [claude], 21:55 UTC):
 - GPU가 557분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A143 CUB, H-A144 Aircraft, 한 등록). 이유는 라운드 361~413과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 413이 남긴 첫 후보(학습 view)를 했다. 겹침을 먼저 확인했다. H-A133·134는 학습 view에서 student 비정답 모양만 봤고, teacher 지도 순위는 보지 않았다. run은 H-A141·142와 같다(스냅샷 e25·final만).
