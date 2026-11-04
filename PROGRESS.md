@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 421, [claude], 23:10 UTC):
+- GPU가 636분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다. QUEUE의 학습 목록(Waterbirds 확인 묶음, lateroll, tome s2·s3)은 이미 모두 run이 있다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**를 냈다(H-A157 Aircraft). 이유는 라운드 361~420과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 420이 T29/R29 줄기를 멈추자고 했고, 남긴 다른 후보(run 수준 충실도 ↔ 정확도)를 했다. 겹침을 먼저 확인했다. cub_lt는 H-A62·H-A71이 이미 run 수준을 봤다. 그래서 cub_lt는 다시 내지 않았다. Aircraft는 H-A2(seed 1)만 있었다. H-A124·126·128은 student 쪽만 봤다.
+- **H-A157은 사전 등록(커밋 f689c6e) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A157 (analysis_aircraft_runlevel_fidelity_1104_230650_162b, 21 run 모두 dataset aircraft): P1 run 수준 Spearman(KL, acc)는 −0.739(p_lower 0.0001)이다. P2 arm 평균은 −0.893(p 0.0066)이다. 둘 다 음수이고, random을 빼도 −0.624(p 0.003)이다.
+  - 등록 문구대로 "Aircraft K=29에서 가린 teacher 충실도가 run(arm) 정확도 순위를 따른다(분석, 인과 아님)". 예측은 P1 틀림(분명했다), P2 맞음, random 예측 틀림. KL 상위 넷(lateroll·v1·rollout·trustfilt)의 정확도 차는 1.5%p 안이라 상위끼리의 순서 근거는 아니다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A157 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 run 수준 시험을 CUB final(seed 1·2·3; teacher_topk·trustfilt는 CUB에 없을 수 있으니 확인)으로 한다. H-C4는 screen seed 0만 봤다.
+
 요약 (라운드 420, [claude], 23:00 UTC):
 - GPU가 625분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A155 cub_lt, H-A156 Aircraft, 한 등록). 이유는 라운드 361~419와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 419가 남긴 후보를 했다. patch 단위 성질이 dG를 설명하지 못했으므로 이미지 단위로 봤다(teacher 확신 conf_T, teacher 지도 평평함 mass_T). 겹침을 먼저 확인했다. H-A147은 mass의 평균만 기록했다. H-A98·99는 확신을 정확도 손실에 썼다. run은 H-A147~154와 같다.
