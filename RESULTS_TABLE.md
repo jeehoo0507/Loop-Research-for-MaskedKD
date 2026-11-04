@@ -468,10 +468,11 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 ### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - suffdisc@0f0600 : 29.0 (7 seeds)
+  - trustfilt@27da28 : 29.0 (3 seeds)
   - center : 49.0 (4 seeds)
   - maskedkd : 98.0 (3 seeds)
 - screening only (fewer seeds):
-  - trustfilt@27da28 : 29.0 (1 seeds)
+  - teacher_topk : 29.0 (1 seeds)
   - adaroll@069f50 : 48.5 (1 seeds)
   - suffdisc@0f0600 : 49.0 (1 seeds)
 
@@ -487,8 +488,8 @@ Total agent screen configs: 16
 - midattn: 2 configs
 - gradroll: 2 configs
 - jitdisc: 1 configs
-- gradrep: 1 configs
 - trustfilt: 1 configs
+- gradrep: 1 configs
 - adaroll: 1 configs
 - suffstride: 1 configs
 - conceptcov: 1 configs
@@ -555,10 +556,11 @@ Total agent screen configs: 16
 | screen | suffdisc@0f0600 |  | 29 | 29.0 | 0,1,2,3,4,5,6 | 90.52 ± 0.63 | 64.66 ± 3.33 | 22.62 | 5.36 | 9.62 | 179 | screen_suffdisc_k29_s2_1031_025411_5cac screen_suffdisc_k29_s4_1031_071433_b562 screen_suffdisc_k29_s0_1031_011608_3604 screen_suffdisc_k29_s6_1031_073624_f04c screen_suffdisc_k29_s5_1031_071442_6492 screen_suffdisc_k29_s3_1031_025416_358a screen_suffdisc_k29_s1_1031_022639_643b |
 | screen | suffdisc@0f0600 |  | 49 | 49.0 | 0 | 90.24 ± 0.00 | 60.90 ± 0.00 | 31.75 | 8.82 | 15.29 | 201 | screen_suffdisc_k49_s0_1031_012539_2b13 |
 | screen | suffstride@6afabc |  | 12 | 12.0 | 0 | 89.24 ± 0.00 | 60.90 ± 0.00 | 11.86 | 2.45 | 1.78 | 260 | screen_suffstride_k12_s0_1031_074452_d5ef |
+| screen | teacher_topk |  | 29 | 29.0 | 4 | 90.58 ± 0.00 | 65.41 ± 0.00 | 13.36 | 5.36 | 0.36 | 273 | waterbirds_screen_teacher_topk_k29_s4_1104_041258_c453 |
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0,4,5,6 | 89.57 ± 0.69 | 49.44 ± 1.67 | 12.00 | 4.36 | 0.00 | 311 | screen_tome_k12_s0_1030_135953_84af screen_tome_k12_s4_1031_051120_5c90 screen_tome_k12_s6_1031_054505_d130 screen_tome_k12_s5_1031_051124_f881 |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
-| screen | trustfilt@27da28 |  | 29 | 29.0 | 4 | 90.16 ± 0.00 | 69.92 ± 0.00 | 13.35 | 5.36 | 0.43 | 357 | waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 |
+| screen | trustfilt@27da28 |  | 29 | 29.0 | 4,5,6 | 90.69 ± 0.50 | 69.42 ± 0.87 | 13.35 | 5.36 | 0.43 | 295 | waterbirds_screen_trustfilt_k29_s6_1104_041254_004f waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 waterbirds_screen_trustfilt_k29_s5_1104_041250_8224 |
 
 # Held-out check: caltech256
 
