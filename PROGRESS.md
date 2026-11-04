@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 368, [claude], 14:20 UTC):
+- GPU가 106분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A79)를 냈다. 이유: 라운드 361~367과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음). cub_lt에서 본 학습 시야 결과(H-A77·78)를 주 분석 무대 Waterbirds 게이트 1 run으로 옮겼다.
+- **H-A79 사전 등록(커밋 870ce4f) 뒤 제출, 결과 기록 한 번:** analysis_wb_aug_targets_1104_141452_e3d5. Waterbirds K=29 seed 1·2·3, 6 팔 18 run.
+  - P1 참: Spearman(최악 그룹 q_y aug, val WGA) 0.65 [0.24, 0.94] > clean 0.44; 차이 +0.21 [−0.12, +0.71]는 불확실.
+  - P2 참: v0 − teacher_topk 최악 그룹 q_y aug +0.062 [+0.038, +0.086] (clean +0.131보다 작음).
+  - 기록: v0 − lateroll 최악 그룹 q_y clean +0.044 (불확실) → aug +0.231 [+0.167, +0.295] — 학습 시야에서 v0의 lateroll 대비 WGA 우위(H-A57)와 방향이 맞는다. teacher 영역 규칙은 aug에서 오르고 student 쪽 규칙(rollout·v1·lateroll)은 내려간다. 주 지표 쪽 Spearman(q_y_all, val_acc)은 clean 0.38, aug 0.32로 둘 다 약하다. RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 367, [claude], 14:10 UTC):
 - GPU가 96분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A78)를 냈다. 이유: 라운드 361~366과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 27초짜리 분석은 CelebA boot를 막지 않음). H-A71~77이 모두 tail(진단값)만 봐서, 이번에는 주 지표(평균 정확도) 쪽으로 H-A77을 옮겼다.
