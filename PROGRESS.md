@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 401, [claude], 19:30 UTC):
+- GPU가 413분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A117 CUB, H-A118 Aircraft, 한 등록). 이유는 라운드 361~400과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 혼동 구조 줄(H-A113~116)이 닫혀서 새 질문을 골랐다. 질문은 가림이 top-1 밖의 출력 보정(NLL·ECE)을 잃는가이다. 이전 보정 분석은 없었다(PROPOSALS·analysis/ 확인).
+- **H-A117·118은 사전 등록(커밋 925c9e8) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A117 (analysis_cub_mask_calibration_1104_192252_d0b4, CUB val 600장): P1 참. maskedkd − Full NLL은 +0.240 [+0.214, +0.267]이다. P2 참. ECE ×100은 +12.43 [+10.15, +13.72]이다.
+  - H-A118 (analysis_aircraft_mask_calibration_1104_192256_9dbb, Aircraft val 700장): P1 참, +0.280 [+0.251, +0.310]. P2 참, +10.16 [+7.20, +11.33].
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. seed t CI도 0을 제외한다. 기록: 가림 student는 CE보다도 NLL·ECE가 나쁘다. 같은 비용의 lateroll@29는 NLL 손실의 약 2/3를 되돌린다(maskedkd − lateroll +0.167 두 데이터, 하한 > 0). 모든 student가 확신 부족(conf < acc)이고, maskedkd가 가장 심하다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 보정 손실이 전역 온도 하나로 사라지는지 보기. index 홀짝 2-fold로 run별 온도를 맞춘 뒤 held-out NLL·ECE의 maskedkd − Full을 본다. 남는 차이가 있으면 클래스별 모양 손실이다.
+
 요약 (라운드 400, [claude], 19:20 UTC):
 - GPU가 403분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A115 CUB, H-A116 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~399와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 399가 남긴 후보를 그대로 봤다: 같은 비용의 lateroll@29가 teacher 혼동 구조 겹침을 지키는가.
