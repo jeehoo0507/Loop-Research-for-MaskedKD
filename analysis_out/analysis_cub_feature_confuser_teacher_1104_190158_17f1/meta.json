@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_feature_confuser_teacher_1104_190158_17f1",
+ "name": "cub_feature_confuser_teacher",
+ "source_sha": "17f13b31998e047d121aff26232901a0f3aa97f5e953f93056cabcdde1e943de",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), is a KD student's nearest other class in feature space the full teacher's runner-up class more often for Full@196 than for MaskedKD@29 (and than for CE)?",
+  "method": "clean full teacher runner-up class per val image; per student nearest other class-mean (cosine) on pre-logit features; per-image overlap; paired Full - MaskedKD, Full - CE, MaskedKD - CE; image bootstrap and seed t CI; masked teacher runner-up as record",
+  "paper": "Hinton, Vinyals & Dean 2015 (KD); Furlanello et al. ICML 2018 (dark knowledge); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 7.7
+}

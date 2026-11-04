@@ -1,0 +1,234 @@
+{
+ "n_val": 700,
+ "n_valid": 700,
+ "n_cls": 100,
+ "chance_x100": 1.01,
+ "teacher_val_acc": 77.43,
+ "subsets": {
+  "mask_loss": {
+   "feat_overlap_x100_boot": [
+    3.524,
+    1.665,
+    5.381
+   ],
+   "logit_overlap_x100_boot": [
+    6.19,
+    3.808,
+    8.524
+   ]
+  },
+  "kd_gain": {
+   "feat_overlap_x100_boot": [
+    2.381,
+    0.857,
+    3.952
+   ],
+   "logit_overlap_x100_boot": [
+    2.714,
+    1.095,
+    4.43
+   ]
+  },
+  "mask_vs_ce": {
+   "feat_overlap_x100_boot": [
+    -1.143,
+    -3.0,
+    0.762
+   ],
+   "logit_overlap_x100_boot": [
+    -3.476,
+    -5.62,
+    -1.238
+   ]
+  }
+ },
+ "per_seed": {
+  "mask_loss": {
+   "feat_overlap_x100": [
+    3.714,
+    4.714,
+    2.143
+   ],
+   "logit_overlap_x100": [
+    5.571,
+    7.857,
+    5.143
+   ]
+  },
+  "kd_gain": {
+   "feat_overlap_x100": [
+    1.0,
+    4.429,
+    1.714
+   ],
+   "logit_overlap_x100": [
+    1.714,
+    2.857,
+    3.571
+   ]
+  },
+  "mask_vs_ce": {
+   "feat_overlap_x100": [
+    -2.714,
+    -0.286,
+    -0.429
+   ],
+   "logit_overlap_x100": [
+    -3.857,
+    -5.0,
+    -1.571
+   ]
+  }
+ },
+ "per_seed_t": {
+  "mask_loss": {
+   "feat_overlap_x100": [
+    3.5237,
+    0.3039,
+    6.7434,
+    3
+   ],
+   "logit_overlap_x100": [
+    6.1903,
+    2.5653,
+    9.8154,
+    3
+   ]
+  },
+  "kd_gain": {
+   "feat_overlap_x100": [
+    2.381,
+    -2.1136,
+    6.8756,
+    3
+   ],
+   "logit_overlap_x100": [
+    2.714,
+    0.3869,
+    5.0411,
+    3
+   ]
+  },
+  "mask_vs_ce": {
+   "feat_overlap_x100": [
+    -1.143,
+    -4.5277,
+    2.2417,
+    3
+   ],
+   "logit_overlap_x100": [
+    -3.476,
+    -7.8136,
+    0.8616,
+    3
+   ]
+  }
+ },
+ "overlap_level": {
+  "maskedkd": {
+   "1": {
+    "feat_overlap_x100": 47.86,
+    "logit_overlap_x100": 50.71
+   },
+   "2": {
+    "feat_overlap_x100": 49.57,
+    "logit_overlap_x100": 50.14
+   },
+   "3": {
+    "feat_overlap_x100": 49.0,
+    "logit_overlap_x100": 52.43
+   }
+  },
+  "full": {
+   "1": {
+    "feat_overlap_x100": 51.57,
+    "logit_overlap_x100": 56.29
+   },
+   "2": {
+    "feat_overlap_x100": 54.29,
+    "logit_overlap_x100": 58.0
+   },
+   "3": {
+    "feat_overlap_x100": 51.14,
+    "logit_overlap_x100": 57.57
+   }
+  },
+  "ce": {
+   "1": {
+    "feat_overlap_x100": 50.57,
+    "logit_overlap_x100": 54.57
+   },
+   "2": {
+    "feat_overlap_x100": 49.86,
+    "logit_overlap_x100": 55.14
+   },
+   "3": {
+    "feat_overlap_x100": 49.43,
+    "logit_overlap_x100": 54.0
+   }
+  }
+ },
+ "masked_teacher": {
+  "tm2_eq_t2_x100": [
+   33.29,
+   29.86,
+   32.71
+  ],
+  "maskedkd_feat_overlap_tm2_minus_t2_x100_boot": [
+   -20.905,
+   -24.096,
+   -17.714
+  ]
+ },
+ "acc": {
+  "maskedkd": {
+   "1": {
+    "logit_all_measured": 66.71,
+    "val_acc_last": 66.71428680419922
+   },
+   "2": {
+    "logit_all_measured": 64.43,
+    "val_acc_last": 64.42857384681702
+   },
+   "3": {
+    "logit_all_measured": 64.71,
+    "val_acc_last": 64.71428275108337
+   }
+  },
+  "full": {
+   "1": {
+    "logit_all_measured": 68.29,
+    "val_acc_last": 68.28571557998657
+   },
+   "2": {
+    "logit_all_measured": 68.43,
+    "val_acc_last": 68.42857003211975
+   },
+   "3": {
+    "logit_all_measured": 67.43,
+    "val_acc_last": 67.42857098579407
+   }
+  },
+  "ce": {
+   "1": {
+    "logit_all_measured": 66.0,
+    "val_acc_last": 66.00000262260437
+   },
+   "2": {
+    "logit_all_measured": 66.86,
+    "val_acc_last": 66.8571412563324
+   },
+   "3": {
+    "logit_all_measured": 66.43,
+    "val_acc_last": 66.42857193946838
+   }
+  }
+ },
+ "verdict": {
+  "mask_loss": "positive",
+  "kd_gain": "positive",
+  "mask_vs_ce": "uncertain",
+  "P1_full_minus_maskedkd_overlap": "positive",
+  "P2_full_minus_ce_overlap": "positive"
+ }
+}
