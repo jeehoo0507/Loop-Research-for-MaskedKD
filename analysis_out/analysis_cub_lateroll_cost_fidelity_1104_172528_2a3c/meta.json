@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lateroll_cost_fidelity_1104_172528_2a3c",
+ "name": "cub_lateroll_cost_fidelity",
+ "source_sha": "2a3cb5de9bae02073b6248a033a0b7ec0d1b9501b026ecd9900e2883c398df4f",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3, K=29), is lateroll's per-image accuracy advantage over MaskedKD concentrated on images where MaskedKD's masked teacher departs most from the full teacher?",
+  "method": "keep-only masked teachers with each student's own selector rule (last-block CLS / late rollout) top-29; quintiles of maskedkd-mask KL; lateroll - maskedkd Q5 - Q1 with paired image bootstrap and seed t CI",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 8.6
+}
