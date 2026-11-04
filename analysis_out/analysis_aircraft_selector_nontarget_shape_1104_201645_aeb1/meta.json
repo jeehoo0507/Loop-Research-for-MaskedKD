@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_selector_nontarget_shape_1104_201645_aeb1",
+ "name": "aircraft_selector_nontarget_shape",
+ "source_sha": "aeb13481f48427bc094f0f22094a70cd440ba907e2b27e3f13b3bded4812fba7",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3, K=29), after held-out 2-fold temperature scaling, is the student's non-target class distribution further from the full teacher's for MaskedKD than for Rollout / TrustMask_v1?",
+  "method": "per run, fit one softmax temperature on half of val (index parity), apply on the other half; per image KL(teacher || student) over the non-target classes (true label removed, renormalised); paired MaskedKD@29 - selector@29 and selector@29 - Full; image bootstrap and seed t CI",
+  "paper": "Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Guo et al. ICML 2017 (temperature scaling); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 15.0
+}
