@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_decomp_targets_1104_125901_660e",
+ "name": "cub_lt_decomp_targets",
+ "source_sha": "660e5d7d74a480a8e2cfdd5e11b0960a399ffd38c8995811ee7e866e2a24ea26",
+ "status": "done",
+ "meta": {
+  "question": "out of sample: on the 12 cub_lt v0-decomposition runs (lateroll, trustfilt_attn, trustfilt_pure, trustfilt@20), does the masked teacher's tail target accuracy rank run tail accuracy as in H-A62, and does it explain pure < v0?",
+  "method": "attention rollout (teacher all blocks, student blocks 6..11); last-block CLS attention; keep-only masked-teacher faithfulness sliced by head/tail class; within-group image bootstrap; Spearman",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 26.4
+}
