@@ -1,0 +1,231 @@
+{
+ "n_val": 600,
+ "K": 29,
+ "n_runs": 18,
+ "P1_spearman_kl_acc_runs": [
+  -0.7337,
+  0.0006,
+  0.9994
+ ],
+ "P2_spearman_kl_acc_arms": [
+  -0.8857,
+  0.0186,
+  0.9917
+ ],
+ "record": {
+  "spearman_ntkl_acc_runs": [
+   -0.7461,
+   0.0002,
+   0.9998
+  ],
+  "spearman_tacc_acc_runs": [
+   0.676,
+   0.9984,
+   0.0016
+  ],
+  "spearman_ntkl_acc_arms": [
+   -0.8857,
+   0.015,
+   0.993
+  ],
+  "spearman_tacc_acc_arms": [
+   0.8857,
+   0.9914,
+   0.0169
+  ],
+  "spearman_kl_acc_runs_no_random": [
+   -0.5393,
+   0.0224,
+   0.9784
+  ],
+  "arm_means_kl_ntkl_tacc_acc": {
+   "maskedkd": [
+    1.2247,
+    1.7395,
+    57.3333,
+    80.2222
+   ],
+   "rollout": [
+    0.74,
+    1.2437,
+    70.8889,
+    80.4444
+   ],
+   "lateroll": [
+    0.6236,
+    1.1405,
+    71.4444,
+    81.3889
+   ],
+   "trustmask_v1": [
+    0.601,
+    1.1143,
+    72.8889,
+    81.2778
+   ],
+   "trustfilt": [
+    1.1499,
+    1.5697,
+    59.7778,
+    80.8889
+   ],
+   "random": [
+    2.6115,
+    2.4202,
+    34.1111,
+    74.9444
+   ]
+  }
+ },
+ "per_run": {
+  "final_maskedkd_k29_s1_1101_104303_b676": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 81.33333325386047,
+   "kl": 1.2414,
+   "nt_kl": 1.756,
+   "t_acc": 55.33
+  },
+  "final_maskedkd_k29_s2_1101_125958_5b02": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 79.16666865348816,
+   "kl": 1.2386,
+   "nt_kl": 1.7783,
+   "t_acc": 58.0
+  },
+  "final_maskedkd_k29_s3_1101_140937_b00f": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 80.16666769981384,
+   "kl": 1.1942,
+   "nt_kl": 1.6843,
+   "t_acc": 58.67
+  },
+  "final_rollout_k29_s1_1101_104303_3861": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 81.33333325386047,
+   "kl": 0.7642,
+   "nt_kl": 1.2774,
+   "t_acc": 70.33
+  },
+  "final_rollout_k29_s2_1101_125958_2ad2": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 79.3333351612091,
+   "kl": 0.7497,
+   "nt_kl": 1.2439,
+   "t_acc": 70.83
+  },
+  "final_rollout_k29_s3_1101_140937_8573": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 80.66666722297668,
+   "kl": 0.7061,
+   "nt_kl": 1.2097,
+   "t_acc": 71.5
+  },
+  "final_lateroll_k29_s1_1101_104303_ef38": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 82.33333230018616,
+   "kl": 0.6007,
+   "nt_kl": 1.1224,
+   "t_acc": 73.0
+  },
+  "final_lateroll_k29_s2_1101_125958_6470": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 80.33333420753479,
+   "kl": 0.6341,
+   "nt_kl": 1.1451,
+   "t_acc": 71.17
+  },
+  "final_lateroll_k29_s3_1101_140937_ec98": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 81.49999976158142,
+   "kl": 0.636,
+   "nt_kl": 1.154,
+   "t_acc": 70.17
+  },
+  "final_trustmask_v1_k29_s1_1103_095834_2518": {
+   "arm": "trustmask_v1",
+   "seed": 1,
+   "val_acc_last": 81.49999976158142,
+   "kl": 0.5925,
+   "nt_kl": 1.1003,
+   "t_acc": 72.67
+  },
+  "final_trustmask_v1_k29_s2_1103_095842_a161": {
+   "arm": "trustmask_v1",
+   "seed": 2,
+   "val_acc_last": 81.00000023841858,
+   "kl": 0.6245,
+   "nt_kl": 1.1445,
+   "t_acc": 72.67
+  },
+  "final_trustmask_v1_k29_s3_1103_095847_3c94": {
+   "arm": "trustmask_v1",
+   "seed": 3,
+   "val_acc_last": 81.33333325386047,
+   "kl": 0.5862,
+   "nt_kl": 1.0982,
+   "t_acc": 73.33
+  },
+  "final_trustfilt_k29_s1_1103_095835_0073": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 80.66666722297668,
+   "kl": 1.1653,
+   "nt_kl": 1.5771,
+   "t_acc": 59.83
+  },
+  "final_trustfilt_k29_s2_1103_095842_42fd": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 80.83333373069763,
+   "kl": 1.1339,
+   "nt_kl": 1.5544,
+   "t_acc": 60.0
+  },
+  "final_trustfilt_k29_s3_1103_095847_a7af": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 81.16666674613953,
+   "kl": 1.1504,
+   "nt_kl": 1.5777,
+   "t_acc": 59.5
+  },
+  "final_random_k29_s1_1101_104303_9664": {
+   "arm": "random",
+   "seed": 1,
+   "val_acc_last": 74.6666669845581,
+   "kl": 2.652,
+   "nt_kl": 2.5026,
+   "t_acc": 33.83
+  },
+  "final_random_k29_s2_1101_125958_9495": {
+   "arm": "random",
+   "seed": 2,
+   "val_acc_last": 75.0,
+   "kl": 2.613,
+   "nt_kl": 2.4224,
+   "t_acc": 34.0
+  },
+  "final_random_k29_s3_1101_140937_24cb": {
+   "arm": "random",
+   "seed": 3,
+   "val_acc_last": 75.16666650772095,
+   "kl": 2.5693,
+   "nt_kl": 2.3355,
+   "t_acc": 34.5
+  }
+ },
+ "verdict": {
+  "P1": "negative",
+  "P2": "negative"
+ },
+ "note": "permutation entries are [rho, p_lower (rho <= observed), p_upper (rho >= observed)]"
+}
