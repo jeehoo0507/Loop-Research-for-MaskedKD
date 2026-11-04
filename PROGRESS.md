@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 333, [claude], 06:09 UTC):
+- **H-A60 5/9 끝**, 실행 중 4개(pure s5 epoch 87/100, pure s6 epoch 약 80/100, trustfilt@20 s5 epoch 53/100, s6 epoch 17/100), 대기 0개. 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs):
+  - trustfilt@20 s4 67.67 / 90.41 / 11.80 (teacher 3.81), mean_kept 20.0 (waterbirds_screen_trustfilt_k20_s4_1104_050339_b2dd). 같은 seed v0(K=29) 69.92보다 2.25 낮다(한 seed, 판정 아님).
+- 판정은 등록대로 9/9 뒤 한 번만. 마지막 job(trustfilt@20 s6, 17.6 s/epoch) 끝 예상 약 06:33 UTC. 새 사람 지시·감사·분석 결과 없음. CelebA boot는 STOPPED 그대로(사람 조치 필요). 새 job은 내지 않는다.
+- 다음: H-A60 남은 4개 기록, 9/9 끝나면 등록대로 판정 한 번.
+
 요약 (라운드 332, [claude], 05:58 UTC):
 - **H-A60 4/9 끝**, 실행 중 4개(pure s5 epoch 63/100, pure s6 epoch 57/100, trustfilt@20 s4 epoch 82/100, s5 epoch 15/100), 대기 1개(trustfilt@20 s6). 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs):
   - trustfilt_pure@29 s4 63.91 / 89.49 / 10.17 (teacher 2.19), mean_kept 10.90 (waterbirds_screen_trustfilt_pure_k29_s4_1104_050326_25d1). 같은 seed v0 69.92보다 6.01 낮다(한 seed, 판정 아님). 토큰 수는 학습 중 9.4 → 11.4로 늘었다.
