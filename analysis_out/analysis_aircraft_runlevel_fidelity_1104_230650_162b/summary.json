@@ -1,0 +1,261 @@
+{
+ "n_val": 700,
+ "K": 29,
+ "n_runs": 21,
+ "P1_spearman_kl_acc_runs": [
+  -0.739,
+  0.0001,
+  0.9999
+ ],
+ "P2_spearman_kl_acc_arms": [
+  -0.8929,
+  0.0066,
+  0.9966
+ ],
+ "record": {
+  "spearman_ntkl_acc_runs": [
+   -0.7065,
+   0.0002,
+   0.9998
+  ],
+  "spearman_tacc_acc_runs": [
+   0.7026,
+   0.9992,
+   0.0008
+  ],
+  "spearman_ntkl_acc_arms": [
+   -0.8929,
+   0.0074,
+   0.9958
+  ],
+  "spearman_tacc_acc_arms": [
+   0.8571,
+   0.9934,
+   0.0122
+  ],
+  "spearman_kl_acc_runs_no_random": [
+   -0.6244,
+   0.003,
+   0.9971
+  ],
+  "arm_means_kl_ntkl_tacc_acc": {
+   "maskedkd": [
+    1.5525,
+    2.0843,
+    50.0,
+    65.2857
+   ],
+   "rollout": [
+    1.0173,
+    1.6056,
+    57.619,
+    66.4286
+   ],
+   "lateroll": [
+    0.8159,
+    1.3866,
+    62.8095,
+    66.2857
+   ],
+   "trustmask_v1": [
+    0.8223,
+    1.4037,
+    62.0,
+    67.0476
+   ],
+   "trustfilt": [
+    1.0647,
+    1.6209,
+    57.2857,
+    65.5714
+   ],
+   "teacher_topk": [
+    1.4005,
+    1.8883,
+    49.8571,
+    65.4762
+   ],
+   "random": [
+    2.9818,
+    3.1966,
+    26.3333,
+    63.2381
+   ]
+  }
+ },
+ "per_run": {
+  "aircraft_final_maskedkd_k29_s1_1102_132227_6542": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 66.71428680419922,
+   "kl": 1.5891,
+   "nt_kl": 2.0995,
+   "t_acc": 49.57
+  },
+  "aircraft_final_maskedkd_k29_s2_1102_180321_52e2": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 64.42857384681702,
+   "kl": 1.6756,
+   "nt_kl": 2.1691,
+   "t_acc": 48.0
+  },
+  "aircraft_final_maskedkd_k29_s3_1102_180336_347e": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 64.71428275108337,
+   "kl": 1.3928,
+   "nt_kl": 1.9842,
+   "t_acc": 52.43
+  },
+  "aircraft_final_rollout_k29_s1_1102_132227_c3d7": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "kl": 1.0185,
+   "nt_kl": 1.6046,
+   "t_acc": 56.86
+  },
+  "aircraft_final_rollout_k29_s2_1102_180325_20b6": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 66.57142639160156,
+   "kl": 1.0073,
+   "nt_kl": 1.5994,
+   "t_acc": 59.71
+  },
+  "aircraft_final_rollout_k29_s3_1102_180341_8606": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 65.85714221000671,
+   "kl": 1.0262,
+   "nt_kl": 1.6127,
+   "t_acc": 56.29
+  },
+  "aircraft_final_lateroll_k29_s1_1103_065756_f0d9": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "kl": 0.8208,
+   "nt_kl": 1.4127,
+   "t_acc": 62.29
+  },
+  "aircraft_final_lateroll_k29_s2_1103_065801_38e1": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 67.7142858505249,
+   "kl": 0.7965,
+   "nt_kl": 1.34,
+   "t_acc": 64.29
+  },
+  "aircraft_final_lateroll_k29_s3_1103_065805_2130": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.28571343421936,
+   "kl": 0.8305,
+   "nt_kl": 1.4069,
+   "t_acc": 61.86
+  },
+  "aircraft_final_trustmask_v1_k29_s1_1103_083809_92a4": {
+   "arm": "trustmask_v1",
+   "seed": 1,
+   "val_acc_last": 66.71428680419922,
+   "kl": 0.8276,
+   "nt_kl": 1.4066,
+   "t_acc": 62.14
+  },
+  "aircraft_final_trustmask_v1_k29_s2_1103_083818_f341": {
+   "arm": "trustmask_v1",
+   "seed": 2,
+   "val_acc_last": 67.85714030265808,
+   "kl": 0.8146,
+   "nt_kl": 1.4032,
+   "t_acc": 63.71
+  },
+  "aircraft_final_trustmask_v1_k29_s3_1103_083822_5bcd": {
+   "arm": "trustmask_v1",
+   "seed": 3,
+   "val_acc_last": 66.57142639160156,
+   "kl": 0.8249,
+   "nt_kl": 1.4013,
+   "t_acc": 60.14
+  },
+  "aircraft_final_trustfilt_k29_s1_1103_074527_357e": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 66.42857193946838,
+   "kl": 1.0683,
+   "nt_kl": 1.6318,
+   "t_acc": 58.29
+  },
+  "aircraft_final_trustfilt_k29_s2_1103_074535_db76": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 65.71428775787354,
+   "kl": 1.0602,
+   "nt_kl": 1.6065,
+   "t_acc": 56.14
+  },
+  "aircraft_final_trustfilt_k29_s3_1103_074540_2203": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 64.5714282989502,
+   "kl": 1.0657,
+   "nt_kl": 1.6243,
+   "t_acc": 57.43
+  },
+  "aircraft_final_teacher_topk_k29_s1_1103_074554_cd8b": {
+   "arm": "teacher_topk",
+   "seed": 1,
+   "val_acc_last": 65.57142734527588,
+   "kl": 1.4005,
+   "nt_kl": 1.8883,
+   "t_acc": 49.86
+  },
+  "aircraft_final_teacher_topk_k29_s2_1103_074559_69a5": {
+   "arm": "teacher_topk",
+   "seed": 2,
+   "val_acc_last": 66.28571152687073,
+   "kl": 1.4005,
+   "nt_kl": 1.8883,
+   "t_acc": 49.86
+  },
+  "aircraft_final_teacher_topk_k29_s3_1103_074603_470b": {
+   "arm": "teacher_topk",
+   "seed": 3,
+   "val_acc_last": 64.5714282989502,
+   "kl": 1.4005,
+   "nt_kl": 1.8883,
+   "t_acc": 49.86
+  },
+  "aircraft_final_random_k29_s1_1102_132227_7454": {
+   "arm": "random",
+   "seed": 1,
+   "val_acc_last": 64.28571343421936,
+   "kl": 3.0272,
+   "nt_kl": 3.2561,
+   "t_acc": 25.71
+  },
+  "aircraft_final_random_k29_s2_1103_042255_db43": {
+   "arm": "random",
+   "seed": 2,
+   "val_acc_last": 62.71428465843201,
+   "kl": 2.9075,
+   "nt_kl": 3.1366,
+   "t_acc": 27.43
+  },
+  "aircraft_final_random_k29_s3_1103_042259_2272": {
+   "arm": "random",
+   "seed": 3,
+   "val_acc_last": 62.71428465843201,
+   "kl": 3.0107,
+   "nt_kl": 3.197,
+   "t_acc": 25.86
+  }
+ },
+ "verdict": {
+  "P1": "negative",
+  "P2": "negative"
+ },
+ "note": "permutation entries are [rho, p_lower (rho <= observed), p_upper (rho >= observed)]"
+}

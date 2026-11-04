@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_runlevel_fidelity_1104_230650_162b",
+ "name": "aircraft_runlevel_fidelity",
+ "source_sha": "162b9d2608f1303b5174e051d6445a618dca2ac110ce6224257a869a071ac739",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft final K=29 runs (seven token rules, seeds 1-3), does the masked teacher's fidelity to the full teacher under each run's own rule and own student rank the runs' val accuracy?",
+  "method": "keep-only masked-teacher faithfulness (KL to the full teacher) per token rule, student/teacher attention rollout and last-block CLS attention; Spearman across runs with permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 20.2
+}
