@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_kd_gain_feature_ncm_1104_181011_af48",
+ "name": "cub_kd_gain_feature_ncm",
+ "source_sha": "af48cb29674a93096c97c67dad08280e595400a416fbca8b29a958e9ca32b5c4",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), is the KD gain (Full - CE) and the masking loss (Full - MaskedKD@29) visible in a leave-one-out nearest-class-mean probe on the students' features, or only in logits?",
+  "method": "pre-logit features of each student; leave-one-out cosine nearest-class-mean probe on val; paired per-image differences Full - CE and Full - MaskedKD, image bootstrap and seed t CI",
+  "paper": "Allen-Zhu & Li ICLR 2023 (multi-view KD); Kang et al. ICLR 2020 (NCM); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 6.7
+}
