@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_target_to_student_1104_073756_af4a",
+ "name": "cub_lt_target_to_student",
+ "source_sha": "af4ad85116f63d229ffe218241fc7a23fc205460b80b14cf9a9d87414e125633",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does the per-image v1 - maskedkd masked-teacher target gap at e25 predict the per-image v1 - maskedkd final student accuracy gap?",
+  "method": "attention rollout (student blocks 6..11); last-block CLS attention; keep-only masked-teacher p(label) at epoch snapshots; per-image gap correlation sliced by head/tail class; image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 10.3
+}
