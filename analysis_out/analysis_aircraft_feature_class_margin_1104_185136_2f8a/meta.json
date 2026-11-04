@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_feature_class_margin_1104_185136_2f8a",
+ "name": "aircraft_feature_class_margin",
+ "source_sha": "2f8a4ca5bb1ed34c5a69f0e193fd75a76cb2305be7fc73eb4042214adb9ff8d7",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), does masking (MaskedKD@29 vs Full@196) lower the per-image class margin of the students' features (own LOO class mean vs nearest other class mean)?",
+  "method": "pre-logit features of each student; per-image cosine class margin and NC1 ratio on val; paired per-image differences Full - MaskedKD, MaskedKD - CE, Full - CE; image bootstrap and seed t CI",
+  "paper": "Papyan, Han & Donoho PNAS 2020 (neural collapse); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 6.8
+}

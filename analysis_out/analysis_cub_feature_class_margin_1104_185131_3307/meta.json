@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_feature_class_margin_1104_185131_3307",
+ "name": "cub_feature_class_margin",
+ "source_sha": "33079ad39c5fa22c6c0694b20a78ccc714b9bfceb216c4bad550f6d65238c92f",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), does masking (MaskedKD@29 vs Full@196) lower the per-image class margin of the students' features (own LOO class mean vs nearest other class mean), a global geometry change?",
+  "method": "pre-logit features of each student; per-image cosine class margin and NC1 ratio on val; paired per-image differences Full - MaskedKD, MaskedKD - CE, Full - CE; image bootstrap and seed t CI",
+  "paper": "Papyan, Han & Donoho PNAS 2020 (neural collapse); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 6.6
+}
