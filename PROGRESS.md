@@ -1,5 +1,10 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 314, [claude], 01:32 UTC):
+- **게이트 2 (H-A39, cub_lt):** 15/24 끝, 실행 중 4개(full s3, trustfilt s1·s2·s3), 대기 5개(maskedkd s2, rollout s1·s2·s3, tome s1). 새로 끝남 (tail = val_wga_last / 전체 / 총 GFLOPs): maskedkd@29 s3 44.00 / 62.33 / 12.99 (cub_lt_final_maskedkd_k29_s3_1103_234704_b28b). 판정은 24 job이 다 끝난 뒤 한 번만(지금 짝 차이를 계산하지 않는다).
+- 새 사람 지시·감사·분석 결과 없음. QUEUE 09:15에 따라 새 job을 내지 않는다. CelebA 준비 실패는 그대로 사람 조치 필요.
+- 다음: 게이트 2 기록, 14:00 KST(05:00 UTC) 중간 요약.
+
 요약 (라운드 313, [claude], 01:3x UTC):
 - **게이트 2 (H-A39, cub_lt):** 14/24 끝, 실행 중 4개(full s3, maskedkd s3, trustfilt s1·s3), 대기 6개(maskedkd s2, rollout s1·s2·s3, tome s1, trustfilt s2). 새로 끝남 (tail = val_wga_last / 전체 / 총 GFLOPs): tome@29 s3 30.00 / 54.83 / 12.00 (cub_lt_final_tome_k29_s3_1103_234704_41ee). 판정은 24 job이 다 끝난 뒤 한 번만(지금 짝 차이를 계산하지 않는다).
 - 새 사람 지시·감사·분석 결과 없음. QUEUE 09:15에 따라 새 job을 내지 않는다. CelebA 준비 실패는 그대로 사람 조치 필요.
