@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_tail_targets_1104_070927_c7e1",
+ "name": "cub_lt_tail_targets",
+ "source_sha": "c7e1a35c37e6220444445276e5615c88ac414d3fabf76e215ea7e6192b9ab8be",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, is MaskedKD's masked-teacher KD target less correct on the tail classes than v1's (and the other rules'), and does run-level tail target accuracy track run tail accuracy across the 15 gate-2 runs?",
+  "method": "attention rollout (teacher all blocks, student all blocks or 6..11); last-block CLS attention; keep-only masked-teacher faithfulness sliced by head/tail class; within-group image bootstrap; Spearman",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 16.6
+}
