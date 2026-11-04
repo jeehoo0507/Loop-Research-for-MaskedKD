@@ -1,5 +1,19 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+## 14:00 KST 중간 요약 ([claude], 라운드 327, 04:45 UTC 작성, 16:00 발표용)
+모든 차이는 같은 seed 짝 차이, t 95% CI (df 2), 주 지표 val WGA(cub_lt는 tail 정확도). 감사 PASS는 아직 없다(첫 줄 STUCK).
+1. **게이트 1 (Waterbirds final K=29, 3/3 seed, 등록 H-A37):** P1 v1 − teacher_topk −2.01 [−6.32, +2.31] → 불성립(차이는 불확실). P2 v1 − maskedkd +23.81 [+22.73, +24.89] → 성립. MaskedKD WGA 38.6, 다른 선택(rollout, teacher_topk, v1)은 62~64.
+2. **게이트 1 사후 관찰 (등록 밖, 주장 아님):** v0(trustfilt) WGA 72.68. v0 − teacher_topk +8.27 [+6.41, +10.13], v0 − Full@196 +5.26 [+3.40, +7.12] (Full 대비 GFLOPs 0.31배), v0 − tome +21.30 [+12.67, +29.93]. H-A57: v0 − lateroll K=29 +8.77 [+4.07, +13.47], K=12 +17.04 [+14.19, +19.89] → v0의 몫은 lateroll이 아니라 teacher 영역 필터. **확인 실험 H-A59 (seed 4·5·6): 1/6 끝** (trustfilt@29 s4 WGA 69.92, waterbirds_screen_trustfilt_k29_s4_1104_041245_3797). 판정은 6/6 뒤 한 번만.
+3. **게이트 3 (Waterbirds K=29, 3/3, 등록 H-A38):** online maskedkd − frozen −22.81 [−26.69, −18.93] → "고리" 성립(학습 중 student의 마지막 층 attention을 따라가는 것이 소수 그룹 붕괴를 만든다). frozen − rollout −0.75 [−9.30, +7.80] (불확실). frozen은 비용 1.18배라 메커니즘 시험이다.
+4. **게이트 2 (cub_lt final K=29, 24/24, 등록 H-A39, tail 정확도):** P1 v1 − maskedkd +6.33 [+1.72, +10.94] → 성립. P2 v1 − teacher_topk +4.22 [−0.63, +9.08] → 평균 > 0으로 성립(CI 0 포함). P3 v0 − maskedkd +3.33 [−3.44, +10.11] → 불성립(차이는 불확실) → v0 사후 관찰은 cub_lt에서 재현되지 않았다. Full − CE tail +8.11 [+4.66, +11.57].
+5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
+6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
+
+요약 (라운드 327, [claude], 04:45 UTC):
+- H-A59 1/6 끝: trustfilt@29 s4 WGA 69.92 / acc 90.16 / 13.35 GFLOPs (waterbirds_screen_trustfilt_k29_s4_1104_041245_3797). 실행 중 4개, 대기 1개(teacher_topk s6). 짝 차이는 6/6 뒤에만 계산한다.
+- 14:00 KST 중간 요약을 위에 썼다(05:00 UTC 직전이라 이번 라운드에 씀). 새 사람 지시·감사·분석 결과 없음. 새 job은 내지 않는다(H-A59가 큐에 있음).
+- 다음: H-A59 기록, 6/6 끝나면 등록대로 판정 한 번.
+
 요약 (라운드 326, [claude], 04:14 UTC):
 - GPU가 31분째 놀았다(큐 비어 있음). CelebA boot는 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로다(BOOT_STATUS). prepare_data는 내가 실행할 수 없어 사람 조치가 필요하다. 새 사람 지시·감사·분석 결과 없음.
 - **H-A59 사전 등록(커밋 e2c7790) 뒤 6 job 제출:** QUEUE 08:58 (4) 확인 실험의 핵심(Waterbirds K=29, seed 4·5·6). waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 (실행 중), waterbirds_screen_trustfilt_k29_s5_1104_041250_8224, waterbirds_screen_trustfilt_k29_s6_1104_041254_004f, waterbirds_screen_teacher_topk_k29_s4_1104_041258_c453, waterbirds_screen_teacher_topk_k29_s5_1104_041303_2db2, waterbirds_screen_teacher_topk_k29_s6_1104_041307_d108. full@196 s4·5·6은 이미 있는 Waterbirds screen run 3개를 쓴다. 같은 teacher_sha·lr·epoch이고, 다시 내려 하자 harness가 중복으로 막았다.
