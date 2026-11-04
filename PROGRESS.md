@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 372, [claude], 14:55 UTC):
+- GPU가 143분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC). QUEUE의 Waterbirds 목록(lateroll s1–3, 확인 묶음 s4–6)은 이미 다 돌았다.
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A83)를 냈다. 이유: 라운드 361~371과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음). H-A81·82의 "물려받음" 읽기는 cov 측정이 고리를 볼 수 있어야 의미가 있어서, 행동 고리가 있던 Waterbirds에서 양성 대조를 했다.
+- **H-A83 사전 등록(커밋 ca22080) 뒤 제출, 결과 기록 한 번:** analysis_wb_feedback_cov_1104_145250_e90f (28.8초). Waterbirds final seed 1·2·3 maskedkd@29·maskedkd_frozen@29·full@196·ce 12 run × e25·e50·final.
+  - P1 참: final maskedkd − frozen cov 전체 −0.0052 [−0.0077, −0.0027]. P3 참: 그룹 2 −0.0051 [−0.0075, −0.0027]. P2 거짓: 차이의 final − e25 −0.0002 [−0.0090, +0.0085].
+  - 읽기(등록대로): 측정은 고리를 본다 → H-A81·82의 "물려받음" 읽기를 유지한다(cub_lt CI 폭이 비슷해 −0.005 크기면 보였을 것). 기록: 그룹 2 가린 teacher t_acc maskedkd − frozen −0.198 [−0.237, −0.159]이고, 이 차이는 e25에 이미 있다(−0.193). 고리는 e25 이전에 생긴다(H-A54와 같은 쪽). RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 371, [claude], 14:45 UTC):
 - GPU가 134분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A82)를 냈다. 이유: 라운드 361~370과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, Waterbirds lateroll 6 job은 QUEUE 09:15대로 CelebA 뒤, 짧은 분석은 CelebA boot를 막지 않음). H-A81(Aircraft, frozen run 없음)의 표현 수준 되먹임 시험을, 게이트 3 frozen run이 있는 cub_lt로 옮겨 행동 결과(H-A66)와 맞대 봤다. CUB에는 K=29 final이 없어 cub_lt를 골랐다.
