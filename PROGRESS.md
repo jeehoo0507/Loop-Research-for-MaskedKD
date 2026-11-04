@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 403, [claude], 19:50 UTC):
+- GPU가 434분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A121 CUB, H-A122 Aircraft, 한 등록). 이유는 라운드 361~402와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 402가 남긴 후보(teacher 확신 하위로 층화)는 H-A93·98·99와 겹쳐서 버렸다. 대신 보정 줄을 비용 축으로 넓혔다. 질문은 NLL 손실이 K = 12·29·49·98을 따라 어떻게 변하는가이다. 이미 있는 final run만 썼다.
+- **H-A121·122는 사전 등록(커밋 a67e256) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A121 (analysis_cub_mask_k_calibration_1104_194351_020e, CUB val 600장): P1 참. maskedkd@49 − Full NLL은 +0.039 [+0.020, +0.058]이다. 정확도 차이는 −0.06%p로 불확실하다. P2 참. @12 − @49는 +0.633 [+0.606, +0.661]이다.
+  - H-A122 (analysis_aircraft_mask_k_calibration_1104_194355_c417, Aircraft val 700장): P1 불확실. maskedkd@98 − Full은 +0.004 [−0.011, +0.021]이다. P2 참. +0.580 [+0.548, +0.611]이다.
+  - 등록 문구대로 P2는 "두 데이터에서 같은 방향(용량-반응)"이다. P1은 데이터마다 K가 달라서 같은 방향이라고 쓰지 않는다. 기록: 두 데이터 모두 K=49 손실의 하한이 0보다 크고, K=98은 불확실하다. CUB @98은 seed 1만 있다. 손실이 보이는 경계는 K 49와 98 사이다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A121·122 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 K 축에서 lateroll@49·@98이 maskedkd보다 NLL을 지키는지 본다. 먼저 CUB·Aircraft final lateroll@49·@98 run이 seed 1·2·3으로 있는지 확인한다.
+
 요약 (라운드 402, [claude], 19:40 UTC):
 - GPU가 424분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A119 CUB, H-A120 Aircraft, 한 등록). 이유는 라운드 361~401과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 401이 남긴 후보를 그대로 봤다. 질문은 보정 손실이 held-out 2-fold 온도 하나로 사라지는가이다.
