@@ -564,7 +564,7 @@ Total agent screen configs: 0
 
 # Earlier check: cub_lt (no new runs; kept for the record)
 
-Gate: gate incomplete: ce seeds [1], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1, 3], full seeds [], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagnostic: WGA seed sigma: not measured yet (run harness.submit --baselines))
 
@@ -588,7 +588,7 @@ Total agent screen configs: 0
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1 | 61.17 ± 0.00 | 41.67 ± 0.00 | 7.64 | 0.00 | 0.00 | 394 | cub_lt_final_ce_k0_s1_1103_234642_ee32 |
-| final | teacher_topk |  | 29 | 29.0 | 1 | 64.50 ± 0.00 | 47.33 ± 0.00 | 13.35 | 5.36 | 0.35 | 312 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 |
+| final | ce |  | 0 | None | 1,3 | 60.17 ± 1.41 | 38.84 ± 4.01 | 7.64 | 0.00 | 0.00 | 390 | cub_lt_final_ce_k0_s3_1103_234720_e74b cub_lt_final_ce_k0_s1_1103_234642_ee32 |
+| final | teacher_topk |  | 29 | 29.0 | 1,2 | 64.25 ± 0.35 | 47.66 ± 0.47 | 13.35 | 5.36 | 0.35 | 299 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1 | 67.50 ± 0.00 | 52.33 ± 0.00 | 13.34 | 5.36 | 0.43 | 376 | cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
 
