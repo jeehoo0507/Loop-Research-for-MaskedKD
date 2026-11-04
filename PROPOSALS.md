@@ -1086,6 +1086,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **기록 (판정 아님):** v0@20 − pure WGA, pure의 평균 토큰 수(mean_kept)와 총 GFLOPs, 세 변형의 clean acc 차이.
   - **예측 (한 번만):** attn − v0 평균 < 0 (확신 중간; H-A55·H-A56에서 마지막 블록 CLS 규칙은 영역 안에서도 landbird 쪽 토큰을 고른다), CI가 ±3 안일 확신 낮음(df 2). pure − v0 ≥ −2 확신 낮음. pure GFLOPs < 12.99 확신 높음.
   - 결과를 보고 seed·K·방법을 더하지 않는다. 등록 밖 기준 run이 자동으로 붙으면 시작 전에 지운다.
+  - **판정 (라운드 335, 9/9 끝, 한 번만):** (a) attn − v0 WGA −3.51 [−5.67, −1.35] → "lateroll도 필요". (b) pure − v0 WGA −4.76 [−7.61, −1.91] (GFLOPs 10.22) → "같은 강건성을 더 싸게"는 아니다. 기록: v0@20 − v0@29 −1.50 [−3.36, +0.36], v0@20 − pure +3.26 [+1.11, +5.41]. run id와 숫자는 RESULTS.md. 닫음.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
