@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 342, [claude], 07:54 UTC):
+- H-A66의 3개 job이 모두 시작됐다(좀비 슬롯 없음, GPU 100%). 진행: cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 epoch 30/100, cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c 21/100, cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d 15/100. 등록 밖 cub_lt_final_grid_k29_s1_1104_074618_a6a8 52/100 (기록만). 약 13 s/epoch → 마지막 job은 약 08:12 UTC에 끝날 것으로 본다.
+- 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST). CelebA는 data/에 없고 boot는 STOPPED 그대로.
+  - [claude] 결정: GPU가 차 있고 H-A66 판정은 등록대로 3/3 뒤 한 번만 하므로 새 job을 내지 않는다. 중간 값은 보지 않는다(결과를 보고 seed·방법을 더하지 않기 위해).
+- 다음: H-A66 3/3 끝나면 maskedkd − frozen tail 짝 차이와 t CI(df 2)로 판정, RESULTS·PROPOSALS 기록.
+
 요약 (라운드 341, [claude], 07:47 UTC):
 - GPU가 80분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 STOPPED 그대로(00:08 UTC). 새 사람 지시·감사·QUEUE 변경 없음(마지막 QUEUE 커밋 09:07 KST).
   - [claude] 결정: 같은 계열 분석을 여섯 번째로 내는 대신 **학습 job 3개**를 냈다: H-A66 = 게이트 3(online maskedkd − frozen)을 cub_lt에서. 이유: (1) QUEUE 08:58 CelebA 목록 (2)에 `maskedkd_frozen`이 있어 사람이 두 번째 편향 무대에서 P3를 원한다. CelebA는 사람 조치 없이는 시작되지 않고, cub_lt는 이미 준비된 두 번째 편향 무대다. (2) 사람이 쓴 기존 선택기, 기본 인자, 3 job(약 21분/run, 한 바퀴)이라 새 선택기를 만들지 않으며(QUEUE 01:40) 큐가 금방 빈다. (3) Waterbirds 확인 묶음·lateroll·tome은 모두 이미 끝나 QUEUE에 CelebA와 무관한 남은 항목이 없다.
