@@ -469,10 +469,10 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - claim-grade (>= 3 seeds):
   - suffdisc@0f0600 : 29.0 (7 seeds)
   - trustfilt@27da28 : 29.0 (3 seeds)
+  - trustfilt_attn@8fd44d : 29.0 (3 seeds)
   - center : 49.0 (4 seeds)
   - maskedkd : 98.0 (3 seeds)
 - screening only (fewer seeds):
-  - trustfilt_attn@8fd44d : 29.0 (1 seeds)
   - adaroll@069f50 : 48.5 (1 seeds)
   - suffdisc@0f0600 : 49.0 (1 seeds)
 
@@ -562,7 +562,7 @@ Total agent screen configs: 17
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
 | screen | trustfilt@27da28 |  | 29 | 29.0 | 4,5,6 | 90.69 ± 0.50 | 69.42 ± 0.87 | 13.35 | 5.36 | 0.43 | 295 | waterbirds_screen_trustfilt_k29_s6_1104_041254_004f waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 waterbirds_screen_trustfilt_k29_s5_1104_041250_8224 |
-| screen | trustfilt_attn@8fd44d |  | 29 | 29.0 | 4 | 90.66 ± 0.00 | 66.92 ± 0.00 | 13.34 | 5.36 | 0.36 | 408 | waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0 |
+| screen | trustfilt_attn@8fd44d |  | 29 | 29.0 | 4,5,6 | 90.19 ± 0.46 | 65.91 ± 0.87 | 13.34 | 5.36 | 0.36 | 337 | waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0 waterbirds_screen_trustfilt_attn_k29_s6_1104_050321_808a waterbirds_screen_trustfilt_attn_k29_s5_1104_050317_860f |
 
 # Held-out check: caltech256
 
