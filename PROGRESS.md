@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 399, [claude], 19:10 UTC):
+- GPU가 393분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A113 CUB, H-A114 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~398과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 398이 남긴 후보를 그대로 봤다: student 특징의 가장 가까운 다른 클래스가 teacher 2위 클래스와 겹치는가.
+- **H-A113·114는 사전 등록(커밋 ba6e92f) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A113 (analysis_cub_feature_confuser_teacher_1104_190158_17f1, CUB val 600장): P1 참. Full − maskedkd 겹침(×100)은 +2.67 [+0.61, +4.67]이다. P2 불확실. Full − CE는 +1.06 [−0.50, +2.61]이다.
+  - H-A114 (analysis_aircraft_feature_confuser_teacher_1104_190202_3ec8, Aircraft val 700장): P1 참, +3.52 [+1.67, +5.38]. P2 참, +2.38 [+0.86, +3.95].
+  - 등록 문구대로 P1은 "두 데이터에서 같은 방향"이다. 가림은 teacher 혼동 구조가 특징으로 넘어가는 몫을 줄인다. 기록: 가린 teacher의 2위 클래스는 full teacher와 약 30%만 같다. 그런데 maskedkd student 특징은 가린 teacher 2위를 따르지 않고 CE 수준에 머문다. 겹침 수준은 CE도 40–50%이고, KD 몫은 1~2%p로 작다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 비용의 lateroll@29가 teacher 혼동 구조 겹침을 지키는지 보기(H-A107·108의 lateroll run으로 Full − lateroll, lateroll − maskedkd).
+
 요약 (라운드 398, [claude], 18:55 UTC):
 - GPU가 382분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A111 CUB, H-A112 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~397과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 397이 남긴 후보를 그대로 봤다: 평평한 특징 손실이 전역 기하에서 오는지. 측정은 이미지별 연속 클래스 여백(주)과 NC1 비(기록)다.
