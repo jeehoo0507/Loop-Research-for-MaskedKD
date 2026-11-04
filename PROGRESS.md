@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 378, [claude], 15:55 UTC):
+- GPU가 198분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A89)를 냈다. 이유는 라운드 361~377과 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기를 만들거나 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A88에서 teacher 영역 필터의 몫이 위치가 아니라고 나와서, 필터가 빼는 토큰의 내용(가린 teacher 한계 기여)을 봤다.
+- **H-A89는 사전 등록(커밋 64525c7) 뒤 제출했고, 결과는 한 번만 기록했다:** analysis_wb_filter_marginal_1104_154650_cd6f. v0@29와 lateroll@29 final seed 1·2·3 student 6개를 썼다.
+  - P1 거짓(반대 방향): v0 student에서 필터가 빼는 lateroll 토큰은 그룹 2 가린 teacher q_y를 올린다(d_L +0.128 [+0.096, +0.160]). P2 거짓(반대 방향): 필터의 손해 d_V − d_L이 그룹 2에서 그룹 0보다 크다(−0.096 [−0.131, −0.060]).
+  - 등록 해석 규칙의 세 경우 밖이라 사실만 적었다. 필터는 가린 teacher의 정답 확률을 지키지 않고 낮춘다. 그런데 v0는 WGA가 가장 높다. 그래서 v0의 이득은 q_y 보존으로 설명되지 않는다. 등록 밖 기록으로, 필터 없는 lateroll 규칙을 v0 student에 쓰면 그룹 2 q_L이 lateroll student보다 +0.175 [+0.104, +0.246] 높다. v0 학습이 student attention 자체를 바꾼 것으로 보인다(추정). RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). 열린 질문은 "v0 학습이 언제 student attention을 바꾸는가"다. e25·e50 스냅샷에서 그룹 2 q_L(v0 student − lateroll student)을 재면 학습 동역학 없이 볼 수 있다. 다음 라운드 후보로 둔다. boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 377, [claude], 15:45 UTC):
 - GPU가 189분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A88)를 냈다. 이유는 라운드 361~376과 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기를 만들거나 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A86·87의 중심 거리 읽기가 online·frozen 짝 밖에서도 게이트 1 선택기들의 WGA 순위를 설명하는지 봤다.
