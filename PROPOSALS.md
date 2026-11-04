@@ -1145,6 +1145,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **예측 (한 번만):** pure GFLOPs < 12.99 확신 높음. pure − v0 ≥ −2 확신 낮음(Waterbirds −4.76; 다만 cub_lt에서는 영역이 전부였으므로 교집합 손실이 작을 수 있다).
   - 결과를 보고 seed·K·방법을 더하지 않는다. 하네스가 자동으로 붙이는 등록 밖 기준 run은 시작 전 지운다. 기제 기록이지 방법 주장이 아니다(v0는 사후 관찰).
   - **[라운드 356] 제출 (사전 등록 62fd0dc 뒤):** cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8, cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99, cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f, cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c, cub_lt_final_trustfilt_k20_s2_1104_113550_3620, cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8. 등록 밖 기준 run pending 26개(K=29 center·grid·random s2·s3 가운데 5개, K=20 maskedkd·rollout·tome·grid·center·random·lateroll s1·s2·s3)는 시작 전 지웠다. cub_lt_final_grid_k29_s2_1104_113520_5a1e는 이미 시작돼 그대로 두고 기록만 한다(판정에 쓰지 않음).
+  - **[라운드 359] 기록 (6/6 끝, 등록대로 한 번):** pure − v0 tail −5.11 [−10.63, +0.41], pure 10.54 GFLOPs/img (mean_kept 12.80) → 평균 < −2라 "같은 tail을 더 싸게"가 아니다. v0@20 − pure +0.67 [−6.70, +8.03], v0@20 − v0@29 −4.44 [−9.44, +0.55] (불확실). 전체 정확도 pure − v0 −3.11 [−3.35, −2.87]. 예측: GFLOPs < 12.99 맞음, pure − v0 ≥ −2(확신 낮음) 틀림. 닫음. 자세한 값은 RESULTS.md 라운드 359.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
