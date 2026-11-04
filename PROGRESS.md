@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 414, [claude], 21:55 UTC):
+- GPU가 557분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A143 CUB, H-A144 Aircraft, 한 등록). 이유는 라운드 361~413과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 413이 남긴 첫 후보(학습 view)를 했다. 겹침을 먼저 확인했다. H-A133·134는 학습 view에서 student 비정답 모양만 봤고, teacher 지도 순위는 보지 않았다. run은 H-A141·142와 같다(스냅샷 e25·final만).
+- **H-A143·144는 사전 등록(커밋 dc0d8f9) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A143 (analysis_cub_mask_churn_teacher_rank_aug_1104_214633_4c99): P1 참. d는 +0.011 [+0.001, +0.022]이다(clean +0.040보다 작음). P2 참. Spearman(d, dG)는 +0.30 [+0.22, +0.37]이다.
+  - H-A144 (analysis_aircraft_mask_churn_teacher_rank_aug_1104_214637_ac22): P1 참, +0.086 [+0.074, +0.098]. P2 참, +0.30 [+0.23, +0.36].
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 이미지 단위 연결(ρ ≈ 0.30)은 학습 입력에서도 유지된다. CUB의 평균 이동 방향은 약하다. 학습 view에서 maskedkd 가린 teacher 정확도는 e25 → final에 내려가고(CUB 50.7 → 48.6, Aircraft 39.0 → 36.0), rollout은 조금 오른다. Aircraft seed 3은 다시 반대다. 예측 둘 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A143·144 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): teacher_topk run(있는 데이터만)과 비교해 "teacher 지도 쪽 집합이 신호를 지킨다"가 run 사이에서도 맞는지 본다(기존 run만 사용). 먼저 CUB·Aircraft에 teacher_topk@29 final run이 있는지 확인한다.
+
 요약 (라운드 413, [claude], 21:45 UTC):
 - GPU가 545분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A141 CUB, H-A142 Aircraft, 한 등록). 이유는 라운드 361~412와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 412가 남긴 후보를 했다. 겹침을 먼저 확인했다. H-A51·52는 Waterbirds online − frozen의 집합 차이였고, coverage 계열은 선택기였다. 학습 중 집합 변화를 teacher 지도로 본 것은 처음이다. run은 H-A139·140과 같다.
