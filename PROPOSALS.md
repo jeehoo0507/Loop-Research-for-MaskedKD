@@ -1079,6 +1079,13 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **예측 (한 번만):** v0 − teacher_topk 평균 > 0 확신 중간, CI 하한 > 0 확신 낮음(게이트 1 P1 v1 − teacher_topk CI가 0을 포함했고, seed 간 WGA 분산이 크다). v0 − full 평균 > 0 확신 중간.
   - 결과를 보고 seed·K·방법을 더하지 않는다.
   - **[라운드 326] 제출 (등록 커밋 e2c7790 뒤):** waterbirds_screen_trustfilt_k29_s4_1104_041245_3797, waterbirds_screen_trustfilt_k29_s5_1104_041250_8224, waterbirds_screen_trustfilt_k29_s6_1104_041254_004f, waterbirds_screen_teacher_topk_k29_s4_1104_041258_c453, waterbirds_screen_teacher_topk_k29_s5_1104_041303_2db2, waterbirds_screen_teacher_topk_k29_s6_1104_041307_d108. full s4 제출은 "duplicate of screen_full_k196_s4_1031_071437_e327 (done)"로 막혔다(같은 설정 확인).
+  - **[라운드 329] 판정 (6/6, 한 번만):** v0 − teacher_topk WGA +6.01 [−0.46, +12.48] → 불성립; v0 − full +3.00 [−9.25, +15.26] → 평균 > 0 성립. → **"게이트 1의 v0 우위는 seed 4·5·6에서 재현되지 않았다."** (방향은 세 seed 모두 같음, CI 하한이 0 아래.) 숫자는 RESULTS 라운드 329.
+
+- **H-A60 (Waterbirds v0 분해, QUEUE 11-04 09:03 KST, 라운드 329 등록 — 결과 전·제출 전): v0의 어느 부품이 teacher_topk·maskedkd보다 높은 WGA를 만드는가.** H-A59 범위 항목("6 job이 끝나고 CelebA가 여전히 멈춰 있으면 분해를 같은 판정 규칙으로 따로 낸다")을 따른다. CelebA boot는 00:08 UTC STOPPED 그대로다. 제출: Waterbirds tier screen, seed 4·5·6 (9 job): `trustfilt_attn`@29, `trustfilt_pure`@29, `trustfilt`@20 (기본 인자). 짝이 되는 v0@29 = H-A59의 trustfilt s4·s5·s6 run. 주 지표 val WGA (val_wga_last), 같은 seed 짝 차이, t 95% CI (df 2, t 4.303). v0는 H-A59에서 재현되지 않아 사후 관찰이므로, 이 분해는 **기제 기록**이지 방법 주장이 아니다.
+  - **판정 규칙 (QUEUE 09:03 그대로, 9 job이 다 끝난 뒤 한 번만):** (a) attn − v0 WGA CI가 [−3, +3] 안이면 "영역이 전부"; CI 상한 < 0이면 "lateroll도 필요"; 그 밖은 "불확실"로 적는다. (b) pure − v0 WGA 평균 ≥ −2 그리고 pure 총 GFLOPs/img < 12.99 (Waterbirds maskedkd@29, waterbirds_final_maskedkd_k29_s1_1031_201502_4be8)이면 "같은 강건성을 더 싸게"; 아니면 그렇지 않다고 적는다.
+  - **기록 (판정 아님):** v0@20 − pure WGA, pure의 평균 토큰 수(mean_kept)와 총 GFLOPs, 세 변형의 clean acc 차이.
+  - **예측 (한 번만):** attn − v0 평균 < 0 (확신 중간; H-A55·H-A56에서 마지막 블록 CLS 규칙은 영역 안에서도 landbird 쪽 토큰을 고른다), CI가 ±3 안일 확신 낮음(df 2). pure − v0 ≥ −2 확신 낮음. pure GFLOPs < 12.99 확신 높음.
+  - 결과를 보고 seed·K·방법을 더하지 않는다. 등록 밖 기준 run이 자동으로 붙으면 시작 전에 지운다.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
