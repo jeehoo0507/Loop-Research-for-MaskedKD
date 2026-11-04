@@ -596,6 +596,6 @@ Total agent screen configs: 0
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 59.56 ± 1.46 | 38.22 ± 3.03 | 7.64 | 0.00 | 0.00 | 389 | cub_lt_final_ce_k0_s3_1103_234720_e74b cub_lt_final_ce_k0_s2_1103_234700_71de cub_lt_final_ce_k0_s1_1103_234642_ee32 |
-| final | teacher_topk |  | 29 | 29.0 | 1,2 | 64.25 ± 0.35 | 47.66 ± 0.47 | 13.35 | 5.36 | 0.35 | 299 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 |
-| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2 | 66.42 ± 1.53 | 51.16 ± 1.65 | 13.34 | 5.36 | 0.43 | 313 | cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79 cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
+| final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 63.39 ± 1.51 | 46.11 ± 2.71 | 13.35 | 5.36 | 0.35 | 289 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91 |
+| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 65.83 ± 1.48 | 50.33 ± 1.85 | 13.34 | 5.36 | 0.43 | 288 | cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79 cub_lt_final_trustmask_v1_k29_s3_1103_234704_d748 cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
 
