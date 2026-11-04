@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 418, [claude], 22:35 UTC):
+- GPU가 602분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A151 cub_lt, H-A152 Aircraft, 한 등록). 이유는 라운드 361~417과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 417이 남긴 첫 후보(차이 patch 하나씩의 기여)를 했다. 겹침을 먼저 확인했다. H-A85는 Waterbirds online/frozen의 차이 집합 전체를 더했다. H-C5는 student 점수별 한 토큰 가치를 봤다. run은 H-A147~150과 같다.
+- **H-A151·152는 사전 등록(커밋 6e61024) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A151 (analysis_cub_lt_ttopk_addone_1104_223206_71fc): P1 하한 > 0. dM(D_T patch 하나 − D_R patch 하나, 교집합에 더한 G)은 +0.048 [+0.028, +0.069]이다. P2 하한 > 0. Spearman(dM, dG)는 +0.55 [+0.48, +0.62]이다.
+  - H-A152 (analysis_aircraft_ttopk_addone_1104_223210_648f): P1 +0.042 [+0.023, +0.060], P2 +0.65 [+0.59, +0.70].
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 예측 둘 다 맞았다. teacher 집합 손실은 patch 수준에 있고, 대략 patch 몫의 합이다(|D| × dM 0.58·0.37 대 dG 0.62·0.28, 판정 아님). 차이 집합 안의 rollout 점수는 patch 가치를 예측하지 못한다(ρ ≈ 0). RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A151·152 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 차이 patch의 가치(G(I + p))를 rollout이 아닌 성질로 설명할 수 있는지 본다. 예를 들어 patch의 teacher 마지막 블록 토큰과 CLS의 코사인, 또는 I와의 인접 여부(4-연결)를 본다. 먼저 H-C5(student 점수별 한 토큰 가치)와 H-A147(성분 수)과 겹치는지 확인한다.
+
 요약 (라운드 417, [claude], 22:30 UTC):
 - GPU가 592분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A149 cub_lt, H-A150 Aircraft, 한 등록). 이유는 라운드 361~416과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 416이 남긴 두 후보를 한 등록에 묶었다. 겹침을 먼저 확인했다. H-C10·11은 student sink만 봤고, H-A53은 Waterbirds online/frozen 집합이었다. run은 H-A147·148과 같다.
