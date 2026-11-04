@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_tempscale_1104_193308_c994",
+ "name": "cub_mask_tempscale",
+ "source_sha": "c99406b7905c44dda85088933621864d9340b70a99771da7f49c44a5800cc5e5",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), does the MaskedKD@29 - Full@196 val NLL/ECE gap survive held-out 2-fold temperature scaling?",
+  "method": "per run, fit one softmax temperature on half of val (index parity), evaluate NLL and 15-bin ECE on the other half; paired MaskedKD - Full, lateroll - Full, MaskedKD - lateroll, CE - Full; image bootstrap and seed t CI",
+  "paper": "Guo et al. ICML 2017 (temperature scaling, ECE); M\u00fcller et al. NeurIPS 2019; Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 15.9
+}

@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_tempscale_1104_193313_0d08",
+ "name": "aircraft_mask_tempscale",
+ "source_sha": "0d0866c3d937d12ed5898a6e3c907df842f20baf685d3d464f8e093b878c9cfe",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), does the MaskedKD@29 - Full@196 val NLL/ECE gap survive held-out 2-fold temperature scaling?",
+  "method": "per run, fit one softmax temperature on half of val (index parity), evaluate NLL and 15-bin ECE on the other half; paired MaskedKD - Full, lateroll - Full, MaskedKD - lateroll, CE - Full; image bootstrap and seed t CI",
+  "paper": "Guo et al. ICML 2017 (temperature scaling, ECE); M\u00fcller et al. NeurIPS 2019; Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 14.8
+}
