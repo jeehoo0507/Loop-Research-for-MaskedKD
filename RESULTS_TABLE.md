@@ -468,6 +468,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 ### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - trustfilt@27da28 : 20.0 (3 seeds)
+  - lateroll@69541b : 29.0 (3 seeds)
   - suffdisc@0f0600 : 29.0 (7 seeds)
   - trustfilt_attn@8fd44d : 29.0 (3 seeds)
   - center : 49.0 (4 seeds)
@@ -482,7 +483,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
-Total agent screen configs: 19
+Total agent screen configs: 20
 - suffdisc: 4 configs
 - priorroll: 2 configs
 - midattn: 2 configs
@@ -491,6 +492,7 @@ Total agent screen configs: 19
 - jitdisc: 1 configs
 - trustfilt_pure: 1 configs
 - trustfilt_attn: 1 configs
+- lateroll: 1 configs
 - gradrep: 1 configs
 - adaroll: 1 configs
 - suffstride: 1 configs
@@ -538,6 +540,7 @@ Total agent screen configs: 19
 | screen | grid |  | 29 | 29.0 | 0 | 81.65 ± 0.00 | 36.84 ± 0.00 | 13.00 | 5.36 | 0.00 | 283 | screen_grid_k29_s0_1030_135953_a69e |
 | screen | grid |  | 49 | 49.0 | 0 | 84.74 ± 0.00 | 35.34 ± 0.00 | 16.46 | 8.82 | 0.00 | 337 | screen_grid_k49_s0_1030_135953_19b7 |
 | screen | jitdisc@8a1e65 |  | 12 | 12.0 | 0,1,2,3 | 88.74 ± 0.54 | 54.32 ± 1.67 | 10.09 | 2.45 | 0.00 | 481 | screen_jitdisc_k12_s2_1031_020851_1187 screen_jitdisc_k12_s0_1030_195912_ead1 screen_jitdisc_k12_s1_1030_195921_48c7 screen_jitdisc_k12_s3_1031_020901_8cd5 |
+| screen | lateroll@69541b |  | 29 | 29.0 | 4,5,6 | 90.74 ± 0.52 | 61.66 ± 1.30 | 12.99 | 5.36 | 0.08 | 396 | waterbirds_screen_lateroll_k29_s5_1104_093818_1d16 waterbirds_screen_lateroll_k29_s6_1104_093822_07aa waterbirds_screen_lateroll_k29_s4_1104_093813_f1e8 |
 | screen | maskedkd |  | 12 | 12.0 | 0,4,5,6 | 84.78 ± 0.28 | 21.43 ± 2.26 | 10.07 | 2.45 | 0.00 | 315 | screen_maskedkd_k12_s6_1031_040448_eb48 screen_maskedkd_k12_s5_1031_040439_3cc2 screen_maskedkd_k12_s0_1030_135953_ba8e screen_maskedkd_k12_s4_1031_040431_c049 |
 | screen | maskedkd |  | 29 | 29.0 | 0 | 87.66 ± 0.00 | 43.61 ± 0.00 | 12.99 | 5.36 | 0.00 | 357 | screen_maskedkd_k29_s0_1030_135953_764a |
 | screen | maskedkd |  | 49 | 49.0 | 0,4,5,6 | 88.89 ± 0.60 | 50.56 ± 1.78 | 16.44 | 8.82 | 0.00 | 281 | screen_maskedkd_k49_s4_1031_064030_4c7b screen_maskedkd_k49_s6_1031_064039_1864 screen_maskedkd_k49_s5_1031_064034_443d screen_maskedkd_k49_s0_1030_135953_3e16 |
