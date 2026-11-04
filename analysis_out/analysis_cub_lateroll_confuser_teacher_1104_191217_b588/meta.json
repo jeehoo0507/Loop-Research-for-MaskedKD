@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lateroll_confuser_teacher_1104_191217_b588",
+ "name": "cub_lateroll_confuser_teacher",
+ "source_sha": "b588be173f9052e196bad8951cf5c666b84bfad5398d6672ba6aaaef95e2af9e",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), does the same-cost lateroll@29 student keep the full teacher's runner-up class as its nearest other class in feature space (Full - lateroll, lateroll - MaskedKD@29)?",
+  "method": "clean full teacher runner-up class per val image; per student nearest other class-mean (cosine) on pre-logit features; per-image overlap; paired Full - lateroll, lateroll - MaskedKD, Full - MaskedKD; image bootstrap and seed t CI",
+  "paper": "Hinton, Vinyals & Dean 2015 (KD); Furlanello et al. ICML 2018 (dark knowledge); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 7.2
+}

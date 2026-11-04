@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_lateroll_confuser_teacher_1104_191222_cc64",
+ "name": "aircraft_lateroll_confuser_teacher",
+ "source_sha": "cc6405ace9fba348e0e60eaadaba5c11eba9dc45561c641e6dcda36b8ba7014a",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), does the same-cost lateroll@29 student keep the full teacher's runner-up class as its nearest other class in feature space (Full - lateroll, lateroll - MaskedKD@29)?",
+  "method": "clean full teacher runner-up class per val image; per student nearest other class-mean (cosine) on pre-logit features; per-image overlap; paired Full - lateroll, lateroll - MaskedKD, Full - MaskedKD; image bootstrap and seed t CI",
+  "paper": "Hinton, Vinyals & Dean 2015 (KD); Furlanello et al. ICML 2018 (dark knowledge); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 7.3
+}
