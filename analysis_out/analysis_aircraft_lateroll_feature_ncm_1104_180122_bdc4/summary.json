@@ -1,0 +1,105 @@
+{
+ "n_val": 700,
+ "n_dropped_singleton_class": 0,
+ "subsets": {
+  "n": 700,
+  "logit_minus_ncm_gain_pct_boot": [
+   -1.524,
+   -3.524,
+   0.381
+  ],
+  "ncm_gain_pct_boot": [
+   2.524,
+   1.048,
+   4.095
+  ],
+  "logit_gain_pct_boot": [
+   1.0,
+   -0.524,
+   2.429
+  ]
+ },
+ "per_seed": {
+  "ncm": [
+   3.143,
+   4.0,
+   0.429
+  ],
+  "logit": [
+   0.143,
+   3.286,
+   -0.429
+  ],
+  "logit_minus_ncm": [
+   -3.0,
+   -0.714,
+   -0.858
+  ]
+ },
+ "per_seed_t": {
+  "ncm": [
+   2.524,
+   -2.1074,
+   7.1554,
+   3
+  ],
+  "logit": [
+   1.0,
+   -3.9694,
+   5.9694,
+   3
+  ],
+  "logit_minus_ncm": [
+   -1.524,
+   -4.7046,
+   1.6566,
+   3
+  ]
+ },
+ "acc": {
+  "maskedkd": {
+   "1": {
+    "ncm": 64.43,
+    "logit": 66.71,
+    "logit_all_measured": 66.71,
+    "val_acc_last": 66.71428680419922
+   },
+   "2": {
+    "ncm": 63.86,
+    "logit": 64.43,
+    "logit_all_measured": 64.43,
+    "val_acc_last": 64.42857384681702
+   },
+   "3": {
+    "ncm": 64.29,
+    "logit": 64.71,
+    "logit_all_measured": 64.71,
+    "val_acc_last": 64.71428275108337
+   }
+  },
+  "lateroll": {
+   "1": {
+    "ncm": 67.57,
+    "logit": 66.86,
+    "logit_all_measured": 66.86,
+    "val_acc_last": 66.8571412563324
+   },
+   "2": {
+    "ncm": 67.86,
+    "logit": 67.71,
+    "logit_all_measured": 67.71,
+    "val_acc_last": 67.7142858505249
+   },
+   "3": {
+    "ncm": 64.71,
+    "logit": 64.29,
+    "logit_all_measured": 64.29,
+    "val_acc_last": 64.28571343421936
+   }
+  }
+ },
+ "verdict": {
+  "logit_minus_ncm": "uncertain",
+  "P1_logit_gain_exceeds_ncm_gain": false
+ }
+}

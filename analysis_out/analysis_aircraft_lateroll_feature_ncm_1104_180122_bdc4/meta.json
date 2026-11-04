@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_lateroll_feature_ncm_1104_180122_bdc4",
+ "name": "aircraft_lateroll_feature_ncm",
+ "source_sha": "bdc4a1792b465738c9abec9934041216695fb85ccc5a341bc397e8a199e52a55",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft (final, seeds 1-3, K=29), is lateroll's logit accuracy gain over MaskedKD larger than its gain in a leave-one-out nearest-class-mean probe on the students' features?",
+  "method": "pre-logit features of each student; leave-one-out cosine nearest-class-mean probe on val; paired lateroll - maskedkd per image, logit gain minus NCM gain, image bootstrap and seed t CI",
+  "paper": "Kang et al. ICLR 2020 (decoupling representation and classifier, NCM); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 5.9
+}
