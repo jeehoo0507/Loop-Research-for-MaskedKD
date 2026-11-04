@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 416, [claude], 22:20 UTC):
+- GPU가 581분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A147 cub_lt, H-A148 Aircraft, 한 등록). 이유는 라운드 361~415와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 415가 남긴 후보를 했다. teacher 자기 rollout 상위 29개의 충실도가 왜 낮은지 봤다. 겹침을 먼저 확인했다. H-C14·15는 student 집합의 spread만 쟀다. H-A137·138은 maskedkd attention의 집중도를 봤다. run은 H-A145·146의 rollout@29 seed 1·2·3이다.
+- **H-A147·148은 사전 등록(커밋 8f1dac5) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A147 (analysis_cub_lt_ttopk_set_shape_1104_221107_7f75): P1 상한 < 0. dSpread(student − teacher)는 −1.70 [−1.79, −1.61]이다. P2 상한 < 0. Spearman(dSpread, dG)는 −0.14 [−0.22, −0.06]이다.
+  - H-A148 (analysis_aircraft_ttopk_set_shape_1104_221111_a111): P1은 −0.81 [−0.88, −0.76], P2는 −0.09 [−0.17, −0.02]이다.
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 그러나 예측(뭉침)과 반대다. teacher 상위 29개는 더 흩어져 있다(성분 8.5 대 4.5, 5.5 대 2.9). teacher 지도가 더 평평하기 때문이다(top-29 질량 0.23 대 0.27, 0.25 대 0.35). 흩어질수록 신호를 더 잃는다(teacher 안 ρ +0.29·+0.20). 예측 둘 다 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A147·148 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): spread와 상관없이 집합 차이(1 − Jaccard) 자체가 dG를 설명하는지 본다. 부분 Spearman으로 spread를 통제한다. 또는 teacher 집합에만 있는 patch(T \ R)가 배경 sink(높은 token norm)인지 본다. 먼저 H-A53(D_O/D_F 집합 차이)과 겹치는지 확인한다.
+
 요약 (라운드 415, [claude], 22:10 UTC):
 - GPU가 569분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A145 cub_lt, H-A146 Aircraft, 한 등록). 이유는 라운드 361~414와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 414가 남긴 후보(teacher_topk 비교)를 했다. CUB에는 teacher_topk final run이 없다. 그래서 같은 CUB val·teacher를 쓰는 cub_lt run을 썼다. 겹침을 먼저 확인했다. H-A131~136은 maskedkd − rollout 짝만 봤다.
