@@ -1,4 +1,4 @@
-"""v0 ablation (QUEUE 2026-11-04 10:00): the teacher filter of trustfilt with MaskedKD's own picker inside it.
+"""v0 ablation (QUEUE 2026-11-04 09:03): the teacher filter of trustfilt with MaskedKD's own picker inside it.
 
 trustfilt = teacher's cached rollout top ceil(1.5 K) as the allowed region + the student's late-block rollout picks K
 inside. This variant keeps the region and replaces the picker by MaskedKD's rule (last block, head-mean CLS attention,

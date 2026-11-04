@@ -294,7 +294,7 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - **감사 STUCK(증거 묶음 selector_sha):** 사람이 harness/evidence.py를 고친다. 고친 뒤 게이트 1 감사를 다시 요청한다. 감사 기준: 주 지표 WGA, 사전 등록 P1·P2 + 사후 관찰(v0) 구분.
 - 09:00 아침 요약은 게이트 1·3 결과와 분석 H-A40~55의 핵심 다섯 줄로. 14:00 중간 요약에 게이트 2.
 
-## 2026-11-04 09:40 KST — 사람: 두 번째 강건성 데이터셋 CelebA (게이트 2가 끝나는 대로)
+## 2026-11-04 08:58 KST — 사람: 두 번째 강건성 데이터셋 CelebA (게이트 2가 끝나는 대로)
 - **CelebA** (Liu 2015; Sagawa 2020 설정): y = 금발, 지름길 = 남성, group = 2·y + male, 최악 그룹 = 금발 남성. 하네스 `celeba`: 공식 분할을 image_id로 복원, train은 공식 train의 12% 무작위(상관 유지, 19,532장), val/test는 그룹당 2,000장 상한(소수 그룹은 전부). final 30 epoch, teacher 8 epoch.
 - **루프가 자동으로 준비한다** (`config.HOLDOUT`에 추가, `BOOT_WHEN_IDLE`): 큐가 완전히 비면 데이터 다운로드(HF 미러, 약 1.3 GB) → teacher 미세조정 → 게이트(CE·Full·MaskedKD@98 seed 1). **게이트 2가 끝나기 전에는 시작하지 않는다.** BOOT_STATUS에 "celeba gate submitted"가 보이면 아래를 낸다. 게이트 통과 여부와 상관없이 낸다 (held-out 규칙 없음: `stage2 = robustness_check`).
 - **제출 (final, K=29, seed 1·2·3, 우선순위 순):** (1) `trustfilt`(v0), `teacher_topk`, `maskedkd`, `rollout` (12); (2) `maskedkd_frozen`, `trustmask_v1`, `tome` (9); (3) `ce`·`full` seed 2·3 (4). 합계 25 job, run당 약 60분.
@@ -302,10 +302,10 @@ lateroll@29 final seed 2·3은 그대로 진행한다.
 - 그 뒤 GPU가 남으면 (4) **Waterbirds v0 사후 관찰의 확인 실험**: 새 seed 4·5·6, K=29, `trustfilt`·`teacher_topk`·`full` (9 job). 사전 등록: v0 − teacher_topk CI 하한 > 0, v0 − full 평균 > 0. 이것이 통과해야 게이트 1의 v0 결과를 주장으로 쓴다. (5) Waterbirds `tome`@29 seed 2·3 (2 job).
 - 메모리: CelebA train은 job당 약 3.8 GB RAM (Caltech-256과 비슷). 4개 동시 실행 그대로.
 
-## 2026-11-04 10:05 KST — 사람: CelebA 제출 목록에 v0 분해 세 개 추가 (09:40 항목 수정)
+## 2026-11-04 09:03 KST — 사람: CelebA 제출 목록에 v0 분해 세 개 추가 (08:58 항목 수정)
 v0(trustfilt)는 두 부품(teacher 상위 1.5K 영역 + lateroll 선택)이 함께 있어 어느 쪽이 고리를 끊는지 모른다. CelebA 제출에 아래를 더한다 (final, K=29, seed 1·2·3). 사람이 선택기 두 개를 추가했다.
 - `trustfilt_attn`: teacher 영역 그대로 + **MaskedKD 규칙(마지막 블록 CLS attention)**으로 29개. v0 ≈ attn이면 "영역이 전부", attn ≪ v0이면 "lateroll도 필요".
 - `trustfilt_pure`: teacher top-29 ∩ lateroll top-29 **교집합만** (최소 1개, 채우지 않음). 토큰 수가 이미지마다 다르고 평균 < 29 → teacher 비용이 MaskedKD@29보다 낮다. 기록: 평균 토큰 수, 총 GFLOPs.
 - `trustfilt`@**20**: pure와 비용을 맞춘 대조 (토큰 20개 고정).
-우선순위: 09:40의 (1) 뒤, (2) 앞. CelebA 합계 34 job. 사전 등록에 한 줄씩: attn − v0 (WGA), pure − v0 (WGA)와 pure의 GFLOPs/토큰 수, v0@20 − pure. 판정 규칙: |attn − v0| CI가 ±3 안이면 "영역이 전부"; pure − v0 ≥ −2이고 GFLOPs가 maskedkd@29 아래면 "같은 강건성을 더 싸게".
+우선순위: 08:58의 (1) 뒤, (2) 앞. CelebA 합계 34 job. 사전 등록에 한 줄씩: attn − v0 (WGA), pure − v0 (WGA)와 pure의 GFLOPs/토큰 수, v0@20 − pure. 판정 규칙: |attn − v0| CI가 ±3 안이면 "영역이 전부"; pure − v0 ≥ −2이고 GFLOPs가 maskedkd@29 아래면 "같은 강건성을 더 싸게".
 - Waterbirds에서도 같은 세 변형을 **(4) 확인 실험 묶음**(seed 4·5·6)에 함께 넣는다: `trustfilt_attn`·`trustfilt_pure`·`trustfilt`@20 seed 4·5·6 (9 job 추가, 합계 18).

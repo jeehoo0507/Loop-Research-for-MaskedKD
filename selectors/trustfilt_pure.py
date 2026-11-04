@@ -1,4 +1,4 @@
-"""v0 ablation (QUEUE 2026-11-04 10:00): the plain intersection, teacher top-K AND student late-block rollout top-K.
+"""v0 ablation (QUEUE 2026-11-04 09:03): the plain intersection, teacher top-K AND student late-block rollout top-K.
 
 trustfilt widens the teacher region to 1.5 K so that exactly K tokens are kept. Here nothing is widened or padded: a
 token is kept only if it is in the teacher's cached rollout top-K and in the student's late-block rollout top-K (at

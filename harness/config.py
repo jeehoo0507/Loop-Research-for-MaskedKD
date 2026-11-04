@@ -129,7 +129,7 @@ STAGE2_EXPLORE = True
 # Aircraft run (~24k train images x 20 epochs vs ~6k x 100) and finishes within the day.
 HOLDOUT = ("caltech256", "celeba")   # set up by the loop like stage 2 (data, teacher, gate); no baseline grid
 HOLDOUT_STRICT = ("caltech256",)     # only these take agent selectors as frozen candidates (submit.holdout_rule)
-BOOT_WHEN_IDLE = ("celeba",)         # the loop sets these up only while no job is queued or running (QUEUE 11-04 09:30)
+BOOT_WHEN_IDLE = ("celeba",)         # the loop sets these up only while no job is queued or running (QUEUE 11-04 08:58)
 # 2026-11-04 00:30 KST (human): nothing is retired. Waterbirds is the main analysis bed again (QUEUE 2026-11-04).
 RETIRED = ()
 # CUB long-tail (QUEUE 2026-11-04, gate 2): classes 0..99 keep every CUB train image, classes 100..199 keep
