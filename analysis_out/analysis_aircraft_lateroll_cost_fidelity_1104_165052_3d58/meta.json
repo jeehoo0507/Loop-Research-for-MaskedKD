@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_lateroll_cost_fidelity_1104_165052_3d58",
+ "name": "aircraft_lateroll_cost_fidelity",
+ "source_sha": "3d58d0c4fa803ce124e8ed370208e2ea51e507dbb8a0f97df069127d6108ab5e",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3, K=29), is lateroll's per-image accuracy advantage over MaskedKD concentrated on images where MaskedKD's masked teacher departs most from the full teacher?",
+  "method": "keep-only masked teachers with each student's own selector rule (last-block CLS / late rollout) top-29; quintiles of maskedkd-mask KL; lateroll - maskedkd Q5 - Q1 with paired image bootstrap and seed t CI",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Hooker et al. NeurIPS 2019 (keep-only); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 9.1
+}
