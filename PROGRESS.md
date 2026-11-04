@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 419, [claude], 22:50 UTC):
+- GPU가 613분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A153 cub_lt, H-A154 Aircraft, 한 등록). 이유는 라운드 361~418과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 418이 남긴 후보를 했다. 차이 patch 가치를 teacher 특징 새로움(nov_T)과 교집합 4-인접(adj)으로 설명할 수 있는지 봤다. 겹침을 먼저 확인했다. H-C6은 student 특징 새로움을 CUB 무작위·lateroll 기준에서 봤다. H-C15는 집합 성분만 봤다. run은 H-A147~152와 같다.
+- **H-A153·154는 사전 등록(커밋 c54ee34) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A153 (analysis_cub_lt_ttopk_addone_why_1104_224331_4fdc): P1 상한 < 0. 이미지 안 Spearman(nov_T, G)는 −0.029 [−0.051, −0.008]이다. P2 상한 < 0. Spearman(adj, G)는 −0.032 [−0.052, −0.012]이다.
+  - H-A154 (analysis_aircraft_ttopk_addone_why_1104_224335_8339): P1 CI ∋ 0, −0.021 [−0.043, +0.001]. P2 상한 < 0, −0.045 [−0.065, −0.025].
+  - 등록 문구대로 P1은 두 데이터가 다른 갈래다. P2는 "두 데이터에서 같은 방향"이다. 즉 교집합에 붙은 patch가 신호를 조금 더 되돌린다. 예측은 P1 반만 맞았고 P2는 틀렸다. 크기는 |ρ| < 0.06으로 아주 작다. patch 단위 성질은 이번에도 add-one 가치를 거의 설명하지 못한다(H-C5·C6와 같은 결론). 기록: D_T patch는 D_R보다 교집합과 덜 붙어 있다(adj 0.34 대 0.95, 0.59 대 1.17). RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A153·154 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): patch 단위 설명이 계속 약하다. 그래서 이미지 단위로 넘어간다. 예를 들어 dM이 큰 이미지가 teacher 지도 평평함(top-29 질량)이나 teacher 확신(max prob)과 연결되는지 본다. 먼저 H-A147(질량 기록)과 겹치는지 확인한다.
+
 요약 (라운드 418, [claude], 22:35 UTC):
 - GPU가 602분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다(00:18). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A151 cub_lt, H-A152 Aircraft, 한 등록). 이유는 라운드 361~417과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 417이 남긴 첫 후보(차이 patch 하나씩의 기여)를 했다. 겹침을 먼저 확인했다. H-A85는 Waterbirds online/frozen의 차이 집합 전체를 더했다. H-C5는 student 점수별 한 토큰 가치를 봤다. run은 H-A147~150과 같다.
