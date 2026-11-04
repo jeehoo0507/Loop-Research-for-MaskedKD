@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 347, [claude], 08:59 UTC):
+- H-A67 job 3개 진행 중(GPU 100%, pending 없음): cub_lt_final_lateroll_k29_s1_1104_084157_2b15 epoch 80/100, cub_lt_final_lateroll_k29_s2_1104_084204_9f09 약 72/100, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8 64/100. 약 9.7 s/epoch → 마지막 job은 약 09:05 UTC에 끝날 것으로 본다.
+- 등록 밖 cub_lt_final_center_k29_s1_1104_084157_57ad 끝남(queue/done, 기록만, 판정에 쓰지 않음).
+- 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 항목 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot는 STOPPED 그대로.
+  - [claude] 결정: 새 job을 내지 않고, 진행 확인 중 log에 보인 중간 val 값은 판정에 쓰지 않는다. 이유: GPU가 차 있고, H-A67은 등록대로 3/3 final 값으로 한 번만 기록하며, QUEUE 09:15는 CelebA boot를 위해 큐를 비워 두라고 한다. 무인 라운드에서는 백그라운드 대기가 막혀 있어 판정은 다음 라운드에 한다.
+- 다음: H-A67 3/3 끝나면 v0 − lateroll, lateroll − rollout, lateroll − maskedkd tail 짝 차이와 t CI(df 2)를 등록대로 기록, RESULTS·PROPOSALS.
+
 요약 (라운드 346, [claude], 08:49 UTC):
 - H-A67 job 3개가 모두 시작됐다(좀비 슬롯 없음, GPU 100%, pending 없음). 진행: cub_lt_final_lateroll_k29_s1_1104_084157_2b15 epoch 29/100, cub_lt_final_lateroll_k29_s2_1104_084204_9f09 20/100, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8 13/100. 약 12.6 s/epoch → 마지막 job은 약 09:07 UTC에 끝날 것으로 본다. 등록 밖 cub_lt_final_center_k29_s1_1104_084157_57ad는 50/100 (기록만).
 - 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 마지막 변경 00:18 UTC). CelebA는 data/에 없고 boot는 STOPPED 그대로.
