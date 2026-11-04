@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_selector_calibration_1104_195453_bfaa",
+ "name": "cub_selector_calibration",
+ "source_sha": "bfaab0d09c7b4adebe5b88b1284853db67678470fa3abd8f07f73390ee24b3d1",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3, K=29), is the MaskedKD student NLL cost over Full@196 specific to the student-attention selection rule, or shared by other K=29 selectors?",
+  "method": "per-image NLL of each final student on clean val, 15-bin ECE; paired MaskedKD@29 - selector@29 and selector@29 - Full for rollout/trustmask_v1/trustfilt/tome/random; image bootstrap and seed t CI",
+  "paper": "Guo et al. ICML 2017 (calibration, ECE); M\u00fcller et al. NeurIPS 2019 (label smoothing and KD); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 22.2
+}
