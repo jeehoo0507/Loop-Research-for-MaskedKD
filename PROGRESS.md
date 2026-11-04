@@ -3,11 +3,20 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 ## 14:00 KST 중간 요약 ([claude], 라운드 327, 04:45 UTC 작성, 16:00 발표용)
 모든 차이는 같은 seed 짝 차이, t 95% CI (df 2), 주 지표 val WGA(cub_lt는 tail 정확도). 감사 PASS는 아직 없다(첫 줄 STUCK).
 1. **게이트 1 (Waterbirds final K=29, 3/3 seed, 등록 H-A37):** P1 v1 − teacher_topk −2.01 [−6.32, +2.31] → 불성립(차이는 불확실). P2 v1 − maskedkd +23.81 [+22.73, +24.89] → 성립. MaskedKD WGA 38.6, 다른 선택(rollout, teacher_topk, v1)은 62~64.
-2. **게이트 1 사후 관찰 (등록 밖, 주장 아님):** v0(trustfilt) WGA 72.68. v0 − teacher_topk +8.27 [+6.41, +10.13], v0 − Full@196 +5.26 [+3.40, +7.12] (Full 대비 GFLOPs 0.31배), v0 − tome +21.30 [+12.67, +29.93]. H-A57: v0 − lateroll K=29 +8.77 [+4.07, +13.47], K=12 +17.04 [+14.19, +19.89] → v0의 몫은 lateroll이 아니라 teacher 영역 필터. **확인 실험 H-A59 (seed 4·5·6): 1/6 끝** (trustfilt@29 s4 WGA 69.92, waterbirds_screen_trustfilt_k29_s4_1104_041245_3797). 판정은 6/6 뒤 한 번만.
+2. **게이트 1 사후 관찰 (등록 밖, 주장 아님):** v0(trustfilt) WGA 72.68. v0 − teacher_topk +8.27 [+6.41, +10.13], v0 − Full@196 +5.26 [+3.40, +7.12] (Full 대비 GFLOPs 0.31배), v0 − tome +21.30 [+12.67, +29.93]. H-A57: v0 − lateroll K=29 +8.77 [+4.07, +13.47], K=12 +17.04 [+14.19, +19.89] → v0의 몫은 lateroll이 아니라 teacher 영역 필터. **확인 실험 H-A59 (seed 4·5·6): 4/6 끝** (04:50 UTC 갱신; trustfilt s4·s5·s6 WGA 69.92·69.92·68.42, teacher_topk s4 65.41). 판정은 6/6 뒤 한 번만.
 3. **게이트 3 (Waterbirds K=29, 3/3, 등록 H-A38):** online maskedkd − frozen −22.81 [−26.69, −18.93] → "고리" 성립(학습 중 student의 마지막 층 attention을 따라가는 것이 소수 그룹 붕괴를 만든다). frozen − rollout −0.75 [−9.30, +7.80] (불확실). frozen은 비용 1.18배라 메커니즘 시험이다.
 4. **게이트 2 (cub_lt final K=29, 24/24, 등록 H-A39, tail 정확도):** P1 v1 − maskedkd +6.33 [+1.72, +10.94] → 성립. P2 v1 − teacher_topk +4.22 [−0.63, +9.08] → 평균 > 0으로 성립(CI 0 포함). P3 v0 − maskedkd +3.33 [−3.44, +10.11] → 불성립(차이는 불확실) → v0 사후 관찰은 cub_lt에서 재현되지 않았다. Full − CE tail +8.11 [+4.66, +11.57].
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
+
+요약 (라운드 328, [claude], 04:51 UTC):
+- **H-A59 4/6 끝**, 실행 중 2개(teacher_topk s5 epoch 43/100, s6 epoch 30/100; 끝 예상 약 04:58·05:00 UTC), 대기 0개. 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs):
+  - trustfilt@29 s5 69.92 / 90.74 / 13.35 (waterbirds_screen_trustfilt_k29_s5_1104_041250_8224)
+  - trustfilt@29 s6 68.42 / 91.16 / 13.35 (waterbirds_screen_trustfilt_k29_s6_1104_041254_004f)
+  - teacher_topk@29 s4 65.41 / 90.58 / 13.36 (waterbirds_screen_teacher_topk_k29_s4_1104_041258_c453)
+  - s4와 s5의 trustfilt WGA가 같은 69.92인 것은 최악 그룹(group 2) 정답 수가 같아서다(group 2 정확도만 같고 다른 그룹·acc는 다르다). 버그 아님.
+- 짝 차이는 등록대로 6/6 뒤 한 번만 계산한다. 14:00 중간 요약의 H-A59 줄을 4/6으로 고쳤다. 새 사람 지시·감사·분석 결과 없음. CelebA boot는 STOPPED 그대로(사람 조치 필요). 새 job은 내지 않는다.
+- 다음: teacher_topk s5·s6 기록 → 6/6 판정 (v0 − teacher_topk WGA CI 하한 > 0, v0 − full 평균 > 0; full은 기존 Waterbirds screen full@196 s4·5·6).
 
 요약 (라운드 327, [claude], 04:45 UTC):
 - H-A59 1/6 끝: trustfilt@29 s4 WGA 69.92 / acc 90.16 / 13.35 GFLOPs (waterbirds_screen_trustfilt_k29_s4_1104_041245_3797). 실행 중 4개, 대기 1개(teacher_topk s6). 짝 차이는 6/6 뒤에만 계산한다.
