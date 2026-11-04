@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_ttopk_set_shape_1104_221107_7f75",
+ "name": "cub_lt_ttopk_set_shape",
+ "source_sha": "7f7591ff02b20d5a488ff2ad1a0d525b9949e78a6f7112736c33509bc943f41d",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt (final Rollout@29, seeds 1-3), is the teacher's own rollout top-29 patch set more spatially clumped than the student's rollout top-29, and are the images where it is relatively more clumped the images where the teacher-top-29-masked teacher loses more non-target signal?",
+  "method": "teacher and student attention rollout maps on clean val; top-29 sets; mean pairwise grid distance and 4-connected components; non-target KL(full teacher || masked teacher); paired differences, image bootstrap; Spearman across images; seed t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Son et al. ECCV 2024 (MaskedKD); Darcet et al. ICLR 2024 (ViT register/sink tokens); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 9.1
+}

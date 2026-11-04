@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_ttopk_set_shape_1104_221111_a111",
+ "name": "aircraft_ttopk_set_shape",
+ "source_sha": "a1118cba8940517fed8a2988cea7975b561fcde63c85f102f6b3061cabdc994d",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final Rollout@29, seeds 1-3), is the teacher's own rollout top-29 patch set more spatially clumped than the student's rollout top-29, and are the images where it is relatively more clumped the images where the teacher-top-29-masked teacher loses more non-target signal?",
+  "method": "teacher and student attention rollout maps on clean val; top-29 sets; mean pairwise grid distance and 4-connected components; non-target KL(full teacher || masked teacher); paired differences, image bootstrap; Spearman across images; seed t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Son et al. ECCV 2024 (MaskedKD); Darcet et al. ICLR 2024 (ViT register/sink tokens); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 9.6
+}
