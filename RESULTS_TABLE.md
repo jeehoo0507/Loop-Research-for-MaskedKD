@@ -572,7 +572,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - trustmask_v1@29 vs tome@29 [acc]: +10.50 %p, 95% CI [+2.03, +18.97], seeds 2,3, GFLOPs ratio 1.112 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- trustmask_v1@29 vs maskedkd@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs maskedkd@29 [acc]: +3.50 %p, 95% CI [-11.32, +18.32], seeds 1,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs rollout@29 [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs tome@29 [acc]: +10.50 %p, 95% CI [+2.03, +18.97], seeds 2,3, GFLOPs ratio 1.112 -> WIN
 - trustmask_v1@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
@@ -589,8 +589,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - claim-grade (>= 3 seeds):
   - teacher_topk : 29.0 (3 seeds)
   - trustmask_v1@8186a4 : 29.0 (3 seeds)
-- screening only (fewer seeds):
-  - maskedkd : 29.0 (1 seeds)
+- screening only (fewer seeds): none
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -603,7 +602,7 @@ Total agent screen configs: 0
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | final | ce |  | 0 | None | 1,2,3 | 59.56 ± 1.46 | 38.22 ± 3.03 | 7.64 | 0.00 | 0.00 | 389 | cub_lt_final_ce_k0_s3_1103_234720_e74b cub_lt_final_ce_k0_s2_1103_234700_71de cub_lt_final_ce_k0_s1_1103_234642_ee32 |
 | final | full |  | 196 | 196.0 | 1,2 | 63.83 ± 2.12 | 46.66 ± 3.77 | 42.77 | 35.13 | 0.00 | 186 | cub_lt_final_full_k196_s2_1103_234647_7b36 cub_lt_final_full_k196_s1_1103_234609_88d5 |
-| final | maskedkd |  | 29 | 29.0 | 1 | 62.83 ± 0.00 | 44.00 ± 0.00 | 12.99 | 5.36 | 0.00 | 267 | cub_lt_final_maskedkd_k29_s1_1103_234609_76d1 |
+| final | maskedkd |  | 29 | 29.0 | 1,3 | 62.58 ± 0.35 | 44.00 ± 0.00 | 12.99 | 5.36 | 0.00 | 270 | cub_lt_final_maskedkd_k29_s1_1103_234609_76d1 cub_lt_final_maskedkd_k29_s3_1103_234704_b28b |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 63.39 ± 1.51 | 46.11 ± 2.71 | 13.35 | 5.36 | 0.35 | 289 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 2,3 | 54.50 ± 0.47 | 29.16 ± 1.18 | 12.00 | 4.36 | 0.00 | 289 | cub_lt_final_tome_k29_s2_1103_234647_6467 cub_lt_final_tome_k29_s3_1103_234704_41ee |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 65.83 ± 1.48 | 50.33 ± 1.85 | 13.34 | 5.36 | 0.43 | 288 | cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79 cub_lt_final_trustmask_v1_k29_s3_1103_234704_d748 cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
