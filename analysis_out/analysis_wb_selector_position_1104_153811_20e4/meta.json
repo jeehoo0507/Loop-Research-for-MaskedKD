@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_selector_position_1104_153811_20e4",
+ "name": "wb_selector_position",
+ "source_sha": "20e486bdb83eaf66f5c61d91184183df71cbf848c1c3ca2639264882ce3edfee",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29 (gate 1, seeds 1-3), does the mean grid centre distance of the tokens each selector keeps on group 2 rank the runs' val WGA, and does v0 keep more central tokens than maskedkd there?",
+  "method": "attention rollout (teacher all blocks; student all / blocks 6..11); last-block CLS attention; top-K; grid centre distance and outer-ring fraction of kept tokens by group; Spearman with run bootstrap; paired t CI",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 14.6
+}
