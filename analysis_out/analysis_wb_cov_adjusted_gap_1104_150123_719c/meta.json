@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_cov_adjusted_gap_1104_150123_719c",
+ "name": "wb_cov_adjusted_gap",
+ "source_sha": "719c86684cdd2b2500f333a9927721c7dc14bfc176495208eaeb394d4d6e1b25",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds (final, seeds 1-3), does the maskedkd@29 - maskedkd_frozen@29 masked-teacher q_y gap in group 2 remain after reweighting to equal teacher-evidence coverage, and does per-image coverage rank masked-teacher q_y within a run?",
+  "method": "attention rollout (teacher all blocks); last-block CLS attention top-K; keep-only masked teacher; coverage-bin reweighting (direct standardisation); paired t CI over seeds; Spearman",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Sagawa et al. ICLR 2020 (Waterbirds)"
+ },
+ "seconds": 9.1
+}
