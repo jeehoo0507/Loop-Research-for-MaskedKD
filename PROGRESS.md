@@ -1,5 +1,13 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 321, [claude], 02:15 UTC):
+- **게이트 2 (H-A39, cub_lt) 24/24 끝 → 사전 등록대로 판정 (한 번만, tail = val_wga_last, t 95% CI df 2, 손 계산).** 새로 끝남: rollout@29 s1 49.33 / 64.83 / 12.99 (cub_lt_final_rollout_k29_s1_1103_234609_8382), tome@29 s1 29.67 / 54.83 / 12.00 (cub_lt_final_tome_k29_s1_1103_234609_6b58), rollout@29 s3 49.67 / 65.17 / 12.99 (cub_lt_final_rollout_k29_s3_1103_234704_0edf).
+  - P1 성립: v1 − maskedkd +6.33 [+1.72, +10.94]. P2 성립(평균 > 0): v1 − teacher_topk +4.22 [−0.63, +9.08], CI 0 포함. P3 불성립: v0 − maskedkd +3.33 [−3.44, +10.11] (차이는 불확실).
+  - 기록: tome − maskedkd −14.67 [−16.86, −12.48]; Full − CE +8.11 [+4.66, +11.57] (KD 이득은 tail). 평균 tail: v1 50.33 > rollout 48.78 > v0 47.33 > full 46.33 ≈ teacher_topk 46.11 > maskedkd 44.00 > ce 38.22 > tome 29.33. RESULTS·PROPOSALS에 적었다. 감사 전.
+  - [claude] 결정: compare CLI는 전체 정확도만 내므로 등록 주 지표(tail)는 metrics의 val_wga_last로 손 계산했다(게이트 1과 같은 방식). 게이트 2 감사 요청은 이번에 내지 않는다: 첫 줄 STUCK(감사 기준 WGA/평균 정확도 충돌)이 그대로이고, 같은 문제로 다시 막히지 않도록 사람이 AUDIT_PROMPT를 맞춘 뒤 낸다.
+- 큐가 비었다 → QUEUE 09:15에 따라 새 job을 내지 않는다(CelebA boot는 루프 몫). CelebA 준비 실패(00:08 UTC)가 다시 나면 사람 조치 필요. "celeba gate submitted"가 BOOT_STATUS에 보이면 H-A58 등록대로 37 job을 낸다.
+- 다음: CelebA boot 상태 확인, 14:00 KST(05:00 UTC) 중간 요약(게이트 2 결과 포함).
+
 요약 (라운드 320, [claude], 02:06 UTC):
 - **게이트 2 (H-A39, cub_lt):** 21/24 끝, 실행 중 3개(rollout s1·s3, tome s1), 대기 0개. 새로 끝남 (tail = val_wga_last / 전체 / 총 GFLOPs): rollout@29 s2 47.33 / 63.67 / 12.99 (cub_lt_final_rollout_k29_s2_1103_234647_9b4c). 판정은 24 job이 다 끝난 뒤 한 번만(지금 짝 차이를 계산하지 않는다).
 - 새 사람 지시·감사·분석 결과 없음(QUEUE 마지막 11-04 09:15 KST, AUDIT 변화 없음). QUEUE 09:15에 따라 새 job을 내지 않는다(큐가 비어야 CelebA boot). CelebA 준비 실패(00:08 UTC)는 그대로 사람 조치 필요.
