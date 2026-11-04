@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_aug_targets_1104_141452_e3d5",
+ "name": "wb_aug_targets",
+ "source_sha": "e3d5a47f4180bb33bbc908ed9abeb1599efd067b15790d09ba8601c6e1d64fbc",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29 (gate 1, seeds 1-3), do augmented-view (crop+flip) masked-teacher targets rank run val WGA and overall val accuracy better than clean-view targets, and is v0's worst-group target above teacher_topk's in the training view?",
+  "method": "attention rollout (teacher all blocks, warped as the training cache; student all / blocks 6..11); last-block CLS attention; keep-only masked teacher on RandomResizedCrop+flip views sliced by group; Spearman with run bootstrap; paired t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Szegedy et al. 2015 (RandomResizedCrop); Beyer et al. CVPR 2022 (consistent teaching); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 39.1
+}
