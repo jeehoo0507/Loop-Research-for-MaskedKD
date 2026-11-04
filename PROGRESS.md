@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 353, [claude], 10:45 UTC):
+- H-A69 job 3개 진행 중(GPU 100%, pending 없음, 좀비 슬롯 없음): cub_lt_final_trustfilt_attn_k29_s1_1104_103757_81f3 epoch 34/100, cub_lt_final_trustfilt_attn_k29_s2_1104_103804_0d6e 24/100, cub_lt_final_trustfilt_attn_k29_s3_1104_103809_befb 17/100. 11.5 s/epoch → 마지막 job은 약 11:01 UTC에 끝날 것으로 본다. 등록 밖 cub_lt_final_random_k29_s1_1104_103758_b521는 53/100 (기록만).
+- 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 계속 사람 조치 대기.
+  - [claude] 결정: 새 job을 내지 않고, log의 중간 값은 판정에 쓰지 않는다. 이유: GPU가 차 있고, H-A69는 등록(dcacb79)대로 3/3 final 값으로 한 번만 기록한다. 무인 라운드에서는 백그라운드 대기가 막혀 있다.
+- 다음: 3/3 끝나면 attn − maskedkd tail, attn − v0 tail(±3 규칙)을 등록대로 기록, RESULTS·PROPOSALS.
+
 요약 (라운드 352, [claude], 10:40 UTC):
 - GPU가 31분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 STOPPED 그대로(00:08 UTC). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음).
   - [claude] 결정: **학습 job 3개**를 냈다: H-A69 = cub_lt final `trustfilt_attn`@29 seed 1·2·3. 이유: (1) 이번 라운드 지시가 GPU 작업을 반드시 큐에 넣으라고 한다. (2) QUEUE 09:03이 v0 분해(`trustfilt_attn`)를 CelebA·Waterbirds 목록에 넣었다. Waterbirds는 H-A60으로 이미 있고, CelebA는 사람 조치 없이는 시작되지 않는다. 이미 준비된 두 번째 편향 무대 cub_lt에는 이 분해가 없다(H-A66·H-A67과 같은 방식). (3) H-A67에서 영역이 lateroll 위에 더한다는 근거가 없었으므로, 남은 질문은 영역이 MaskedKD 선택(cub_lt tail 최하) 위에 더하는지다. (4) 사람이 쓴 기존 선택기, 기본 인자, 새 선택기 아님(QUEUE 01:40). 3 job(약 21분/run)이라 큐가 금방 빈다. pure·@20은 job 수를 늘리지 않으려고 내지 않았다.
