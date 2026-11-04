@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_calibration_1104_192256_9dbb",
+ "name": "aircraft_mask_calibration",
+ "source_sha": "9dbb8d1d79a68cd46ac6838fac8b480ec06f8fcef1635f984c5ba4e7756a02af",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), does MaskedKD@29 raise student val NLL and ECE over Full@196, and does the same-cost lateroll@29 recover it?",
+  "method": "per-image NLL of each final student on clean val, 15-bin ECE; paired MaskedKD - Full, MaskedKD - lateroll, lateroll - Full, CE - Full; image bootstrap and seed t CI",
+  "paper": "Guo et al. ICML 2017 (calibration, ECE); M\u00fcller et al. NeurIPS 2019 (label smoothing and KD); Yuan et al. CVPR 2020 (KD as learned label smoothing); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 12.1
+}

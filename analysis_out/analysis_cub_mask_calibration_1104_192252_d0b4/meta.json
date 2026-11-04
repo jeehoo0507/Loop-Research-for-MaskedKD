@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_calibration_1104_192252_d0b4",
+ "name": "cub_mask_calibration",
+ "source_sha": "d0b434fc77fd28b7e78f26db36b658357656aa32b0a201dc4ad9cb74beaaeeb0",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), does MaskedKD@29 raise student val NLL and ECE over Full@196, and does the same-cost lateroll@29 recover it?",
+  "method": "per-image NLL of each final student on clean val, 15-bin ECE; paired MaskedKD - Full, MaskedKD - lateroll, lateroll - Full, CE - Full; image bootstrap and seed t CI",
+  "paper": "Guo et al. ICML 2017 (calibration, ECE); M\u00fcller et al. NeurIPS 2019 (label smoothing and KD); Yuan et al. CVPR 2020 (KD as learned label smoothing); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 11.6
+}
