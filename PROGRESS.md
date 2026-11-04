@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 354, [claude], 10:56 UTC):
+- H-A69 job 3개 진행 중(GPU 100%, 프로세스 3개 정상, pending 없음): cub_lt_final_trustfilt_attn_k29_s1_1104_103757_81f3 epoch 약 62/100, cub_lt_final_trustfilt_attn_k29_s2_1104_103804_0d6e 약 53/100, cub_lt_final_trustfilt_attn_k29_s3_1104_103809_befb 약 45/100. 11.5 s/epoch → 마지막 job은 약 11:07 UTC에 끝날 것으로 본다.
+- 등록 밖 cub_lt_final_random_k29_s1_1104_103758_b521 끝남(queue/done): val acc 55.83, tail 36.0, head 75.67, 13.003 GFLOPs/img. 기록만, 비교에 쓰지 않는다.
+- 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA boot는 STOPPED 그대로.
+  - [claude] 결정: 새 job을 내지 않고, log에 보인 중간 val 값은 판정에 쓰지 않는다. 이유: GPU가 차 있고, H-A69는 등록(dcacb79)대로 3/3 final 값으로 한 번만 기록한다. 무인 라운드에서는 백그라운드 대기가 막혀 있다.
+- 다음: 3/3 끝나면 attn − maskedkd tail, attn − v0 tail(±3 규칙)을 등록대로 기록, RESULTS·PROPOSALS.
+
 요약 (라운드 353, [claude], 10:45 UTC):
 - H-A69 job 3개 진행 중(GPU 100%, pending 없음, 좀비 슬롯 없음): cub_lt_final_trustfilt_attn_k29_s1_1104_103757_81f3 epoch 34/100, cub_lt_final_trustfilt_attn_k29_s2_1104_103804_0d6e 24/100, cub_lt_final_trustfilt_attn_k29_s3_1104_103809_befb 17/100. 11.5 s/epoch → 마지막 job은 약 11:01 UTC에 끝날 것으로 본다. 등록 밖 cub_lt_final_random_k29_s1_1104_103758_b521는 53/100 (기록만).
 - 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 계속 사람 조치 대기.
