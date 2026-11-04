@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 411, [claude], 21:20 UTC):
+- GPU가 524분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A137 CUB, H-A138 Aircraft, 한 등록). 이유는 라운드 361~410과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 먼저 라운드 410이 남긴 후보를 새 job 없이 읽었다. Aircraft maskedkd 가린 teacher 정확도는 seed 평균 52.0 → 51.1 → 50.0이다. seed별 e25 → final은 −3.9·−5.4·+3.3이라 불확실하다. CUB의 62.4 → 57.3보다 작다. 그다음 후보 기전("attention이 몇 patch로 몰린다")을 등록했다. 겹침을 먼저 확인했다. H-A27 ent는 출력 엔트로피였고, H-C11은 학습 선택기였다. run은 H-A135·136과 같다.
+- **H-A137·138은 사전 등록(커밋 bc497bd) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A137 (analysis_cub_mask_attn_concentration_snap_1104_211320_77d5): P2 참. 집중도는 +0.008 [+0.006, +0.010] 올랐다. P1 참. ρ는 +0.12 [+0.04, +0.20]이다. 단 집중도는 e50이 최고다. 신호가 나빠지는 e50 → final에서는 집중도가 조금 내려간다.
+  - H-A138 (analysis_aircraft_mask_attn_concentration_snap_1104_211324_aabb): P2 반대. 집중도는 −0.0095 [−0.011, −0.008]이다(seed t는 ∋ 0). P1은 −0.05 [−0.13, +0.02]로 불확실하다.
+  - 등록 문구대로 "두 데이터에서 같은 방향"이 아니다. 집중 기전은 지지되지 않는다(CUB만 약하게, 시점도 어긋남). 두 데이터에서 같은 것은 두 가지다. maskedkd 가린 teacher KL은 e25 → final에서 커진다(+0.13·+0.17, 하한 > 0). rollout은 불확실하다. maskedkd 선택 집합의 Jaccard(e25, final)는 0.52~0.59이고, rollout은 0.78~0.80이다. 예측은 CUB에서 맞고 Aircraft에서 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A137·138 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 선택 집합의 변화(낮은 Jaccard)가 신호 악화와 이미지 단위로 연결되는지 본다. 즉 e25 → final에서 집합이 더 많이 바뀐 이미지에서 dG가 더 큰가이다. 이번 스크립트는 이미지별 Jaccard를 저장하지 않았으므로 새 등록이 필요하다.
+
 요약 (라운드 410, [claude], 21:05 UTC):
 - GPU가 513분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A135 CUB, H-A136 Aircraft, 한 등록). 이유는 라운드 361~409와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 409가 남긴 후보를 했다. 겹침을 먼저 확인했다. 기존 스냅샷 분석은 Waterbirds 그룹 정확도나 원판 KL이었다. run은 H-A131·132와 같다.
