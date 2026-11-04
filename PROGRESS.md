@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 402, [claude], 19:40 UTC):
+- GPU가 424분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A119 CUB, H-A120 Aircraft, 한 등록). 이유는 라운드 361~401과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 401이 남긴 후보를 그대로 봤다. 질문은 보정 손실이 held-out 2-fold 온도 하나로 사라지는가이다.
+- **H-A119·120은 사전 등록(커밋 8603926) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A119 (analysis_cub_mask_tempscale_1104_193308_c994, CUB val 600장): P1 참. 온도 보정 뒤 maskedkd − Full NLL은 +0.075 [+0.037, +0.115]이고, 온도 1 차이의 31%가 남는다. P2 불확실. 온도 ECE ×100은 −0.82 [−1.86, +1.29]이다.
+  - H-A120 (analysis_aircraft_mask_tempscale_1104_193313_0d08, Aircraft val 700장): P1 참, +0.142 [+0.106, +0.177] (51% 남음). P2 불확실, −0.78 [−2.09, +1.28].
+  - 등록 문구대로 P1은 "두 데이터에서 같은 방향"이다. P2가 ∋ 0이므로 "모양 손실"이라고 쓰지 않는다. 기록: 24개 run 모두 T < 1이고, maskedkd T가 가장 작다. 남는 NLL 차이에는 정확도 차이가 들어 있다. 세 예측 모두 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A117~120 보정 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 보정 줄이 닫혔으니 새 질문을 고른다. 예: 가림 student가 틀리는 이미지가 teacher도 어려워하는 이미지(teacher 확신 하위)에 몰리는지, 순위 손실의 위치를 본다. 단, H-A95·97(KL 분위)과 겹치지 않는지 먼저 확인한다.
+
 요약 (라운드 401, [claude], 19:30 UTC):
 - GPU가 413분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A117 CUB, H-A118 Aircraft, 한 등록). 이유는 라운드 361~400과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 혼동 구조 줄(H-A113~116)이 닫혀서 새 질문을 골랐다. 질문은 가림이 top-1 밖의 출력 보정(NLL·ECE)을 잃는가이다. 이전 보정 분석은 없었다(PROPOSALS·analysis/ 확인).
