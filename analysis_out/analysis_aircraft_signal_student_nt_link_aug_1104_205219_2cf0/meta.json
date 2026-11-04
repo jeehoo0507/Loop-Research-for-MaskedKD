@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_signal_student_nt_link_aug_1104_205219_2cf0",
+ "name": "aircraft_signal_student_nt_link_aug",
+ "source_sha": "2cf060c99369da06bc4c35a3b22d95d6f860037f1e6e7e57c0c8715b849b3de0",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3, K=29), on training-style crop+flip views, are the images where the MaskedKD student loses more non-target shape than Rollout the same images where the MaskedKD-masked teacher loses more non-target shape?",
+  "method": "per image and view non-target KL(full teacher || student) after held-out temperature scaling and non-target KL(full teacher || teacher on the 29 patches the run's own final student selects), on 2 fixed RandomResizedCrop+flip views; paired MaskedKD - Rollout differences; Spearman with image bootstrap; clean-view comparison on the same draws",
+  "paper": "Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Abnar & Zuidema ACL 2020 (attention rollout); Guo et al. ICML 2017 (temperature scaling); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 18.7
+}

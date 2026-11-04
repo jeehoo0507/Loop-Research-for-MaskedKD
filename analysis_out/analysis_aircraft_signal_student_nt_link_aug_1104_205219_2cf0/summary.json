@@ -1,0 +1,276 @@
+{
+ "n_val": 700,
+ "K": 29,
+ "V": 2,
+ "T_grid": [
+  0.1,
+  10.0,
+  400
+ ],
+ "teacher_acc_clean_v1_v2": [
+  77.43,
+  73.14,
+  75.29
+ ],
+ "P1_spearman_dS_dG_aug": [
+  0.2572,
+  0.1811,
+  0.3273
+ ],
+ "P2_mean_dG_signal_aug": [
+  0.4272,
+  0.339,
+  0.519
+ ],
+ "mean_dS_student_aug": [
+  0.1212,
+  0.0986,
+  0.1442
+ ],
+ "clean_spearman_dS_dG": [
+  0.2385,
+  0.1648,
+  0.3101
+ ],
+ "clean_mean_dS_dG": [
+  0.1322,
+  0.4787
+ ],
+ "rho_aug_minus_clean": [
+  0.0187,
+  -0.0765,
+  0.1081
+ ],
+ "per_seed_spearman_dS_dG_aug": [
+  0.1749,
+  0.1591,
+  0.2221
+ ],
+ "per_seed_t_spearman_aug": [
+  0.1854,
+  0.1039,
+  0.2668,
+  3
+ ],
+ "per_seed_t_dG_aug": [
+  0.4272,
+  0.237,
+  0.6173,
+  3
+ ],
+ "within_method_spearman_student_vs_signal_aug": {
+  "maskedkd": [
+   0.3533,
+   0.2794,
+   0.4199
+  ],
+  "rollout": [
+   0.4531,
+   0.3865,
+   0.5148
+  ]
+ },
+ "per_run": {
+  "maskedkd": {
+   "1": {
+    "T_fit_even_fit_odd": {
+     "clean": [
+      0.6562,
+      0.6638
+     ],
+     "aug": [
+      0.6194,
+      0.6562
+     ]
+    },
+    "student_nt_kl": {
+     "clean": 1.0581,
+     "aug": 1.058
+    },
+    "signal_nt_kl": {
+     "clean": 2.0995,
+     "aug": 2.3853
+    },
+    "signal_acc_clean_v1_v2": [
+     49.57,
+     35.71,
+     36.43
+    ],
+    "student_acc_clean_v1_v2": [
+     66.71,
+     62.71,
+     63.86
+    ],
+    "spearman_student_vs_signal_aug": 0.3047,
+    "val_acc_last": 66.71428680419922
+   },
+   "2": {
+    "T_fit_even_fit_odd": {
+     "clean": [
+      0.6638,
+      0.6412
+     ],
+     "aug": [
+      0.6266,
+      0.6412
+     ]
+    },
+    "student_nt_kl": {
+     "clean": 1.0278,
+     "aug": 1.0477
+    },
+    "signal_nt_kl": {
+     "clean": 2.1691,
+     "aug": 2.445
+    },
+    "signal_acc_clean_v1_v2": [
+     48.0,
+     34.57,
+     35.14
+    ],
+    "student_acc_clean_v1_v2": [
+     64.43,
+     61.29,
+     64.71
+    ],
+    "spearman_student_vs_signal_aug": 0.2881,
+    "val_acc_last": 64.42857384681702
+   },
+   "3": {
+    "T_fit_even_fit_odd": {
+     "clean": [
+      0.6715,
+      0.6638
+     ],
+     "aug": [
+      0.6412,
+      0.6562
+     ]
+    },
+    "student_nt_kl": {
+     "clean": 0.9893,
+     "aug": 1.053
+    },
+    "signal_nt_kl": {
+     "clean": 1.9842,
+     "aug": 2.2727
+    },
+    "signal_acc_clean_v1_v2": [
+     52.43,
+     36.86,
+     37.57
+    ],
+    "student_acc_clean_v1_v2": [
+     64.71,
+     61.43,
+     63.86
+    ],
+    "spearman_student_vs_signal_aug": 0.3611,
+    "val_acc_last": 64.71428275108337
+   }
+  },
+  "rollout": {
+   "1": {
+    "T_fit_even_fit_odd": {
+     "clean": [
+      0.7197,
+      0.6952
+     ],
+     "aug": [
+      0.6638,
+      0.6872
+     ]
+    },
+    "student_nt_kl": {
+     "clean": 0.9053,
+     "aug": 0.9312
+    },
+    "signal_nt_kl": {
+     "clean": 1.6046,
+     "aug": 1.926
+    },
+    "signal_acc_clean_v1_v2": [
+     56.86,
+     47.86,
+     44.43
+    ],
+    "student_acc_clean_v1_v2": [
+     66.86,
+     62.86,
+     67.86
+    ],
+    "spearman_student_vs_signal_aug": 0.4292,
+    "val_acc_last": 66.8571412563324
+   },
+   "2": {
+    "T_fit_even_fit_odd": {
+     "clean": [
+      0.7033,
+      0.6872
+     ],
+     "aug": [
+      0.6715,
+      0.6872
+     ]
+    },
+    "student_nt_kl": {
+     "clean": 0.8919,
+     "aug": 0.9366
+    },
+    "signal_nt_kl": {
+     "clean": 1.5994,
+     "aug": 1.9626
+    },
+    "signal_acc_clean_v1_v2": [
+     59.71,
+     45.57,
+     46.86
+    ],
+    "student_acc_clean_v1_v2": [
+     66.29,
+     64.43,
+     65.29
+    ],
+    "spearman_student_vs_signal_aug": 0.4142,
+    "val_acc_last": 66.57142639160156
+   },
+   "3": {
+    "T_fit_even_fit_odd": {
+     "clean": [
+      0.7197,
+      0.7033
+     ],
+     "aug": [
+      0.6715,
+      0.6952
+     ]
+    },
+    "student_nt_kl": {
+     "clean": 0.8814,
+     "aug": 0.9271
+    },
+    "signal_nt_kl": {
+     "clean": 1.6127,
+     "aug": 1.9328
+    },
+    "signal_acc_clean_v1_v2": [
+     56.29,
+     45.71,
+     47.0
+    ],
+    "student_acc_clean_v1_v2": [
+     66.14,
+     63.43,
+     62.86
+    ],
+    "spearman_student_vs_signal_aug": 0.3959,
+    "val_acc_last": 65.85714221000671
+   }
+  }
+ },
+ "verdict": {
+  "P1": "positive",
+  "P2": "positive",
+  "aug_minus_clean": "uncertain"
+ }
+}
