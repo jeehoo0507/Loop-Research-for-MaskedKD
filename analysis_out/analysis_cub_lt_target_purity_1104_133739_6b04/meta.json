@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_target_purity_1104_133739_6b04",
+ "name": "cub_lt_target_purity",
+ "source_sha": "6b047c6f8873227fa58a5d3a4cba810cda73eb8a545e1d4ea9203496474fa8e5",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does the masked teacher put its tail-class soft-label mass on that class's images (column purity), and does that purity rank the alignment of the student's tail head rows (H-A74)?",
+  "method": "attention rollout (teacher all blocks, student all / blocks 6..11); last-block CLS attention; keep-only masked teacher; per-class soft-label column purity and soft-label-weighted feature prototype; Spearman with run bootstrap; paired t CI",
+  "paper": "Hinton et al. 2015 (KD gradient on logits); Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Kang et al. ICLR 2020 (classifier direction under long tail); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 17.8
+}
