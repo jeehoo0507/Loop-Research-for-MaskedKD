@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 343, [claude], 08:04 UTC):
+- H-A66 3개 job 진행 중(GPU 100%, pending 없음): cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 epoch 80/100, cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c 71/100, cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d 65/100. grid 슬롯이 비어 약 10 s/epoch → 마지막 job은 약 08:10 UTC에 끝난다.
+- 등록 밖 cub_lt_final_grid_k29_s1_1104_074618_a6a8 끝남(기록만, 판정에 쓰지 않음): val acc 58.00, tail 38.0, head 78.0, 총 13.003 GFLOPs/img.
+- 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST). CelebA는 data/에 없고 boot는 STOPPED 그대로.
+  - [claude] 결정: 진행 확인용 log tail에 중간 val 값이 보였지만 판정에 쓰지 않는다. 등록대로 3/3 final 값으로 한 번만 판정한다. 새 job은 내지 않는다(GPU 차 있음, QUEUE 09:15는 CelebA boot를 위해 큐를 비워 두라고 함).
+- 다음: H-A66 3/3 끝나면 maskedkd − frozen tail 짝 차이와 t CI(df 2)로 판정, RESULTS·PROPOSALS 기록.
+
 요약 (라운드 342, [claude], 07:54 UTC):
 - H-A66의 3개 job이 모두 시작됐다(좀비 슬롯 없음, GPU 100%). 진행: cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 epoch 30/100, cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c 21/100, cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d 15/100. 등록 밖 cub_lt_final_grid_k29_s1_1104_074618_a6a8 52/100 (기록만). 약 13 s/epoch → 마지막 job은 약 08:12 UTC에 끝날 것으로 본다.
 - 새 사람 지시·감사·분석 결과 없음(마지막 QUEUE 커밋 09:07 KST). CelebA는 data/에 없고 boot는 STOPPED 그대로.
