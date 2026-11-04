@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_ttopk_addone_why_1104_224335_8339",
+ "name": "aircraft_ttopk_addone_why",
+ "source_sha": "83397fe95c6cbbc4bf135b0a8c2292dc9284edf44fdbb86b439621914374ea89",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final Rollout@29, seeds 1-3), is the single-patch value of patches in the difference between the teacher's own rollout top-29 and the student's rollout top-29 explained by the patch's teacher-feature novelty relative to the shared patches, or by its spatial adjacency to them?",
+  "method": "teacher and student attention rollout maps on clean val; top-29 sets, intersection and differences; keep-only masked teacher on intersection plus one patch; non-target KL(full teacher || masked teacher); teacher last-block token cosine novelty; 4-neighbour count; within-image Spearman; image bootstrap; seed t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 22.9
+}
