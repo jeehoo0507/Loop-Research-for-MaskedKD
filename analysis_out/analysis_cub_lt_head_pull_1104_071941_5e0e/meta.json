@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_head_pull_1104_071941_5e0e",
+ "name": "cub_lt_head_pull",
+ "source_sha": "5e0ebf2862c4d3a5a8539cce205c8b8546c547d12f08997fb1c4926ab601bc58",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does MaskedKD's rule pull the masked teacher's soft label toward the head classes on tail images more than v1's rule (directional feedback of the student's class-frequency bias), or is the H-A62 target loss uniform?",
+  "method": "attention rollout (teacher all blocks, student all blocks or 6..11); last-block CLS attention; keep-only masked teacher head-class probability mass vs full teacher, sliced by head/tail class; within-group image bootstrap; Spearman",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 15.5
+}
