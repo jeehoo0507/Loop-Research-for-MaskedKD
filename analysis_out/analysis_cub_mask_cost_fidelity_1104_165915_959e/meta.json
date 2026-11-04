@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_cost_fidelity_1104_165915_959e",
+ "name": "cub_mask_cost_fidelity",
+ "source_sha": "959e13f99f343c8d97b8f9c964cea1e05ae9abfad3330b6b0b26055225d8660d",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3; replication of H-A95 on Aircraft), is the per-image accuracy cost of MaskedKD@29 relative to Full@196 larger on images where the masked teacher's soft label departs more from the full teacher's?",
+  "method": "keep-only masked teacher with each maskedkd student's own last-block CLS top-29; per-image KL quintiles; cost Q5 - Q1 with paired image bootstrap and per-seed t CI",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 8.3
+}
