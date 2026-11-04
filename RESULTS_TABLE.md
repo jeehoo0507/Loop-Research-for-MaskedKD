@@ -600,7 +600,8 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
   - teacher_topk : 29.0 (3 seeds)
   - trustfilt@27da28 : 29.0 (3 seeds)
   - trustmask_v1@8186a4 : 29.0 (3 seeds)
-- screening only (fewer seeds): none
+- screening only (fewer seeds):
+  - rollout : 29.0 (1 seeds)
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -614,6 +615,7 @@ Total agent screen configs: 0
 | final | ce |  | 0 | None | 1,2,3 | 59.56 ± 1.46 | 38.22 ± 3.03 | 7.64 | 0.00 | 0.00 | 389 | cub_lt_final_ce_k0_s3_1103_234720_e74b cub_lt_final_ce_k0_s2_1103_234700_71de cub_lt_final_ce_k0_s1_1103_234642_ee32 |
 | final | full |  | 196 | 196.0 | 1,2,3 | 63.83 ± 1.50 | 46.33 ± 2.73 | 42.77 | 35.13 | 0.00 | 188 | cub_lt_final_full_k196_s3_1103_234704_3d84 cub_lt_final_full_k196_s2_1103_234647_7b36 cub_lt_final_full_k196_s1_1103_234609_88d5 |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 62.33 ± 0.50 | 44.00 ± 0.00 | 12.99 | 5.36 | 0.00 | 271 | cub_lt_final_maskedkd_k29_s1_1103_234609_76d1 cub_lt_final_maskedkd_k29_s2_1103_234647_0c6c cub_lt_final_maskedkd_k29_s3_1103_234704_b28b |
+| final | rollout |  | 29 | 29.0 | 2 | 63.67 ± 0.00 | 47.33 ± 0.00 | 12.99 | 5.36 | 0.17 | 232 | cub_lt_final_rollout_k29_s2_1103_234647_9b4c |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 63.39 ± 1.51 | 46.11 ± 2.71 | 13.35 | 5.36 | 0.35 | 289 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 2,3 | 54.50 ± 0.47 | 29.16 ± 1.18 | 12.00 | 4.36 | 0.00 | 289 | cub_lt_final_tome_k29_s2_1103_234647_6467 cub_lt_final_tome_k29_s3_1103_234704_41ee |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 64.67 ± 1.89 | 47.33 ± 2.73 | 13.34 | 5.36 | 0.43 | 247 | cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3 cub_lt_final_trustfilt_k29_s3_1103_234704_8732 cub_lt_final_trustfilt_k29_s2_1103_234647_43e9 |
