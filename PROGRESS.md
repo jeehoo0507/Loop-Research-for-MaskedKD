@@ -9,6 +9,16 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 336, [claude], 07:10 UTC):
+- GPU가 31분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 STOPPED 그대로. 새 사람 지시·감사 없음.
+  - [claude] 결정: 학습 job이 아니라 **분석 job 하나**(학습 없음, 수 분)를 냈다. 이번 라운드 지시가 "반드시 큐에 넣어라"이고, QUEUE에서 CelebA에 의존하지 않는 학습 항목은 남아 있지 않다. 분석은 금방 끝나 큐가 다시 비므로, 사람이 CelebA를 고치면 boot가 늦지 않게 시작된다. 새 선택기·학습 job은 내지 않았다(QUEUE 01:40 규칙).
+- **H-A61 사전 등록(커밋 8f52216) 뒤 제출·완료:** analysis_wb_decomp_targets_1104_065923_a58a. H-A59·H-A60의 15 run(seed 4·5·6) 최종 student에 각 run의 토큰 규칙을 적용해 가린 teacher의 그룹별 정확도를 쟀다.
+  - P1 참: v0 − teacher_topk t_acc 그룹 1 +0.109 [+0.070, +0.149], 그룹 2 +0.143 [+0.070, +0.221] (H-A41 재현).
+  - P2 거짓(주): v0 − attn 그룹 2 +0.053 [−0.005, +0.113] → 차이는 불확실. "lateroll도 필요"를 목표 정확도로 설명하지는 못한다.
+  - P3 참: run 수준 Spearman(가린 teacher 그룹 최소 t_acc, val WGA) 0.68 (H-A41 0.30).
+  - RESULTS·PROPOSALS에 적고 닫았다. v0가 사후 관찰이라 주장 아님. 감사 요청 없음(첫 줄 STUCK).
+- 다음: 사람 지시(CelebA 데이터, AUDIT_PROMPT 정렬) 대기. 큐는 다시 비어 있다.
+
 요약 (라운드 335, [claude], 06:26 UTC):
 - **H-A60 9/9 끝 → 사전 등록(f307515)대로 판정 한 번 (손 계산 t CI df 2).** 새로 끝남: trustfilt@20 s5 69.17 / 90.24 / 11.80 (waterbirds_screen_trustfilt_k20_s5_1104_050343_9a6d), s6 66.92 / 90.16 / 11.80 (waterbirds_screen_trustfilt_k20_s6_1104_050347_3cfa).
   - (a) attn − v0 WGA −3.51 [−5.67, −1.35] → "lateroll도 필요". (b) pure − v0 WGA −4.76 [−7.61, −1.91] → "같은 강건성을 더 싸게"는 아니다 (pure 10.22 GFLOPs). 기록: v0@20 − v0@29 −1.50 [−3.36, +0.36] (불확실), v0@20 − pure +3.26 [+1.11, +5.41]. v0가 H-A59에서 재현되지 않아 기제 기록일 뿐이다. RESULTS·PROPOSALS에 적고 H-A60을 닫았다.
