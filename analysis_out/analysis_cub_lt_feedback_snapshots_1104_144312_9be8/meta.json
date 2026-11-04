@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_feedback_snapshots_1104_144312_9be8",
+ "name": "cub_lt_feedback_snapshots",
+ "source_sha": "9be88eeea235667c1b1adad9db635532bb4703e74c5177206531ee0e03daf9fc",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt (final, seeds 1-3), along training (e25, e50, final), does the maskedkd@29 student's last-block CLS top-29 cover less teacher rollout mass than the same rule applied to maskedkd_frozen@29, full@196 and ce students, and does that gap grow with training?",
+  "method": "attention rollout (teacher all blocks); last-block CLS attention top-K; keep-only masked teacher; paired t CI over seeds",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011); Liu et al. CVPR 2019 (long-tail split)"
+ },
+ "seconds": 18.2
+}
