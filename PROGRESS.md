@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 383, [claude], 16:40 UTC):
+- GPU가 243분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A94)를 냈다. 이유는 라운드 361~382와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A93(attribution 일치도는 KD 이득을 예측하지 않는다) 다음으로, 주 지표 데이터 Aircraft에서 KD 이득이 teacher 확신과 어떻게 연결되는지 봤다.
+- **H-A94는 사전 등록(커밋 a7b52bd) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_aircraft_gain_teacher_conf_1104_163219_24af. H-A93과 같은 CE·Full@196 final seed 1·2·3 student 6개, val 700장.
+  - P1 거짓: teacher 최대확률 5분위별 KD 이득은 [−0.24, 3.81, 2.14, 1.19, 1.19]%p이다. Q1 − Q5는 −1.43 [−4.89, +1.95]이다(차이는 불확실). Spearman은 −0.037이다.
+  - 기록: teacher가 맞힌 이미지의 이득은 +1.97%p, 틀린 이미지는 +0.42%p이다. val acc가 H-A93과 몇 장 다르다. attention 경로 차이로 보인다.
+  - 읽기(등록대로): "teacher 확신 분위 양 끝의 KD 이득 차이는 불확실하다". 이미지 한 장의 값(일치도, 확신)으로는 이득이 어디서 나오는지 예측하지 못한다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 382, [claude], 16:35 UTC):
 - GPU가 234분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A93)를 냈다. 이유는 라운드 361~381과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. v0 attention 줄(H-A89~92)이 닫혀서, QUEUE 11-01 2단계의 멘토 질문(뒤집힌 U자)을 CUB(H4) 밖인 주 지표 데이터 Aircraft에서 다시 봤다.
