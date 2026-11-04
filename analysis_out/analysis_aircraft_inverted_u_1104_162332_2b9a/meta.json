@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_inverted_u_1104_162332_2b9a",
+ "name": "aircraft_inverted_u",
+ "source_sha": "2b9ad051b16f7bf4224d0b8cb40cadf95af46164a9f9c1a5822626526399ffe9",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), is per-image KD gain (Full - CE) highest at middle CE-student / teacher attribution agreement (mentor's inverted U), unlike CUB H4?",
+  "method": "per-image Spearman of CE student rollout vs teacher rollout; quintiles of agreement; KD gain contrasts with paired image bootstrap and per-seed t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Hinton et al. 2015 (KD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 7.3
+}
