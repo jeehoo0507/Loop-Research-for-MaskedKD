@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_loss_ncm_fidelity_1104_183953_bf51",
+ "name": "aircraft_mask_loss_ncm_fidelity",
+ "source_sha": "bf513e35d3d11827ea8465bdf9f03dc3774180ba33c90e3bf42dfed650212539",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft (final, seeds 1-3), is the feature (leave-one-out NCM) loss of MaskedKD@29 relative to Full@196 concentrated on images where the masked teacher's soft label departs from the full teacher's?",
+  "method": "keep-only masked teacher with each maskedkd student's own last-block CLS top-29; per-image KL quintiles; NCM loss Q5 - Q1 with paired image bootstrap and per-seed t CI",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Allen-Zhu & Li ICLR 2023 (multi-view KD); Kang et al. ICLR 2020 (NCM); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 8.6
+}
