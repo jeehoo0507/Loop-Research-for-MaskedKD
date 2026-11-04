@@ -569,16 +569,17 @@ Gate: gate incomplete: ce seeds [1, 2, 3], full seeds [1, 2, 3], maskedkd seeds 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagnostic: WGA seed sigma: not measured yet (run harness.submit --baselines))
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- trustfilt@29 vs tome@29 [acc]: +9.08 %p, 95% CI [+8.02, +10.14], seeds 2,3, GFLOPs ratio 1.112 -> WIN
 - trustmask_v1@29 vs tome@29 [acc]: +10.50 %p, 95% CI [+2.03, +18.97], seeds 2,3, GFLOPs ratio 1.112 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
 - trustfilt@29 vs maskedkd@29 [acc]: +2.75 %p, 95% CI [-13.13, +18.63], seeds 1,3, GFLOPs ratio 1.027 -> no difference
 - trustfilt@29 vs rollout@29 [acc]: missing (needs >= 2 shared seeds)
-- trustfilt@29 vs tome@29 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@29 vs tome@29 [acc]: +9.08 %p, 95% CI [+8.02, +10.14], seeds 2,3, GFLOPs ratio 1.112 -> WIN
 - trustfilt@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
-- trustfilt@29 vs full@196 [acc]: +0.75 %p, 95% CI [-8.78, +10.28], seeds 1,3, GFLOPs ratio 0.312 -> no difference
+- trustfilt@29 vs full@196 [acc]: +0.83 %p, 95% CI [-1.06, +2.73], seeds 1,2,3, GFLOPs ratio 0.312 -> no difference
 - trustfilt@29 vs lateroll@29 (parent) [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs maskedkd@29 [acc]: +3.50 %p, 95% CI [-11.32, +18.32], seeds 1,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs rollout@29 [acc]: missing (needs >= 2 shared seeds)
@@ -587,7 +588,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - trustmask_v1@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs full@196 [acc]: +2.00 %p, 95% CI [-0.72, +4.72], seeds 1,2,3, GFLOPs ratio 0.312 -> no difference
-- trustmask_v1@29 vs trustfilt@29 (parent) [acc]: +0.75 %p, 95% CI [-0.31, +1.81], seeds 1,3, GFLOPs ratio 1.000 -> no difference
+- trustmask_v1@29 vs trustfilt@29 (parent) [acc]: +1.17 %p, 95% CI [-0.64, +2.97], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - no child selectors yet
@@ -596,9 +597,9 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 ### final: Full KD val 63.83 (seeds 1,2,3); KD gain +4.28, tolerance 1.00 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - teacher_topk : 29.0 (3 seeds)
+  - trustfilt@27da28 : 29.0 (3 seeds)
   - trustmask_v1@8186a4 : 29.0 (3 seeds)
-- screening only (fewer seeds):
-  - trustfilt@27da28 : 29.0 (2 seeds)
+- screening only (fewer seeds): none
 
 ## Where token choice matters (screen seed 0, each baseline vs Full KD)
 - not measured yet
@@ -614,6 +615,6 @@ Total agent screen configs: 0
 | final | maskedkd |  | 29 | 29.0 | 1,3 | 62.58 ± 0.35 | 44.00 ± 0.00 | 12.99 | 5.36 | 0.00 | 270 | cub_lt_final_maskedkd_k29_s1_1103_234609_76d1 cub_lt_final_maskedkd_k29_s3_1103_234704_b28b |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 63.39 ± 1.51 | 46.11 ± 2.71 | 13.35 | 5.36 | 0.35 | 289 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 2,3 | 54.50 ± 0.47 | 29.16 ± 1.18 | 12.00 | 4.36 | 0.00 | 289 | cub_lt_final_tome_k29_s2_1103_234647_6467 cub_lt_final_tome_k29_s3_1103_234704_41ee |
-| final | trustfilt@27da28 |  | 29 | 29.0 | 1,3 | 65.33 ± 2.12 | 47.66 ± 3.77 | 13.34 | 5.36 | 0.43 | 246 | cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3 cub_lt_final_trustfilt_k29_s3_1103_234704_8732 |
+| final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 64.67 ± 1.89 | 47.33 ± 2.73 | 13.34 | 5.36 | 0.43 | 247 | cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3 cub_lt_final_trustfilt_k29_s3_1103_234704_8732 cub_lt_final_trustfilt_k29_s2_1103_234647_43e9 |
 | final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2,3 | 65.83 ± 1.48 | 50.33 ± 1.85 | 13.34 | 5.36 | 0.43 | 288 | cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79 cub_lt_final_trustmask_v1_k29_s3_1103_234704_d748 cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
 
