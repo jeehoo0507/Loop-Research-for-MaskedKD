@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 349, [claude], 09:39 UTC):
+- GPU가 31분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 00:08 UTC부터 STOPPED 그대로. 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음).
+- QUEUE에서 CelebA 뒤로 미룬 Waterbirds 항목을 다시 확인했다: lateroll@29·@12 seed 1·2·3(H-A57), 확인 묶음 seed 4·5·6(H-A59·H-A60), tome@29 seed 2·3 모두 이미 있다. 빠진 것은 seed 4·5·6의 lateroll 대조군뿐이다(H-A59 v0 s4-6와 짝이 없다).
+  - [claude] 결정: **학습 job 3개**를 냈다: H-A68 = Waterbirds screen `lateroll`@29 seed 4·5·6. 이유: (1) 이번 라운드 지시가 GPU 작업을 반드시 큐에 넣으라고 한다. (2) QUEUE 09:15의 "큐를 비워 둔다"는 CelebA boot를 위한 것인데, boot는 데이터 준비 실패로 멈춰 있어 사람 조치 없이는 시작되지 않는다. (3) QUEUE 09:10·09:15가 Waterbirds lateroll을 확인 묶음(seed 4·5·6)과 함께 내라고 했다. 그리고 H-A57(+8.77)과 cub_lt H-A67(−2.44)의 방향이 서로 반대라서 새 seed의 짝이 가장 많은 정보를 준다. (4) 사람이 쓴 기존 선택기의 기본 인자를 쓰고 새 선택기는 없다. seed 4·5·6은 screen tier다(final과 겹치지 않음). job이 3개뿐이라 큐가 금방 빈다.
+- **H-A68 사전 등록(커밋 093bd61) 뒤 제출:** waterbirds_screen_lateroll_k29_s4_1104_093813_f1e8, waterbirds_screen_lateroll_k29_s5_1104_093818_1d16, waterbirds_screen_lateroll_k29_s6_1104_093822_07aa. 등록 밖 기준 run은 붙지 않았다. 기록 항목(판정 아님): v0 − lateroll WGA CI, lateroll − teacher_topk, trustfilt_attn − lateroll.
+- 다음: 3/3 끝나면 등록대로 한 번 기록, RESULTS·PROPOSALS. 시작이 안 됐으면 `ps aux`로 좀비 슬롯 확인. CelebA·AUDIT_PROMPT는 계속 사람 조치 대기.
+
 요약 (라운드 348, [claude], 09:10 UTC):
 - **H-A67 3/3 끝 → 사전 등록(603e950)대로 기록 한 번 (손 계산 t CI df 2, 전체 정확도는 harness.compare로 확인해 일치).** lateroll tail: cub_lt_final_lateroll_k29_s1_1104_084157_2b15 51.67, cub_lt_final_lateroll_k29_s2_1104_084204_9f09 49.33, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8 48.33.
   - v0 − lateroll tail −2.44 [−4.96, +0.07] → 등록 문구대로 "cub_lt에서 v0와 lateroll의 차이는 불확실". 예측(평균 > 0) 틀림, 세 seed 모두 음수.
