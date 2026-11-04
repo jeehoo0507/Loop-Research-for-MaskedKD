@@ -562,3 +562,32 @@ Total agent screen configs: 0
 | final | full |  | 196 | 196.0 | 1 | 84.35 ± 0.00 | - | 42.77 | 35.13 | 0.00 | 252 | caltech256_final_full_k196_s1_1103_123120_d6de |
 | final | maskedkd |  | 98 | 98.0 | 1 | 83.81 ± 0.00 | - | 25.04 | 17.41 | 0.00 | 305 | caltech256_final_maskedkd_k98_s1_1103_123120_9e43 |
 
+# Earlier check: cub_lt (no new runs; kept for the record)
+
+Gate: gate incomplete: ce seeds [], full seeds [], maskedkd seeds []
+
+Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagnostic: WGA seed sigma: not measured yet (run harness.submit --baselines))
+
+## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- none yet
+
+## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
+- no agent method has >= 2 final seeds yet
+
+## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
+- no child selectors yet
+
+## Primary metric (analysis-only methods excluded: oracle)
+
+## Where token choice matters (screen seed 0, each baseline vs Full KD)
+- not measured yet
+
+## Search effort (screen)
+Total agent screen configs: 0
+
+## All finished runs
+| tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| final | teacher_topk |  | 29 | 29.0 | 1 | 64.50 ± 0.00 | 47.33 ± 0.00 | 13.35 | 5.36 | 0.35 | 312 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 |
+| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1 | 67.50 ± 0.00 | 52.33 ± 0.00 | 13.34 | 5.36 | 0.43 | 376 | cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
+

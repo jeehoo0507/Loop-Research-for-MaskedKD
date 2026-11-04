@@ -55,3 +55,4 @@
 - 2026-11-03 12:31 [stage2] caltech256 gate submitted (one GPU slot)
 - 2026-11-03 13:15 [stage2] caltech256 gate: KD beats CE; MaskedKD@98 more than 0.5 below Full KD, kept as a finding, stage 2 goes on: [caltech256 final, 20 epochs, mean of seeds [1]] Full KD 84.35 vs CE 83.31 (need +1.0): PASS; MaskedKD@98 83.81 vs Full 84.35 (need >= Full - 0.5): FAIL
 - 2026-11-03 13:15 [stage2] caltech256 is a held-out check: no baseline grid; the agent submits the frozen candidate and its references
+- 2026-11-04 00:08 [stage2] STOPPED: celeba data preparation failed (see agent/logs/stage2_boot.log)
