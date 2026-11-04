@@ -1,0 +1,19 @@
+{
+ "id": "waterbirds_screen_trustfilt_pure_k29_s5_1104_050330_15c1",
+ "kind": "train",
+ "dataset": "waterbirds",
+ "stage2": null,
+ "method": "trustfilt_pure",
+ "keep": 29.0,
+ "seed": 5,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"v0 ablation (QUEUE 2026-11-04 09:03): the plain intersection, teacher top-K AND student late-block rollout top-K.\n\ntrustfilt widens the teacher region to 1.5 K so that exactly K tokens are kept. Here nothing is widened or padded: a\ntoken is kept only if it is in the teacher's cached rollout top-K and in the student's late-block rollout top-K (at\nleast one token per image). The count varies per image and its mean is below K, so the teacher costs less than\nMaskedKD at the same nominal K; the question is whether worst-group accuracy stays at trustfilt's level.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase, topk_mask\n\nSTART = 6\n\nMETA = {\n    \"method\": \"intersection of the cached teacher rollout top-K and the student's late-block (6..11) attention rollout \"\n              \"top-K, no widening, no padding (at least one token)\",\n    \"paper\": \"Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD)\",\n    \"why\": \"tokens both the teacher uses as evidence and the student attends to; dropping the rest cuts the teacher's \"\n           \"cost below MaskedKD@K and tests whether the robustness of trustfilt survives with fewer tokens\",\n    \"vs_maskedkd\": \"student picks restricted to the teacher's top-K and nothing added back: fewer tokens per image\",\n    \"prior_art\": \"trustfilt (widened region, exactly K kept); LeaF (NeurIPS 2025) prunes tokens the student attends \"\n                 \"to but the teacher ignores, for LLM distillation\",\n    \"parent\": \"trustfilt\",\n    \"uses_teacher_cache\": True,\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": list(range(START, 12)), \"tokens\": []}\n\n    def select(self, ctx):\n        r = None\n        for a in ctx.out.attn[START:]:\n            a = a.detach().float().mean(dim=1)\n            a = 0.5 * a + 0.5 * torch.eye(a.shape[-1], device=a.device)\n            a = a / a.sum(dim=-1, keepdim=True)\n            r = a if r is None else a @ r\n        s = r[:, 0, 1:]\n        k = int(ctx.budget)\n        keep = topk_mask(s, k) & topk_mask(ctx.teacher_map.float(), k)\n        empty = ~keep.any(1)\n        if empty.any():   # no overlap: the student's single best token inside the teacher's top-K\n            t_in = ctx.teacher_map.float().argsort(1, descending=True).argsort(1) < k\n            best = s.masked_fill(~t_in, -1.0).argmax(1)\n            keep[empty, best[empty]] = True\n        return keep\n",
+ "selector_sha": "2e6797f8ab223eeb6da349f44217e6212c65945412c52e37b4fa447421b907ac",
+ "note": "H-A60 f307515",
+ "by": "claude",
+ "priority": 0,
+ "submitted": "2026-11-04 05:03:30",
+ "lr": null
+}

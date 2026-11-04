@@ -1,0 +1,19 @@
+{
+ "id": "waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0",
+ "kind": "train",
+ "dataset": "waterbirds",
+ "stage2": null,
+ "method": "trustfilt_attn",
+ "keep": 29.0,
+ "seed": 4,
+ "tier": "screen",
+ "epochs": 100,
+ "sel_args": {},
+ "selector_src": "\"\"\"v0 ablation (QUEUE 2026-11-04 09:03): the teacher filter of trustfilt with MaskedKD's own picker inside it.\n\ntrustfilt = teacher's cached rollout top ceil(1.5 K) as the allowed region + the student's late-block rollout picks K\ninside. This variant keeps the region and replaces the picker by MaskedKD's rule (last block, head-mean CLS attention,\ntop-K). If it matches trustfilt on worst-group accuracy, the teacher region alone breaks the feedback loop and\nlateroll adds nothing; if it falls to MaskedKD's level, the region is not enough.\n\"\"\"\nimport torch\n\nfrom harness.selector_api import SelectorBase\n\nWIDEN = 1.5\n\nMETA = {\n    \"method\": \"cached teacher rollout top ceil(1.5K) as the allowed region; MaskedKD's last-block CLS attention picks \"\n              \"the K tokens inside it\",\n    \"paper\": \"Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout, cached teacher map)\",\n    \"why\": \"separates the two parts of trustfilt (teacher region vs late-block rollout picker): which one keeps the \"\n           \"masked teacher from confirming the student's shortcut on the minority groups\",\n    \"vs_maskedkd\": \"identical picker and K; the student may only pick inside the teacher's own evidence region\",\n    \"prior_art\": \"trustfilt (teacher region + lateroll); teacher_topk (teacher alone)\",\n    \"parent\": \"trustfilt\",\n    \"uses_teacher_cache\": True,\n}\n\n\nclass Selector(SelectorBase):\n    NEEDS = {\"attn\": [-1], \"tokens\": []}\n\n    def select(self, ctx):\n        s = ctx.out.attn[-1].detach().float().mean(dim=1)[:, 0, 1:]\n        k = int(ctx.budget)\n        t = ctx.teacher_map.float()\n        n = s.shape[1]\n        m = min(int(-(-WIDEN * k // 1)), n)\n        allowed = t.argsort(1, descending=True).argsort(1) < m\n        s = s.masked_fill(~allowed, -1.0)\n        return s.argsort(1, descending=True).argsort(1) < k\n",
+ "selector_sha": "8fd44d0a00c6dcbd5ee82f21347df0ed9b6ebdf2ea0f8d95245f6393e3af393a",
+ "note": "H-A60 f307515",
+ "by": "claude",
+ "priority": 0,
+ "submitted": "2026-11-04 05:03:10",
+ "lr": null
+}
