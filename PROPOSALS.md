@@ -1126,6 +1126,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - 예측 (한 번만): v0 − lateroll 평균 > 0 확신 중간(H-A57은 큰 양수지만 H-A59에서 v0 우위가 줄었다).
   - 결과를 보고 seed·K·방법을 더하지 않는다. 하네스가 자동으로 붙이는 등록 밖 기준 run은 시작 전 지운다.
   - **[라운드 349] 제출 (사전 등록 093bd61 뒤):** waterbirds_screen_lateroll_k29_s4_1104_093813_f1e8, waterbirds_screen_lateroll_k29_s5_1104_093818_1d16, waterbirds_screen_lateroll_k29_s6_1104_093822_07aa. 등록 밖 기준 run은 붙지 않았다.
+  - **[라운드 351] 결과 (3/3, 등록대로 한 번만 기록):** lateroll WGA 60.15/62.41/62.41. v0 − lateroll +7.76 [+3.06, +12.47] → CI 하한 > 0 → "seed 4·5·6에서도 teacher 영역이 lateroll 위에 더한다". 예측(평균 > 0) 맞음. 기록: lateroll − teacher_topk −1.75 [−10.18, +6.68], trustfilt_attn − lateroll +4.26 [−1.15, +9.66], clean acc v0 − lateroll −0.06 [−1.53, +1.41], GFLOPs/img v0 13.35 vs lateroll 12.99. 닫음.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
