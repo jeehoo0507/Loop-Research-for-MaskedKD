@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_head_norm_1104_132734_2add",
+ "name": "cub_lt_head_norm",
+ "source_sha": "2addd467969d2a531093c7b7838871838e09730d68f955922dff4ff7205a306c",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does unit-norm rescaling of each class row of the student head (tau-normalisation, no fitting) remove the tail-accuracy gap between methods, i.e. is the head gap a weight-norm gap?",
+  "method": "tau-normalised classifier (tau=1, bias dropped); per-class weight norm ratio tail/head; cosine of class weight to centred val class-mean feature; spread of method means; Spearman with run bootstrap; paired t CI",
+  "paper": "Kang et al. ICLR 2020 (decoupling representation and classifier, tau-normalisation); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 12.4
+}
