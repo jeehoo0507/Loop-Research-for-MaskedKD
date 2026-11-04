@@ -471,6 +471,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
   - center : 49.0 (4 seeds)
   - maskedkd : 98.0 (3 seeds)
 - screening only (fewer seeds):
+  - trustfilt@27da28 : 29.0 (1 seeds)
   - adaroll@069f50 : 48.5 (1 seeds)
   - suffdisc@0f0600 : 49.0 (1 seeds)
 
@@ -480,13 +481,14 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
-Total agent screen configs: 15
+Total agent screen configs: 16
 - suffdisc: 4 configs
 - priorroll: 2 configs
 - midattn: 2 configs
 - gradroll: 2 configs
 - jitdisc: 1 configs
 - gradrep: 1 configs
+- trustfilt: 1 configs
 - adaroll: 1 configs
 - suffstride: 1 configs
 - conceptcov: 1 configs
@@ -556,6 +558,7 @@ Total agent screen configs: 15
 | screen | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 0,4,5,6 | 89.57 ± 0.69 | 49.44 ± 1.67 | 12.00 | 4.36 | 0.00 | 311 | screen_tome_k12_s0_1030_135953_84af screen_tome_k12_s4_1031_051120_5c90 screen_tome_k12_s6_1031_054505_d130 screen_tome_k12_s5_1031_051124_f881 |
 | screen | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 12.00 | 4.36 | 0.00 | 297 | screen_tome_k29_s0_1030_135953_88a4 |
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
+| screen | trustfilt@27da28 |  | 29 | 29.0 | 4 | 90.16 ± 0.00 | 69.92 ± 0.00 | 13.35 | 5.36 | 0.43 | 357 | waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 |
 
 # Held-out check: caltech256
 
