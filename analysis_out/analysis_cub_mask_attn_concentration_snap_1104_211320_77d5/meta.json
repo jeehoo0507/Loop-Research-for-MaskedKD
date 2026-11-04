@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_attn_concentration_snap_1104_211320_77d5",
+ "name": "cub_mask_attn_concentration_snap",
+ "source_sha": "77d58e41d4b4bcba4e85246c8403d34c19a2b58b6cf037f61b3e306e89e39822",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3, K=29), does the MaskedKD student's last-block CLS attention concentrate from e25 to final, and do images whose attention concentrates more lose more masked-teacher signal?",
+  "method": "per image normalised entropy of the selection score and KL(full teacher || teacher on the 29 top-score patches) at e25 / e50 / final snapshots; within-image change e25 -> final averaged over seeds; Spearman with image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Darcet et al. ICLR 2024 (registers, attention artefacts); Hinton et al. 2015; Wah et al. 2011 (CUB)"
+ },
+ "seconds": 13.2
+}

@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_attn_concentration_snap_1104_211324_aabb",
+ "name": "aircraft_mask_attn_concentration_snap",
+ "source_sha": "aabbd2d467280a07167249de64b33ff4ccc13f4999f712b246d36ed8c77a37f8",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3, K=29), does the MaskedKD student's last-block CLS attention concentrate from e25 to final, and do images whose attention concentrates more lose more masked-teacher signal?",
+  "method": "per image normalised entropy of the selection score and KL(full teacher || teacher on the 29 top-score patches) at e25 / e50 / final snapshots; within-image change e25 -> final averaged over seeds; Spearman with image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Darcet et al. ICLR 2024 (registers, attention artefacts); Hinton et al. 2015; Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 14.2
+}
