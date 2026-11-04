@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_cost_fidelity_strat_1104_170817_ab9d",
+ "name": "cub_mask_cost_fidelity_strat",
+ "source_sha": "ab9d510fa4af20797c06dc2b12b0eae1aa029925b98c3f056684faf5935743a0",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), is the per-image accuracy cost of MaskedKD@29 relative to Full@196 larger on high masked-teacher-KL images within full-teacher-confidence terciles (difficulty held fixed)?",
+  "method": "keep-only masked teacher with each maskedkd student's own last-block CLS top-29; per-image KL; within-confidence-tercile median split of KL; stratified high-minus-low cost with image bootstrap",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 9.3
+}
