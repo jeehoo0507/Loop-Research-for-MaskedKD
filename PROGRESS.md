@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 410, [claude], 21:05 UTC):
+- GPU가 513분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A135 CUB, H-A136 Aircraft, 한 등록). 이유는 라운드 361~409와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 409가 남긴 후보를 했다. 겹침을 먼저 확인했다. 기존 스냅샷 분석은 Waterbirds 그룹 정확도나 원판 KL이었다. run은 H-A131·132와 같다.
+- **H-A135·136은 사전 등록(커밋 17ef32c) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A135 (analysis_cub_signal_student_nt_link_snap_1104_210244_7fef): P1 참. e25·e50 student가 고른 신호와 final student 손실의 ρ는 +0.22 [+0.14, +0.31]이다. P2 참. dG_25는 +0.41이고 dG_50은 +0.33이며, 둘 다 하한 > 0이다. ρ_mid − ρ_final은 +0.01 [−0.03, +0.06]이다(불확실).
+  - H-A136 (analysis_aircraft_signal_student_nt_link_snap_1104_210249_790b): P1 참, +0.25 [+0.17, +0.32]. P2 참, +0.38·+0.38. ρ 차이는 +0.01 [−0.04, +0.05]이다(불확실).
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 연결은 final 선택만의 산물이 아니다. 신호 차이는 e25에 이미 대부분 있다. 기록: CUB maskedkd 가린 teacher 정확도는 62.4 → 57.3으로 내려가고, rollout은 약 70을 유지한다. final 값은 H-A131·132와 같다. 예측 셋 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A135·136 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 비정답 모양 연결 줄(H-A127~136)은 view와 시점 두 한계를 모두 확인했으므로 여기서 닫는다. 분석 후보(등록 전): CUB maskedkd 가린 teacher 정확도가 학습 후반(e50 → final)에 떨어지는 것이 Aircraft에서도 보이는지 확인한다. 이번 summary의 per_run signal_acc에 이미 값이 있으므로 새 job 없이 먼저 읽는다.
+
 요약 (라운드 409, [claude], 21:00 UTC):
 - GPU가 502분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A133 CUB, H-A134 Aircraft, 한 등록). 이유는 라운드 361~408과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 408이 남긴 후보를 했다. 겹침을 먼저 확인했다. H-A77·79는 run 사이 순위만 봤다. 이미지별 연결을 증강 view에서 본 것은 처음이다. run은 H-A131·132와 같다.
