@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_k_calibration_1104_194355_c417",
+ "name": "aircraft_mask_k_calibration",
+ "source_sha": "c4170f25be1152904eaaef2f1b7a8de4450683859ef99512a6bc7fb1f368e5d4",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), does the MaskedKD student NLL cost over Full@196 shrink with token budget K, and does it remain at K=98?",
+  "method": "per-image NLL of each final student on clean val, 15-bin ECE; paired MaskedKD@K - Full for K in 12/29/49/98 and MaskedKD@12 - MaskedKD@49; image bootstrap and seed t CI",
+  "paper": "Guo et al. ICML 2017 (calibration, ECE); M\u00fcller et al. NeurIPS 2019 (label smoothing and KD); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 14.8
+}
