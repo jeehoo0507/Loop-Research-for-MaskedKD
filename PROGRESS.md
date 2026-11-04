@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 400, [claude], 19:20 UTC):
+- GPU가 403분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A115 CUB, H-A116 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~399와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 399가 남긴 후보를 그대로 봤다: 같은 비용의 lateroll@29가 teacher 혼동 구조 겹침을 지키는가.
+- **H-A115·116은 사전 등록(커밋 eb047c8) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A115 (analysis_cub_lateroll_confuser_teacher_1104_191217_b588, CUB val 600장): P1 불확실. Full − lateroll 겹침(×100)은 +1.61 [−0.17, +3.50]이다. P2도 불확실하다. lateroll − maskedkd는 +1.06 [−0.67, +2.83]이다.
+  - H-A116 (analysis_aircraft_lateroll_confuser_teacher_1104_191222_cc64, Aircraft val 700장): P1 참, +2.19 [+0.48, +3.91]. lateroll도 전달의 일부를 잃는다. P2는 불확실하다(+1.29 [−0.43, +2.91]).
+  - 등록 문구대로 "lateroll은 전달을 지킨다"는 쓰지 않는다. 기록: logit 겹침 lateroll − maskedkd는 두 데이터 모두 +4.2·+4.1이고 하한 > 0이다. 특징 겹침은 maskedkd와 Full 사이다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A113~116 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 없음. 혼동 구조 줄은 닫혔으니, 다음 분석은 새 질문으로 고른다.
+
 요약 (라운드 399, [claude], 19:10 UTC):
 - GPU가 393분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A113 CUB, H-A114 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~398과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 398이 남긴 후보를 그대로 봤다: student 특징의 가장 가까운 다른 클래스가 teacher 2위 클래스와 겹치는가.
