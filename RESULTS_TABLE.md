@@ -607,6 +607,8 @@ Gate: gate incomplete: ce seeds [1, 2, 3], full seeds [1, 2, 3], maskedkd seeds 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagnostic: WGA seed sigma: not measured yet (run harness.submit --baselines))
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- lateroll@29 vs maskedkd@29 [acc]: +2.94 %p, 95% CI [+0.90, +4.99], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
+- lateroll@29 vs tome@29 [acc]: +10.67 %p, 95% CI [+8.08, +13.25], seeds 1,2,3, GFLOPs ratio 1.083 -> WIN
 - maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
 - maskedkd_frozen@29 vs rollout@29 [acc]: -3.44 %p, 95% CI [-4.71, -2.18], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
 - maskedkd_frozen@29 vs tome@29 [acc]: +6.50 %p, 95% CI [+5.40, +7.60], seeds 1,2,3, GFLOPs ratio 1.280 -> WIN
@@ -617,6 +619,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - trustmask_v1@29 vs tome@29 [acc]: +11.22 %p, 95% CI [+7.70, +14.74], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
+- lateroll@29 vs maskedkd@29 [acc]: +2.94 %p, 95% CI [+0.90, +4.99], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
+- lateroll@29 vs rollout@29 [acc]: +0.72 %p, 95% CI [-2.62, +4.07], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- lateroll@29 vs tome@29 [acc]: +10.67 %p, 95% CI [+8.08, +13.25], seeds 1,2,3, GFLOPs ratio 1.083 -> WIN
+- lateroll@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
+- lateroll@29 vs full@196 [acc]: +1.44 %p, 95% CI [-1.61, +4.50], seeds 1,2,3, GFLOPs ratio 0.304 -> no difference
+- lateroll@29 vs rollout@29 [acc]: +0.72 %p, 95% CI [-2.62, +4.07], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 - maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
 - maskedkd_frozen@29 vs rollout@29 [acc]: -3.44 %p, 95% CI [-4.71, -2.18], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
 - maskedkd_frozen@29 vs tome@29 [acc]: +6.50 %p, 95% CI [+5.40, +7.60], seeds 1,2,3, GFLOPs ratio 1.280 -> WIN
@@ -632,7 +642,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - trustfilt@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs full@196 [acc]: +0.83 %p, 95% CI [-1.06, +2.73], seeds 1,2,3, GFLOPs ratio 0.312 -> no difference
-- trustfilt@29 vs lateroll@29 (parent) [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@29 vs lateroll@29 (parent) [acc]: -0.61 %p, 95% CI [-3.52, +2.30], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs maskedkd@29 [acc]: +3.50 %p, 95% CI [+0.60, +6.40], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
 - trustmask_v1@29 vs rollout@29 [acc]: +1.28 %p, 95% CI [-2.74, +5.30], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustmask_v1@29 vs tome@29 [acc]: +11.22 %p, 95% CI [+7.70, +14.74], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
@@ -648,6 +658,7 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 ## Primary metric (analysis-only methods excluded: oracle)
 ### final: Full KD val 63.83 (seeds 1,2,3); KD gain +4.28, tolerance 1.00 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
+  - lateroll@69541b : 29.0 (3 seeds)
   - rollout : 29.0 (3 seeds)
   - teacher_topk : 29.0 (3 seeds)
   - trustfilt@27da28 : 29.0 (3 seeds)
@@ -667,6 +678,7 @@ Total agent screen configs: 0
 | final | center |  | 29 | 29.0 | 1 | 61.83 ± 0.00 | 43.33 ± 0.00 | 13.00 | 5.36 | 0.00 | 467 | cub_lt_final_center_k29_s1_1104_084157_57ad |
 | final | full |  | 196 | 196.0 | 1,2,3 | 63.83 ± 1.50 | 46.33 ± 2.73 | 42.77 | 35.13 | 0.00 | 188 | cub_lt_final_full_k196_s3_1103_234704_3d84 cub_lt_final_full_k196_s2_1103_234647_7b36 cub_lt_final_full_k196_s1_1103_234609_88d5 |
 | final | grid |  | 29 | 29.0 | 1 | 58.00 ± 0.00 | 38.00 ± 0.00 | 13.00 | 5.36 | 0.00 | 467 | cub_lt_final_grid_k29_s1_1104_074618_a6a8 |
+| final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 65.28 ± 1.00 | 49.78 ± 1.71 | 12.99 | 5.36 | 0.08 | 318 | cub_lt_final_lateroll_k29_s3_1104_084209_a3f8 cub_lt_final_lateroll_k29_s1_1104_084157_2b15 cub_lt_final_lateroll_k29_s2_1104_084204_9f09 |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 62.33 ± 0.50 | 44.00 ± 0.00 | 12.99 | 5.36 | 0.00 | 271 | cub_lt_final_maskedkd_k29_s1_1103_234609_76d1 cub_lt_final_maskedkd_k29_s2_1103_234647_0c6c cub_lt_final_maskedkd_k29_s3_1103_234704_b28b |
 | final | maskedkd_frozen@0f7bcc |  | 29 | 29.0 | 1,2,3 | 61.11 ± 0.75 | 41.78 ± 1.39 | 15.36 | 5.36 | 2.36 | 309 | cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 64.56 ± 0.79 | 48.78 ± 1.26 | 12.99 | 5.36 | 0.17 | 346 | cub_lt_final_rollout_k29_s3_1103_234704_0edf cub_lt_final_rollout_k29_s1_1103_234609_8382 cub_lt_final_rollout_k29_s2_1103_234647_9b4c |
