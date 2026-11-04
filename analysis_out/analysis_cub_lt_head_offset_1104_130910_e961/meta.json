@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_head_offset_1104_130910_e961",
+ "name": "cub_lt_head_offset",
+ "source_sha": "e961367ee23a124fcff894afa06478a26484450102086e89da4d81130da555cb",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does one scalar offset on the tail-class logits of the original head (head/tail balanced, 2-fold CV) remove the tail-accuracy gap between methods, as a threshold did on Waterbirds?",
+  "method": "post-hoc logit adjustment of the original head with one tail offset chosen by 2-fold CV; spread of method means; Spearman rank correlation with run bootstrap",
+  "paper": "Menon et al. ICLR 2021 (logit adjustment); Kang et al. ICLR 2020 (decoupling, tau-normalisation); Kirichenko et al. ICLR 2023 (DFR); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 16.1
+}
