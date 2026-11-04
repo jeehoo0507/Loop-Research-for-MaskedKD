@@ -343,6 +343,11 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - gradroll@12 vs grid@12 [acc]: +4.89 %p, 95% CI [+3.42, +6.36], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
+- lateroll@12 vs maskedkd@12 [acc]: +4.14 %p, 95% CI [+3.16, +5.12], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
+- lateroll@12 vs tome@12 [acc]: -1.61 %p, 95% CI [-1.85, -1.37], seeds 1,2,3, GFLOPs ratio 0.840 -> LOSS
+- lateroll@12 vs grid@12 [acc]: +5.25 %p, 95% CI [+2.19, +8.32], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
+- lateroll@12 vs random@12 [acc]: +4.50 %p, 95% CI [+2.40, +6.61], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
+- lateroll@12 vs full@196 [acc]: -2.81 %p, 95% CI [-3.65, -1.97], seeds 1,2,3, GFLOPs ratio 0.236 -> LOSS
 - lateroll@29 vs maskedkd@29 [acc]: +2.97 %p, 95% CI [+1.25, +4.70], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +1.14 %p, 95% CI [+0.10, +2.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +1.14 %p, 95% CI [+0.10, +2.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
@@ -354,6 +359,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - trustfilt@12 vs grid@12 [acc]: +6.95 %p, 95% CI [+4.12, +9.78], seeds 1,2,3, GFLOPs ratio 1.034 -> WIN
 - trustfilt@12 vs random@12 [acc]: +6.20 %p, 95% CI [+4.74, +7.65], seeds 1,2,3, GFLOPs ratio 1.034 -> WIN
 - trustfilt@12 vs full@196 [acc]: -1.11 %p, 95% CI [-1.35, -0.87], seeds 1,2,3, GFLOPs ratio 0.244 -> LOSS
+- trustfilt@12 vs lateroll@12 (parent) [acc]: +1.70 %p, 95% CI [+1.03, +2.36], seeds 1,2,3, GFLOPs ratio 1.035 -> WIN
 - trustfilt@29 vs maskedkd@29 [acc]: +3.20 %p, 95% CI [+0.91, +5.48], seeds 1,2,3, GFLOPs ratio 1.028 -> WIN
 - trustfilt@29 vs rollout@29 [acc]: +1.36 %p, 95% CI [+0.41, +2.32], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
 - trustmask_v1@12 vs maskedkd@12 [acc]: +3.73 %p, 95% CI [+2.66, +4.79], seeds 1,2,3, GFLOPs ratio 1.036 -> WIN
@@ -374,6 +380,14 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - gradroll@12 vs random@12 [acc]: +4.14 %p, 95% CI [+1.03, +7.25], seeds 1,2,3, GFLOPs ratio 1.270 -> WIN
 - gradroll@12 vs full@196 [acc]: -3.17 %p, 95% CI [-5.48, -0.86], seeds 1,2,3, GFLOPs ratio 0.300 -> LOSS
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
+- lateroll@12 vs maskedkd@12 [acc]: +4.14 %p, 95% CI [+3.16, +5.12], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
+- lateroll@12 vs rollout@12 [acc]: +0.25 %p, 95% CI [-1.85, +2.35], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
+- lateroll@12 vs tome@12 [acc]: -1.61 %p, 95% CI [-1.85, -1.37], seeds 1,2,3, GFLOPs ratio 0.840 -> LOSS
+- lateroll@12 vs grid@12 [acc]: +5.25 %p, 95% CI [+2.19, +8.32], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
+- lateroll@12 vs center@12 [acc]: -0.33 %p, 95% CI [-2.03, +1.36], seeds 1,2,3, GFLOPs ratio 0.999 -> no difference
+- lateroll@12 vs random@12 [acc]: +4.50 %p, 95% CI [+2.40, +6.61], seeds 1,2,3, GFLOPs ratio 0.999 -> WIN
+- lateroll@12 vs full@196 [acc]: -2.81 %p, 95% CI [-3.65, -1.97], seeds 1,2,3, GFLOPs ratio 0.236 -> LOSS
+- lateroll@12 vs rollout@12 [acc]: +0.25 %p, 95% CI [-1.85, +2.35], seeds 1,2,3, GFLOPs ratio 1.000 -> no difference
 - lateroll@29 vs maskedkd@29 [acc]: +2.97 %p, 95% CI [+1.25, +4.70], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs rollout@29 [acc]: +1.14 %p, 95% CI [+0.10, +2.18], seeds 1,2,3, GFLOPs ratio 1.000 -> WIN
 - lateroll@29 vs tome@29 [acc]: +0.50 %p, 95% CI [-1.74, +2.74], seeds 1,2,3, GFLOPs ratio 1.083 -> no difference
@@ -405,7 +419,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - trustfilt@12 vs center@12 [acc]: +1.36 %p, 95% CI [-0.67, +3.40], seeds 1,2,3, GFLOPs ratio 1.034 -> no difference
 - trustfilt@12 vs random@12 [acc]: +6.20 %p, 95% CI [+4.74, +7.65], seeds 1,2,3, GFLOPs ratio 1.034 -> WIN
 - trustfilt@12 vs full@196 [acc]: -1.11 %p, 95% CI [-1.35, -0.87], seeds 1,2,3, GFLOPs ratio 0.244 -> LOSS
-- trustfilt@12 vs lateroll@12 (parent) [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@12 vs lateroll@12 (parent) [acc]: +1.70 %p, 95% CI [+1.03, +2.36], seeds 1,2,3, GFLOPs ratio 1.035 -> WIN
 - trustfilt@29 vs maskedkd@29 [acc]: +3.20 %p, 95% CI [+0.91, +5.48], seeds 1,2,3, GFLOPs ratio 1.028 -> WIN
 - trustfilt@29 vs rollout@29 [acc]: +1.36 %p, 95% CI [+0.41, +2.32], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
 - trustfilt@29 vs tome@29 [acc]: +0.72 %p, 95% CI [-2.11, +3.55], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
@@ -485,7 +499,7 @@ Total agent screen configs: 15
 | final | full |  | 196 | 196.0 | 1,2,3 | 91.16 ± 0.52 | 67.42 ± 0.43 | 42.77 | 35.13 | 0.00 | 196 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc final_full_k196_s3_1030_220958_8d7e |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
-| final | lateroll@69541b |  | 12 | 12.0 | 1 | 88.16 ± 0.00 | 43.61 ± 0.00 | 10.07 | 2.45 | 0.08 | 262 | waterbirds_final_lateroll_k12_s1_1104_025017_463f |
+| final | lateroll@69541b |  | 12 | 12.0 | 1,2,3 | 88.35 ± 0.41 | 46.37 ± 3.56 | 10.07 | 2.45 | 0.08 | 445 | waterbirds_final_lateroll_k12_s2_1104_025021_d386 waterbirds_final_lateroll_k12_s1_1104_025017_463f waterbirds_final_lateroll_k12_s3_1104_025026_0de9 |
 | final | lateroll@69541b |  | 29 | 29.0 | 1,2,3 | 90.71 ± 0.29 | 63.91 ± 1.99 | 12.99 | 5.36 | 0.08 | 295 | waterbirds_final_lateroll_k29_s1_1104_025003_b396 waterbirds_final_lateroll_k29_s3_1104_025012_629b waterbirds_final_lateroll_k29_s2_1104_025008_c94e |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 87.74 ± 0.55 | 38.59 ± 1.74 | 12.99 | 5.36 | 0.00 | 366 | waterbirds_final_maskedkd_k29_s2_1103_170931_92bd waterbirds_final_maskedkd_k29_s1_1031_201502_4be8 waterbirds_final_maskedkd_k29_s3_1103_170935_907a |
