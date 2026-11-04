@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_ttopk_image_why_1104_225439_be14",
+ "name": "cub_lt_ttopk_image_why",
+ "source_sha": "be14fc20b448654333f24d95feac4fb1ac349c6f508e12cde41f8b509fb3f660",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt (final Rollout@29, seeds 1-3), is the image-level gap in masked-teacher non-target signal between the teacher's own rollout top-29 and the student's rollout top-29 larger on images where the full teacher is less confident or where the teacher rollout map is flatter?",
+  "method": "teacher and student attention rollout maps on clean val; top-29 sets; non-target KL(full teacher || masked teacher); teacher max prob and own top-29 rollout mass; Spearman and rank-residual partial Spearman across images, image bootstrap; seed t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 11.3
+}
