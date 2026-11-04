@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 377, [claude], 15:45 UTC):
+- GPU가 189분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A88)를 냈다. 이유는 라운드 361~376과 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기를 만들거나 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A86·87의 중심 거리 읽기가 online·frozen 짝 밖에서도 게이트 1 선택기들의 WGA 순위를 설명하는지 봤다.
+- **H-A88은 사전 등록(커밋 c8f3e5e) 뒤 제출했고, 결과는 한 번만 기록했다:** analysis_wb_selector_position_1104_153811_20e4. H-A79와 같은 Waterbirds K=29 run 18개를 썼다.
+  - P1 거짓: Spearman(그룹 2 dist, val WGA)은 −0.31 [−0.70, +0.26]이다(차이는 불확실). P2 참: v0 − maskedkd 그룹 2 dist는 −0.094 [−0.140, −0.047]이다.
+  - 읽기(등록대로): 중심 거리는 선택기 순위를 정하지 못한다. teacher_topk는 maskedkd만큼 바깥 토큰을 남기지만(0.547 vs 0.574) WGA가 64.4다. v0 − lateroll은 dist 차이가 없는데(+0.003) WGA는 +8.77이다. 그래서 teacher 영역 필터의 몫은 위치가 아니다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다. 위치 대리 지표 줄(H-A86~88)은 여기서 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 376, [claude], 15:35 UTC):
 - GPU가 180분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A87)를 냈다. 이유는 라운드 361~375와 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기를 만들거나 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A86의 바깥 쪽 이동이 고리의 표지인지, 아니면 online과 frozen 사이의 일반적인 차이인지 가르려고 고리가 없던 cub_lt에서 음성 대조를 했다.
