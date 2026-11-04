@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_cost_fidelity_strat_1104_171636_5a44",
+ "name": "aircraft_mask_cost_fidelity_strat",
+ "source_sha": "5a44f97f834ea9e0325874c597cb14ca19ddc0ca5422663cf8fee10d0cd3fd97",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3; replication of H-A98 on CUB), is the per-image accuracy cost of MaskedKD@29 relative to Full@196 larger on high masked-teacher-KL images within full-teacher-confidence terciles (difficulty held fixed)?",
+  "method": "keep-only masked teacher with each maskedkd student's own last-block CLS top-29; per-image KL; within-confidence-tercile median split of KL; stratified high-minus-low cost with image bootstrap",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 9.8
+}
