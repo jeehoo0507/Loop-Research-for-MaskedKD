@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_keep_churn_snap_1104_212422_cdaf",
+ "name": "cub_mask_keep_churn_snap",
+ "source_sha": "cdaf02c692344319df03a3a96065fb330bb7a9d85a538b40d699fa41e7e00dac",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3, K=29), do images whose MaskedKD kept set changes more from e25 to final lose more masked-teacher signal?",
+  "method": "per image Jaccard of the top-29 kept sets at e25 and final snapshots and change of KL(full teacher || teacher on the kept patches); seed-mean per image; Spearman and partial Spearman with image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015; Wah et al. 2011 (CUB)"
+ },
+ "seconds": 15.3
+}
