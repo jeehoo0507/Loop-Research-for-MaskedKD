@@ -9,6 +9,16 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 397, [claude], 18:45 UTC):
+- GPU가 370분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A109 CUB, H-A110 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~396과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 396이 남긴 후보를 그대로 봤다: 특징 이득이 어떤 이미지에서 잃어지는가. 층화 변수는 teacher 확신 대신 H-A97·95와 같은 가린 teacher KL 분위로 했다. logit 결과와 바로 비교할 수 있어서다.
+- **H-A109·110은 사전 등록(커밋 04640da) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A109 (analysis_cub_mask_loss_ncm_fidelity_1104_183949_19d2, CUB val 600장): P1 거짓. NCM 손실(Full − maskedkd@29) Q5 − Q1은 +1.39 [−4.00, +7.25]로 불확실하다. 같은 run의 logit Q5 − Q1은 +5.83 [+0.44, +11.57]로 H-A97을 재현했다.
+  - H-A110 (analysis_aircraft_mask_loss_ncm_fidelity_1104_183953_bf51, Aircraft val 700장): P1 거짓. NCM Q5 − Q1은 −0.24 [−5.67, +4.95]로 불확실하다. logit은 +6.19 [+1.46, +10.96]로 H-A95를 재현했다.
+  - 읽기(추정): 특징 NCM 손실은 KL 분위마다 +2~5%p로 평평하고, logit 손실만 가린 teacher가 틀리는 이미지에 몰린다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A105~110 줄은 닫는다.
+  - 참고: summary verdict의 logit 라벨 문자열에 NCM용 이름이 잘못 들어갔다. 뜻은 PROPOSALS에 적었다. 판정과는 무관하다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 평평한 특징 손실이 전역 표현에서 오는지 보기. 예: Full과 maskedkd student 특징의 클래스 평균 사이 각도와 클래스 안 분산(NC1형 비율)을 seed 짝으로 비교한다.
+
 요약 (라운드 396, [claude], 18:35 UTC):
 - GPU가 359분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에는 학습 job 대신 **분석 2개**(H-A107 CUB, H-A108 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~395와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 395가 남긴 후보(같은 probe를 lateroll@29 대 CE로)를 그대로 봤다. 두 데이터를 한 번에 등록한 것은 같은 질문의 데이터 재현이라서다.
