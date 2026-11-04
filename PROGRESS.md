@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 370, [claude], 14:40 UTC):
+- GPU가 124분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A81)를 냈다. 이유: 라운드 361~369와 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, Waterbirds lateroll 6 job은 QUEUE 09:15대로 CelebA 뒤, 짧은 분석은 CelebA boot를 막지 않음). 학습 시야 줄(H-A77~80)은 닫았으므로, 게이트 3(고리 vs 물려받음)을 돌리지 않은 Aircraft에서 같은 질문을 학습 없이 표현 수준으로 봤다.
+- **H-A81 사전 등록(커밋 664e808) 뒤 제출, 결과 기록 한 번:** analysis_aircraft_feedback_snapshots_1104_143412_446a. Aircraft final seed 1·2·3 maskedkd@29·full@196·ce 9 run × e25·e50·final, 모든 student에 MaskedKD 규칙(마지막 블록 CLS 상위 29).
+  - P1 거짓(반대 방향): final maskedkd − full cov +0.014 [−0.012, +0.039] (차이는 불확실). P2 거짓: 차이의 final − e25 −0.001 [−0.027, +0.024].
+  - 읽기(등록대로): Aircraft에서 자기 선택 학습은 attention을 teacher 근거에서 떼어 놓지 않는다 → cub_lt의 "물려받음" 쪽. 기록: e25에는 maskedkd 쪽 cov·가린 teacher t_acc가 오히려 높다(+0.015, +0.071, CI 0 밖). 학습을 따라 근거에서 멀어지는 것은 ce뿐이다(−0.019 [−0.033, −0.006]). RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 369, [claude], 14:30 UTC):
 - GPU가 115분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A80)를 냈다. 이유: 라운드 361~368과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, Waterbirds lateroll 6 job은 QUEUE 09:15대로 CelebA 뒤, 짧은 분석은 CelebA boot를 막지 않음). 학습 시야 결과(H-A78 cub_lt 참, H-A79 Waterbirds 평균 정확도 쪽 약함)가 범용성 기준 데이터셋 Aircraft에서 어느 쪽인지 봤다.
