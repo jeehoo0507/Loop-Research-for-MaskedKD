@@ -1,0 +1,234 @@
+{
+ "n_val": 600,
+ "K": 29,
+ "P1_mean_d_dropped_minus_entered_maskedkd": [
+  0.0396,
+  0.027,
+  0.0517
+ ],
+ "P2_spearman_d_dG_maskedkd": [
+  0.2811,
+  0.2046,
+  0.3546
+ ],
+ "mean_d": {
+  "maskedkd": [
+   0.0396,
+   0.027,
+   0.0517
+  ],
+  "rollout": [
+   -0.0272,
+   -0.0361,
+   -0.0182
+  ]
+ },
+ "spearman_d_dG": {
+  "maskedkd": [
+   0.2811,
+   0.2046,
+   0.3546
+  ],
+  "rollout": [
+   -0.0639,
+   -0.1466,
+   0.0155
+  ]
+ },
+ "per_seed_mean_d": {
+  "maskedkd": [
+   0.0489,
+   0.041,
+   0.029
+  ],
+  "rollout": [
+   -0.0127,
+   -0.0372,
+   -0.0323
+  ]
+ },
+ "mean_rank_dropped_entered": {
+  "maskedkd": {
+   "dropped": 0.6116,
+   "entered": 0.5719
+  },
+  "rollout": {
+   "dropped": 0.719,
+   "entered": 0.7465
+  }
+ },
+ "by_epoch": {
+  "maskedkd": {
+   "e25": {
+    "kept_teacher_rank": 0.6744,
+    "overlap_teacher_top29": 0.3685
+   },
+   "e50": {
+    "kept_teacher_rank": 0.6816,
+    "overlap_teacher_top29": 0.3754
+   },
+   "final": {
+    "kept_teacher_rank": 0.6617,
+    "overlap_teacher_top29": 0.355
+   }
+  },
+  "rollout": {
+   "e25": {
+    "kept_teacher_rank": 0.8306,
+    "overlap_teacher_top29": 0.5871
+   },
+   "e50": {
+    "kept_teacher_rank": 0.8355,
+    "overlap_teacher_top29": 0.5982
+   },
+   "final": {
+    "kept_teacher_rank": 0.8337,
+    "overlap_teacher_top29": 0.5907
+   }
+  }
+ },
+ "n_nan_images": {
+  "maskedkd": 0,
+  "rollout": 0
+ },
+ "mean_dG": {
+  "maskedkd": 0.1291,
+  "rollout": -0.0071
+ },
+ "per_run": {
+  "maskedkd": {
+   "1": {
+    "val_acc_last": 81.33333325386047,
+    "e25": {
+     "signal_kl": 1.0794,
+     "signal_acc": 62.17,
+     "kept_teacher_rank": 0.669,
+     "overlap_teacher_top29": 0.3649
+    },
+    "e50": {
+     "signal_kl": 1.0984,
+     "signal_acc": 62.0,
+     "kept_teacher_rank": 0.6773,
+     "overlap_teacher_top29": 0.3704
+    },
+    "final": {
+     "signal_kl": 1.2414,
+     "signal_acc": 55.33,
+     "kept_teacher_rank": 0.6536,
+     "overlap_teacher_top29": 0.3455
+    }
+   },
+   "2": {
+    "val_acc_last": 79.16666865348816,
+    "e25": {
+     "signal_kl": 1.1433,
+     "signal_acc": 61.17,
+     "kept_teacher_rank": 0.6754,
+     "overlap_teacher_top29": 0.3637
+    },
+    "e50": {
+     "signal_kl": 1.1493,
+     "signal_acc": 59.83,
+     "kept_teacher_rank": 0.6712,
+     "overlap_teacher_top29": 0.3642
+    },
+    "final": {
+     "signal_kl": 1.2386,
+     "signal_acc": 58.0,
+     "kept_teacher_rank": 0.6593,
+     "overlap_teacher_top29": 0.3502
+    }
+   },
+   "3": {
+    "val_acc_last": 80.16666769981384,
+    "e25": {
+     "signal_kl": 1.0642,
+     "signal_acc": 63.83,
+     "kept_teacher_rank": 0.6788,
+     "overlap_teacher_top29": 0.377
+    },
+    "e50": {
+     "signal_kl": 0.9973,
+     "signal_acc": 65.0,
+     "kept_teacher_rank": 0.6963,
+     "overlap_teacher_top29": 0.3915
+    },
+    "final": {
+     "signal_kl": 1.1942,
+     "signal_acc": 58.67,
+     "kept_teacher_rank": 0.6721,
+     "overlap_teacher_top29": 0.3693
+    }
+   }
+  },
+  "rollout": {
+   "1": {
+    "val_acc_last": 81.33333325386047,
+    "e25": {
+     "signal_kl": 0.7637,
+     "signal_acc": 69.33,
+     "kept_teacher_rank": 0.8311,
+     "overlap_teacher_top29": 0.5882
+    },
+    "e50": {
+     "signal_kl": 0.8239,
+     "signal_acc": 68.33,
+     "kept_teacher_rank": 0.8351,
+     "overlap_teacher_top29": 0.5967
+    },
+    "final": {
+     "signal_kl": 0.7642,
+     "signal_acc": 70.33,
+     "kept_teacher_rank": 0.8328,
+     "overlap_teacher_top29": 0.5885
+    }
+   },
+   "2": {
+    "val_acc_last": 79.3333351612091,
+    "e25": {
+     "signal_kl": 0.764,
+     "signal_acc": 70.5,
+     "kept_teacher_rank": 0.8323,
+     "overlap_teacher_top29": 0.5924
+    },
+    "e50": {
+     "signal_kl": 0.7605,
+     "signal_acc": 71.0,
+     "kept_teacher_rank": 0.832,
+     "overlap_teacher_top29": 0.5899
+    },
+    "final": {
+     "signal_kl": 0.7497,
+     "signal_acc": 70.83,
+     "kept_teacher_rank": 0.8361,
+     "overlap_teacher_top29": 0.5976
+    }
+   },
+   "3": {
+    "val_acc_last": 80.66666722297668,
+    "e25": {
+     "signal_kl": 0.7136,
+     "signal_acc": 71.67,
+     "kept_teacher_rank": 0.8285,
+     "overlap_teacher_top29": 0.5806
+    },
+    "e50": {
+     "signal_kl": 0.7533,
+     "signal_acc": 69.5,
+     "kept_teacher_rank": 0.8394,
+     "overlap_teacher_top29": 0.608
+    },
+    "final": {
+     "signal_kl": 0.7061,
+     "signal_acc": 71.5,
+     "kept_teacher_rank": 0.8321,
+     "overlap_teacher_top29": 0.5861
+    }
+   }
+  }
+ },
+ "verdict": {
+  "P1": "positive",
+  "P2": "positive"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_mask_churn_teacher_rank_snap_1104_213521_fe7b",
+ "name": "cub_mask_churn_teacher_rank_snap",
+ "source_sha": "fe7b4b30c69f337fa1c11618aa6af2d330cb3aeee59bd319b4c41752dcd4db9a",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3, K=29), do the patches MaskedKD drops from e25 to final rank higher in the teacher's own attention rollout than the patches it takes in, and does that go with signal loss?",
+  "method": "per image mean teacher-rollout rank of dropped minus entered patches (e25 -> final top-29 kept sets); seed-mean per image; mean with image bootstrap; Spearman with the change of KL(full || masked teacher)",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015; Wah et al. 2011 (CUB)"
+ },
+ "seconds": 13.8
+}
