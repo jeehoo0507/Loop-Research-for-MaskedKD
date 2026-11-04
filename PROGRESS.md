@@ -12,7 +12,7 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 요약 (라운드 373, [claude], 15:05 UTC):
 - GPU가 153분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A84)를 냈다. 이유: 라운드 361~372와 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음). H-A83에서 그룹 2 cov 차이(−0.005)는 작은데 가린 teacher t_acc 차이(−0.198)는 커서, cov가 붕괴를 설명하는지 봤다.
-- **H-A84 사전 등록(커밋 직전 라운드 373 커밋) 뒤 제출, 결과 기록 한 번:** analysis_wb_cov_adjusted_gap_1104_150123_719c. H-A83과 같은 maskedkd@29·frozen@29 final run 6개.
+- **H-A84 사전 등록(커밋 cf57201) 뒤 제출, 결과 기록 한 번:** analysis_wb_cov_adjusted_gap_1104_150123_719c. H-A83과 같은 maskedkd@29·frozen@29 final run 6개.
   - P1 참: 그룹 2 cov 보정 q_y 차이 −0.152 [−0.207, −0.097], 원 −0.156과 거의 같다(보정 − 원 +0.004 [−0.002, +0.011]). P2 참: maskedkd run 안 Spearman(cov, q_y) 0.113 [0.032, 0.193] (약함).
   - 읽기(등록대로): 고리는 teacher 근거 질량이 아니라 남긴 토큰의 내용을 바꾼다 → H-A81·82의 "cov 차이 없음 → 물려받음" 읽기에 단서(cub_lt는 가린 teacher t_acc도 maskedkd 쪽이 높아 결론은 그대로). 두 student의 29개 Jaccard 0.36~0.52. RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
 - 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
