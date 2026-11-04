@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_filter_temp_1104_232748_7aff",
+ "name": "aircraft_filter_temp",
+ "source_sha": "7aff0617f4544335914a5410febe59a125f09b25418101d47689c2c14c16035a",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft final K=29 runs, is the teacher-area filter's extra masked-teacher KL (trustfilt vs lateroll) mostly a temperature shift that one scale removes, or a shape loss that remains after calibration?",
+  "method": "keep-only masked-teacher faithfulness with per-run temperature scaling (grid search of one scale), seed-paired t CI and image bootstrap",
+  "paper": "Guo et al. ICML 2017 (temperature scaling); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD)"
+ },
+ "seconds": 12.0
+}

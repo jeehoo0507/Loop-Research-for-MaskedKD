@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_filter_temp_1104_232744_95d3",
+ "name": "cub_filter_temp",
+ "source_sha": "95d37e7a16751c69402ad8bf06db413e3f3b6a69ab2a404fa90cfc858a8d04be",
+ "status": "done",
+ "meta": {
+  "question": "on CUB final K=29 runs, is the teacher-area filter's extra masked-teacher KL (trustfilt vs lateroll) mostly a temperature shift that one scale removes, or a shape loss that remains after calibration?",
+  "method": "keep-only masked-teacher faithfulness with per-run temperature scaling (grid search of one scale), seed-paired t CI and image bootstrap",
+  "paper": "Guo et al. ICML 2017 (temperature scaling); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD)"
+ },
+ "seconds": 11.6
+}

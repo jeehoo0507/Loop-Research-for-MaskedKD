@@ -1,0 +1,222 @@
+{
+ "n_val": 700,
+ "K": 29,
+ "n_runs": 12,
+ "h_full": 0.3446,
+ "P1_trustfilt_minus_lateroll_kl_cal_seed_t": [
+  0.2368,
+  0.1984,
+  0.2752
+ ],
+ "record": {
+  "trustfilt_minus_lateroll_kl_raw_seed_t": [
+   0.2488,
+   0.2133,
+   0.2843
+  ],
+  "share_of_raw_gap_left_after_cal": 0.9518,
+  "trustfilt_minus_lateroll_kl_cal_boot": [
+   0.2368,
+   0.1759,
+   0.3005
+  ],
+  "trustfilt_minus_lateroll_kl_raw_boot": [
+   0.2488,
+   0.1785,
+   0.3131
+  ],
+  "trustfilt_minus_rollout_kl_cal_seed_t": [
+   0.0432,
+   0.0224,
+   0.064
+  ],
+  "maskedkd_minus_trustfilt_kl_cal_seed_t": [
+   0.4699,
+   0.1353,
+   0.8044
+  ],
+  "trustfilt_minus_lateroll_tau_seed_t": [
+   0.05,
+   0.05,
+   0.05
+  ],
+  "trustfilt_minus_lateroll_entropy_seed_t": [
+   0.1393,
+   0.0846,
+   0.194
+  ],
+  "spearman_kl_raw_acc_12runs": -0.4476,
+  "spearman_kl_cal_acc_12runs": -0.4476,
+  "arm_means_kl_klcal_tau_dH_acc": {
+   "lateroll": [
+    0.8159,
+    0.8059,
+    1.1,
+    0.6299,
+    66.2857
+   ],
+   "trustfilt": [
+    1.0647,
+    1.0427,
+    1.15,
+    0.7692,
+    65.5714
+   ],
+   "rollout": [
+    1.0173,
+    0.9995,
+    1.15,
+    0.751,
+    66.4286
+   ],
+   "maskedkd": [
+    1.5525,
+    1.5126,
+    1.1833,
+    1.1095,
+    65.2857
+   ]
+  }
+ },
+ "per_run": {
+  "aircraft_final_lateroll_k29_s1_1103_065756_f0d9": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "kl": 0.8208,
+   "kl_cal": 0.8112,
+   "tau": 1.1,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.6393,
+   "t_acc": 62.29
+  },
+  "aircraft_final_lateroll_k29_s2_1103_065801_38e1": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 67.7142858505249,
+   "kl": 0.7965,
+   "kl_cal": 0.7863,
+   "tau": 1.1,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.611,
+   "t_acc": 64.29
+  },
+  "aircraft_final_lateroll_k29_s3_1103_065805_2130": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.28571343421936,
+   "kl": 0.8305,
+   "kl_cal": 0.8201,
+   "tau": 1.1,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.6393,
+   "t_acc": 61.86
+  },
+  "aircraft_final_trustfilt_k29_s1_1103_074527_357e": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 66.42857193946838,
+   "kl": 1.0683,
+   "kl_cal": 1.0455,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.7675,
+   "t_acc": 58.29,
+   "filter_removed_frac": 0.2305
+  },
+  "aircraft_final_trustfilt_k29_s2_1103_074535_db76": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 65.71428775787354,
+   "kl": 1.0602,
+   "kl_cal": 1.0397,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.7757,
+   "t_acc": 56.14,
+   "filter_removed_frac": 0.2384
+  },
+  "aircraft_final_trustfilt_k29_s3_1103_074540_2203": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 64.5714282989502,
+   "kl": 1.0657,
+   "kl_cal": 1.0429,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.7644,
+   "t_acc": 57.43,
+   "filter_removed_frac": 0.2369
+  },
+  "aircraft_final_rollout_k29_s1_1102_132227_c3d7": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "kl": 1.0185,
+   "kl_cal": 0.999,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.7377,
+   "t_acc": 56.86
+  },
+  "aircraft_final_rollout_k29_s2_1102_180325_20b6": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 66.57142639160156,
+   "kl": 1.0073,
+   "kl_cal": 0.9903,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.7484,
+   "t_acc": 59.71
+  },
+  "aircraft_final_rollout_k29_s3_1102_180341_8606": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 65.85714221000671,
+   "kl": 1.0262,
+   "kl_cal": 1.0092,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 0.7669,
+   "t_acc": 56.29
+  },
+  "aircraft_final_maskedkd_k29_s1_1102_132227_6542": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 66.71428680419922,
+   "kl": 1.5891,
+   "kl_cal": 1.5473,
+   "tau": 1.2,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 1.1339,
+   "t_acc": 49.57
+  },
+  "aircraft_final_maskedkd_k29_s2_1102_180321_52e2": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 64.42857384681702,
+   "kl": 1.6756,
+   "kl_cal": 1.6254,
+   "tau": 1.2,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 1.1631,
+   "t_acc": 48.0
+  },
+  "aircraft_final_maskedkd_k29_s3_1102_180336_347e": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 64.71428275108337,
+   "kl": 1.3928,
+   "kl_cal": 1.365,
+   "tau": 1.15,
+   "tau_at_grid_edge": false,
+   "h_masked_minus_full": 1.0314,
+   "t_acc": 52.43
+  }
+ },
+ "verdict": {
+  "P1": "positive"
+ },
+ "note": "CI entries are [mean, low, high]; seed_t pairs run s_i of one arm with s_i of the other"
+}
