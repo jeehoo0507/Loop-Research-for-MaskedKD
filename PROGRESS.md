@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 398, [claude], 18:55 UTC):
+- GPU가 382분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A111 CUB, H-A112 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~397과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 397이 남긴 후보를 그대로 봤다: 평평한 특징 손실이 전역 기하에서 오는지. 측정은 이미지별 연속 클래스 여백(주)과 NC1 비(기록)다.
+- **H-A111·112는 사전 등록(커밋 5eaf6b1) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A111 (analysis_cub_feature_class_margin_1104_185131_3307, CUB val 600장): P1 참. Full − maskedkd 여백(×100)은 +2.93 [+2.36, +3.49]다. P2 참. maskedkd − CE는 −1.45 [−2.00, −0.88]이다. seed t CI도 둘 다 0을 제외한다. NC1(기록): maskedkd가 CE보다 낮고, Full과의 차이는 불확실하다.
+  - H-A112 (analysis_aircraft_feature_class_margin_1104_185136_2f8a, Aircraft val 700장): P1 참, +3.94 [+3.36, +4.47]. P2 참, −3.02 [−3.56, −2.49]. NC1(기록)은 maskedkd가 가장 크다(가장 퍼져 있다).
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 가림 KD@29는 student 특징의 클래스 여백을 CE 아래로 줄인다. 분석이지 방법 주장은 아니다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 여백을 좁히는 가장 가까운 다른 클래스가 teacher의 2위 클래스(혼동 쌍)와 겹치는지 보고, maskedkd에서 그 겹침이 다른지 본다.
+
 요약 (라운드 397, [claude], 18:45 UTC):
 - GPU가 370분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A109 CUB, H-A110 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~396과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 396이 남긴 후보를 그대로 봤다: 특징 이득이 어떤 이미지에서 잃어지는가. 층화 변수는 teacher 확신 대신 H-A97·95와 같은 가린 teacher KL 분위로 했다. logit 결과와 바로 비교할 수 있어서다.
