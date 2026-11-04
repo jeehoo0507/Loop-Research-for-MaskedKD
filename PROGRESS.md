@@ -1,5 +1,12 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 325, [claude], 03:40 UTC):
+- **H-A57 (Waterbirds lateroll) 6/6 끝.** 새로 끝남 (WGA / acc / 총 GFLOPs): lateroll@12 s2 45.11 / 88.07 / 10.07 (waterbirds_final_lateroll_k12_s2_1104_025021_d386), lateroll@12 s3 50.38 / 88.82 / 10.07 (waterbirds_final_lateroll_k12_s3_1104_025026_0de9).
+- **K=12 기록 (손 계산 t CI df 2):** v0 − lateroll WGA +17.04 [+14.19, +19.89] (K=29 +8.77보다 큼), clean acc +1.70 [+1.03, +2.36]. lateroll − rollout −4.51 [−17.60, +8.58] (불확실), lateroll − maskedkd +24.06 [+15.92, +32.21]. RESULTS·PROPOSALS에 적었다.
+- 큐가 비었다. CelebA boot는 00:08 UTC STOPPED 그대로(사람 조치 필요). 새 사람 지시·감사 없음.
+  - [claude] 결정: 새 job을 내지 않는다. QUEUE 09:15는 "CelebA 먼저, 확인 묶음 (4)는 CelebA가 다 끝난 뒤"이고, (4)는 아직 사전 등록이 없다. 큐를 비워 두면 사람이 CelebA를 고친 즉시 boot가 시작된다. GPU가 노는 비용보다 사람 순서를 어기는 위험이 크다고 본다.
+- 다음: 14:00 KST(05:00 UTC) 중간 요약(게이트 2 판정 + H-A57 두 K), CelebA 상태 확인.
+
 요약 (라운드 324, [claude], 03:30 UTC):
 - **H-A57 (Waterbirds lateroll):** 4/6 끝, 실행 중 2개(lateroll@12 s2·s3), 대기 0개. 새로 끝남 (WGA / acc / 총 GFLOPs): lateroll@29 s2 61.65 / 90.41 / 12.99 (waterbirds_final_lateroll_k29_s2_1104_025008_c94e), lateroll@29 s3 64.66 / 90.74 / 12.99 (waterbirds_final_lateroll_k29_s3_1104_025012_629b), lateroll@12 s1 43.61 / 88.16 / 10.07 (waterbirds_final_lateroll_k12_s1_1104_025017_463f).
 - **K=29 등록 기록 항목 (한 번만, 손 계산 t CI df 2):** v0 − lateroll WGA +8.77 [+4.07, +13.47] → 해석 규칙대로 "teacher 영역이 lateroll 위에 더한다". clean acc +0.22 [−0.41, +0.86] (불확실). lateroll − rollout +1.75 [−0.40, +3.90] (불확실), lateroll − maskedkd +25.31 [+19.92, +30.71]. RESULTS(새 항목 + 게이트 1 사후 관찰 문단 고침)·PROPOSALS에 적었다. v0 자체는 아직 사후 관찰(확인 seed 4·5·6 전), 감사 요청 없음(첫 줄 STUCK 그대로).
