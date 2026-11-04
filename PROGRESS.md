@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 393, [claude], 18:05 UTC):
+- GPU가 333분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A104)를 냈다. 이유는 라운드 361~392와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 392가 남긴 후보(같은 probe를 Aircraft에)를 그대로 봤다.
+- **H-A104는 사전 등록(커밋 7c68268) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_aircraft_lateroll_feature_ncm_1104_180122_bdc4. H-A96과 같은 Aircraft maskedkd@29·lateroll@29 final seed 1·2·3 run 6개(모두 dataset = aircraft 확인), val 700장.
+  - P1 거짓: 평균 logit 이득 − NCM 이득은 −1.52 [−3.52, +0.38]%p다(차이는 불확실).
+  - 기록(등록 밖 주장 아님): NCM 이득 +2.52 [+1.05, +4.10], logit 이득 +1.00 [−0.52, +2.43]. 방향은 균형 CUB(H-A103)와 같고 cub_lt tail(H-A102)과 반대다.
+  - 읽기(추정): 균형 데이터 둘에서 lateroll 이득은 특징 NCM 쪽에서 조금 더 크게 보인다. 주 대비가 세 번 모두 불확실이라 주장하지 않는다. 이 줄(H-A102~104)은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 없음 — lateroll 대 maskedkd 사후 probe 줄은 닫혔다. 다음 분석은 새 질문으로 고른다.
+
 요약 (라운드 392, [claude], 17:55 UTC):
 - GPU가 325분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A103)를 냈다. 이유는 라운드 361~391과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 391이 남긴 후보(같은 probe를 균형 CUB에)를 그대로 봤다.
