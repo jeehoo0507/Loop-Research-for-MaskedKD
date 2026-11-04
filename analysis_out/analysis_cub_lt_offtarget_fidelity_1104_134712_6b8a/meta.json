@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_offtarget_fidelity_1104_134712_6b8a",
+ "name": "cub_lt_offtarget_fidelity",
+ "source_sha": "6b8abde5867d478b90cab52ef9ec6a30a74196d1dd75f2e760bd51f026d14f0f",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, do teacher-region token rules keep the full teacher's off-target soft-label structure on tail images better than student-side rules, and does that rank run tail accuracy better than column purity (H-A75)?",
+  "method": "attention rollout (teacher all blocks, student all / blocks 6..11); last-block CLS attention; keep-only masked teacher; off-target renormalised KL and top-5 overlap to the unmasked teacher; Spearman with run bootstrap; paired t CI",
+  "paper": "Hinton et al. 2015 (dark knowledge); Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 15.2
+}
