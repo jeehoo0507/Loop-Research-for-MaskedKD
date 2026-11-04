@@ -607,11 +607,24 @@ Gate: gate incomplete: ce seeds [1, 2, 3], full seeds [1, 2, 3], maskedkd seeds 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagnostic: WGA seed sigma: not measured yet (run harness.submit --baselines))
 
 ## Significant only (final tier, paired 95% CI excludes 0; wins AND losses)
+- maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
+- maskedkd_frozen@29 vs rollout@29 [acc]: -3.44 %p, 95% CI [-4.71, -2.18], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
+- maskedkd_frozen@29 vs tome@29 [acc]: +6.50 %p, 95% CI [+5.40, +7.60], seeds 1,2,3, GFLOPs ratio 1.280 -> WIN
+- maskedkd_frozen@29 vs full@196 [acc]: -2.72 %p, 95% CI [-4.59, -0.86], seeds 1,2,3, GFLOPs ratio 0.359 -> LOSS
+- maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
 - trustfilt@29 vs tome@29 [acc]: +10.06 %p, 95% CI [+5.87, +14.24], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
 - trustmask_v1@29 vs maskedkd@29 [acc]: +3.50 %p, 95% CI [+0.60, +6.40], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
 - trustmask_v1@29 vs tome@29 [acc]: +11.22 %p, 95% CI [+7.70, +14.74], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
+- maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
+- maskedkd_frozen@29 vs rollout@29 [acc]: -3.44 %p, 95% CI [-4.71, -2.18], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
+- maskedkd_frozen@29 vs tome@29 [acc]: +6.50 %p, 95% CI [+5.40, +7.60], seeds 1,2,3, GFLOPs ratio 1.280 -> WIN
+- maskedkd_frozen@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs full@196 [acc]: -2.72 %p, 95% CI [-4.59, -0.86], seeds 1,2,3, GFLOPs ratio 0.359 -> LOSS
+- maskedkd_frozen@29 vs maskedkd@29 [acc]: -1.22 %p, 95% CI [-1.85, -0.59], seeds 1,2,3, GFLOPs ratio 1.183 -> LOSS
 - trustfilt@29 vs maskedkd@29 [acc]: +2.33 %p, 95% CI [-1.25, +5.92], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustfilt@29 vs rollout@29 [acc]: +0.11 %p, 95% CI [-4.14, +4.36], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
 - trustfilt@29 vs tome@29 [acc]: +10.06 %p, 95% CI [+5.87, +14.24], seeds 1,2,3, GFLOPs ratio 1.112 -> WIN
@@ -654,6 +667,7 @@ Total agent screen configs: 0
 | final | full |  | 196 | 196.0 | 1,2,3 | 63.83 ± 1.50 | 46.33 ± 2.73 | 42.77 | 35.13 | 0.00 | 188 | cub_lt_final_full_k196_s3_1103_234704_3d84 cub_lt_final_full_k196_s2_1103_234647_7b36 cub_lt_final_full_k196_s1_1103_234609_88d5 |
 | final | grid |  | 29 | 29.0 | 1 | 58.00 ± 0.00 | 38.00 ± 0.00 | 13.00 | 5.36 | 0.00 | 467 | cub_lt_final_grid_k29_s1_1104_074618_a6a8 |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 62.33 ± 0.50 | 44.00 ± 0.00 | 12.99 | 5.36 | 0.00 | 271 | cub_lt_final_maskedkd_k29_s1_1103_234609_76d1 cub_lt_final_maskedkd_k29_s2_1103_234647_0c6c cub_lt_final_maskedkd_k29_s3_1103_234704_b28b |
+| final | maskedkd_frozen@0f7bcc |  | 29 | 29.0 | 1,2,3 | 61.11 ± 0.75 | 41.78 ± 1.39 | 15.36 | 5.36 | 2.36 | 309 | cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245 |
 | final | rollout |  | 29 | 29.0 | 1,2,3 | 64.56 ± 0.79 | 48.78 ± 1.26 | 12.99 | 5.36 | 0.17 | 346 | cub_lt_final_rollout_k29_s3_1103_234704_0edf cub_lt_final_rollout_k29_s1_1103_234609_8382 cub_lt_final_rollout_k29_s2_1103_234647_9b4c |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 63.39 ± 1.51 | 46.11 ± 2.71 | 13.35 | 5.36 | 0.35 | 289 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91 |
 | final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 54.61 ± 0.38 | 29.33 ± 0.88 | 12.00 | 4.36 | 0.00 | 296 | cub_lt_final_tome_k29_s2_1103_234647_6467 cub_lt_final_tome_k29_s3_1103_234704_41ee cub_lt_final_tome_k29_s1_1103_234609_6b58 |
