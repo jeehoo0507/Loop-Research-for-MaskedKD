@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_churn_teacher_rank_aug_1104_214637_ac22",
+ "name": "aircraft_mask_churn_teacher_rank_aug",
+ "source_sha": "ac220072d5e16b48fa5602c453751ed4d2e5d5a3c208b549a2ce225c1b05465e",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3, K=29), on training-style crop+flip views, do the patches MaskedKD drops from e25 to final rank higher in the teacher's own attention rollout than the patches it takes in, and does that go with signal loss?",
+  "method": "per image and view mean teacher-rollout rank of dropped minus entered patches (e25 -> final top-29 kept sets) on 2 fixed RandomResizedCrop+flip views; seed/view mean per image; mean with image bootstrap; Spearman with the change of KL(full || masked teacher)",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015; Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 17.0
+}
