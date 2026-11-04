@@ -373,7 +373,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - gradroll@12 vs rollout@12 [acc]: -0.11 %p, 95% CI [-3.71, +3.49], seeds 1,2,3, GFLOPs ratio 1.271 -> no difference
 - maskedkd_frozen@29 vs maskedkd@29 [acc]: +1.39 %p, 95% CI [-0.07, +2.85], seeds 1,2,3, GFLOPs ratio 1.183 -> no difference
 - maskedkd_frozen@29 vs rollout@29 [acc]: -0.44 %p, 95% CI [-0.92, +0.03], seeds 1,2,3, GFLOPs ratio 1.183 -> no difference
-- maskedkd_frozen@29 vs tome@29 [acc]: missing (needs >= 2 shared seeds)
+- maskedkd_frozen@29 vs tome@29 [acc]: -1.08 %p, 95% CI [-3.96, +1.79], seeds 1,2,3, GFLOPs ratio 1.280 -> no difference
 - maskedkd_frozen@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
 - maskedkd_frozen@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - maskedkd_frozen@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
@@ -397,7 +397,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - trustfilt@12 vs lateroll@12 (parent) [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs maskedkd@29 [acc]: +3.20 %p, 95% CI [+0.91, +5.48], seeds 1,2,3, GFLOPs ratio 1.028 -> WIN
 - trustfilt@29 vs rollout@29 [acc]: +1.36 %p, 95% CI [+0.41, +2.32], seeds 1,2,3, GFLOPs ratio 1.027 -> WIN
-- trustfilt@29 vs tome@29 [acc]: missing (needs >= 2 shared seeds)
+- trustfilt@29 vs tome@29 [acc]: +0.72 %p, 95% CI [-2.11, +3.55], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
 - trustfilt@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - trustfilt@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
@@ -413,7 +413,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - trustmask_v1@12 vs trustfilt@12 (parent) [acc]: -2.11 %p, 95% CI [-4.04, -0.19], seeds 1,2,3, GFLOPs ratio 1.000 -> LOSS
 - trustmask_v1@29 vs maskedkd@29 [acc]: +2.86 %p, 95% CI [+2.27, +3.46], seeds 1,2,3, GFLOPs ratio 1.028 -> WIN
 - trustmask_v1@29 vs rollout@29 [acc]: +1.03 %p, 95% CI [-0.47, +2.53], seeds 1,2,3, GFLOPs ratio 1.027 -> no difference
-- trustmask_v1@29 vs tome@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs tome@29 [acc]: +0.39 %p, 95% CI [-2.11, +2.89], seeds 1,2,3, GFLOPs ratio 1.112 -> no difference
 - trustmask_v1@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
 - trustmask_v1@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
@@ -486,7 +486,7 @@ Total agent screen configs: 15
 | final | teacher_topk |  | 12 | 12.0 | 1,2,3 | 88.80 ± 0.42 | 57.64 ± 3.04 | 10.44 | 2.45 | 0.36 | 301 | waterbirds_final_teacher_topk_k12_s2_1103_171051_3651 waterbirds_final_teacher_topk_k12_s1_1103_171046_0a7d waterbirds_final_teacher_topk_k12_s3_1103_171055_5959 |
 | final | teacher_topk |  | 29 | 29.0 | 1,2,3 | 89.71 ± 0.21 | 64.41 ± 0.43 | 13.36 | 5.36 | 0.36 | 294 | waterbirds_final_teacher_topk_k29_s1_1103_170914_f015 waterbirds_final_teacher_topk_k29_s3_1103_170923_d12a waterbirds_final_teacher_topk_k29_s2_1103_170918_4535 |
 | final | tome (teacher cost x2.69 of budget: not matched) |  | 12 | 12.0 | 1,2,3 | 89.96 ± 0.46 | 50.88 ± 1.89 | 12.00 | 4.36 | 0.00 | 292 | final_tome_k12_s2_1030_212126_9500 final_tome_k12_s3_1030_220958_918a final_tome_k12_s1_1030_201811_9fb4 |
-| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1 | 89.74 ± 0.00 | 48.87 ± 0.00 | 12.00 | 4.36 | 0.00 | 1171 | waterbirds_final_tome_k29_s1_1031_201502_610a |
+| final | tome (teacher cost x1.16 of budget: not matched) |  | 29 | 29.0 | 1,2,3 | 90.21 ± 0.61 | 51.38 ± 3.13 | 12.00 | 4.36 | 0.00 | 597 | waterbirds_final_tome_k29_s3_1103_234734_fbbf waterbirds_final_tome_k29_s1_1031_201502_610a waterbirds_final_tome_k29_s2_1103_234725_3539 |
 | final | trustfilt@27da28 |  | 12 | 12.0 | 1,2,3 | 90.05 ± 0.43 | 63.41 ± 2.42 | 10.43 | 2.45 | 0.43 | 494 | waterbirds_final_trustfilt_k12_s3_1103_171144_fdb5 waterbirds_final_trustfilt_k12_s2_1103_171139_aea5 waterbirds_final_trustfilt_k12_s1_1103_171135_cb3a |
 | final | trustfilt@27da28 |  | 29 | 29.0 | 1,2,3 | 90.94 ± 0.54 | 72.68 ± 0.87 | 13.35 | 5.36 | 0.43 | 254 | waterbirds_final_trustfilt_k29_s2_1103_171126_b33d waterbirds_final_trustfilt_k29_s3_1103_171130_db65 waterbirds_final_trustfilt_k29_s1_1103_171121_24be |
 | final | trustmask_v1@8186a4 |  | 12 | 12.0 | 1,2,3 | 87.93 ± 0.47 | 44.86 ± 4.59 | 10.43 | 2.45 | 0.43 | 259 | waterbirds_final_trustmask_v1_k12_s3_1103_171109_331a waterbirds_final_trustmask_v1_k12_s1_1103_171059_cd8d waterbirds_final_trustmask_v1_k12_s2_1103_171104_150e |
