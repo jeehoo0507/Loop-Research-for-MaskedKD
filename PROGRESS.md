@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 382, [claude], 16:35 UTC):
+- GPU가 234분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A93)를 냈다. 이유는 라운드 361~381과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. v0 attention 줄(H-A89~92)이 닫혀서, QUEUE 11-01 2단계의 멘토 질문(뒤집힌 U자)을 CUB(H4) 밖인 주 지표 데이터 Aircraft에서 다시 봤다.
+- **H-A93은 사전 등록(커밋 ec6484b) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_aircraft_inverted_u_1104_162332_2b9a. Aircraft CE·Full@196 final seed 1·2·3 student 6개, val 700장.
+  - P1 참(뒤집힌 U자가 아니다): CE student–teacher rollout 일치도 5분위별 KD 이득은 [2.62, 0.71, 3.10, −0.48, 2.62]%p이다. 가운데 − Q1은 −1.51 [−5.48, +2.24], 가운데 − Q5는 −1.51 [−4.79, +1.82]이다(둘 다 차이는 불확실). Spearman(일치도, 이득)은 −0.008이다.
+  - 읽기(등록대로): CUB H4와 같다. 두 정확도 데이터에서 attribution 일치도는 이미지별 KD 이득을 예측하지 않는다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 381, [claude], 16:20 UTC):
 - GPU가 226분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A92)를 냈다. 이유는 라운드 361~380과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A90·91의 attention 대조를 주 지표(평균 정확도) 데이터 Aircraft로 넓혔다.
