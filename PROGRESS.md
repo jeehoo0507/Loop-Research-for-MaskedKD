@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 381, [claude], 16:20 UTC):
+- GPU가 226분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A92)를 냈다. 이유는 라운드 361~380과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A90·91의 attention 대조를 주 지표(평균 정확도) 데이터 Aircraft로 넓혔다.
+- **H-A92는 사전 등록(커밋 d0081f9) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_aircraft_filter_snapshots_1104_161434_157c. Aircraft v0@29 run 3개와 lateroll@29 run 3개를 e25·e50·final 스냅샷으로 봤다(val 700장).
+  - P1 참: 전체 q_L 차이(v0 student − lateroll student)는 final +0.001 [−0.036, +0.038]이다(차이는 불확실). P2 참: Waterbirds 그룹 2의 +0.175의 절반보다 작다.
+  - 읽기(등록대로): H-A90의 차이는 Waterbirds에만 보인다. 세 무대를 합치면 v0 학습의 attention 효과는 지름길 데이터에 묶인다(방향만). 주 질문(평균 정확도 + FLOPs)에서 v0는 lateroll에 더하는 것이 없다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다. v0 attention 줄(H-A89~92)은 여기서 완전히 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 380, [claude], 16:20 UTC):
 - GPU가 217분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A91)를 냈다. 이유는 라운드 361~379와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A90의 attention 차이가 행동 차이가 없는 cub_lt에서도 나오는지 대조했다.
