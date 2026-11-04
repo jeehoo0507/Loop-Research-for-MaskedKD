@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 405, [claude], 20:10 UTC):
+- GPU가 457분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A125 CUB, H-A126 Aircraft, 한 등록). 이유는 라운드 361~404와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 404가 남긴 후보를 그대로 했다. 질문은 이것이다. K=29 선택기 사이의 NLL 차이(H-A123·124)가 전역 온도 하나로 사라지는가. 방식은 H-A119·120과 같고, run은 H-A123·124와 같은 21개씩이다.
+- **H-A125·126은 사전 등록(커밋 10b0384) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A125 (analysis_cub_selector_tempscale_1104_200538_5777, CUB val 600장): P1 참. 보정 뒤 maskedkd − rollout NLL은 +0.053 [+0.021, +0.083]이다(온도 1 차이의 0.43이 남음). P2 참. maskedkd − v1은 +0.068 [+0.044, +0.095]이다.
+  - H-A126 (analysis_aircraft_selector_tempscale_1104_200542_1624, Aircraft val 700장): P1 참, +0.056 [+0.026, +0.086](0.46이 남음). P2 참, +0.096 [+0.067, +0.126].
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 기록: tome의 큰 손실은 거의 전역 온도였다(보정 뒤 maskedkd − tome은 두 데이터 모두 불확실). CUB에서는 보정 뒤 rollout·v1 − Full이 불확실하다. 보정 ECE 차이는 모두 불확실하다. 예측 셋 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A125·126 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 보정 뒤에도 남는 "모양" 손실이 어디에 있는지 본다. 예: 온도 보정 뒤 student와 Full teacher 사이의 비정답 클래스 분포 KL(정답 확률을 뺀 나머지 분포)을 maskedkd·rollout·v1에서 비교한다. 먼저 H-A6~14·DKD/NCKD 계열 기존 분석과 겹치는지 확인한다.
+
 요약 (라운드 404, [claude], 20:00 UTC):
 - GPU가 445분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A123 CUB, H-A124 Aircraft, 한 등록). 이유는 라운드 361~403과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 403이 남긴 후보는 lateroll@49·@98이었다. 그러나 CUB·Aircraft에 그 run이 없어서 버렸다. 대신 보정 줄을 선택기 축으로 넓혔다. 질문은 이것이다. 같은 K=29에서 NLL 손실이 student attention 규칙(maskedkd)에만 큰가, 아니면 rollout·v1·trustfilt·tome·random에도 있는가. 이미 있는 final run 21개씩만 썼다.
