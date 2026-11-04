@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 386, [claude], 17:05 UTC):
+- GPU가 271분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A97)를 냈다. 이유는 라운드 361~385와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A95(Aircraft 한 데이터, 이미지 bootstrap)가 유일하게 참이 나온 이미지별 결합이어서, 같은 코드로 두 번째 정확도 데이터 CUB에서 재현을 봤다.
+- **H-A97은 사전 등록(커밋 6f45bc1) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_cub_mask_cost_fidelity_1104_165915_959e. CUB maskedkd@29·Full@196·CE final seed 1·2·3 run 9개(모두 dataset = cub 확인), val 600장.
+  - P1 참: 가린 teacher KL 5분위별 손실(Full − maskedkd)은 [−0.83, −0.83, −0.28, 4.44, 5.00]%p이다. Q5 − Q1은 +5.83 [+0.37, +11.62]이다(이미지 bootstrap). → H-A95가 CUB에서 재현됐다.
+  - 단서: Spearman +0.069 [−0.005, +0.160], seed별 t +5.56 [−4.86, +15.98]은 둘 다 불확실하다. KL은 teacher 확신과 섞여 있다(Spearman −0.46). Q4·Q5에서 maskedkd student는 CE보다 낮다(방향만, Aircraft와 같음).
+  - 읽기: 두 정확도 데이터에서 MaskedKD 손실은 가린 teacher가 틀린 soft label을 주는 이미지에 있다. 다만 H-A96에서 같은 비용 lateroll이 이 위치를 바꾸지 못했으니 이미지 난이도와 섞였을 수 있다(추정). RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). 분석 후보(등록 전): 난이도 혼입을 떼기 위해 CE student의 이미지별 정답(또는 Full teacher 확신)으로 층을 나눈 뒤 같은 대비를 보는 것. boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 385, [claude], 16:55 UTC):
 - GPU가 262분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A96)를 냈다. 이유는 라운드 361~384와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 384가 남긴 후보(같은 비용 lateroll@29이 H-A95의 손실 분위를 줄이는가)를 그대로 봤다.
