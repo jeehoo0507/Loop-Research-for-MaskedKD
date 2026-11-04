@@ -4,6 +4,10 @@
 - (없음. 감사 이력: 라운드 38 요청 NEEDS-MORE(증거 누락), 라운드 39 1/3부 FAIL(문구: rollout 대비 정확도 "지지 않는다"는 CI [−2.52, +5.58]로 입증되지 않음). 라운드 40에 문구를 "정확도 차이는 불확실"로 고쳐 1/3부를 다시 요청했다.)
 
 ## final (감사 전, Significant only 옮김)
+- [claude] 2026-11-04 라운드 340 **H-A65 분석 (학습 없음, 결과 표 숫자 아님, 사전 등록 7164fce 그대로 한 번만):** analysis_cub_lt_target_to_student_1104_073756_af4a. H-A64와 같은 6 run(cub_lt final K=29 seed 1·2·3 maskedkd·trustmask_v1), 스냅샷 e25·final, 같은 규칙·같은 val 600장(head 300 / tail 300). 이미지별 seed 평균 v1 − maskedkd 차이, 그룹 안 이미지 부트스트랩 95% CI.
+  - **P1 참 (주, 약함):** tail에서 r(e25 dpt, final ds_acc) +0.152 [+0.034, +0.262] (head +0.100 [−0.053, +0.239], 불확실). **P2 거짓:** tail에서 e25 dt_acc > 0 이미지(82장) − dt_acc < 0 이미지(22장)의 final ds_acc −0.009 [−0.159, +0.122] → 차이는 불확실.
+  - 기록: r(e25 dpt, ds_acc 증가분 final − e25) tail −0.024 [−0.150, +0.102], head −0.001 → e25 목표 차이는 그 뒤 student 차이가 자라는 이미지를 예측하지 못한다. r(e25 dpt, e25 ds_acc) tail +0.209 [+0.087, +0.319], r(final dpt, final ds_acc) tail +0.182 [+0.071, +0.289] → 연결은 같은 시점 안에서 이미 비슷한 크기다.
+  - 해석 (분석, 주장 아님, 인과 아님): 등록 문구대로 "e25 목표가 나았던 tail 이미지에서 v1 student가 끝에 조금 더 맞는다(이미지 수준 연결, r ≈ 0.15)". 다만 이 연결은 e25 student 차이와의 같은 시점 상관과 같은 크기이고, H-A64에서 보인 student 차이의 증가분(+0.038)은 이미지 수준에서 e25 목표 차이로 설명되지 않는다. 평균 수준의 시간 순서(H-A64)를 이미지 수준의 "목표 → 나중 학습" 기제로 읽을 근거는 약하다.
 - [claude] 2026-11-04 라운드 339 **H-A64 분석 (학습 없음, 결과 표 숫자 아님, 사전 등록 235c3a7 그대로 한 번만):** analysis_cub_lt_target_timing_1104_072913_cb08. 게이트 2 final K=29 seed 1·2·3의 maskedkd·trustmask_v1 6 run, 스냅샷 e25·e50·final, H-A62와 같은 규칙·같은 val 600장.
   - **P1 참 (주):** e25 v1 − maskedkd tail t_acc +0.110 [+0.072, +0.148] (head +0.090 [+0.053, +0.127]). **P2 거짓:** tail에서 차이의 final − e25 +0.001 [−0.031, +0.033] → 등록 규칙대로 "cub_lt에서도 목표 차이는 e25에 이미 있고 더 자라지 않는다(Waterbirds H-A54와 같은 시점 모양)".
   - 기록: tail t_acc maskedkd e25 0.601 / e50 0.633 / final 0.608, v1 0.711 / 0.716 / 0.719 (두 arm 모두 거의 평평). head에서는 차이가 조금 자랐다(final − e25 +0.038 [+0.003, +0.075], maskedkd head t_acc 0.639 → 0.594).
