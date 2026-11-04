@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 396, [claude], 18:35 UTC):
+- GPU가 359분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에는 학습 job 대신 **분석 2개**(H-A107 CUB, H-A108 Aircraft, 한 등록)를 냈다. 이유는 라운드 361~395와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 395가 남긴 후보(같은 probe를 lateroll@29 대 CE로)를 그대로 봤다. 두 데이터를 한 번에 등록한 것은 같은 질문의 데이터 재현이라서다.
+- **H-A107·108은 사전 등록(커밋 1d5d4ba) 뒤에 제출했고, 결과는 한 번만 기록했다.** 등록에 "seed 평균 NCM은 이미 안다"고 적었다(같은 run). 새로 얻은 것은 이미지 짝 CI다.
+  - H-A107 (analysis_cub_lateroll_ce_feature_ncm_1104_182901_6742, CUB val 600장): P1 거짓: lateroll − CE NCM +1.56 [−0.06, +3.28] (불확실; seed t는 [+0.22, +2.89]로 0 제외, 기록만). P2 거짓: Full − lateroll NCM +0.22 [−1.39, +1.84] (불확실).
+  - H-A108 (analysis_aircraft_lateroll_ce_feature_ncm_1104_182905_5b28, Aircraft val 700장): P1 거짓: lateroll − CE NCM +0.90 [−0.76, +2.62] (불확실). P2 거짓: Full − lateroll NCM +1.14 [−0.38, +2.71] (불확실). logit으로는 Full − lateroll +1.76 [+0.24, +3.33] (기록만).
+  - 등록 문구대로 "두 데이터에서 lateroll은 특징 이득을 지킨다"는 쓰지 않는다. 읽기(추정): lateroll@29 특징 NCM은 CE와 Full 사이이고 양쪽 차이 모두 불확실하다. MaskedKD@29(CE 아래)와 달리 CE 아래로 떨어지지는 않는다. H-A105~108 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): lateroll − maskedkd NCM은 H-A103·104에서 이미 +2.6·+2.5(하한 > 0)이므로, 남은 질문은 "어떤 이미지에서" 특징 이득이 잃어지는가(Full − maskedkd NCM 이득을 teacher 확신도·student–teacher 지도 일치도 분위로 나눔).
+
 요약 (라운드 395, [claude], 18:25 UTC):
 - GPU가 350분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A106)를 냈다. 이유는 라운드 361~394와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 394가 남긴 후보(같은 probe를 Aircraft의 Full·CE·maskedkd@29에)를 그대로 봤다. final은 seed 1~3뿐이므로 seed 대신 데이터로 재현했다.
