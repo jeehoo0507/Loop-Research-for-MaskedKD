@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 375, [claude], 15:25 UTC):
+- GPU가 171분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A86)를 냈다. 이유는 라운드 361~374와 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기와 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A85의 "배경 토큰" 해석을 FG/BG 라벨 없이 시험했다. 분석 API에는 파일 접근이 없어 data/raw의 CUB bounding box를 쓸 수 없으므로, 격자 중심 거리를 대리 지표로 썼다(통계에만 썼고 마스크에는 넣지 않았다).
+- **H-A86은 사전 등록(커밋 3f441e7) 뒤 제출했고, 결과는 한 번만 기록했다:** analysis_wb_swap_position_1104_151937_1606. H-A85와 같은 run 6개를 썼다.
+  - P1 참: 그룹 2 dist(M∖F) − dist(F∖M)는 +0.135 [+0.070, +0.201]이다. P2 참: 그룹 2 Spearman(dist(M∖F), d_M)은 −0.201 [−0.327, −0.076]이다.
+  - 읽기(등록대로): 고리가 끌어들인 토큰은 가장자리 쪽이고, 배경 해석과 맞는다(대리 지표). 바깥 쪽 이동은 다수 그룹 0에서 가장 크다(+0.229). 그 그룹에서는 같은 토큰이 teacher를 돕는다. 따라서 지름길(배경) 읽기와 맞는다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다. H-A83~86의 Waterbirds 고리 내용 줄은 여기서 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). 분석 API로 CUB bounding box(data/raw/CUB_200_2011/bounding_boxes.txt)를 Waterbirds val 순서에 맞춰 읽을 수 있게 되면, H-A86을 라벨로 다시 확인할 수 있다. boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 374, [claude], 15:15 UTC):
 - GPU가 162분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A85)를 냈다. 이유는 라운드 361~373과 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기와 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. H-A84에서 "고리는 남긴 토큰의 내용을 바꾼다"가 나와서, 바뀐 토큰이 해로운지 아니면 도움 되는 토큰이 빠진 것인지 갈랐다.
