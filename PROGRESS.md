@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 363, [claude], 13:35 UTC):
+- GPU가 58분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A74)를 냈다. 이유: 라운드 361·362와 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음).
+- **H-A74 사전 등록(커밋 54861ae) 뒤 제출, 결과 기록 한 번:** analysis_cub_lt_head_norm_1104_132734_2add. H-A73(차이는 머리 방향)의 다음 단계: 머리 행을 단위 norm으로 바꾸면(τ-정규화, Kang 2020, 맞춤 없음) 게이트 2 30 run의 tail 차이가 사라지는가.
+  - P1 거짓: tail 방법 평균 sd 6.43 → 6.08. P2 참: Spearman(norm_ratio, orig tail) 0.57 [0.19, 0.81], 단 ToMe가 끌어냄(다른 KD 방법 norm_ratio 0.927~0.932).
+  - 기록: Spearman(align_tail, orig tail) 0.90 [0.74, 0.97]; v1 − maskedkd align_tail +0.020 [+0.014, +0.025], norm_ratio −0.003 (불확실). 읽기: H-A72·73·74를 합치면 cub_lt에서 MaskedKD의 낮은 tail은 치우침·특징·norm이 아니라 tail 클래스 머리 행의 방향(그 클래스 특징과의 정렬)에 있다(인과 아님). RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 362, [claude], 13:25 UTC):
 - GPU가 49분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A73)를 냈다. 이유: 라운드 361과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음).
