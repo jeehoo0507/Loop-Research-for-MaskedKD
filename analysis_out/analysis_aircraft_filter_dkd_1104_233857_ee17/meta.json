@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_filter_dkd_1104_233857_ee17",
+ "name": "aircraft_filter_dkd",
+ "source_sha": "ee1775b02b80250155241327e80797991926c8a733dbc39ebb747b10bcc14d52",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft final K=29 runs, is the teacher-area filter's extra masked-teacher KL (trustfilt vs lateroll) a loss of true-class probability (TCKD) or of the non-target shape (NCKD)?",
+  "method": "exact DKD chain-rule split of keep-only masked-teacher KL into TCKD and (1-p_t)-weighted NCKD, seed-paired t CI and image bootstrap",
+  "paper": "Zhao et al. CVPR 2022 (decoupled KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD)"
+ },
+ "seconds": 11.3
+}

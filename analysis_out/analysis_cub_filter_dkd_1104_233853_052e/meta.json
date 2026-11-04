@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_filter_dkd_1104_233853_052e",
+ "name": "cub_filter_dkd",
+ "source_sha": "052e318645ef334be91edb68dcda0226bf9828aeee5c6aee3558e9fb70a532f0",
+ "status": "done",
+ "meta": {
+  "question": "on CUB final K=29 runs, is the teacher-area filter's extra masked-teacher KL (trustfilt vs lateroll) a loss of true-class probability (TCKD) or of the non-target shape (NCKD)?",
+  "method": "exact DKD chain-rule split of keep-only masked-teacher KL into TCKD and (1-p_t)-weighted NCKD, seed-paired t CI and image bootstrap",
+  "paper": "Zhao et al. CVPR 2022 (decoupled KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD)"
+ },
+ "seconds": 10.6
+}

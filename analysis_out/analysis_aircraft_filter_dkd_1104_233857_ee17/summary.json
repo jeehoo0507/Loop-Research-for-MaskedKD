@@ -1,0 +1,256 @@
+{
+ "n_val": 700,
+ "K": 29,
+ "n_runs": 12,
+ "full_teacher_p_true": 0.7483,
+ "P1_trustfilt_minus_lateroll_tckd_seed_t": [
+  0.1762,
+  0.161,
+  0.1914
+ ],
+ "P2_trustfilt_minus_lateroll_wnckd_seed_t": [
+  0.0727,
+  0.0478,
+  0.0976
+ ],
+ "record": {
+  "trustfilt_minus_lateroll_kl_seed_t": [
+   0.2488,
+   0.2133,
+   0.2843
+  ],
+  "tckd_share_of_kl_gap": 0.7082,
+  "trustfilt_minus_lateroll_tckd_boot": [
+   0.1762,
+   0.1176,
+   0.2361
+  ],
+  "trustfilt_minus_lateroll_wnckd_boot": [
+   0.0727,
+   0.0387,
+   0.1092
+  ],
+  "trustfilt_minus_lateroll_p_true_seed_t": [
+   -0.0513,
+   -0.0752,
+   -0.0273
+  ],
+  "trustfilt_minus_lateroll_top1_agree_seed_t": [
+   -5.7167,
+   -10.9334,
+   -0.5
+  ],
+  "trustfilt_minus_lateroll_t_acc_seed_t": [
+   -5.5267,
+   -11.1955,
+   0.1422
+  ],
+  "trustfilt_minus_rollout_tckd_seed_t": [
+   0.0198,
+   -0.0115,
+   0.0511
+  ],
+  "trustfilt_minus_rollout_wnckd_seed_t": [
+   0.0276,
+   0.0135,
+   0.0416
+  ],
+  "maskedkd_minus_trustfilt_tckd_seed_t": [
+   0.3764,
+   0.0883,
+   0.6645
+  ],
+  "maskedkd_minus_trustfilt_wnckd_seed_t": [
+   0.1114,
+   0.0341,
+   0.1887
+  ],
+  "spearman_tckd_acc_12runs": -0.4476,
+  "spearman_wnckd_acc_12runs": -0.3357,
+  "arm_means_kl_tckd_wnckd_ptrue_agree_acc": {
+   "lateroll": [
+    0.8159,
+    0.4865,
+    0.3294,
+    0.563,
+    69.8567,
+    66.2857
+   ],
+   "trustfilt": [
+    1.0647,
+    0.6627,
+    0.4021,
+    0.5117,
+    64.14,
+    65.5714
+   ],
+   "rollout": [
+    1.0173,
+    0.6429,
+    0.3745,
+    0.5116,
+    63.6667,
+    66.4286
+   ],
+   "maskedkd": [
+    1.5525,
+    1.039,
+    0.5135,
+    0.4199,
+    54.1433,
+    65.2857
+   ]
+  }
+ },
+ "per_run": {
+  "aircraft_final_lateroll_k29_s1_1103_065756_f0d9": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "kl": 0.8208,
+   "tckd": 0.4835,
+   "wnckd": 0.3372,
+   "split_residual": 0.0,
+   "p_true": 0.5622,
+   "top1_agree_full": 69.29,
+   "t_acc": 62.29
+  },
+  "aircraft_final_lateroll_k29_s2_1103_065801_38e1": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 67.7142858505249,
+   "kl": 0.7965,
+   "tckd": 0.482,
+   "wnckd": 0.3145,
+   "split_residual": 0.0,
+   "p_true": 0.5724,
+   "top1_agree_full": 71.14,
+   "t_acc": 64.29
+  },
+  "aircraft_final_lateroll_k29_s3_1103_065805_2130": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.28571343421936,
+   "kl": 0.8305,
+   "tckd": 0.494,
+   "wnckd": 0.3365,
+   "split_residual": 0.0,
+   "p_true": 0.5544,
+   "top1_agree_full": 69.14,
+   "t_acc": 61.86
+  },
+  "aircraft_final_trustfilt_k29_s1_1103_074527_357e": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 66.42857193946838,
+   "kl": 1.0683,
+   "tckd": 0.6634,
+   "wnckd": 0.4049,
+   "split_residual": 0.0,
+   "p_true": 0.5137,
+   "top1_agree_full": 64.71,
+   "t_acc": 58.29
+  },
+  "aircraft_final_trustfilt_k29_s2_1103_074535_db76": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 65.71428775787354,
+   "kl": 1.0602,
+   "tckd": 0.6615,
+   "wnckd": 0.3987,
+   "split_residual": 0.0,
+   "p_true": 0.5104,
+   "top1_agree_full": 63.0,
+   "t_acc": 56.14
+  },
+  "aircraft_final_trustfilt_k29_s3_1103_074540_2203": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 64.5714282989502,
+   "kl": 1.0657,
+   "tckd": 0.6631,
+   "wnckd": 0.4026,
+   "split_residual": 0.0,
+   "p_true": 0.5111,
+   "top1_agree_full": 64.71,
+   "t_acc": 57.43
+  },
+  "aircraft_final_rollout_k29_s1_1102_132227_c3d7": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "kl": 1.0185,
+   "tckd": 0.6404,
+   "wnckd": 0.3782,
+   "split_residual": 0.0,
+   "p_true": 0.5103,
+   "top1_agree_full": 62.71,
+   "t_acc": 56.86
+  },
+  "aircraft_final_rollout_k29_s2_1102_180325_20b6": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 66.57142639160156,
+   "kl": 1.0073,
+   "tckd": 0.631,
+   "wnckd": 0.3763,
+   "split_residual": 0.0,
+   "p_true": 0.5203,
+   "top1_agree_full": 65.86,
+   "t_acc": 59.71
+  },
+  "aircraft_final_rollout_k29_s3_1102_180341_8606": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 65.85714221000671,
+   "kl": 1.0262,
+   "tckd": 0.6572,
+   "wnckd": 0.369,
+   "split_residual": 0.0,
+   "p_true": 0.5043,
+   "top1_agree_full": 62.43,
+   "t_acc": 56.29
+  },
+  "aircraft_final_maskedkd_k29_s1_1102_132227_6542": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 66.71428680419922,
+   "kl": 1.5891,
+   "tckd": 1.0686,
+   "wnckd": 0.5205,
+   "split_residual": 0.0,
+   "p_true": 0.4139,
+   "top1_agree_full": 54.29,
+   "t_acc": 49.57
+  },
+  "aircraft_final_maskedkd_k29_s2_1102_180321_52e2": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 64.42857384681702,
+   "kl": 1.6756,
+   "tckd": 1.1367,
+   "wnckd": 0.5389,
+   "split_residual": 0.0,
+   "p_true": 0.3986,
+   "top1_agree_full": 50.71,
+   "t_acc": 48.0
+  },
+  "aircraft_final_maskedkd_k29_s3_1102_180336_347e": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 64.71428275108337,
+   "kl": 1.3928,
+   "tckd": 0.9118,
+   "wnckd": 0.481,
+   "split_residual": 0.0,
+   "p_true": 0.4472,
+   "top1_agree_full": 57.43,
+   "t_acc": 52.43
+  }
+ },
+ "verdict": {
+  "P1": "positive",
+  "P2": "positive"
+ },
+ "note": "CI entries are [mean, low, high]; seed_t pairs run s_i of one arm with s_i of the other; TCKD/NCKD use the ground-truth class"
+}
