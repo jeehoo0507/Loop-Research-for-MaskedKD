@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_selector_nontarget_split_1104_202803_57bc",
+ "name": "aircraft_selector_nontarget_split",
+ "source_sha": "57bc1259e2c7521ead8d6f36613659c6a758d71c771ec53573a153617b3db2f2",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3, K=29), after held-out temperature scaling, is the MaskedKD - Rollout non-target shape loss on the teacher's top-5 confusable classes or on the remaining classes?",
+  "method": "per run, 2-fold held-out softmax temperature; per image non-target KL(teacher || student) split exactly by the chain rule into top-5 mass, within-top-5 and within-rest terms; paired MaskedKD@29 - selector@29 and selector@29 - Full; image bootstrap and seed t CI",
+  "paper": "Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Furlanello et al. ICML 2018 (born-again networks); Guo et al. ICML 2017 (temperature scaling); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 14.7
+}
