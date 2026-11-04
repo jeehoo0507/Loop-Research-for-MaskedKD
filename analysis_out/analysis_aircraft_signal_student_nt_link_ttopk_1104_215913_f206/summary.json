@@ -1,0 +1,309 @@
+{
+ "n_val": 700,
+ "n_tail_val": 0,
+ "K": 29,
+ "T_grid": [
+  0.1,
+  10.0,
+  400
+ ],
+ "P1_spearman_dS_dG_maskedkd_minus_teacher_topk": [
+  0.2036,
+  0.1311,
+  0.2733
+ ],
+ "P2_mean_dG_signal_maskedkd_minus_teacher_topk": [
+  0.1959,
+  0.0888,
+  0.307
+ ],
+ "pairs": {
+  "maskedkd-teacher_topk": {
+   "spearman_dS_dG": [
+    0.2036,
+    0.1311,
+    0.2733
+   ],
+   "mean_dG_signal": [
+    0.1959,
+    0.0888,
+    0.307
+   ],
+   "mean_dS_student": [
+    0.1218,
+    0.0932,
+    0.1493
+   ],
+   "spearman_dS_dG_tail_only": NaN,
+   "per_seed_spearman_dS_dG": [
+    0.1438,
+    0.1149,
+    0.1486
+   ],
+   "per_seed_t_spearman": [
+    0.1358,
+    0.0905,
+    0.1811,
+    3
+   ],
+   "per_seed_t_dG": [
+    0.1959,
+    -0.0361,
+    0.428,
+    3
+   ],
+   "per_seed_t_dS": [
+    0.1218,
+    0.0611,
+    0.1825,
+    3
+   ]
+  },
+  "maskedkd-rollout": {
+   "spearman_dS_dG": [
+    0.2385,
+    0.1651,
+    0.3074
+   ],
+   "mean_dG_signal": [
+    0.4787,
+    0.3739,
+    0.5776
+   ],
+   "mean_dS_student": [
+    0.1322,
+    0.1078,
+    0.157
+   ],
+   "spearman_dS_dG_tail_only": NaN,
+   "per_seed_spearman_dS_dG": [
+    0.1912,
+    0.1783,
+    0.1669
+   ],
+   "per_seed_t_spearman": [
+    0.1788,
+    0.1486,
+    0.209,
+    3
+   ],
+   "per_seed_t_dG": [
+    0.4787,
+    0.2299,
+    0.7274,
+    3
+   ],
+   "per_seed_t_dS": [
+    0.1322,
+    0.0759,
+    0.1885,
+    3
+   ]
+  },
+  "rollout-teacher_topk": {
+   "spearman_dS_dG": [
+    0.0486,
+    -0.0284,
+    0.123
+   ],
+   "mean_dG_signal": [
+    -0.2828,
+    -0.3726,
+    -0.1878
+   ],
+   "mean_dS_student": [
+    -0.0104,
+    -0.0298,
+    0.0079
+   ],
+   "spearman_dS_dG_tail_only": NaN,
+   "per_seed_spearman_dS_dG": [
+    0.0741,
+    0.0397,
+    0.0428
+   ],
+   "per_seed_t_spearman": [
+    0.0522,
+    0.0049,
+    0.0995,
+    3
+   ],
+   "per_seed_t_dG": [
+    -0.2828,
+    -0.2995,
+    -0.2661,
+    3
+   ],
+   "per_seed_t_dS": [
+    -0.0104,
+    -0.0558,
+    0.035,
+    3
+   ]
+  }
+ },
+ "within_method_spearman_student_vs_signal": {
+  "maskedkd": [
+   0.4147,
+   0.3497,
+   0.4756
+  ],
+  "rollout": [
+   0.5093,
+   0.4458,
+   0.5673
+  ],
+  "teacher_topk": [
+   0.418,
+   0.3478,
+   0.4848
+  ]
+ },
+ "per_run": {
+  "maskedkd": {
+   "1": {
+    "T_fit_even_fit_odd": [
+     0.6562,
+     0.6638
+    ],
+    "student_nt_kl": 1.0581,
+    "signal_nt_kl": 2.0995,
+    "signal_top5_overlap": 0.402,
+    "signal_acc": 49.57,
+    "spearman_student_vs_signal": 0.3687,
+    "acc_measured": 66.71,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 66.71,
+    "val_acc_last": 66.71428680419922
+   },
+   "2": {
+    "T_fit_even_fit_odd": [
+     0.6638,
+     0.6412
+    ],
+    "student_nt_kl": 1.0278,
+    "signal_nt_kl": 2.1691,
+    "signal_top5_overlap": 0.3914,
+    "signal_acc": 48.0,
+    "spearman_student_vs_signal": 0.3751,
+    "acc_measured": 64.43,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 64.43,
+    "val_acc_last": 64.42857384681702
+   },
+   "3": {
+    "T_fit_even_fit_odd": [
+     0.6715,
+     0.6638
+    ],
+    "student_nt_kl": 0.9893,
+    "signal_nt_kl": 1.9842,
+    "signal_top5_overlap": 0.4234,
+    "signal_acc": 52.43,
+    "spearman_student_vs_signal": 0.3401,
+    "acc_measured": 64.71,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 64.71,
+    "val_acc_last": 64.71428275108337
+   }
+  },
+  "rollout": {
+   "1": {
+    "T_fit_even_fit_odd": [
+     0.7197,
+     0.6952
+    ],
+    "student_nt_kl": 0.9053,
+    "signal_nt_kl": 1.6046,
+    "signal_top5_overlap": 0.4783,
+    "signal_acc": 56.86,
+    "spearman_student_vs_signal": 0.4425,
+    "acc_measured": 66.86,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 66.86,
+    "val_acc_last": 66.8571412563324
+   },
+   "2": {
+    "T_fit_even_fit_odd": [
+     0.7033,
+     0.6872
+    ],
+    "student_nt_kl": 0.8919,
+    "signal_nt_kl": 1.5994,
+    "signal_top5_overlap": 0.4694,
+    "signal_acc": 59.71,
+    "spearman_student_vs_signal": 0.51,
+    "acc_measured": 66.29,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 66.29,
+    "val_acc_last": 66.57142639160156
+   },
+   "3": {
+    "T_fit_even_fit_odd": [
+     0.7197,
+     0.7033
+    ],
+    "student_nt_kl": 0.8814,
+    "signal_nt_kl": 1.6127,
+    "signal_top5_overlap": 0.4734,
+    "signal_acc": 56.29,
+    "spearman_student_vs_signal": 0.4832,
+    "acc_measured": 66.14,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 66.14,
+    "val_acc_last": 65.85714221000671
+   }
+  },
+  "teacher_topk": {
+   "1": {
+    "T_fit_even_fit_odd": [
+     0.7033,
+     0.6793
+    ],
+    "student_nt_kl": 0.9332,
+    "signal_nt_kl": 1.8883,
+    "signal_top5_overlap": 0.4249,
+    "signal_acc": 49.86,
+    "spearman_student_vs_signal": 0.3916,
+    "acc_measured": 65.57,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 65.57,
+    "val_acc_last": 65.57142734527588
+   },
+   "2": {
+    "T_fit_even_fit_odd": [
+     0.6872,
+     0.6715
+    ],
+    "student_nt_kl": 0.8833,
+    "signal_nt_kl": 1.8883,
+    "signal_top5_overlap": 0.4249,
+    "signal_acc": 49.86,
+    "spearman_student_vs_signal": 0.4091,
+    "acc_measured": 66.29,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 66.29,
+    "val_acc_last": 66.28571152687073
+   },
+   "3": {
+    "T_fit_even_fit_odd": [
+     0.6952,
+     0.6952
+    ],
+    "student_nt_kl": 0.8934,
+    "signal_nt_kl": 1.8883,
+    "signal_top5_overlap": 0.4249,
+    "signal_acc": 49.86,
+    "spearman_student_vs_signal": 0.3991,
+    "acc_measured": 64.57,
+    "acc_tail_measured": NaN,
+    "acc_head_measured": 64.57,
+    "val_acc_last": 64.5714282989502
+   }
+  }
+ },
+ "verdict": {
+  "P1": "positive",
+  "P2": "positive"
+ }
+}
