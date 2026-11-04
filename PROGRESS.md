@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 380, [claude], 16:20 UTC):
+- GPU가 217분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A91)를 냈다. 이유는 라운드 361~379와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. H-A90의 attention 차이가 행동 차이가 없는 cub_lt에서도 나오는지 대조했다.
+- **H-A91은 사전 등록(커밋 076ac16) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_cub_lt_filter_snapshots_1104_160528_ffe5. cub_lt v0@29 run 3개와 lateroll@29 run 3개를 e25·e50·final 스냅샷으로 봤다.
+  - P1 거짓(반대 방향, 작음): tail q_L 차이(v0 student − lateroll student)는 final −0.011 [−0.020, −0.003]이다. P2 참: Waterbirds 그룹 2의 +0.175보다 작다.
+  - 읽기(등록대로): v0 학습의 attention 효과는 데이터에 따라 다르다. teacher 쪽으로 옮기는 효과는 v0가 WGA를 올린 Waterbirds에서만 보이고, 행동 결과(H-A67)와 같은 쪽이다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다. v0 attention 줄(H-A89~91)은 여기서 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 379, [claude], 16:05 UTC):
 - GPU가 208분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC).
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A90)를 냈다. 이유는 라운드 361~378과 같다. 지시가 큐에 작업을 넣으라고 하고, 새 선택기를 만들거나 결과를 본 뒤 K·seed를 더하는 것은 금지이며, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 378이 남긴 열린 질문("v0 학습이 언제 student attention을 바꾸는가")을 e25·e50 스냅샷으로 봤다.
