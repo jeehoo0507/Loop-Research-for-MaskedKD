@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_signal_student_nt_link_1104_204037_8967",
+ "name": "cub_signal_student_nt_link",
+ "source_sha": "896737c9040888ed583743b0cc9ea3c5e1f9c2fbd65f478d36f16f428f94035d",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3, K=29), are the images where the MaskedKD student loses more non-target shape than Rollout the same images where the MaskedKD-masked teacher loses more non-target shape?",
+  "method": "per image non-target KL(full teacher || student) after held-out temperature scaling and non-target KL(full teacher || teacher on the 29 patches the run's own final student selects); paired MaskedKD - Rollout differences; Spearman across images with image bootstrap; seed t CI",
+  "paper": "Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Abnar & Zuidema ACL 2020 (attention rollout); Guo et al. ICML 2017 (temperature scaling); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 10.5
+}

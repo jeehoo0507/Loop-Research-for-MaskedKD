@@ -1,0 +1,141 @@
+{
+ "n_val": 600,
+ "K": 29,
+ "T_grid": [
+  0.1,
+  10.0,
+  400
+ ],
+ "P1_spearman_dS_dG": [
+  0.2095,
+  0.1306,
+  0.2888
+ ],
+ "P2_mean_dG_signal": [
+  0.4959,
+  0.4084,
+  0.5909
+ ],
+ "mean_dS_student": [
+  0.12,
+  0.0928,
+  0.1472
+ ],
+ "per_seed_spearman_dS_dG": [
+  0.1972,
+  0.1511,
+  0.1419
+ ],
+ "per_seed_t_spearman": [
+  0.1634,
+  0.0898,
+  0.237,
+  3
+ ],
+ "per_seed_t_dG": [
+  0.4959,
+  0.4129,
+  0.5788,
+  3
+ ],
+ "within_method_spearman_student_vs_signal": {
+  "maskedkd": [
+   0.3098,
+   0.2324,
+   0.3881
+  ],
+  "rollout": [
+   0.3415,
+   0.261,
+   0.4163
+  ]
+ },
+ "per_run": {
+  "maskedkd": {
+   "1": {
+    "T_fit_even_fit_odd": [
+     0.6412,
+     0.5847
+    ],
+    "student_nt_kl": 1.0672,
+    "signal_nt_kl": 1.756,
+    "signal_top5_overlap": 0.4237,
+    "signal_acc": 55.33,
+    "spearman_student_vs_signal": 0.2864,
+    "acc_measured": 81.17,
+    "val_acc_last": 81.33333325386047
+   },
+   "2": {
+    "T_fit_even_fit_odd": [
+     0.6053,
+     0.5713
+    ],
+    "student_nt_kl": 1.1071,
+    "signal_nt_kl": 1.7783,
+    "signal_top5_overlap": 0.42,
+    "signal_acc": 58.0,
+    "spearman_student_vs_signal": 0.2478,
+    "acc_measured": 79.17,
+    "val_acc_last": 79.16666865348816
+   },
+   "3": {
+    "T_fit_even_fit_odd": [
+     0.6123,
+     0.5713
+    ],
+    "student_nt_kl": 1.0583,
+    "signal_nt_kl": 1.6843,
+    "signal_top5_overlap": 0.4503,
+    "signal_acc": 58.67,
+    "spearman_student_vs_signal": 0.3113,
+    "acc_measured": 80.33,
+    "val_acc_last": 80.16666769981384
+   }
+  },
+  "rollout": {
+   "1": {
+    "T_fit_even_fit_odd": [
+     0.6638,
+     0.6123
+    ],
+    "student_nt_kl": 0.964,
+    "signal_nt_kl": 1.2774,
+    "signal_top5_overlap": 0.5097,
+    "signal_acc": 70.33,
+    "spearman_student_vs_signal": 0.3135,
+    "acc_measured": 81.33,
+    "val_acc_last": 81.33333325386047
+   },
+   "2": {
+    "T_fit_even_fit_odd": [
+     0.6412,
+     0.6123
+    ],
+    "student_nt_kl": 0.9544,
+    "signal_nt_kl": 1.2439,
+    "signal_top5_overlap": 0.515,
+    "signal_acc": 70.83,
+    "spearman_student_vs_signal": 0.3068,
+    "acc_measured": 79.33,
+    "val_acc_last": 79.3333351612091
+   },
+   "3": {
+    "T_fit_even_fit_odd": [
+     0.6562,
+     0.5983
+    ],
+    "student_nt_kl": 0.954,
+    "signal_nt_kl": 1.2097,
+    "signal_top5_overlap": 0.522,
+    "signal_acc": 71.5,
+    "spearman_student_vs_signal": 0.3148,
+    "acc_measured": 80.83,
+    "val_acc_last": 80.66666722297668
+   }
+  }
+ },
+ "verdict": {
+  "P1": "positive",
+  "P2": "positive"
+ }
+}
