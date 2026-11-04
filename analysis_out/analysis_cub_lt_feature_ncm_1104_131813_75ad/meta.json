@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_feature_ncm_1104_131813_75ad",
+ "name": "cub_lt_feature_ncm",
+ "source_sha": "75adfe294de14e35186642063f0eb8e12fe9ecefa9057b9927e96b5f66b25799",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does the tail-accuracy gap between methods survive a head-free leave-one-out mean-cosine classifier on the students' pre-logit features (feature) or shrink (head)?",
+  "method": "leave-one-out nearest-class-mean (mean cosine) classifier on val pre-logit features; spread of method means; Spearman rank correlation with run bootstrap; paired t CI",
+  "paper": "Mensink et al. TPAMI 2013 (nearest class mean); Kang et al. ICLR 2020 (decoupling representation and classifier); Son et al. ECCV 2024 (MaskedKD)"
+ },
+ "seconds": 11.9
+}
