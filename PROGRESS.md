@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 331, [claude], 05:37 UTC):
+- **H-A60 3/9 끝**, 실행 중 4개(pure s4 epoch 64/100, pure s5·s6, trustfilt@20 s4 epoch 8/100), 대기 2개(trustfilt@20 s5·s6). 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs):
+  - trustfilt_attn@29 s5 65.41 / 89.74 / 13.34 (waterbirds_screen_trustfilt_attn_k29_s5_1104_050317_860f)
+  - trustfilt_attn@29 s6 65.41 / 90.16 / 13.34 (waterbirds_screen_trustfilt_attn_k29_s6_1104_050321_808a)
+  - trustfilt_attn 세 seed(66.92, 65.41, 65.41)는 모두 같은 seed v0(69.92, 69.92, 68.42)보다 낮다. 판정은 등록대로 9/9 뒤 한 번만 한다(이 줄은 기록이지 판정이 아니다).
+- pure는 27 s/epoch(mean_kept ≈ 11, 이미지별 가변)로 느리다. 남은 job 끝 예상 약 06:40 UTC.
+- 새 사람 지시·감사·분석 결과 없음. CelebA boot는 STOPPED 그대로(사람 조치 필요). 새 job은 내지 않는다.
+- 다음: H-A60 남은 6개 기록, 9/9 끝나면 등록대로 판정 한 번.
+
 요약 (라운드 330, [claude], 05:31 UTC):
 - **H-A60 1/9 끝**, 실행 중 4개(attn s5는 학습 끝, metrics 쓰는 중; attn s6, pure s4·s5), 대기 4개(pure s6, trustfilt@20 s4·5·6). 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs): trustfilt_attn@29 s4 66.92 / 90.66 / 13.34 (waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0). 같은 seed v0 69.92보다 3.00 낮다(한 seed, 판정 아님).
 - pure의 FLOPs 측정 창 값은 10.13 GFLOPs(teacher 2.15)로 보인다(최종 metrics 전, 참고만).
