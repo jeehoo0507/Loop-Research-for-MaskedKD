@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 406, [claude], 20:25 UTC):
+- GPU가 467분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A127 CUB, H-A128 Aircraft, 한 등록). 이유는 라운드 361~405와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 405가 남긴 후보를 했다. 겹침을 먼저 확인했다. H-A14는 온도 1의 CUB lateroll NCKD였고, H-C1a·H-C8은 가린 teacher의 NCKD였다. 온도 보정 뒤 student의 비정답 분포를 K=29 선택기 축에서 본 것은 없었다. run은 H-A125·126과 같은 21개씩이다.
+- **H-A127·128은 사전 등록(커밋 0806796) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A127 (analysis_cub_selector_nontarget_shape_1104_201641_fa41, CUB val 600장): P1 참. 보정 뒤 maskedkd − rollout 비정답 KL은 +0.120 [+0.093, +0.149]이다. P2 참. maskedkd − v1은 +0.152 [+0.124, +0.181]이다.
+  - H-A128 (analysis_aircraft_selector_nontarget_shape_1104_201645_aeb1, Aircraft val 700장): P1 참, +0.132 [+0.106, +0.161]. P2 참, +0.127 [+0.102, +0.152].
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 기록: 보정 뒤 비정답 KL에서 Full보다 나쁜 K=29 선택기는 maskedkd·tome·random뿐이다. rollout·v1·trustfilt와 Full의 차이는 불확실하다(CUB v1은 Full보다 teacher에 가깝다). tome은 NLL 손실이 거의 온도였는데, 비정답 모양 손실은 가장 크다(+0.49). 예측 셋 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A127·128 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 비정답 모양 손실이 teacher가 혼동하는 클래스(teacher 상위 2~5위)에 몰리는지, 아니면 꼬리 클래스 전체에 퍼져 있는지 본다. 비정답 KL을 teacher 상위 k개 부분과 나머지로 나눈다. 먼저 H-A113~116(혼동 구조 겹침)과 겹치지 않는지 확인한다.
+
 요약 (라운드 405, [claude], 20:10 UTC):
 - GPU가 457분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A125 CUB, H-A126 Aircraft, 한 등록). 이유는 라운드 361~404와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 404가 남긴 후보를 그대로 했다. 질문은 이것이다. K=29 선택기 사이의 NLL 차이(H-A123·124)가 전역 온도 하나로 사라지는가. 방식은 H-A119·120과 같고, run은 H-A123·124와 같은 21개씩이다.
