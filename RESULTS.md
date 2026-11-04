@@ -4,6 +4,11 @@
 - (없음. 감사 이력: 라운드 38 요청 NEEDS-MORE(증거 누락), 라운드 39 1/3부 FAIL(문구: rollout 대비 정확도 "지지 않는다"는 CI [−2.52, +5.58]로 입증되지 않음). 라운드 40에 문구를 "정확도 차이는 불확실"로 고쳐 1/3부를 다시 요청했다.)
 
 ## final (감사 전, Significant only 옮김)
+- [claude] 2026-11-04 라운드 339 **H-A64 분석 (학습 없음, 결과 표 숫자 아님, 사전 등록 235c3a7 그대로 한 번만):** analysis_cub_lt_target_timing_1104_072913_cb08. 게이트 2 final K=29 seed 1·2·3의 maskedkd·trustmask_v1 6 run, 스냅샷 e25·e50·final, H-A62와 같은 규칙·같은 val 600장.
+  - **P1 참 (주):** e25 v1 − maskedkd tail t_acc +0.110 [+0.072, +0.148] (head +0.090 [+0.053, +0.127]). **P2 거짓:** tail에서 차이의 final − e25 +0.001 [−0.031, +0.033] → 등록 규칙대로 "cub_lt에서도 목표 차이는 e25에 이미 있고 더 자라지 않는다(Waterbirds H-A54와 같은 시점 모양)".
+  - 기록: tail t_acc maskedkd e25 0.601 / e50 0.633 / final 0.608, v1 0.711 / 0.716 / 0.719 (두 arm 모두 거의 평평). head에서는 차이가 조금 자랐다(final − e25 +0.038 [+0.003, +0.075], maskedkd head t_acc 0.639 → 0.594).
+  - 기록: student 자신의 tail 정확도 차이(v1 − maskedkd s_acc)는 e25 +0.029 [+0.004, +0.051] → final +0.067 [+0.041, +0.093]로 자랐다(final − e25 +0.038 [+0.003, +0.073]). 즉 목표 차이가 e25에 먼저 있고, student tail 정확도 차이는 그 뒤에 벌어진다(시간 순서만, 인과 아님).
+  - 해석 (분석, 주장 아님): 게이트 2의 v1 > maskedkd(tail)는 학습 후반에 생기는 고리라기보다, e25 전에 이미 정해진 목표 품질 차이가 남은 학습 동안 student에 쌓인 모양과 맞는다. step-0 스냅샷은 API에 없어 더 앞은 볼 수 없다.
 - [claude] 2026-11-04 라운드 338 **H-A63 분석 (학습 없음, 결과 표 숫자 아님, 사전 등록 5d43ef6 그대로 한 번만):** analysis_cub_lt_head_pull_1104_071941_5e0e. H-A62와 같은 15 run·같은 규칙·같은 val. hpull = 가린 teacher의 head 클래스(0..99) 확률 질량 − full teacher의 그것. full teacher head 질량: head 이미지 0.960, tail 이미지 0.040.
   - **P1 참 (주):** maskedkd − v1 tail hpull +0.039 [+0.022, +0.056]. **P2 참:** 15 run Spearman(tail hpull, val tail 정확도) −0.56 (arm 수준 −0.70).
   - 같은 차이가 head 이미지에서는 −0.078 [−0.095, −0.061] (maskedkd가 head 이미지에서 head 질량을 더 잃는다). 모든 arm에서 hpull은 head 이미지 음수, tail 이미지 양수다 → 가린 teacher가 정답 클래스 질량을 잃고 나머지로 퍼지는 "평탄화"가 대부분이다. head 이미지 쪽 손실이 tail 이미지 쪽 증가의 두 배라, head 쪽으로 기우는 방향성은 이 지표로 보이지 않는다.

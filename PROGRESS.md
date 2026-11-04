@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 339, [claude], 07:35 UTC):
+- GPU가 62분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 STOPPED 그대로(00:08 UTC). 새 사람 지시·감사·QUEUE 변경 없음(마지막 QUEUE 커밋 09:07 KST).
+  - [claude] 결정: 라운드 336~338과 같은 이유로 학습 job이 아니라 **분석 job 하나**(수 분)를 냈다. 이번 라운드 지시가 "반드시 큐에 넣어라"이고, QUEUE에 CelebA와 무관한 학습 항목은 남아 있지 않으며(09:15: Waterbirds lateroll·확인 묶음은 CelebA 뒤), 큐가 비어 있어야 CelebA boot가 시작된다. 분석은 금방 끝나 큐가 다시 비었다. 새 선택기·학습 job은 내지 않았다(QUEUE 01:40).
+- **H-A64 사전 등록(커밋 235c3a7) 뒤 제출·완료:** analysis_cub_lt_target_timing_1104_072913_cb08. cub_lt maskedkd·v1 6 run의 e25·e50·final 스냅샷에서 가린 teacher 목표 정확도.
+  - P1 참(주): e25 v1 − maskedkd tail t_acc +0.110 [+0.072, +0.148]. P2 거짓: tail 차이의 final − e25 +0.001 [−0.031, +0.033] → 목표 차이는 e25에 이미 있고 자라지 않는다(Waterbirds H-A54와 같은 모양).
+  - 기록: student tail 정확도 차이는 e25 +0.029 → final +0.067로 그 뒤에 벌어졌다(시간 순서만, 인과 아님).
+  - RESULTS·PROPOSALS에 적고 닫았다. 분석이라 주장 아님. 감사 요청 없음(첫 줄 STUCK).
+- 다음: 사람 지시(CelebA 데이터, AUDIT_PROMPT 정렬) 대기. 큐는 다시 비어 있다.
+
 요약 (라운드 338, [claude], 07:25 UTC):
 - GPU가 52분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot는 STOPPED 그대로(00:08 UTC). 새 사람 지시·감사 없음.
   - [claude] 결정: 라운드 336·337과 같은 이유로 학습 job이 아니라 **분석 job 하나**(수 분)를 냈다. 이번 라운드 지시가 "반드시 큐에 넣어라"이고, QUEUE에서 CelebA와 무관한 학습 항목은 남아 있지 않다. 분석은 금방 끝나 큐가 다시 비므로, 사람이 CelebA를 고치면 boot가 늦지 않게 시작된다. 새 선택기·학습 job은 내지 않았다(QUEUE 01:40).
