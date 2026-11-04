@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mask_cost_fidelity_1104_164143_f8c7",
+ "name": "aircraft_mask_cost_fidelity",
+ "source_sha": "f8c796b88f0e9056fc74cc633adfaa1c003d526dca6d337fa2301192afd70def",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final, seeds 1-3), is the per-image accuracy cost of MaskedKD@29 relative to Full@196 larger on images where the masked teacher's soft label departs more from the full teacher's?",
+  "method": "keep-only masked teacher with each maskedkd student's own last-block CLS top-29; per-image KL quintiles; cost Q5 - Q1 with paired image bootstrap and per-seed t CI",
+  "paper": "Hinton et al. 2015 (KD); Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 8.3
+}
