@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_aug_targets_1104_135628_0c83",
+ "name": "cub_lt_aug_targets",
+ "source_sha": "0c837a26fa189acee382982632f7f2df0edf283268ac12c73db5c6b9b5265e39",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, does the teacher-region rules' deficit in masked-teacher tail true-class probability vs maskedkd (seen on clean val) shrink on training-style crop+flip views, and do augmented-view targets rank run tail accuracy better than clean-view targets?",
+  "method": "attention rollout (teacher all blocks, warped as the training cache; student all / blocks 6..11); last-block CLS attention; keep-only masked teacher on RandomResizedCrop+flip views; Spearman with run bootstrap; paired t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Szegedy et al. 2015 (RandomResizedCrop); Beyer et al. CVPR 2022 (consistent teaching: KD on the same augmented view); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 26.6
+}
