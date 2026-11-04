@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_ttopk_addone_1104_223210_648f",
+ "name": "aircraft_ttopk_addone",
+ "source_sha": "648fedd21f9331a6e13744eb9abdf07520e5fadaf404ab89d408c6d45851735b",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft (final Rollout@29, seeds 1-3), does each patch only in the teacher's own rollout top-29 restore less of the full teacher's non-target signal, when added alone to the shared patches, than each patch only in the student's rollout top-29, and does this single-patch gap track the set-level signal loss across images?",
+  "method": "teacher and student attention rollout maps on clean val; top-29 sets, intersection and differences; keep-only masked teacher on intersection plus one patch; non-target KL(full teacher || masked teacher); image bootstrap; Spearman; seed t CI",
+  "paper": "Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (dark knowledge); Zhao et al. CVPR 2022 (DKD, NCKD); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 23.7
+}

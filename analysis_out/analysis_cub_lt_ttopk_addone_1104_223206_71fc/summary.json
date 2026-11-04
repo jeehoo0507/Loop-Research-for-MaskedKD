@@ -1,0 +1,79 @@
+{
+ "n_val": 600,
+ "K": 29,
+ "n_images_P1": 600,
+ "P1_mean_dM_singlepatch_DT_minus_DR": [
+  0.0484,
+  0.0284,
+  0.0691
+ ],
+ "P2_spearman_dM_dG": [
+  0.5501,
+  0.4803,
+  0.6175
+ ],
+ "record": {
+  "mean_I": 17.023,
+  "mean_D": 11.977,
+  "mean_G_I": 2.4333,
+  "mean_dG": [
+   0.6184,
+   0.5174,
+   0.7177
+  ],
+  "within_DT_spearman_teacher_rollout_vs_G": [
+   0.0004,
+   1783
+  ],
+  "within_DR_spearman_student_rollout_vs_G": [
+   -0.0169,
+   1783
+  ],
+  "signal_nt_kl_T": 1.8643,
+  "per_seed_t_dM": [
+   0.0485,
+   0.0365,
+   0.0605,
+   3
+  ]
+ },
+ "per_seed": {
+  "1": {
+   "n_images_with_diff": 600,
+   "mean_I": 16.912,
+   "dM": 0.0446,
+   "share_dM_pos": 0.5483,
+   "mean_G_I_plus_DT_patch": 2.6004,
+   "mean_G_I_plus_DR_patch": 2.5464,
+   "mean_G_I": 2.428,
+   "dG": 0.6069,
+   "n_rows": 14506
+  },
+  "2": {
+   "n_images_with_diff": 599,
+   "mean_I": 17.157,
+   "dM": 0.047,
+   "share_dM_pos": 0.5693,
+   "mean_G_I_plus_DT_patch": 2.6107,
+   "mean_G_I_plus_DR_patch": 2.5564,
+   "mean_G_I": 2.4306,
+   "dG": 0.6178,
+   "n_rows": 14212
+  },
+  "3": {
+   "n_images_with_diff": 599,
+   "mean_I": 17.0,
+   "dM": 0.0539,
+   "share_dM_pos": 0.5609,
+   "mean_G_I_plus_DT_patch": 2.6214,
+   "mean_G_I_plus_DR_patch": 2.5657,
+   "mean_G_I": 2.4412,
+   "dG": 0.6304,
+   "n_rows": 14400
+  }
+ },
+ "verdict": {
+  "P1": "positive",
+  "P2": "positive"
+ }
+}
