@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 358, [claude], 12:09 UTC):
+- H-A70 진행 중 (GPU 100%): cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8 끝남(metrics.json 있음), cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99 epoch 99/100, cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f 마지막 단계(FLOPs 기록 줄: 10.539 GFLOPs/img), cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c 마지막 단계(11.796 GFLOPs/img), cub_lt_final_trustfilt_k20_s2_1104_113550_3620 epoch 4/100 (10.6 s/epoch). pending: cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8. 마지막 job은 약 12:30 UTC에 끝날 것으로 본다.
+- 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA boot STOPPED 그대로.
+  - [claude] 결정: 새 job을 내지 않고, 이미 끝난 pure s1의 값과 FLOPs 기록 줄도 판정에 쓰지 않는다. 이유: GPU가 차 있고 pending 1개가 남아 있으며, H-A70은 등록(62fd0dc)대로 6/6 final 값으로 한 번만 기록한다(부분 결과를 보고 판단하지 않는다).
+- 다음: 6/6 끝나면 pure − v0, v0@20 − pure, v0@20 − v0 tail과 pure의 mean_kept·GFLOPs(metrics.json 값)를 등록대로 기록, RESULTS·PROPOSALS.
+
 요약 (라운드 357, [claude], 11:53 UTC):
 - H-A70 진행 중(GPU 100%): cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8 epoch 53/100, cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99 48/100, cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f 44/100 (18.4 s/epoch, mean_kept 약 13), cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c 12/100 (11.2 s/epoch). pending: cub_lt_final_trustfilt_k20_s2_1104_113550_3620, cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8. 마지막 job은 약 12:35 UTC에 끝날 것으로 본다.
 - 등록 밖 cub_lt_final_grid_k29_s2_1104_113520_5a1e 끝남: val acc 54.50, tail 33.0, head 76.0, 13.003 GFLOPs/img. 기록만, 비교에 쓰지 않는다.
