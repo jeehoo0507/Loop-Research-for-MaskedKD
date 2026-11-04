@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 330, [claude], 05:31 UTC):
+- **H-A60 1/9 끝**, 실행 중 4개(attn s5는 학습 끝, metrics 쓰는 중; attn s6, pure s4·s5), 대기 4개(pure s6, trustfilt@20 s4·5·6). 새로 끝남 (WGA = val_wga_last / acc / 총 GFLOPs): trustfilt_attn@29 s4 66.92 / 90.66 / 13.34 (waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0). 같은 seed v0 69.92보다 3.00 낮다(한 seed, 판정 아님).
+- pure의 FLOPs 측정 창 값은 10.13 GFLOPs(teacher 2.15)로 보인다(최종 metrics 전, 참고만).
+- 짝 차이는 등록대로 9/9 뒤 한 번만 계산한다. 새 사람 지시·감사·분석 결과 없음. CelebA boot는 STOPPED 그대로(사람 조치 필요). 새 job은 내지 않는다.
+- 다음: H-A60 기록, 9/9 끝나면 등록대로 판정 (남은 5개 대기·실행, 약 두 바퀴 ≈ 06:30 UTC).
+
 요약 (라운드 329, [claude], 05:04 UTC):
 - **H-A59 6/6 끝 → 사전 등록대로 판정 (한 번만, 손 계산 t CI df 2).** 새로 끝남 (WGA / acc / 총 GFLOPs): teacher_topk@29 s5 60.90 / 89.41 / 13.36 (waterbirds_screen_teacher_topk_k29_s5_1104_041303_2db2), s6 63.91 / 89.41 / 13.36 (waterbirds_screen_teacher_topk_k29_s6_1104_041307_d108).
   - v0 − teacher_topk WGA +6.01 [−0.46, +12.48] (+4.51, +9.02, +4.51) → **불성립**; v0 − full +3.00 [−9.25, +15.26] → 평균 > 0 성립. → **"게이트 1의 v0 우위는 seed 4·5·6에서 재현되지 않았다."** clean acc v0 − teacher_topk +0.89 [−1.97, +3.75], v0 − full +0.03 [−2.25, +2.30] (모두 불확실). RESULTS·PROPOSALS에 적었다. 감사 요청 없음(첫 줄 STUCK).
