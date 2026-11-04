@@ -1,0 +1,193 @@
+{
+ "n_val": 600,
+ "n_valid": 600,
+ "n_dropped_singleton_class": 0,
+ "subsets": {
+  "late_gain": {
+   "ncm_pct_boot": [
+    1.556,
+    -0.056,
+    3.278
+   ],
+   "logit_pct_boot": [
+    0.167,
+    -1.278,
+    1.5
+   ],
+   "logit_minus_ncm_pct_boot": [
+    -1.389,
+    -3.333,
+    0.5
+   ]
+  },
+  "resid_loss": {
+   "ncm_pct_boot": [
+    0.222,
+    -1.389,
+    1.835
+   ],
+   "logit_pct_boot": [
+    0.333,
+    -0.944,
+    1.667
+   ],
+   "logit_minus_ncm_pct_boot": [
+    0.111,
+    -1.833,
+    1.89
+   ]
+  }
+ },
+ "per_seed": {
+  "late_gain": {
+   "ncm": [
+    2.167,
+    1.167,
+    1.333
+   ],
+   "logit": [
+    1.333,
+    -0.5,
+    -0.333
+   ],
+   "logit_minus_ncm": [
+    -0.834,
+    -1.667,
+    -1.666
+   ]
+  },
+  "resid_loss": {
+   "ncm": [
+    1.167,
+    1.0,
+    -1.5
+   ],
+   "logit": [
+    0.5,
+    -0.5,
+    1.0
+   ],
+   "logit_minus_ncm": [
+    -0.667,
+    -1.5,
+    2.5
+   ]
+  }
+ },
+ "per_seed_t": {
+  "late_gain": {
+   "ncm": [
+    1.5557,
+    0.2243,
+    2.887,
+    3
+   ],
+   "logit": [
+    0.1667,
+    -2.3513,
+    2.6846,
+    3
+   ],
+   "logit_minus_ncm": [
+    -1.389,
+    -2.5831,
+    -0.1949,
+    3
+   ]
+  },
+  "resid_loss": {
+   "ncm": [
+    0.2223,
+    -3.4891,
+    3.9337,
+    3
+   ],
+   "logit": [
+    0.3333,
+    -1.5641,
+    2.2308,
+    3
+   ],
+   "logit_minus_ncm": [
+    0.111,
+    -5.1321,
+    5.3541,
+    3
+   ]
+  }
+ },
+ "acc": {
+  "lateroll": {
+   "1": {
+    "ncm": 69.33,
+    "logit": 82.33,
+    "logit_all_measured": 82.33,
+    "val_acc_last": 82.33333230018616
+   },
+   "2": {
+    "ncm": 69.17,
+    "logit": 80.33,
+    "logit_all_measured": 80.33,
+    "val_acc_last": 80.33333420753479
+   },
+   "3": {
+    "ncm": 70.17,
+    "logit": 81.5,
+    "logit_all_measured": 81.5,
+    "val_acc_last": 81.49999976158142
+   }
+  },
+  "full": {
+   "1": {
+    "ncm": 70.5,
+    "logit": 82.83,
+    "logit_all_measured": 82.83,
+    "val_acc_last": 82.833331823349
+   },
+   "2": {
+    "ncm": 70.17,
+    "logit": 79.83,
+    "logit_all_measured": 79.83,
+    "val_acc_last": 79.83333468437195
+   },
+   "3": {
+    "ncm": 68.67,
+    "logit": 82.5,
+    "logit_all_measured": 82.5,
+    "val_acc_last": 82.4999988079071
+   }
+  },
+  "ce": {
+   "1": {
+    "ncm": 67.17,
+    "logit": 81.0,
+    "logit_all_measured": 81.0,
+    "val_acc_last": 81.00000023841858
+   },
+   "2": {
+    "ncm": 68.0,
+    "logit": 80.83,
+    "logit_all_measured": 80.83,
+    "val_acc_last": 80.83333373069763
+   },
+   "3": {
+    "ncm": 68.83,
+    "logit": 81.83,
+    "logit_all_measured": 81.83,
+    "val_acc_last": 81.83333277702332
+   }
+  }
+ },
+ "verdict": {
+  "late_gain": {
+   "ncm": "uncertain",
+   "logit_minus_ncm": "uncertain"
+  },
+  "resid_loss": {
+   "ncm": "uncertain",
+   "logit_minus_ncm": "uncertain"
+  },
+  "P1_late_gain_in_features": false,
+  "P2_resid_loss_in_features": false
+ }
+}

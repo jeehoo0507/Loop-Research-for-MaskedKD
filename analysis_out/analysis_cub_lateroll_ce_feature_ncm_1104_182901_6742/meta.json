@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lateroll_ce_feature_ncm_1104_182901_6742",
+ "name": "cub_lateroll_ce_feature_ncm",
+ "source_sha": "6742ae7f63e25c75ace7d045e83e996e000b4d25d374e73a2c72bcd9b89bdb43",
+ "status": "done",
+ "meta": {
+  "question": "on CUB (final, seeds 1-3), does same-cost lateroll@29 keep a feature (leave-one-out NCM) gain over CE, and how much of the Full@196 feature gain is left (Full - lateroll)?",
+  "method": "pre-logit features of each student; leave-one-out cosine nearest-class-mean probe on val; paired per-image differences lateroll - CE and Full - lateroll, image bootstrap and seed t CI",
+  "paper": "Allen-Zhu & Li ICLR 2023 (multi-view KD); Kang et al. ICLR 2020 (NCM); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB)"
+ },
+ "seconds": 6.8
+}

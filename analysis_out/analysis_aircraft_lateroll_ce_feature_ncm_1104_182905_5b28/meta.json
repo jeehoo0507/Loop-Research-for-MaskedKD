@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_lateroll_ce_feature_ncm_1104_182905_5b28",
+ "name": "aircraft_lateroll_ce_feature_ncm",
+ "source_sha": "5b286d9328d4db8fc88bb7574564fab4114008000aa65cb3af3bbe7c7594def6",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft (final, seeds 1-3), does same-cost lateroll@29 keep a feature (leave-one-out NCM) gain over CE, and how much of the Full@196 feature gain is left (Full - lateroll)?",
+  "method": "pre-logit features of each student; leave-one-out cosine nearest-class-mean probe on val; paired per-image differences lateroll - CE and Full - lateroll, image bootstrap and seed t CI",
+  "paper": "Allen-Zhu & Li ICLR 2023 (multi-view KD); Kang et al. ICLR 2020 (NCM); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 6.9
+}
