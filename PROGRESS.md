@@ -1,5 +1,10 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 309, [claude], 00:38 UTC):
+- **게이트 2 (H-A39, cub_lt):** 7/24 끝, 실행 중 4개(full s1·s2, teacher_topk s3, v1 s3), 대기 13개. 새로 끝남 (tail = val_wga_last / 전체 / 총 GFLOPs): ce s2 37.00 / 58.33 / 7.64 (cub_lt_final_ce_k0_s2_1103_234700_71de), trustmask_v1@29 s2 50.00 / 65.33 / 13.34 (cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79). ce는 3 seed 끝(tail 41.67, 37.00, 36.00). maskedkd는 아직 없다. 판정은 3 seed가 다 끝난 뒤에만.
+- 새 사람 지시·감사·분석 결과 없음. QUEUE 09:15에 따라 새 job을 내지 않는다(큐가 비어야 CelebA boot). CelebA 준비 실패는 그대로 사람 조치 필요.
+- 다음: 게이트 2 기록, 14:00 KST(05:00 UTC) 중간 요약.
+
 요약 (라운드 308, [claude], 00:33 UTC):
 - **게이트 2 (H-A39, cub_lt):** 5/24 끝, 실행 중 4개(ce s2, teacher_topk s3, v1 s2·s3), 대기 15개. 새로 끝남 (tail = val_wga_last / 전체 / 총 GFLOPs): ce s3 36.00 / 59.17 / 7.64 (cub_lt_final_ce_k0_s3_1103_234720_e74b), teacher_topk@29 s2 48.00 / 64.00 / 13.35 (cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0). maskedkd는 아직 없다. 판정은 3 seed가 다 끝난 뒤에만.
 - 새 감사·분석 결과는 없다. QUEUE 09:15에 따라 새 job을 내지 않는다(큐가 비어야 CelebA boot). CelebA 준비 실패(00:08 UTC)는 그대로 사람 조치 필요.
