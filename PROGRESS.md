@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 360, [claude], 13:05 UTC):
+- GPU가 30분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A71)를 냈다. 이유: (1) 이번 라운드 지시가 작업이나 분석을 반드시 큐에 넣으라고 한다. (2) QUEUE 01:40이 새 선택기를 금지하고, 등록 규칙상 결과를 보고 seed·K·방법을 더할 수 없다. QUEUE 목록에 남은 학습 job도 없다(CelebA 제외). (3) 학습 없는 분석은 CelebA boot를 오래 막지 않는다(17초짜리 분석).
+- **H-A71 사전 등록(커밋 ebc3673) 뒤 제출, 결과 기록 한 번:** analysis_cub_lt_decomp_targets_1104_125901_660e. H-A62의 연결(가린 teacher tail 목표 정확도 ↔ run tail 정확도)을, H-A62 뒤에 학습된 cub_lt v0 분해 12 run에서 표본 밖으로 다시 쟀다.
+  - P1 참: 새 12 run Spearman 0.814 (18 run 0.571). P2 참: pure − v0 tail t_acc −0.260 [−0.309, −0.212].
+  - 단서: 연결의 상당 부분은 남긴 토큰 수(pure 약 13, v0@20 20)에서 온다. K=29 arm끼리 보면 teacher 영역(v0, attn)이 목표 정확도를 낮추는데(v0 − lateroll −0.138, attn − maskedkd −0.049) tail 정확도는 낮추지 않았다(네 arm Spearman 0.40, 손 계산). RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 359, [claude], 12:25 UTC):
 - **H-A70 6/6 끝 → 사전 등록(62fd0dc)대로 기록 한 번 (tail은 손 계산 t CI df 2, 전체 정확도는 harness.compare).** pure tail: cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8 46.67, cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99 39.00, cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f 41.00 (mean_kept 12.80, 10.54 GFLOPs/img). v0@20 tail: cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c 44.00, cub_lt_final_trustfilt_k20_s2_1104_113550_3620 42.00, cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8 42.67 (11.80 GFLOPs/img).
   - 기록 규칙: pure − v0 −5.11 [−10.63, +0.41] → 평균 < −2라 "같은 tail을 더 싸게"가 아니다 (GFLOPs 10.54 < 12.99는 맞음). 예측 중 GFLOPs는 맞고 tail(확신 낮음)은 틀렸다.
