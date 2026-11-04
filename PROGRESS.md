@@ -1,5 +1,12 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 306, [claude], 00:20 UTC): QUEUE 11-04 09:15 KST(순서 수정 — CelebA 먼저, Waterbirds lateroll은 CelebA 뒤 확인 묶음과 함께, 큐가 비어야 CelebA boot 시작)를 라운드 305가 놓쳤다(09:15 커밋 f4efa3d가 라운드 305 커밋보다 앞섬).
+- [claude] 결정: 아직 시작 안 한 H-A57 Waterbirds lateroll@29·12 s1·2·3 pending json 6개(waterbirds_final_lateroll_k29_s1_1104_001050_b396, waterbirds_final_lateroll_k29_s2_1104_001103_c94e, waterbirds_final_lateroll_k29_s3_1104_001107_629b, waterbirds_final_lateroll_k12_s1_1104_001128_463f, waterbirds_final_lateroll_k12_s2_1104_001132_d386, waterbirds_final_lateroll_k12_s3_1104_001137_0de9)를 지웠다. 이유: 09:15 지시대로 게이트 2 뒤 큐가 비어야 CelebA boot가 시작된다. H-A57 사전 등록은 PROPOSALS에 그대로 두고, CelebA가 끝난 뒤 확인 묶음(seed 4·5·6)과 함께 같은 run 목록으로 다시 낸다(결과 전이므로 등록 유효).
+- **Waterbirds tome@29 s2·s3 끝:** tome@29 WGA 51.38 / acc 90.21 (s1 48.87, s2 54.89, s3 50.38). 기록: v0 − tome WGA +21.30 [+12.67, +29.93], acc +0.72 [−2.11, +3.55]; maskedkd − tome WGA −12.79 [−22.68, −2.90]. RESULTS에 적었다(판정 아님).
+- **게이트 2:** 2/24 끝, 실행 중 4개(ce s1·s3, teacher_topk s2, v1 s2), 대기 18개. 판정 안 함.
+- **CelebA:** 00:08 UTC 데이터 준비 실패(stage2_boot.log) 그대로 → 사람 조치 필요. 게이트 2가 끝나 큐가 비면 루프가 다시 시도하는지는 루프 몫. 나는 prepare_data를 돌리지 않는다(무인 실행에서 막힘).
+- 다음: 게이트 2 진행 기록, CelebA 사전 등록(H-A58 초안, 제출 전 커밋), 14:00 KST(05:00 UTC) 중간 요약.
+
 ## 09:00 KST 아침 요약 (라운드 305, [claude], 00:15 UTC, 16:00 발표용)
 **게이트 1 (H-A37, Waterbirds final K=29, val WGA, seed 3/3 끝, 판정 한 번):** P1 v1 − teacher_topk −2.01 [−6.32, +2.31] → **불성립** (v1의 우위가 보이지 않음, 차이는 불확실). P2 v1 − maskedkd +23.81 [+22.73, +24.89] → **성립**. 기록 v1 − rollout +0.25 [−3.65, +4.14] → "처방은 rollout이지 신뢰 가중치가 아니다". WGA 평균: v0 72.68, Full 67.42, teacher_topk 64.41, v1 62.40, rollout 62.16, frozen 61.40, maskedkd 38.59. **사후 관찰(등록 밖, 주장 아님):** v0(trustfilt) − teacher_topk +8.27 [+6.41, +10.13], − rollout +10.52 [+5.58, +15.47], − Full +5.26 [+3.40, +7.12] (비용 0.31배) → 후보 v0. 확인은 새 seed 4·5·6 묶음과 lateroll 대조(H-A57) 뒤.
 **게이트 3 (H-A38, K=29, seed 3/3):** online maskedkd − frozen(step-0 student) −22.81 [−26.69, −18.93] → **"고리" 성립**. frozen − rollout −0.75 [−9.30, +7.80] (차이는 불확실). frozen은 1.18배 비용(메커니즘 시험).
