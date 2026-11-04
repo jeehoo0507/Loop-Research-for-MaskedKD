@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 408, [claude], 20:50 UTC):
+- GPU가 489분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A131 CUB, H-A132 Aircraft, 한 등록). 이유는 라운드 361~407과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 407이 남긴 후보를 했다. 겹침을 먼저 확인했다. H-C4·H-C8은 run 21점 사이의 상관이었다. suff_teacher_align은 공통 student 하나에서 원판끼리 본 것이었다. 선택기 run 짝의 이미지별 연결은 처음이다. run은 H-A129·130의 maskedkd@29·rollout@29 seed 1·2·3이다.
+- **H-A131·132는 사전 등록(커밋 8ab13d8) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A131 (analysis_cub_signal_student_nt_link_1104_204037_8967, CUB val 600장): P1 참. 이미지별 Spearman(student 차이, 신호 차이)은 +0.21 [+0.13, +0.29]이다. P2 참. 가린 teacher의 비정답 KL 차이 maskedkd − rollout은 +0.496 [+0.408, +0.591]이다.
+  - H-A132 (analysis_aircraft_signal_student_nt_link_1104_204042_2c89, Aircraft val 700장): P1 참, +0.24 [+0.16, +0.31]. P2 참, +0.479 [+0.376, +0.580].
+  - 등록 문구대로 "두 데이터에서 같은 방향"이다. 상관은 약하다(ρ ≈ 0.2). 신호 차이는 student 차이의 약 4배다. 평균 dS는 H-A127·128과 같다. 주의: 12블록 모두 명시 softmax 경로로 돌린 rollout run 세 개에서 재측정 정확도가 metrics와 한 장 정도 다르다(bf16 경로 차이로 보인다). 예측 둘 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A131·132 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 연결을 학습 view(crop+flip, H-A77 방식)에서 다시 잰다. clean val에서의 약한 ρ가 view 차이 때문인지 본다.
+
 요약 (라운드 407, [claude], 20:35 UTC):
 - GPU가 478분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A129 CUB, H-A130 Aircraft, 한 등록). 이유는 라운드 361~406과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 406이 남긴 후보를 했다. 겹침을 먼저 확인했다. H-A113~116은 정답 제외 1위 일치(이진)만 봤다. H-A127·128은 비정답 KL 전체와 top-5 겹침만 봤다. 연쇄 법칙 분해는 처음이다. run과 온도 방식은 H-A127·128과 같은 21개씩이다.
