@@ -5,9 +5,19 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 1. **게이트 1 (Waterbirds final K=29, 3/3 seed, 등록 H-A37):** P1 v1 − teacher_topk −2.01 [−6.32, +2.31] → 불성립(차이는 불확실). P2 v1 − maskedkd +23.81 [+22.73, +24.89] → 성립. MaskedKD WGA 38.6, 다른 선택(rollout, teacher_topk, v1)은 62~64.
 2. **게이트 1 사후 관찰 (등록 밖, 주장 아님):** v0(trustfilt) WGA 72.68. v0 − teacher_topk +8.27 [+6.41, +10.13], v0 − Full@196 +5.26 [+3.40, +7.12] (Full 대비 GFLOPs 0.31배), v0 − tome +21.30 [+12.67, +29.93]. H-A57: v0 − lateroll K=29 +8.77 [+4.07, +13.47], K=12 +17.04 [+14.19, +19.89] → v0의 몫은 lateroll이 아니라 teacher 영역 필터. **확인 실험 H-A59 (seed 4·5·6): 6/6 끝, 판정 불성립** (05:05 UTC 갱신): v0 − teacher_topk WGA +6.01 [−0.46, +12.48] (세 seed 모두 양수, CI 하한 < 0), v0 − full +3.00 [−9.25, +15.26] → 등록 문구대로 "게이트 1의 v0 우위는 seed 4·5·6에서 재현되지 않았다". v0는 사후 관찰로 남는다. 분해 H-A60 (9/9 끝, 라운드 335 판정): attn − v0 −3.51 [−5.67, −1.35] → "lateroll도 필요"; pure − v0 −4.76 [−7.61, −1.91] → 더 싸게 같은 강건성은 아님.
 3. **게이트 3 (Waterbirds K=29, 3/3, 등록 H-A38):** online maskedkd − frozen −22.81 [−26.69, −18.93] → "고리" 성립(학습 중 student의 마지막 층 attention을 따라가는 것이 소수 그룹 붕괴를 만든다). frozen − rollout −0.75 [−9.30, +7.80] (불확실). frozen은 비용 1.18배라 메커니즘 시험이다. **cub_lt 재시험 H-A66 (3/3, 라운드 344 갱신):** online − frozen tail +2.22 [−1.22, +5.66] → 불성립(차이는 불확실), 평균 ≥ 0 → 등록 문구대로 "cub_lt에서는 물려받음에 가깝다". frozen − rollout tail −7.00 [−10.00, −4.00]. 즉 "고리"는 Waterbirds에서만 보였다.
-4. **게이트 2 (cub_lt final K=29, 24/24, 등록 H-A39, tail 정확도):** P1 v1 − maskedkd +6.33 [+1.72, +10.94] → 성립. P2 v1 − teacher_topk +4.22 [−0.63, +9.08] → 평균 > 0으로 성립(CI 0 포함). P3 v0 − maskedkd +3.33 [−3.44, +10.11] → 불성립(차이는 불확실) → v0 사후 관찰은 cub_lt에서 재현되지 않았다. Full − CE tail +8.11 [+4.66, +11.57].
+4. **게이트 2 (cub_lt final K=29, 24/24, 등록 H-A39, tail 정확도):** P1 v1 − maskedkd +6.33 [+1.72, +10.94] → 성립. P2 v1 − teacher_topk +4.22 [−0.63, +9.08] → 평균 > 0으로 성립(CI 0 포함). P3 v0 − maskedkd +3.33 [−3.44, +10.11] → 불성립(차이는 불확실) → v0 사후 관찰은 cub_lt에서 재현되지 않았다. Full − CE tail +8.11 [+4.66, +11.57]. **lateroll 대조 H-A67 (3/3, 라운드 348, 기록):** v0 − lateroll tail −2.44 [−4.96, +0.07] → 차이는 불확실(평균 음수, Waterbirds H-A57 +8.77과 반대 방향); lateroll − maskedkd +5.78 [+1.52, +10.04] (같은 12.99 GFLOPs).
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
+
+요약 (라운드 348, [claude], 09:10 UTC):
+- **H-A67 3/3 끝 → 사전 등록(603e950)대로 기록 한 번 (손 계산 t CI df 2, 전체 정확도는 harness.compare로 확인해 일치).** lateroll tail: cub_lt_final_lateroll_k29_s1_1104_084157_2b15 51.67, cub_lt_final_lateroll_k29_s2_1104_084204_9f09 49.33, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8 48.33.
+  - v0 − lateroll tail −2.44 [−4.96, +0.07] → 등록 문구대로 "cub_lt에서 v0와 lateroll의 차이는 불확실". 예측(평균 > 0) 틀림, 세 seed 모두 음수.
+  - 기록: lateroll − rollout tail +1.00 [−4.05, +6.05]; lateroll − maskedkd tail +5.78 [+1.52, +10.04]; 전체 정확도 v0 − lateroll −0.61 [−3.52, +2.30], lateroll − maskedkd +2.94 [+0.90, +4.99]; GFLOPs/img v0 13.34, lateroll 12.99.
+  - 읽기: Waterbirds에서는 teacher 영역이 lateroll 위에 더했지만(H-A57), cub_lt에서는 그런 근거가 없다. RESULTS·PROPOSALS에 적고 닫았다. 14:00 요약 4번에 한 줄 더했다. 감사 요청 없음(첫 줄 STUCK).
+- 등록 밖 cub_lt_final_center_k29_s1_1104_084157_57ad (acc 61.83, tail 43.33)는 기록만, 비교에 쓰지 않는다.
+- 큐 비어 있음, GPU 0%. CelebA는 data/에 없고, 새 사람 지시·감사 없음(QUEUE·AUDIT.md 마지막 커밋 00:18 UTC).
+  - [claude] 결정: 새 job을 내지 않는다. 이유: (1) QUEUE 09:15는 CelebA boot를 위해 큐를 비워 두라고 한다. (2) QUEUE에서 CelebA와 무관하게 남은 학습 항목(Waterbirds lateroll·확인 묶음)은 CelebA 뒤로 미뤄져 있다. (3) cub_lt에서 빠진 대조군은 이번으로 채웠다. 가장 보수적인 선택은 사람 조치(CelebA 데이터, AUDIT_PROMPT 정렬)를 기다리는 것이다.
+- 다음: 사람 지시 대기. CelebA boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
 
 요약 (라운드 347, [claude], 08:59 UTC):
 - H-A67 job 3개 진행 중(GPU 100%, pending 없음): cub_lt_final_lateroll_k29_s1_1104_084157_2b15 epoch 80/100, cub_lt_final_lateroll_k29_s2_1104_084204_9f09 약 72/100, cub_lt_final_lateroll_k29_s3_1104_084209_a3f8 64/100. 약 9.7 s/epoch → 마지막 job은 약 09:05 UTC에 끝날 것으로 본다.
