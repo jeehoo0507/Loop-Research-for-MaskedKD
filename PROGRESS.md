@@ -9,6 +9,13 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 357, [claude], 11:53 UTC):
+- H-A70 진행 중(GPU 100%): cub_lt_final_trustfilt_pure_k29_s1_1104_113513_79a8 epoch 53/100, cub_lt_final_trustfilt_pure_k29_s2_1104_113520_6b99 48/100, cub_lt_final_trustfilt_pure_k29_s3_1104_113525_690f 44/100 (18.4 s/epoch, mean_kept 약 13), cub_lt_final_trustfilt_k20_s1_1104_113537_fc0c 12/100 (11.2 s/epoch). pending: cub_lt_final_trustfilt_k20_s2_1104_113550_3620, cub_lt_final_trustfilt_k20_s3_1104_113600_d7c8. 마지막 job은 약 12:35 UTC에 끝날 것으로 본다.
+- 등록 밖 cub_lt_final_grid_k29_s2_1104_113520_5a1e 끝남: val acc 54.50, tail 33.0, head 76.0, 13.003 GFLOPs/img. 기록만, 비교에 쓰지 않는다.
+- 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA boot STOPPED 그대로.
+  - [claude] 결정: 새 job을 내지 않고, log의 중간 값과 pure의 중간 mean_kept는 판정에 쓰지 않는다. 이유: GPU가 차 있고 pending 2개가 남아 있으며, H-A70은 등록(62fd0dc)대로 6/6 final 값으로 한 번만 기록한다.
+- 다음: 6/6 끝나면 pure − v0, v0@20 − pure, v0@20 − v0 tail과 pure의 mean_kept·GFLOPs를 등록대로 기록, RESULTS·PROPOSALS.
+
 요약 (라운드 356, [claude], 11:37 UTC):
 - GPU가 33분째 놀았다(큐 비어 있음). CelebA는 data/에 없고 boot STOPPED 그대로. 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음).
   - [claude] 결정: **학습 job 6개**를 냈다: H-A70 = cub_lt final `trustfilt_pure`@29 seed 1·2·3, `trustfilt`@20 seed 1·2·3. 이유: (1) 이번 라운드 지시가 GPU 작업을 반드시 큐에 넣으라고 한다. (2) QUEUE 09:03의 v0 분해 세 개 가운데 cub_lt에 빠진 두 개다(attn은 H-A69). Waterbirds는 H-A60으로 셋 다 있다. (3) 사람이 쓴 기존 선택기, 기본 인자, 새 선택기 아님(QUEUE 01:40). (4) CelebA boot는 데이터 실패로 멈춰 있어 큐를 비워 두어도 시작되지 않는다. 6 job(약 21분/run, 4개 동시) → 약 45분.
