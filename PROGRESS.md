@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 407, [claude], 20:35 UTC):
+- GPU가 478분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A129 CUB, H-A130 Aircraft, 한 등록). 이유는 라운드 361~406과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 406이 남긴 후보를 했다. 겹침을 먼저 확인했다. H-A113~116은 정답 제외 1위 일치(이진)만 봤다. H-A127·128은 비정답 KL 전체와 top-5 겹침만 봤다. 연쇄 법칙 분해는 처음이다. run과 온도 방식은 H-A127·128과 같은 21개씩이다.
+- **H-A129·130은 사전 등록(커밋 7f65938) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A129 (analysis_cub_selector_nontarget_split_1104_202759_5a49, CUB val 600장): P1 참. maskedkd − rollout의 상위 5 쪽(질량 + 안쪽 모양)은 +0.076 [+0.051, +0.102]이다. P2 참. 나머지 쪽은 +0.044 [+0.037, +0.051]이다. 앞쪽 비율은 0.64 [0.55, 0.70]이다.
+  - H-A130 (analysis_aircraft_selector_nontarget_split_1104_202803_57bc, Aircraft val 700장): P1 참, +0.120 [+0.094, +0.147]. P2 참, +0.011 [+0.009, +0.014]. 비율은 0.91 [0.89, 0.93]이다.
+  - 등록 문구대로 "두 데이터에서 같은 방향: 주로 혼동 상위 클래스"이다. 분해 합은 H-A127·128과 같다(잔차 0). 주의: teacher가 상위 5에 두는 비정답 질량이 이미 크다(p(H) 0.81·0.91). 그래서 비율은 teacher 분포가 몰린 것을 반영한다. CUB에서는 질량당 꼬리 손실도 작지 않다. 예측 셋 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A129·130 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 비정답 모양 손실이 이미지별 가린 teacher 자신의 상위 5 손실(H-C1a·H-C8 계열의 학습 신호)과 이미지 수준에서 상관하는지 본다. 즉 "학습 신호에서 잃은 혼동 구조가 student에서 잃은 것과 같은 이미지인가"이다. 먼저 H-C1a·H-C8과 겹치는지 확인한다.
+
 요약 (라운드 406, [claude], 20:25 UTC):
 - GPU가 467분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다. QUEUE의 마지막 항목은 09:15 KST이고 AUDIT.md도 바뀌지 않았다. CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**를 냈다(H-A127 CUB, H-A128 Aircraft, 한 등록). 이유는 라운드 361~405와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 405가 남긴 후보를 했다. 겹침을 먼저 확인했다. H-A14는 온도 1의 CUB lateroll NCKD였고, H-C1a·H-C8은 가린 teacher의 NCKD였다. 온도 보정 뒤 student의 비정답 분포를 K=29 선택기 축에서 본 것은 없었다. run은 H-A125·126과 같은 21개씩이다.
