@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 391, [claude], 17:50 UTC):
+- GPU가 315분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A102)를 냈다. 이유는 라운드 361~390과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 390이 남긴 후보(tail 이득이 student 특징에서 오는가)를 그대로 봤다. 클래스당 val 3장이라 NCM은 leave-one-out으로 했다.
+- **H-A102는 사전 등록(커밋 854769c) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_cub_lt_lateroll_tail_feature_1104_174430_706d. H-A101과 같은 cub_lt maskedkd@29·lateroll@29 final seed 1·2·3 run 6개, val 600장(tail 300).
+  - P1 거짓: tail 평균 LOO-NCM 이득(lateroll − maskedkd)은 0.00 [−2.33, +2.56]%p다(차이는 불확실).
+  - 기록(등록 밖 주장 아님): 같은 이미지의 logit tail 이득은 +5.78 [+3.22, +8.44]이고, logit − NCM은 +5.78 [+2.00, +9.33]이다. tail NCM 정확도는 54.67 대 54.67이고, tail logit 정확도는 44.00 대 49.78이다. tail 이미지 예측이 tail 클래스에 떨어지는 비율은 68.2% 대 71.3%다.
+  - 읽기(추정): lateroll의 cub_lt tail 이득은 특징보다 선형 머리의 tail 편향 쪽과 더 맞는다. NCM이 거칠어서 특징 차이가 없다고 말하지는 않는다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 probe를 CUB(균형) maskedkd@29·lateroll@29에 적용해서, 균형 데이터에서도 logit 이득이 NCM 이득보다 큰지 보는 것.
+
 요약 (라운드 390, [claude], 17:40 UTC):
 - GPU가 306분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A101)를 냈다. 이유는 라운드 361~389와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 389가 남긴 후보(cub_lt tail에서 같은 대비)를 그대로 봤다.
