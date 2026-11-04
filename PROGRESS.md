@@ -1,5 +1,13 @@
 STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31]) — 064cef4 묶음 수정 뒤 라운드 304에 재요청했으나 AUDIT.md(00:06 UTC)가 다시 NEEDS-MORE ×3. REASON은 여섯 run·산술·selector·lock이 모두 맞는다고 하면서 무엇이 부족한지 말하지 않는다. AUDIT_PROMPT(평균 정확도 주 지표)와 QUEUE 08:50의 WGA 감사 기준이 충돌하는 것으로 보인다. 사람이 AUDIT_PROMPT를 맞출 때까지 재요청하지 않는다.
 
+요약 (라운드 326, [claude], 04:14 UTC):
+- GPU가 31분째 놀았다(큐 비어 있음). CelebA boot는 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로다(BOOT_STATUS). prepare_data는 내가 실행할 수 없어 사람 조치가 필요하다. 새 사람 지시·감사·분석 결과 없음.
+- **H-A59 사전 등록(커밋 e2c7790) 뒤 6 job 제출:** QUEUE 08:58 (4) 확인 실험의 핵심(Waterbirds K=29, seed 4·5·6). waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 (실행 중), waterbirds_screen_trustfilt_k29_s5_1104_041250_8224, waterbirds_screen_trustfilt_k29_s6_1104_041254_004f, waterbirds_screen_teacher_topk_k29_s4_1104_041258_c453, waterbirds_screen_teacher_topk_k29_s5_1104_041303_2db2, waterbirds_screen_teacher_topk_k29_s6_1104_041307_d108. full@196 s4·5·6은 이미 있는 Waterbirds screen run 3개를 쓴다. 같은 teacher_sha·lr·epoch이고, 다시 내려 하자 harness가 중복으로 막았다.
+  - 판정 (QUEUE 그대로, 6 job이 다 끝난 뒤 한 번만): v0 − teacher_topk WGA CI 하한 > 0 그리고 v0 − full 평균 > 0 → 게이트 1의 v0 결과를 주장으로 쓸 수 있다.
+  - [claude] 결정: QUEUE 09:15는 "확인 묶음은 CelebA가 끝난 뒤"였다. 하지만 CelebA boot가 실패로 멈춰 큐를 비워 둬도 시작되지 않고, 이번 라운드 지시가 "반드시 큐에 넣어라"다. 라운드 322(H-A57)와 같은 이유로, CelebA에 의존하지 않는 다음 항목 가운데 가장 작은 핵심 묶음(6 job, 두 바퀴 안쪽)만 냈다. 분해 세 변형(9 job)은 내지 않았다. 사람이 CelebA를 고쳤을 때 boot가 늦게 시작되지 않게 하려는 것이다.
+  - [claude] 결정: harness는 final을 seed 1·2·3으로만 받는다(FINAL_SEEDS). QUEUE가 요구한 "새 seed 4·5·6"은 tier screen으로 냈다. Waterbirds screen = final = 100 epoch·같은 recipe라 tier 이름만 다르다. 이 run들은 승격 screen으로 쓰지 않는다. 사람이 final tier를 원하면 FINAL_SEEDS를 바꿔야 한다.
+- 다음: H-A59 결과 기록(6/6 끝나면 판정 한 번), 14:00 KST(05:00 UTC) 중간 요약, CelebA 상태 확인.
+
 요약 (라운드 325, [claude], 03:40 UTC):
 - **H-A57 (Waterbirds lateroll) 6/6 끝.** 새로 끝남 (WGA / acc / 총 GFLOPs): lateroll@12 s2 45.11 / 88.07 / 10.07 (waterbirds_final_lateroll_k12_s2_1104_025021_d386), lateroll@12 s3 50.38 / 88.82 / 10.07 (waterbirds_final_lateroll_k12_s3_1104_025026_0de9).
 - **K=12 기록 (손 계산 t CI df 2):** v0 − lateroll WGA +17.04 [+14.19, +19.89] (K=29 +8.77보다 큼), clean acc +1.70 [+1.03, +2.36]. lateroll − rollout −4.51 [−17.60, +8.58] (불확실), lateroll − maskedkd +24.06 [+15.92, +32.21]. RESULTS·PROPOSALS에 적었다.

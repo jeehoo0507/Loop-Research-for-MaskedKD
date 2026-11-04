@@ -1078,6 +1078,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **범위:** 이번에는 QUEUE 09:03의 분해 세 변형(trustfilt_attn·trustfilt_pure·trustfilt@20 seed 4·5·6, 9 job)과 등록 밖 기준을 내지 않는다. CelebA가 사람 조치로 다시 열릴 때 boot가 늦게 시작되지 않게 하려는 것이다. 분해는 이 6 job이 끝나고 CelebA가 여전히 멈춰 있으면 같은 판정 규칙(QUEUE 09:03)으로 따로 낸다.
   - **예측 (한 번만):** v0 − teacher_topk 평균 > 0 확신 중간, CI 하한 > 0 확신 낮음(게이트 1 P1 v1 − teacher_topk CI가 0을 포함했고, seed 간 WGA 분산이 크다). v0 − full 평균 > 0 확신 중간.
   - 결과를 보고 seed·K·방법을 더하지 않는다.
+  - **[라운드 326] 제출 (등록 커밋 e2c7790 뒤):** waterbirds_screen_trustfilt_k29_s4_1104_041245_3797, waterbirds_screen_trustfilt_k29_s5_1104_041250_8224, waterbirds_screen_trustfilt_k29_s6_1104_041254_004f, waterbirds_screen_teacher_topk_k29_s4_1104_041258_c453, waterbirds_screen_teacher_topk_k29_s5_1104_041303_2db2, waterbirds_screen_teacher_topk_k29_s6_1104_041307_d108. full s4 제출은 "duplicate of screen_full_k196_s4_1031_071437_e327 (done)"로 막혔다(같은 설정 확인).
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
