@@ -564,7 +564,7 @@ Total agent screen configs: 0
 
 # Earlier check: cub_lt (no new runs; kept for the record)
 
-Gate: gate incomplete: ce seeds [1, 3], full seeds [], maskedkd seeds []
+Gate: gate incomplete: ce seeds [1, 2, 3], full seeds [], maskedkd seeds []
 
 Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagnostic: WGA seed sigma: not measured yet (run harness.submit --baselines))
 
@@ -572,7 +572,14 @@ Noise: acc seed sigma: not measured yet (run harness.submit --baselines) (diagno
 - none yet
 
 ## Core comparison (final tier: every agent method vs maskedkd, rollout, tome, grid, center, random, full, parent)
-- no agent method has >= 2 final seeds yet
+- trustmask_v1@29 vs maskedkd@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs rollout@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs tome@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs grid@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs center@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs random@29 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs full@196 [acc]: missing (needs >= 2 shared seeds)
+- trustmask_v1@29 vs trustfilt@29 (parent) [acc]: missing (needs >= 2 shared seeds)
 
 ## Parent check (screen seed 0: a child must beat its META parent by the promotion threshold)
 - no child selectors yet
@@ -588,7 +595,7 @@ Total agent screen configs: 0
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| final | ce |  | 0 | None | 1,3 | 60.17 ± 1.41 | 38.84 ± 4.01 | 7.64 | 0.00 | 0.00 | 390 | cub_lt_final_ce_k0_s3_1103_234720_e74b cub_lt_final_ce_k0_s1_1103_234642_ee32 |
+| final | ce |  | 0 | None | 1,2,3 | 59.56 ± 1.46 | 38.22 ± 3.03 | 7.64 | 0.00 | 0.00 | 389 | cub_lt_final_ce_k0_s3_1103_234720_e74b cub_lt_final_ce_k0_s2_1103_234700_71de cub_lt_final_ce_k0_s1_1103_234642_ee32 |
 | final | teacher_topk |  | 29 | 29.0 | 1,2 | 64.25 ± 0.35 | 47.66 ± 0.47 | 13.35 | 5.36 | 0.35 | 299 | cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0 cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0 |
-| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1 | 67.50 ± 0.00 | 52.33 ± 0.00 | 13.34 | 5.36 | 0.43 | 376 | cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
+| final | trustmask_v1@8186a4 |  | 29 | 29.0 | 1,2 | 66.42 ± 1.53 | 51.16 ± 1.65 | 13.34 | 5.36 | 0.43 | 313 | cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79 cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df |
 
