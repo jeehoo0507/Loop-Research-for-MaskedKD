@@ -482,7 +482,7 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - K=12: maskedkd 85.15 / WGA 23.3; rollout 87.24 / WGA 45.1; random 83.49 / WGA 33.8; grid 83.90 / WGA 35.3; center 88.74 / WGA 56.4; tome 88.99 / WGA 48.1 (Full KD 90.66 / WGA 65.4)
 
 ## Search effort (screen)
-Total agent screen configs: 17
+Total agent screen configs: 18
 - suffdisc: 4 configs
 - priorroll: 2 configs
 - midattn: 2 configs
@@ -494,6 +494,7 @@ Total agent screen configs: 17
 - adaroll: 1 configs
 - suffstride: 1 configs
 - conceptcov: 1 configs
+- trustfilt_pure: 1 configs
 
 ## All finished runs
 | tier | method | sel_args | keep | mean kept | seeds | val acc (mean ± sd) | worst-group acc | total GFLOPs/img | teacher | selector | img/s* | run ids |
@@ -563,6 +564,7 @@ Total agent screen configs: 17
 | screen | tome |  | 49 | 49.0 | 0 | 89.66 ± 0.00 | 51.13 ± 0.00 | 14.50 | 6.86 | 0.00 | 346 | screen_tome_k49_s0_1030_135953_1e32 |
 | screen | trustfilt@27da28 |  | 29 | 29.0 | 4,5,6 | 90.69 ± 0.50 | 69.42 ± 0.87 | 13.35 | 5.36 | 0.43 | 295 | waterbirds_screen_trustfilt_k29_s6_1104_041254_004f waterbirds_screen_trustfilt_k29_s4_1104_041245_3797 waterbirds_screen_trustfilt_k29_s5_1104_041250_8224 |
 | screen | trustfilt_attn@8fd44d |  | 29 | 29.0 | 4,5,6 | 90.19 ± 0.46 | 65.91 ± 0.87 | 13.34 | 5.36 | 0.36 | 337 | waterbirds_screen_trustfilt_attn_k29_s4_1104_050310_43e0 waterbirds_screen_trustfilt_attn_k29_s6_1104_050321_808a waterbirds_screen_trustfilt_attn_k29_s5_1104_050317_860f |
+| screen | trustfilt_pure@2e6797 |  | 29 | 10.9 | 4 | 89.49 ± 0.00 | 63.91 ± 0.00 | 10.17 | 2.19 | 0.43 | 176 | waterbirds_screen_trustfilt_pure_k29_s4_1104_050326_25d1 |
 
 # Held-out check: caltech256
 
