@@ -1071,6 +1071,14 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - **예측 (한 번만):** 효과가 Waterbirds보다 작다(성별 단서가 얼굴 전체에 퍼져 배경 토큰처럼 잘리지 않음). P1 평균 > 0 확신 중간, CI 하한 > 0 확신 낮음. P2 평균 > 0 확신 낮음. P3 평균 < 0 확신 중간. 효과가 작거나 없으면 그대로 "지름길이 공간적으로 분리될 때만"이라는 조건으로 적는다.
   - 결과를 보고 seed·K·방법을 더하지 않는다. 게이트(KD>CE) 통과 여부와 상관없이 낸다(QUEUE 08:58, stage2 = robustness_check).
 
+- **H-A59 (Waterbirds v0 사후 관찰의 확인 실험 핵심, QUEUE 11-04 08:58 KST (4), 라운드 326 등록 — 결과 전·제출 전): 게이트 1의 v0(trustfilt)@29 우위는 새 seed에서도 나오는가.** 제출: Waterbirds `trustfilt`@29 (selector_sha 27da286a…, 게이트 1과 같은 소스·기본 인자), `teacher_topk`@29, seed 4·5·6, tier screen (6 job). `full`@196 seed 4·5·6은 이미 있는 Waterbirds screen run을 쓴다: screen_full_k196_s4_1031_071437_e327, screen_full_k196_s5_1031_073620_9291, screen_full_k196_s6_1031_073628_b37a (같은 teacher_sha 84f5d4ed…, student_lr 1e-4, 100 epoch; harness가 같은 키로 중복을 막으면 그것이 같은 설정이라는 확인이다). 주 지표 val WGA (val_wga_last). 같은 seed 짝 차이, t 95% CI (df 2, t 4.303).
+  - **판정 (QUEUE 08:58 그대로, 한 번만, 6 job이 다 끝난 뒤):** v0 − teacher_topk CI 하한 > 0, v0 − full 평균 > 0. 둘 다 성립해야 게이트 1의 v0 결과를 주장으로 쓴다. 하나라도 안 되면 "게이트 1의 v0 우위는 seed 4·5·6에서 재현되지 않았다"로 적는다.
+  - **기록 (판정 아님):** clean acc 같은 차이, 총 GFLOPs/img.
+  - **tier에 대해:** `harness.submit`은 final을 seed 1·2·3으로만 받는다(config.FINAL_SEEDS). Waterbirds의 screen과 final은 같은 100 epoch·같은 recipe이고 tier 이름만 다르다. 그래서 seed 4·5·6을 screen tier로 낸다. 이 run들은 탐색 screen(승격 판단)에 쓰지 않는다.
+  - **범위:** 이번에는 QUEUE 09:03의 분해 세 변형(trustfilt_attn·trustfilt_pure·trustfilt@20 seed 4·5·6, 9 job)과 등록 밖 기준을 내지 않는다. CelebA가 사람 조치로 다시 열릴 때 boot가 늦게 시작되지 않게 하려는 것이다. 분해는 이 6 job이 끝나고 CelebA가 여전히 멈춰 있으면 같은 판정 규칙(QUEUE 09:03)으로 따로 낸다.
+  - **예측 (한 번만):** v0 − teacher_topk 평균 > 0 확신 중간, CI 하한 > 0 확신 낮음(게이트 1 P1 v1 − teacher_topk CI가 0을 포함했고, seed 간 WGA 분산이 크다). v0 − full 평균 > 0 확신 중간.
+  - 결과를 보고 seed·K·방법을 더하지 않는다.
+
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
 IDEA 2: CLS reconstruction pursuit — Recover last-block values \(v_{hi}\) from student penultimate tokens and value-projection weights; read CLS attention \(a_{hi}\). Define the full message \(u_h=\sum_{i=0}^{196}a_{hi}v_{hi}\) and subset message \(\hat u_h(S)=\frac{\sum_{i\in S\cup\{0\}}a_{hi}v_{hi}}{\sum_{i\in S\cup\{0\}}a_{hi}}\), with \(0=\mathrm{CLS}\).
