@@ -438,7 +438,8 @@ Noise: acc seed sigma 0.44 %p (pooled, dof 7) -> threshold 0.88 %p (diagnostic: 
 - claim-grade (>= 3 seeds):
   - trustfilt@27da28 : 29.0 (3 seeds)
   - trustmask_v1@8186a4 : 29.0 (3 seeds)
-- screening only (fewer seeds): none
+- screening only (fewer seeds):
+  - lateroll@69541b : 29.0 (1 seeds)
 ### screen: Full KD val 90.74 (seeds 0,1,2,4,5,6); KD gain +1.42, tolerance 0.71 %p; smallest mean kept tokens within it
 - claim-grade (>= 3 seeds):
   - suffdisc@0f0600 : 29.0 (7 seeds)
@@ -473,6 +474,7 @@ Total agent screen configs: 15
 | final | full |  | 196 | 196.0 | 1,2,3 | 91.16 ± 0.52 | 67.42 ± 0.43 | 42.77 | 35.13 | 0.00 | 196 | final_full_k196_s1_1030_201811_b764 final_full_k196_s2_1030_212126_a1dc final_full_k196_s3_1030_220958_8d7e |
 | final | gradroll@4f3962 |  | 12 | 12.0 | 1,2,3 | 87.99 ± 0.42 | 59.15 ± 6.31 | 12.81 | 2.45 | 2.90 | 195 | final_gradroll_k12_s3_1030_220958_176b final_gradroll_k12_s1_1030_201811_faf0 final_gradroll_k12_s2_1030_212126_da50 |
 | final | grid |  | 12 | 12.0 | 1,2,3 | 83.10 ± 0.84 | 35.34 ± 0.00 | 10.09 | 2.45 | 0.00 | 301 | final_grid_k12_s2_1030_212126_9336 final_grid_k12_s3_1030_220958_14eb final_grid_k12_s1_1030_201811_dc71 |
+| final | lateroll@69541b |  | 29 | 29.0 | 1 | 90.99 ± 0.00 | 65.41 ± 0.00 | 12.99 | 5.36 | 0.08 | 361 | waterbirds_final_lateroll_k29_s1_1104_025003_b396 |
 | final | maskedkd |  | 12 | 12.0 | 1,2,3 | 84.21 ± 0.05 | 22.31 ± 1.15 | 10.07 | 2.45 | 0.00 | 280 | final_maskedkd_k12_s1_1030_201811_e49a final_maskedkd_k12_s2_1030_212126_ad00 final_maskedkd_k12_s3_1030_220958_cc4e |
 | final | maskedkd |  | 29 | 29.0 | 1,2,3 | 87.74 ± 0.55 | 38.59 ± 1.74 | 12.99 | 5.36 | 0.00 | 366 | waterbirds_final_maskedkd_k29_s2_1103_170931_92bd waterbirds_final_maskedkd_k29_s1_1031_201502_4be8 waterbirds_final_maskedkd_k29_s3_1103_170935_907a |
 | final | maskedkd |  | 98 | 98.0 | 1,2,3 | 90.46 ± 0.39 | 64.16 ± 2.42 | 25.04 | 17.41 | 0.00 | 359 | waterbirds_final_maskedkd_k98_s3_1031_201502_0f31 waterbirds_final_maskedkd_k98_s1_1031_130203_5bef waterbirds_final_maskedkd_k98_s2_1031_201502_95ac |
