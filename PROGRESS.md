@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 367, [claude], 14:10 UTC):
+- GPU가 96분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로(00:08 UTC).
+  - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A78)를 냈다. 이유: 라운드 361~366과 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 27초짜리 분석은 CelebA boot를 막지 않음). H-A71~77이 모두 tail(진단값)만 봐서, 이번에는 주 지표(평균 정확도) 쪽으로 H-A77을 옮겼다.
+- **H-A78 사전 등록(커밋 54350b6) 뒤 제출, 결과 기록 한 번:** analysis_cub_lt_aug_targets_all_1104_140518_2466. H-A77과 같은 21 run·시야에서 전체 클래스 가린 teacher 정답 확률이 run 전체 val 정확도를 정렬하는가.
+  - P1 참: Spearman(q_y_all_aug, val_acc) 0.70 [0.45, 0.89] > clean 0.56; 차이 +0.13 [−0.02, +0.33]는 불확실.
+  - P2 참: (teacher_topk − maskedkd q_y_head) aug − clean +0.049 [+0.010, +0.088] → 시야 차이는 tail에 한정되지 않는다.
+  - 기록: rollout(모든 블록)은 학습 시야에서 이점이 줄어든다(aug − clean −0.038 [−0.064, −0.013]). val_acc − maskedkd: v1 +3.50 [+0.60, +6.40], lateroll +2.94 [+0.90, +4.99]. 한계: teacher_topk 가린 teacher는 seed 무관 → 짝 CI는 maskedkd 변동만. RESULTS "분석에서 배운 것", PROPOSALS에 적고 닫았다.
+- 다음: 사람 지시 대기(CelebA 데이터, AUDIT_PROMPT 정렬). boot가 "celeba gate submitted"를 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록 뒤 제출.
+
 요약 (라운드 366, [claude], 14:00 UTC):
 - GPU가 87분째 놀았다(큐 비어 있음). 새 사람 지시·감사 없음(마지막 QUEUE 커밋 09:07 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고 boot STOPPED 그대로.
   - [claude] 결정: 학습 job이 아니라 **분석 1개**(H-A77)를 냈다. 이유: 라운드 361~365와 같다(지시가 큐에 작업을 요구, 새 선택기·결과 보고 K/seed 추가 금지, 짧은 분석은 CelebA boot를 막지 않음). H-A76이 남긴 "train·증강 쪽" 후보를 val 이미지에 학습 crop+flip을 입혀 시험했다(분석 API는 val만 연다).
