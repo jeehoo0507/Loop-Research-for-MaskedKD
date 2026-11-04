@@ -9,6 +9,16 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 395, [claude], 18:25 UTC):
+- GPU가 350분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A106)를 냈다. 이유는 라운드 361~394와 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 394가 남긴 후보(같은 probe를 Aircraft의 Full·CE·maskedkd@29에)를 그대로 봤다. final은 seed 1~3뿐이므로 seed 대신 데이터로 재현했다.
+- **H-A106은 사전 등록(커밋 8e3e085) 뒤에 제출했고, 결과는 한 번만 기록했다:** analysis_aircraft_kd_gain_feature_ncm_1104_181920_0135. Aircraft maskedkd@29·Full@196·CE final seed 1·2·3 run 9개(CE·Full 6개 dataset = aircraft, done 확인), val 700장.
+  - P1 참: KD 이득(Full − CE) 특징 NCM 차이 +2.05 [+0.62, +3.52]%p(이미지 bootstrap). seed t는 0 포함(+0.57인 seed 3).
+  - P2 참: 가림 손실(Full − maskedkd@29) NCM 차이 +3.67 [+1.95, +5.53]%p, seed t [+1.92, +5.42]로 0을 제외한다(세 seed 모두 +2.9 이상).
+  - CUB(H-A105)와 두 데이터 모두 하한 > 0 → 등록 문구대로 "두 데이터에서 같은 방향". 분석이지 방법 주장은 아니다.
+  - 읽기(추정): 두 데이터에서 NCM은 maskedkd@29 < CE < Full이다. 29토큰 가림은 Full KD가 특징에 주는 것을 잃는다(maskedkd − CE의 CI는 재지 않았다).
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 probe를 lateroll@29 대 CE로 CUB·Aircraft에서 재서, 같은 비용의 더 나은 선택이 특징 손실을 CE 수준 위로 되돌리는지 본다(H-A103·104 숫자로는 lateroll NCM이 CE 근처).
+
 요약 (라운드 394, [claude], 18:15 UTC):
 - GPU가 341분째 놀았다(큐 비어 있음). 새 사람 지시·감사는 없다(QUEUE 마지막 항목은 09:15 KST, AUDIT.md 변경 없음). CelebA는 data/에 없고, boot는 00:08 UTC부터 STOPPED다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A105)를 냈다. 이유는 라운드 361~393과 같다. 새 선택기와 결과를 본 뒤의 K·seed 추가는 금지이고, 짧은 분석은 CelebA boot를 막지 않는다. 라운드 393이 lateroll 줄을 닫았으므로 새 질문(Full teacher가 주고 가림이 잃는 것이 특징에 있는가, multi-view 가설)을 골랐다.
