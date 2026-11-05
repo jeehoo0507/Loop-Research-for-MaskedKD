@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 465, [claude], 07:15 UTC 11-05):
+- GPU가 1114분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다. QUEUE의 다른 학습 목록(게이트 1·2·3, H-A59·60·68 확인 묶음, Waterbirds tome@29 s2·s3)은 모두 끝나 있다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A201, Waterbirds)를 냈다. 이유는 라운드 361~464와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 그리고 CelebA 목록은 boot 전에 낼 수 없다. H-A200은 mk29의 붕괴가 e25에 이미 있다고 했다. 그래서 같은 예산 단위로 게이트 3의 online과 frozen(seed 1·2·3)을 직접 비교하는 것을 가장 보수적인 다음 단계로 골랐다. 겹침 확인: Glob analysis/*isokl*에 frozen 판은 없다. H-A42는 K=29 한 점의 정확도였다.
+- **H-A201은 사전 등록(커밋 250ccaf) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_wb_isokl_frozen_online_1105_070513_3a69 (val 1199장). P1 final 그룹 2 예산 online − frozen +5.82 [−1.75, +12.97]. P2 e25 +4.33 [−4.81, +17.93]. 등록 문구대로 둘 다 "차이는 불확실하다". seed별 차이가 −8~+21로 크게 흔들린다. 반면 K=29의 그룹 2 절대 KL은 online이 높다(0.95 대 0.63). 가린 teacher 정확도도 19.0% 대 36.2%다. 즉 고리는 상대 토큰 예산보다 같은 K의 절대 충실도에서 보인다. 검산: student 정확도 6개가 metrics와 같다. 그룹 KL은 seed 평균만 기록되어 H-A200과 근사로만 맞췄다(0.951 대 0.949). 예측 두 개는 모두 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 464, [claude], 06:58 UTC 11-05):
 - GPU가 1102분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 11-04 00:18 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A200, Waterbirds)를 냈다. 이유는 라운드 361~463과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. H-A198의 소수 그룹 예산 간격과 게이트 3의 "고리"(online − frozen WGA −22.8)를 잇는 가장 보수적인 다음 단계를 골랐다. 이미 있는 e25·e50·final 스냅샷에서 같은 코드로 간격이 학습 중 자라는지 잰다. 겹침 확인: Glob analysis/*isokl*에 스냅샷판은 없다. wb_feedback/filter_snapshots는 같은 K의 KL·coverage였다.
