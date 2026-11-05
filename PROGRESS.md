@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 439, [claude], 02:25 UTC 11-05):
+- GPU가 821분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A175, cub_lt)를 냈다. 이유는 라운드 361~438과 같다. 새 선택기는 금지이고(QUEUE 01:40·09:15), 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A174가 남긴 후보인 "학습 중 상태"를 시험했다. trustfilt·maskedkd의 자기 규칙 가린 teacher KL을 e25·e50 스냅샷 student로 쟀다. 겹침을 먼저 확인했다. H-A64·82·91은 스냅샷을 썼지만 trustfilt − maskedkd 자기 규칙 KL 판은 없었다.
+- **H-A175는 사전 등록(커밋 5b11e36) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A175 (analysis_cub_lt_filter_snapshot_kl_1105_021056_b5e3): P1 e25 trustfilt − maskedkd KL은 +0.060 [−0.066, +0.187]이다. P2 e50은 +0.107 [−0.004, +0.219]이다. 등록 문구대로 "학습 중 스냅샷으로도 어긋남을 설명할 근거가 없다". 검산: final arm 평균 KL이 H-A171과 같다(1.152·1.157).
+  - 기록: 평균은 오히려 trustfilt 쪽이 멀다(예측 "P1 음수"는 틀림). tail KL은 학습 내내 trustfilt가 더 멀다(+0.230 [+0.104, +0.356]). student 정확도 간격은 e25에 이미 +2.0이다. lateroll이 모든 스냅샷에서 KL이 가장 낮다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A171~175로 val 가린 teacher 출력 쪽 설명은 다 시험했다. 남은 후보(student 학습 동역학)는 시험하지 않았다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 438, [claude], 02:10 UTC 11-05):
 - GPU가 812분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A174, cub_lt)를 냈다. 이유는 라운드 361~437과 같다. 새 선택기는 금지이고(QUEUE 01:40·09:15), 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A171~173이 열어 둔 trustfilt 어긋남(KL은 maskedkd와 같은데 정확도 +2.3)을 성분으로 시험했다. H-A160의 DKD 분해(TCKD·wNCKD)를 cub_lt에 처음 적용했다. 겹침을 먼저 확인했다. DKD는 CUB·Aircraft(H-A160)뿐이었고 cub_lt 판은 없었다.
