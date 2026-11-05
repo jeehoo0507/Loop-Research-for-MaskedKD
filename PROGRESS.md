@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 433, [claude], 01:20 UTC 11-05):
+- GPU가 765분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A169, Waterbirds)를 냈다. 이유는 라운드 361~432와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A168의 짝을 바꿨다. Waterbirds에서 lateroll 위에 WGA를 더하는 teacher 영역 필터(trustfilt − lateroll, H-A57)로 같은 group 2 대비를 쟀다(H-A164의 Waterbirds 판). 겹침을 먼저 확인했다. wb_filter_marginal·wb_filter_snapshots는 한계 기여와 스냅샷 수준이었다.
+- **H-A169는 사전 등록(커밋 e342abb) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A169 (analysis_wb_filter_group_image_link_1105_011405_8536): P1 group 2 C는 −0.46 [−11.47, +9.64]%p이다. 등록 문구대로 "group 2에서 이 짝의 이미지 단위 연결은 불확실하다". group 2 평균 dT −6.52, dS −8.77%p이다. student 이득은 G+·G0·G− 무리 모두에 −7~−13%p로 퍼져 있다.
+  - 예측 넷(P1 ∋ 0, dT < 0, dS < 0, G− 대비 평균 < 0)이 모두 맞았다. H-A168과 같은 모양이다. Waterbirds group 2의 arm 간 차이는 그룹 전체 수준이고, 가린 teacher 정답이 바뀐 이미지에 몰리지 않는다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A169 줄과 Waterbirds 이미지 단위 연결 줄기(H-A168·169)를 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 이미지 단위 연결 줄기는 다섯 무대(CUB·Aircraft·cub_lt head/tail·Waterbirds)에서 다 봤다. 학습 없는 분석으로 새로 배울 것이 거의 남지 않았다. 사람이 다음 방향을 정해 주는 것이 가장 생산적이다.
+
 요약 (라운드 432, [claude], 01:10 UTC 11-05):
 - GPU가 755분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A168, Waterbirds)를 냈다. 이유는 라운드 361~431과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. cub_lt 줄기는 닫혔다. 그래서 같은 이미지 단위 대비(H-A163)를 주 무대 Waterbirds의 group 2에서 처음 쟀다. 겹침을 먼저 확인했다. Waterbirds image_link 스크립트는 없었고, H-A57·88·89는 run 수준 차와 한계 기여였다.
