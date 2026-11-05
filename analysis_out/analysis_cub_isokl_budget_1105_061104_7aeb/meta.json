@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_isokl_budget_1105_061104_7aeb",
+ "name": "cub_isokl_budget",
+ "source_sha": "7aebef4b7aa7205b9ec881541aaa006e1124d9bb0c306e8fbf1887e4484a7181",
+ "status": "done",
+ "meta": {
+  "question": "on CUB-200-2011 crop+flip views of val, how many teacher tokens does the last-block CLS attention rule (MaskedKD) need to match the masked-teacher KL that block 6-11 rollout reaches with 29 tokens?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views over a token-budget grid, iso-KL budget by linear interpolation, paired image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Darcet et al. ICLR 2024 (ViTs need registers); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993; Wah et al. 2011 (CUB)"
+ },
+ "seconds": 27.8
+}
