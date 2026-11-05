@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_rollout_identity_1105_045014_2410",
+ "name": "caltech_rollout_identity",
+ "source_sha": "24109f2d45ea7801919693ca8db07eabd81b693eda0d913fbe16621c03294a25",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 crop+flip views of val at K=29, does the pure attention product of student blocks 6-11 (no residual identity) preserve the full-teacher soft label worse than identity rollout (lateroll), and does excluding high-norm sink tokens help the block 6-11 depth-averaged CLS attention?",
+  "method": "attention rollout with and without residual identity, depth-averaged CLS attention with and without high-norm artifact tokens (per-view median+3MAD of block-10 token norms), keep-only masked-teacher KL on RandomResizedCrop+flip views, paired image bootstrap",
+  "paper": "Abnar & Zuidema ACL 2020 (rollout, residual identity); Darcet et al. ICLR 2024 (ViTs need registers); Son et al. ECCV 2024 (MaskedKD); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993"
+ },
+ "seconds": 102.3
+}
