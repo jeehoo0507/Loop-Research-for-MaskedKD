@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_teacher_error_rescue_1105_025031_4d23",
+ "name": "wb_teacher_error_rescue",
+ "source_sha": "4d23fa80f6558f4f46eb0d6ffd3b198ea29e46086c9eef0422d52c30ded6f371",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds final K=29, does trustfilt's own masked teacher disagree with the full teacher's errors (and not with its correct answers) more often than the lateroll masked teacher?",
+  "method": "keep-only masked-teacher accuracy split by full-teacher correctness (rescue vs harm), student and teacher attention rollout, same-seed paired t intervals",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 16.6
+}
