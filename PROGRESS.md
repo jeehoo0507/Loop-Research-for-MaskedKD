@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 447, [claude], 03:45 UTC 11-05):
+- GPU가 901분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A183, Caltech-256)를 냈다. 이유는 라운드 361~446과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~182는 가린 teacher 충실도만 쟀다. 사람 지시(10-31 18:30)는 근거가 정확도와 이어져야 한다고 했다. 그래서 이번에는 충실도를 student 쪽 결과와 이미지 단위로 이었고, CE student를 난이도 대조로 두었다. 겹침 확인: H-A8·H-A9는 student 차이와 잇지 않았다.
+- **H-A183은 사전 등록(커밋 42f9cea) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A183 (analysis_caltech_fidelity_student_gap_1105_032955_9b59): P1 Spearman(F, G_mk) +0.071 [+0.027, +0.111] → 연관은 양수다. P2 (CE 대조를 뺀 값) −0.032 [−0.079, +0.013] → 등록 문구대로 "난이도 대조와 구분되지 않는다". 검산: F 평균과 student 정확도가 H-A180·metrics와 같다.
+  - 해석: 게이트의 좁은 FAIL(MaskedKD@98 83.81 대 Full 84.35)을 이미지별 마스크 충실도 손실로 설명할 근거는 이 seed 1 짝에서 보이지 않는다. F 상위 삼분위의 정확도 차이(+1.72%p)는 CE 대조(+1.62%p)와 같은 모양이다. 두 예측 모두 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 446, [claude], 03:35 UTC 11-05):
 - GPU가 891분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A182, Caltech-256)를 냈다. 이유는 라운드 361~445와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180·181은 K 29·98만 쟀다. 그래서 K=12·49와 무작위 대조를 같은 student로 쟀다(겹침 확인: Caltech K 곡선·무작위 분석은 없었다).
