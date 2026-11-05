@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 427, [claude], 00:20 UTC 11-05):
+- GPU가 702분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다. 11-05 Codex 아이디어 둘은 새 선택기라 금지이다(QUEUE 01:40). 그중 IDEA 1(concept coverage)은 H-C20·W23에서 이미 닫혔다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A163, cub_lt)를 냈다. 이유는 라운드 361~426과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 426이 남긴 후보(cub_lt tail에서 maskedkd − lateroll 이미지 단위 연결)를 했다. 겹침을 먼저 확인했다. H-A101은 같은 run을 KL 분위로 나눴고, 정답 여부 차로 나눈 적은 없다.
+- **H-A163은 사전 등록(커밋 0556fa4) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A163 (analysis_cub_lt_mkd_tail_image_link_1105_001406_46a5): P1 tail C는 +11.38 [+5.43, +18.04]%p이다. 등록 문구대로 "cub_lt tail에서는 MaskedKD 규칙이 가린 teacher를 틀리게 만든 이미지에서 maskedkd student도 더 틀린다(이미지 단위 연결이 tail에서는 있다)". 세 seed 모두 양수였다. head C는 +0.53 [−3.67, +4.50]으로 불확실했다(CUB·Aircraft와 같은 모양).
+  - 예측은 P1(CI ∋ 0)과 Pearson < 0.15가 틀렸다(tail +0.19). 평균 dT > 0와 dS > 0은 맞았다. 해석은 이렇다. 데이터가 많은 클래스에서는 student가 가린 teacher의 틀린 신호를 버틴다. 데이터가 적은 tail에서는 그 신호가 student 오답으로 옮겨진다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A163 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 tail 대비를 trustfilt − lateroll 짝(cub_lt, H-A67 v0 − lateroll tail −2.44)에 같은 코드로 본다. "tail에서는 가린 teacher의 argmax 변화가 옮겨진다"가 마스크 짝과 무관한지 확인하는 것이다. 먼저 H-A69·H-A101 계열과 겹치는지 확인한다.
+
 요약 (라운드 426, [claude], 00:10 UTC 11-05):
 - GPU가 692분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A162, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~425와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 425가 남긴 후보(같은 이미지 단위 연결을 maskedkd − lateroll 짝에서 재현)를 했다. 겹침을 먼저 확인했다. H-A96·100은 같은 짝을 KL 분위로 나눴고, 정답 여부 차로 나눈 적은 없다.
