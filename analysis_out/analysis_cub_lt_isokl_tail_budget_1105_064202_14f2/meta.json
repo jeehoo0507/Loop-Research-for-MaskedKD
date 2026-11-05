@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_isokl_tail_budget_1105_064202_14f2",
+ "name": "cub_lt_isokl_tail_budget",
+ "source_sha": "14f208967b998812bb0fae51ed508ae850b37b3e9100d963158fb3822851b2aa",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt crop+flip views of val, does the last-block CLS attention rule (MaskedKD) need more teacher tokens on tail-class images than on head-class images to match the masked-teacher KL that block 6-11 rollout reaches with 29 tokens?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views over a token-budget grid, per-group iso-KL budget by linear interpolation, group-stratified image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Darcet et al. ICLR 2024 (ViTs need registers); Liu et al. CVPR 2019 (long-tail); Efron & Tibshirani 1993"
+ },
+ "seconds": 29.6
+}
