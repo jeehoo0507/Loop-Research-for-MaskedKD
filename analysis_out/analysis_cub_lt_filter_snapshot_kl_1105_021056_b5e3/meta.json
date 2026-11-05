@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_filter_snapshot_kl_1105_021056_b5e3",
+ "name": "cub_lt_filter_snapshot_kl",
+ "source_sha": "b5e361ae29d32fbc8ff1fb392515ed72d9213aac8b5bc4fb198d7d6bd126cae7",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, was trustfilt's own-rule masked teacher closer to the full teacher than maskedkd's at the e25 and e50 snapshots, although the two are equal at the final student?",
+  "method": "own rule on e25/e50/final student snapshots, keep-only masked-teacher KL with exact DKD split, seed-paired t CI, image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Zhao et al. CVPR 2022 (decoupled KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (KD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 16.4
+}
