@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_mkd_image_link_1105_000102_96a3",
+ "name": "aircraft_mkd_image_link",
+ "source_sha": "96a38c70d6f4735f179cd109e77778f2512a5c8a21d64dbd385c5d9b721bca42",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft final K=29 runs, are images where the maskedkd mask turns the masked teacher wrong (maskedkd vs lateroll) also images where the maskedkd student is wrong more often?",
+  "method": "per-image seed-averaged masked-teacher and student error differences, group contrast with image bootstrap CI, seed-wise contrast t CI",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD)"
+ },
+ "seconds": 8.5
+}

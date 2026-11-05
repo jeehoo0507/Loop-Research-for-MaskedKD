@@ -1,0 +1,116 @@
+{
+ "n_val": 700,
+ "K": 29,
+ "n_runs": 6,
+ "P1_contrast_dS_Gplus_minus_Gzero_pp_boot": [
+  1.9511,
+  -0.9586,
+  4.8904
+ ],
+ "record": {
+  "mean_dT_pp": 12.8095,
+  "mean_dS_pp": 1.0,
+  "pearson_dT_dS": 0.12,
+  "pearson_dT_dS_boot": [
+   0.12,
+   0.0401,
+   0.1974
+  ],
+  "seedwise_contrast_pp": [
+   1.4388,
+   8.862,
+   2.0106
+  ],
+  "seedwise_contrast_t": [
+   4.1038,
+   -6.1572,
+   14.3648
+  ],
+  "groups": {
+   "G_plus": {
+    "n": 239,
+    "mean_dS_pp": 2.9289,
+    "mean_dT_pp": 53.696,
+    "full_teacher_wrong_rate": 0.1004,
+    "lateroll_student_wrong": 0.2176,
+    "maskedkd_student_wrong": 0.2469
+   },
+   "G_zero": {
+    "n": 375,
+    "mean_dS_pp": 0.9778,
+    "mean_dT_pp": 0.0,
+    "full_teacher_wrong_rate": 0.2987,
+    "lateroll_student_wrong": 0.3858,
+    "maskedkd_student_wrong": 0.3956
+   },
+   "G_minus": {
+    "n": 86,
+    "mean_dS_pp": -4.2636,
+    "mean_dT_pp": -44.9612,
+    "full_teacher_wrong_rate": 0.2558,
+    "lateroll_student_wrong": 0.4574,
+    "maskedkd_student_wrong": 0.4147
+   }
+  }
+ },
+ "per_run": {
+  "aircraft_final_lateroll_k29_s1_1103_065756_f0d9": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.8571412563324,
+   "student_acc_remeasured": 66.86,
+   "masked_teacher_acc": 62.29,
+   "p_student_wrong_given_mt_wrong": 0.6477,
+   "p_student_wrong_given_mt_right": 0.1399
+  },
+  "aircraft_final_lateroll_k29_s2_1103_065801_38e1": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 67.7142858505249,
+   "student_acc_remeasured": 67.71,
+   "masked_teacher_acc": 64.29,
+   "p_student_wrong_given_mt_wrong": 0.656,
+   "p_student_wrong_given_mt_right": 0.1378
+  },
+  "aircraft_final_lateroll_k29_s3_1103_065805_2130": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.28571343421936,
+   "student_acc_remeasured": 64.29,
+   "masked_teacher_acc": 61.86,
+   "p_student_wrong_given_mt_wrong": 0.6517,
+   "p_student_wrong_given_mt_right": 0.1755
+  },
+  "aircraft_final_maskedkd_k29_s1_1102_132227_6542": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 66.71428680419922,
+   "student_acc_remeasured": 66.71,
+   "masked_teacher_acc": 49.57,
+   "p_student_wrong_given_mt_wrong": 0.5269,
+   "p_student_wrong_given_mt_right": 0.1354
+  },
+  "aircraft_final_maskedkd_k29_s2_1102_180321_52e2": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 64.42857384681702,
+   "student_acc_remeasured": 64.43,
+   "masked_teacher_acc": 48.0,
+   "p_student_wrong_given_mt_wrong": 0.5275,
+   "p_student_wrong_given_mt_right": 0.1696
+  },
+  "aircraft_final_maskedkd_k29_s3_1102_180336_347e": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 64.71428275108337,
+   "student_acc_remeasured": 64.71,
+   "masked_teacher_acc": 52.43,
+   "p_student_wrong_given_mt_wrong": 0.5766,
+   "p_student_wrong_given_mt_right": 0.1499
+  }
+ },
+ "verdict": {
+  "P1": "uncertain"
+ },
+ "note": "CI entries are [mean, low, high]; dT, dS = maskedkd - lateroll error rates (seed mean); groups fixed on the full sample by dT sign; seed-wise contrast pairs seed s of the two arms"
+}
