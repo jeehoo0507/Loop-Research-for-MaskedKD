@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_frozen_tail_image_link_1105_003415_1fa2",
+ "name": "cub_lt_frozen_tail_image_link",
+ "source_sha": "1fa22bf70e73db59d096ce4992b8d0545596fcb62c03da8fee584548f7a2c92f",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 tail images, does the maskedkd rule applied to the maskedkd_frozen student (whose own attention never chose its training masks) show the same image-level link between masked-teacher errors and student errors as online maskedkd (H-A163)?",
+  "method": "per-image seed-averaged masked-teacher and student error differences vs lateroll, group contrast inside the tail group with image bootstrap CI, paired bootstrap difference between arms",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Arazo et al. IJCNN 2020 (confirmation bias)"
+ },
+ "seconds": 10.4
+}

@@ -1,0 +1,286 @@
+{
+ "n_val": 600,
+ "n_tail": 300,
+ "n_head": 300,
+ "K": 29,
+ "n_runs": 9,
+ "P1_tail_C_frozen_pp_boot": [
+  3.9469,
+  -2.4588,
+  10.3077
+ ],
+ "record": {
+  "contrasts": {
+   "tail": {
+    "C_frozen_pp_boot": [
+     3.9469,
+     -2.4588,
+     10.3077
+    ],
+    "C_maskedkd_pp_boot": [
+     11.3843,
+     5.4593,
+     17.8478
+    ],
+    "C_maskedkd_minus_frozen_pp_boot": [
+     7.4374,
+     0.275,
+     15.0573
+    ],
+    "pearson_dT_dS_frozen_boot": [
+     0.0774,
+     -0.0153,
+     0.1698
+    ],
+    "mean_dT_frozen_pp": 10.6667,
+    "mean_dS_frozen_pp": 8.0,
+    "mean_dT_maskedkd_pp": 9.8889,
+    "mean_dS_maskedkd_pp": 5.7778
+   },
+   "head": {
+    "C_frozen_pp_boot": [
+     0.3842,
+     -3.2215,
+     3.9647
+    ],
+    "C_maskedkd_pp_boot": [
+     0.5294,
+     -3.6248,
+     4.518
+    ],
+    "C_maskedkd_minus_frozen_pp_boot": [
+     0.1451,
+     -4.0017,
+     4.3774
+    ],
+    "pearson_dT_dS_frozen_boot": [
+     0.058,
+     -0.0593,
+     0.1955
+    ],
+    "mean_dT_frozen_pp": 12.2222,
+    "mean_dS_frozen_pp": 0.3333,
+    "mean_dT_maskedkd_pp": 13.8889,
+    "mean_dS_maskedkd_pp": 0.1111
+   },
+   "all": {
+    "C_frozen_pp_boot": [
+     1.7787,
+     -1.6439,
+     5.5375
+    ],
+    "C_maskedkd_pp_boot": [
+     5.0428,
+     1.1295,
+     8.7502
+    ],
+    "C_maskedkd_minus_frozen_pp_boot": [
+     3.2641,
+     -1.2533,
+     7.2646
+    ],
+    "pearson_dT_dS_frozen_boot": [
+     0.0621,
+     -0.0007,
+     0.1294
+    ],
+    "mean_dT_frozen_pp": 11.4444,
+    "mean_dS_frozen_pp": 4.1667,
+    "mean_dT_maskedkd_pp": 11.8889,
+    "mean_dS_maskedkd_pp": 2.9444
+   }
+  },
+  "tail_seedwise_C_frozen_pp": [
+   2.5875,
+   3.1259,
+   4.4249
+  ],
+  "tail_seedwise_C_frozen_t": [
+   3.3794,
+   1.0329,
+   5.7259
+  ],
+  "tail_seedwise_C_maskedkd_pp": [
+   10.8942,
+   7.8668,
+   13.0037
+  ],
+  "tail_seedwise_C_maskedkd_t": [
+   10.5882,
+   4.174,
+   17.0024
+  ],
+  "tail_seedwise_C_maskedkd_minus_frozen_t": [
+   7.2088,
+   1.8888,
+   12.5288
+  ],
+  "groups_tail_frozen": {
+   "G_plus": {
+    "n": 81,
+    "mean_dS_pp": 11.5226,
+    "mean_dT_pp": 53.0864,
+    "full_teacher_wrong_rate": 0.0494,
+    "lateroll_student_wrong": 0.5226,
+    "frozen_student_wrong": 0.6379
+   },
+   "G_zero": {
+    "n": 198,
+    "mean_dS_pp": 7.5758,
+    "mean_dT_pp": 0.0,
+    "full_teacher_wrong_rate": 0.1869,
+    "lateroll_student_wrong": 0.4697,
+    "frozen_student_wrong": 0.5455
+   },
+   "G_minus": {
+    "n": 21,
+    "mean_dS_pp": -1.5873,
+    "mean_dT_pp": -52.381,
+    "full_teacher_wrong_rate": 0.1905,
+    "lateroll_student_wrong": 0.7302,
+    "frozen_student_wrong": 0.7143
+   }
+  },
+  "groups_tail_maskedkd": {
+   "G_plus": {
+    "n": 76,
+    "mean_dS_pp": 14.4737,
+    "mean_dT_pp": 51.7544,
+    "full_teacher_wrong_rate": 0.0395,
+    "lateroll_student_wrong": 0.5088,
+    "maskedkd_student_wrong": 0.6535
+   },
+   "G_zero": {
+    "n": 205,
+    "mean_dS_pp": 3.0894,
+    "mean_dT_pp": 0.0,
+    "full_teacher_wrong_rate": 0.1902,
+    "lateroll_student_wrong": 0.4748,
+    "maskedkd_student_wrong": 0.5057
+   },
+   "G_minus": {
+    "n": 19,
+    "mean_dS_pp": 0.0,
+    "mean_dT_pp": -50.8772,
+    "full_teacher_wrong_rate": 0.1579,
+    "lateroll_student_wrong": 0.7719,
+    "maskedkd_student_wrong": 0.7719
+   }
+  }
+ },
+ "per_run": {
+  "cub_lt_final_lateroll_k29_s1_1104_084157_2b15": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.33333563804626,
+   "val_wga_last": 51.67,
+   "student_acc_remeasured": 66.33,
+   "student_tail_acc_remeasured": 51.67,
+   "masked_teacher_acc": 72.17,
+   "masked_teacher_tail_acc": 71.67,
+   "tail_p_student_wrong_given_mt_wrong": 0.7647,
+   "tail_p_student_wrong_given_mt_right": 0.3721
+  },
+  "cub_lt_final_lateroll_k29_s2_1104_084204_9f09": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 65.16666412353516,
+   "val_wga_last": 49.33,
+   "student_acc_remeasured": 65.17,
+   "student_tail_acc_remeasured": 49.33,
+   "masked_teacher_acc": 71.33,
+   "masked_teacher_tail_acc": 70.67,
+   "tail_p_student_wrong_given_mt_wrong": 0.7727,
+   "tail_p_student_wrong_given_mt_right": 0.3962
+  },
+  "cub_lt_final_lateroll_k29_s3_1104_084209_a3f8": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.33333158493042,
+   "val_wga_last": 48.33,
+   "student_acc_remeasured": 64.33,
+   "student_tail_acc_remeasured": 48.33,
+   "masked_teacher_acc": 73.17,
+   "masked_teacher_tail_acc": 72.33,
+   "tail_p_student_wrong_given_mt_wrong": 0.7952,
+   "tail_p_student_wrong_given_mt_right": 0.4101
+  },
+  "cub_lt_final_maskedkd_frozen_k29_s1_1104_074618_8245": {
+   "arm": "frozen",
+   "seed": 1,
+   "val_acc_last": 61.83333396911621,
+   "val_wga_last": 43.33,
+   "student_acc_remeasured": 61.83,
+   "student_tail_acc_remeasured": 43.33,
+   "masked_teacher_acc": 60.67,
+   "masked_teacher_tail_acc": 61.67,
+   "tail_p_student_wrong_given_mt_wrong": 0.8,
+   "tail_p_student_wrong_given_mt_right": 0.4216
+  },
+  "cub_lt_final_maskedkd_frozen_k29_s2_1104_074622_647c": {
+   "arm": "frozen",
+   "seed": 2,
+   "val_acc_last": 60.333335399627686,
+   "val_wga_last": 40.67,
+   "student_acc_remeasured": 60.33,
+   "student_tail_acc_remeasured": 40.67,
+   "masked_teacher_acc": 58.33,
+   "masked_teacher_tail_acc": 59.67,
+   "tail_p_student_wrong_given_mt_wrong": 0.7438,
+   "tail_p_student_wrong_given_mt_right": 0.4916
+  },
+  "cub_lt_final_maskedkd_frozen_k29_s3_1104_074627_dd2d": {
+   "arm": "frozen",
+   "seed": 3,
+   "val_acc_last": 61.16666793823242,
+   "val_wga_last": 41.33,
+   "student_acc_remeasured": 61.17,
+   "student_tail_acc_remeasured": 41.33,
+   "masked_teacher_acc": 63.33,
+   "masked_teacher_tail_acc": 61.33,
+   "tail_p_student_wrong_given_mt_wrong": 0.8103,
+   "tail_p_student_wrong_given_mt_right": 0.4457
+  },
+  "cub_lt_final_maskedkd_k29_s1_1103_234609_76d1": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 62.833333015441895,
+   "val_wga_last": 44.0,
+   "student_acc_remeasured": 62.83,
+   "student_tail_acc_remeasured": 44.0,
+   "masked_teacher_acc": 57.33,
+   "masked_teacher_tail_acc": 59.67,
+   "tail_p_student_wrong_given_mt_wrong": 0.7521,
+   "tail_p_student_wrong_given_mt_right": 0.4302
+  },
+  "cub_lt_final_maskedkd_k29_s2_1103_234647_0c6c": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 61.83333396911621,
+   "val_wga_last": 44.0,
+   "student_acc_remeasured": 61.83,
+   "student_tail_acc_remeasured": 44.0,
+   "masked_teacher_acc": 60.67,
+   "masked_teacher_tail_acc": 63.0,
+   "tail_p_student_wrong_given_mt_wrong": 0.8108,
+   "tail_p_student_wrong_given_mt_right": 0.4127
+  },
+  "cub_lt_final_maskedkd_k29_s3_1103_234704_b28b": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 62.33333349227905,
+   "val_wga_last": 44.0,
+   "student_acc_remeasured": 62.33,
+   "student_tail_acc_remeasured": 44.0,
+   "masked_teacher_acc": 63.0,
+   "masked_teacher_tail_acc": 62.33,
+   "tail_p_student_wrong_given_mt_wrong": 0.823,
+   "tail_p_student_wrong_given_mt_right": 0.4011
+  }
+ },
+ "verdict": {
+  "P1": "uncertain",
+  "maskedkd_minus_frozen_tail": "positive"
+ },
+ "note": "CI entries are [point, low, high]; dT, dS = arm - lateroll error rates (seed mean); groups by dT sign; tail = val group 1; one rng shared in order tail, head, all; frozen mask = maskedkd rule on the frozen-arm final student (not its training mask)"
+}
