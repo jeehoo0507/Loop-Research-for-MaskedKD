@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_filter_group_image_link_1105_011405_8536",
+ "name": "wb_filter_group_image_link",
+ "source_sha": "8536416f40052892ce4a14f1b57da45a4493d35767e35ced0ebf6f22fe35585a",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds final K=29 group-2 images, are images where the teacher-area filter turns the masked teacher wrong (trustfilt vs lateroll) also images where the trustfilt student is wrong more often?",
+  "method": "per-image seed-averaged masked-teacher and student error differences, group contrast inside each val group with image bootstrap CI, seed-wise contrast t CI",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 13.6
+}
