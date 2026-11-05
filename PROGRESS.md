@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 450, [claude], 04:05 UTC 11-05):
+- GPU가 929분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로 00:18 UTC 11-04). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A186, Caltech-256)를 냈다. 이유는 라운드 361~449와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~185는 간격의 크기·분해·시점을 쟀지만, 왜 MaskedKD 규칙이 덜 보존하는지는 재지 않았다. 그래서 CUB H-C10의 sink 설명을 Caltech에서 다시 쟀다. 겹침 확인: Caltech sink 분석은 없었다.
+- **H-A186은 사전 등록(커밋 ffd0152) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A186 (analysis_caltech_sink_gap_1105_035910_bf90): P1 sink 비율 maskedkd − lateroll (K=29) +0.369 [+0.360, +0.377] → "MaskedKD는 sink 토큰에 예산을 더 쓴다". P2 closure 0.652 [0.594, 0.711] → "sink 제외가 간격의 절반 이상을 닫는다". 검산: student 정확도와 lateroll KL은 H-A180과 같다. maskedkd KL은 0.0024 다르다(attn 경로 표류 수준).
+  - 해석: Caltech-256에서도 CUB(H-C10)와 같다. MaskedKD 마지막 층 attention의 0.42가 이미지당 약 21개의 고노름 토큰으로 간다. K가 작을수록 간격은 거의 다 이것 때문이다(K=12 closure 0.90, K=49 0.55). 예측 두 개가 모두 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. sinkfree는 CUB에서 정확도로 이어지지 않았고(H-C11) 새 선택기도 금지라서, 이 결과로 선택기를 만들지 않는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 449, [claude], 03:55 UTC 11-05):
 - GPU가 919분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A185, Caltech-256)를 냈다. 이유는 라운드 361~448과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~184는 학습 끝 student만 썼다. 그런데 학습 중 마스크는 그 epoch의 student가 만든다. 그래서 같은 run의 스냅샷 e5·e10·final로 K=29 간격을 다시 쟀다. 겹침 확인: Caltech 스냅샷 분석은 없었다.
