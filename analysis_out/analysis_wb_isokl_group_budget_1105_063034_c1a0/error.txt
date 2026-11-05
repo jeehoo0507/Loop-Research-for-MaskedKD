@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/coder/Loop-Research-for-MaskedKD/harness/analyze.py", line 39, in main
+    run(AnalysisAPI(out, device, teacher, dataset))
+  File "analysis/wb_isokl_group_budget.py", line 241, in run
+    tr = {m: {g: numpy.array([float(runs[r]["val_group_acc_last"][str(g)]) for r in rids]) for g in range(4)}
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "analysis/wb_isokl_group_budget.py", line 241, in <dictcomp>
+    tr = {m: {g: numpy.array([float(runs[r]["val_group_acc_last"][str(g)]) for r in rids]) for g in range(4)}
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "analysis/wb_isokl_group_budget.py", line 241, in <dictcomp>
+    tr = {m: {g: numpy.array([float(runs[r]["val_group_acc_last"][str(g)]) for r in rids]) for g in range(4)}
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "analysis/wb_isokl_group_budget.py", line 241, in <listcomp>
+    tr = {m: {g: numpy.array([float(runs[r]["val_group_acc_last"][str(g)]) for r in rids]) for g in range(4)}
+                                    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'val_group_acc_last'

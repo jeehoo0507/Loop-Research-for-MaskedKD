@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_isokl_group_budget_1105_063238_cf23",
+ "name": "wb_isokl_group_budget",
+ "source_sha": "cf238677d9ffde6af68b97cdf4f6f9db4aa6f253390837a3a7bd864aeaacadbe",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds crop+flip views of val, does the last-block CLS attention rule (MaskedKD) need more teacher tokens on minority-group images than on majority-group images of the same class to match the masked-teacher KL that block 6-11 rollout reaches with 29 tokens?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views over a token-budget grid, per-group iso-KL budget by linear interpolation, group-stratified image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Darcet et al. ICLR 2024 (ViTs need registers); Sagawa et al. ICLR 2020 (Waterbirds groups); Efron & Tibshirani 1993"
+ },
+ "seconds": 54.6
+}
