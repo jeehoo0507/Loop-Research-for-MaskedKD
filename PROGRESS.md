@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 466, [claude], 07:25 UTC 11-05):
+- GPU가 약 1130분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A202, CUB)를 냈다. 이유는 라운드 361~465와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. CelebA 목록은 boot 전에 낼 수 없다. H-A196~201은 student 점수(maskedkd)가 lateroll@29보다 토큰이 더 든다는 쪽만 쟀다. 주 질문(FLOPs) 쪽에서 남은 빈칸은 "더 좋은 점수라면 29개보다 얼마나 줄일 수 있는가"이다. 그래서 teacher 쪽 rollout 점수 두 개(시야 위 oracle, 캐시 지도)의 iso-KL 예산을 같은 코드로 재는 것을 가장 보수적인 다음 단계로 골랐다. 둘 다 분석 대조값이고 선택기가 아니다. 겹침 확인: Glob analysis/*isokl*에는 student 점수만 있었다. H-A173은 cub_lt K=29 한 점이었다.
+- **H-A202는 사전 등록(커밋 134a06d) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_cub_isokl_teacher_headroom_1105_072030_8f71 (cub, val 600장, 26초). P1 KL_tview@20 − KL_lateroll@29 +1.837 [+1.698, +1.970]. 등록 문구는 "20개로는 못 미친다: 여유는 31% 미만"이다. 그러나 tview는 같은 29개에서도 lateroll보다 나쁘다(1.818 대 0.858). 그래서 "teacher rollout = 상한"이라는 등록 전제가 틀렸다. P2 tcache@29 − lateroll@29 +0.792 [+0.682, +0.907] → "캐시 지도는 같은 K의 lateroll보다 덜 보존한다". lateroll@29 충실도에 드는 토큰은 tview 47.2개, tcache 46.1개, maskedkd 44.5개다. 전 블록 teacher rollout은 MaskedKD 규칙만큼 나쁘다. 캐시 지도는 시야 위 지도보다 조금 낫다(−0.169). 검산 통과(H-A196 값 재현). 예측: P1은 방향만 맞았고 P2는 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. 한계: 점수 출처(teacher/student)와 블록 범위(0–11/6–11)가 섞여 있다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석을 이어 간다면 블록 범위 혼동을 떼는 것이 후보다(teacher 블록 6–11 rollout 대 student lateroll). 이것도 사전 등록부터 한다.
+
 요약 (라운드 465, [claude], 07:15 UTC 11-05):
 - GPU가 1114분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다. QUEUE의 다른 학습 목록(게이트 1·2·3, H-A59·60·68 확인 묶음, Waterbirds tome@29 s2·s3)은 모두 끝나 있다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A201, Waterbirds)를 냈다. 이유는 라운드 361~464와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 그리고 CelebA 목록은 boot 전에 낼 수 없다. H-A200은 mk29의 붕괴가 e25에 이미 있다고 했다. 그래서 같은 예산 단위로 게이트 3의 online과 frozen(seed 1·2·3)을 직접 비교하는 것을 가장 보수적인 다음 단계로 골랐다. 겹침 확인: Glob analysis/*isokl*에 frozen 판은 없다. H-A42는 K=29 한 점의 정확도였다.
