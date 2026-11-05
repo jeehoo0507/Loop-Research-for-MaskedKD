@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_isokl_frozen_online_1105_070513_3a69",
+ "name": "wb_isokl_frozen_online",
+ "source_sha": "3a69a362d3e5bf68e637d44984699bed39258ac5fcc7a184897473ae2cb44095",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds crop+flip views of val, is the waterbird-on-land teacher-token budget that the last-block CLS attention rule needs to match block 6-11 rollout@29 larger for online MaskedKD@29 students than for frozen step-0 selector students, at the end of training and at epoch 25?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views over a token-budget grid, per-group iso-KL budget by linear interpolation on seed-mean KLs, paired group-stratified image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Darcet et al. ICLR 2024 (ViTs need registers); Sagawa et al. ICLR 2020 (Waterbirds groups); Efron & Tibshirani 1993"
+ },
+ "seconds": 256.9
+}
