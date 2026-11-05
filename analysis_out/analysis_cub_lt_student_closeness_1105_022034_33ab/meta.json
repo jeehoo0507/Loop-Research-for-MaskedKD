@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_student_closeness_1105_022034_33ab",
+ "name": "cub_lt_student_closeness",
+ "source_sha": "33ab347c1126cb1b118ec87b4a98ff4cf6b3425479edf1936cf8c5fcf443484d",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29, is the trained trustfilt student closer to the full teacher (KL, TCKD/wNCKD, top-1 agreement) than the maskedkd student of the same seed, overall and on tail classes?",
+  "method": "teacher-student output divergence on held-out images with exact DKD split, seed-paired t CI, run-level Spearman with permutation p, image bootstrap",
+  "paper": "Hinton et al. 2015 (KD); Zhao et al. CVPR 2022 (decoupled KD); Stanton et al. NeurIPS 2021 (does KD really work? student-teacher fidelity); Son et al. ECCV 2024 (MaskedKD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 11.5
+}
