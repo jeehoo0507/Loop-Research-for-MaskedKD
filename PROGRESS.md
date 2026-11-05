@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 464, [claude], 06:58 UTC 11-05):
+- GPU가 1102분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 11-04 00:18 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A200, Waterbirds)를 냈다. 이유는 라운드 361~463과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. H-A198의 소수 그룹 예산 간격과 게이트 3의 "고리"(online − frozen WGA −22.8)를 잇는 가장 보수적인 다음 단계를 골랐다. 이미 있는 e25·e50·final 스냅샷에서 같은 코드로 간격이 학습 중 자라는지 잰다. 겹침 확인: Glob analysis/*isokl*에 스냅샷판은 없다. wb_feedback/filter_snapshots는 같은 K의 KL·coverage였다.
+- **H-A200은 사전 등록(커밋 d2eabdb) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_wb_isokl_group_snapshots_1105_065201_d016 (val 1199장, 149초). P1 mk29 육지새 간격 final − e25 −5.07 [−10.53, +0.71]. P2 full −2.14 [−7.96, +3.01]. 등록 문구대로 둘 다 "간격 변화는 불확실하다". mk29 student의 그룹 2 붕괴(clean 정확도 39.9%)와 큰 간격(19.4개)은 e25에 이미 있다. 그룹 2의 절대 KL은 mk29가 full보다 계속 높다(0.95 대 0.55). 검산 통과. 예측 P1(하한 > 0)은 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 463, [claude], 06:50 UTC 11-05):
 - GPU가 1093분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A199, cub_lt)를 냈다. 이유는 라운드 361~462와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. H-A198(Waterbirds)에서 소수 그룹 예산이 더 컸다. 그래서 두 번째 무대 cub_lt의 꼬리 클래스에서 같은 코드로 재현되는지 보는 것을 가장 보수적인 다음 단계로 골랐다. 겹침 확인: Glob analysis/*isokl*을 했고, cub_lt 것은 없었다.
