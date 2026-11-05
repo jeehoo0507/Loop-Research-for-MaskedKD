@@ -45,7 +45,7 @@ STUDENTS = {
     "full": "final_full_k196_s1_1030_201811_b764",
     "maskedkd98": "waterbirds_final_maskedkd_k98_s1_1031_130203_5bef",
 }
-TRAINED = {  # seed 1, 2, 3 (record only: trained val group accuracy, no forward pass)
+TRAINED = {  # seed 1, 2, 3 (record only: trained val accuracy and WGA, no forward pass)
     "maskedkd@29": ["waterbirds_final_maskedkd_k29_s1_1031_201502_4be8", "waterbirds_final_maskedkd_k29_s2_1103_170931_92bd",
                     "waterbirds_final_maskedkd_k29_s3_1103_170935_907a"],
     "lateroll@29": ["waterbirds_final_lateroll_k29_s1_1104_025003_b396", "waterbirds_final_lateroll_k29_s2_1104_025008_c94e",
@@ -238,7 +238,8 @@ def run(api):
                                                             "g1-g0": contrast(s, tag, rule, kt, 1, 0)}
                               for rule in ("maskedkd", "nosink") for kt in LR_KS},
             }
-    tr = {m: {g: numpy.array([float(runs[r]["val_group_acc_last"][str(g)]) for r in rids]) for g in range(4)}
+    # api.runs() exposes val_acc_last and val_wga_last only (no per-group accuracy)
+    tr = {m: {g: numpy.array([float(runs[r][g]) for r in rids]) for g in ("val_acc_last", "val_wga_last")}
           for m, rids in TRAINED.items()}
 
     def _tci(d):
@@ -246,9 +247,9 @@ def run(api):
         return {"mean": round(float(d.mean()), 3), "per_seed": [round(float(v), 3) for v in d],
                 "t95_ci": [round(float(d.mean() - 4.303 * se), 3), round(float(d.mean() + 4.303 * se), 3)]}
 
-    trained = {"seed_mean_group_acc": {m: {str(g): round(float(v[g].mean()), 3) for g in range(4)} for m, v in tr.items()},
-               "lateroll@29-maskedkd@29_per_group": {str(g): _tci(tr["lateroll@29"][g] - tr["maskedkd@29"][g])
-                                                     for g in range(4)},
+    trained = {"seed_mean": {m: {g: round(float(v[g].mean()), 3) for g in v} for m, v in tr.items()},
+               "lateroll@29-maskedkd@29": {g: _tci(tr["lateroll@29"][g] - tr["maskedkd@29"][g])
+                                           for g in ("val_acc_last", "val_wga_last")},
                "datasets": sorted({str(runs[r].get("dataset")) for rids in TRAINED.values() for r in rids})}
     api.write_json("summary", {
         "trained_record": trained,

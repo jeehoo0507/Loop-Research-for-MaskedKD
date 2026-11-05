@@ -1883,6 +1883,7 @@ IDEA 2: D-optimal Contrastive Attribution — At penultimate student patch state
   - 기록 (판정 아님): 그룹별 B_g(maskedkd·nosink 대 lateroll@12·29·49, CI, 닿은 비율), 그룹별 KL 평균·가린 teacher 정확도·maskedkd@29 − lateroll@29 KL 차이, clean 판, maskedkd98 student 판, 그룹별 full teacher 정확도. 학습 정확도(runs 메타데이터 val_group_acc_last, seed 1·2·3, 그룹별 lateroll@29 − maskedkd@29 짝 차이, t 95% CI df 2) — 게이트 결과의 대조용이지 예측 검증이 아니다. 검산: student 정확도 91.326·90.325(metrics val_acc_last)와 같아야 한다.
   - 예측 (한 번만): P1 하한 > 0 (확신 중간; 게이트 1에서 MaskedKD가 그룹 2에서 가장 많이 잃었다). P2 CI ∋ 0 (확신 낮음). 2클래스라 KL 값 자체가 작아 K=12에서 이미 닿는 그룹이 있을 수 있다(그러면 B_g = 12로 바닥).
   - 한계: seed 1 student 하나(이미지 단위 CI만), 소수 그룹 val 이미지가 적다, 이미지당 시야 2개, 2클래스 soft label은 클래스 관계 정보가 거의 없다, KL 충실도는 student WGA가 아니다. 결과 뒤 K 격자·sink 문턱·student·시야 수·그룹 짝을 바꾸지 않는다. 새 선택기·학습 job 없음(QUEUE 01:40·09:15).
+  - 제출 1 (라운드 462, 등록 커밋 e767f6d 뒤): analysis_wb_isokl_group_budget_1105_063034_c1a0 → FAILED (KeyError 'val_group_acc_last'). api.runs()는 그룹별 정확도를 주지 않는다. summary는 쓰이지 않았다(결과를 보지 않음). 고침: 학습 기록 항목만 "그룹별 정확도"에서 "val_acc_last·val_wga_last의 seed 1·2·3 짝 차이(lateroll@29 − maskedkd@29)"로 바꿨다. 판정 P1·P2와 측정은 그대로다.
 
 ## 2026-11-04 ideas from Codex (independent)
 IDEA 1: Contrastive HiResCAM selection — Let \(X_i\) be student patch \(i\)’s penultimate-block output and \(m=z_a-z_b\), where \(a,b\) are its two highest-logit classes; compute \(g_i=\partial m/\partial X_i\) using one `autograd.grad(..., retain_graph=True)` call.
