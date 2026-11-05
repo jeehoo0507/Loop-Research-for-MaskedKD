@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_filter_dkd_1105_033847_67f1",
+ "name": "caltech_filter_dkd",
+ "source_sha": "67f14e8678f9d0865941c817547a9b4e80c7dfcc296fca218cf80b79a55a52ef",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, is the lateroll - MaskedKD masked-teacher KL gap a true-class probability loss (TCKD) or a non-target shape loss (wNCKD)?",
+  "method": "exact DKD chain-rule split of keep-only masked-teacher KL into TCKD and (1-p_t)-weighted NCKD, image bootstrap",
+  "paper": "Zhao et al. CVPR 2022 (DKD); Hooker et al. NeurIPS 2019 (keep-only); Abnar & Zuidema ACL 2020 (rollout); Son et al. ECCV 2024 (MaskedKD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 25.5
+}

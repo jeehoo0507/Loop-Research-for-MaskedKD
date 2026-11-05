@@ -1,0 +1,427 @@
+{
+ "n_val": 2971,
+ "teacher_acc": 92.595,
+ "student_acc_check": {
+  "full": [
+   84.349,
+   84.3487024307251
+  ],
+  "maskedkd98": [
+   83.81,
+   83.81016254425049
+  ]
+ },
+ "P1_lateroll_minus_maskedkd_tckd_full_K29": {
+  "mean": -1.0935,
+  "ci": [
+   -1.1843,
+   -1.0031
+  ]
+ },
+ "P2_lateroll_minus_maskedkd_wnckd_full_K29": {
+  "mean": -0.0497,
+  "ci": [
+   -0.0681,
+   -0.0304
+  ]
+ },
+ "raw_kl_gap_full_K29": {
+  "mean": -1.1432,
+  "ci": [
+   -1.2363,
+   -1.0505
+  ]
+ },
+ "tckd_share_of_kl_gap": 0.9565,
+ "record": {
+  "full@K29": {
+   "means": {
+    "maskedkd": {
+     "kl": 3.1008,
+     "tckd": 2.7866,
+     "wnckd": 0.3142,
+     "p_true": 0.296,
+     "acc": 35.9138
+    },
+    "lateroll": {
+     "kl": 1.9576,
+     "tckd": 1.6931,
+     "wnckd": 0.2645,
+     "p_true": 0.4624,
+     "acc": 54.5271
+    },
+    "trustfilt": {
+     "kl": 2.6536,
+     "tckd": 2.3597,
+     "wnckd": 0.2939,
+     "p_true": 0.3522,
+     "acc": 42.7129
+    }
+   },
+   "split_residual_max": 1.0281251405785952e-07,
+   "diff": {
+    "lateroll-maskedkd": {
+     "kl": {
+      "mean": -1.1432,
+      "ci": [
+       -1.2363,
+       -1.0505
+      ]
+     },
+     "tckd": {
+      "mean": -1.0935,
+      "ci": [
+       -1.1843,
+       -1.0031
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0497,
+      "ci": [
+       -0.0681,
+       -0.0304
+      ]
+     }
+    },
+    "trustfilt-maskedkd": {
+     "kl": {
+      "mean": -0.4472,
+      "ci": [
+       -0.5478,
+       -0.343
+      ]
+     },
+     "tckd": {
+      "mean": -0.4268,
+      "ci": [
+       -0.5248,
+       -0.3285
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0203,
+      "ci": [
+       -0.0384,
+       -0.0004
+      ]
+     }
+    },
+    "trustfilt-lateroll": {
+     "kl": {
+      "mean": 0.696,
+      "ci": [
+       0.6095,
+       0.7853
+      ]
+     },
+     "tckd": {
+      "mean": 0.6667,
+      "ci": [
+       0.5827,
+       0.7533
+      ]
+     },
+     "wnckd": {
+      "mean": 0.0293,
+      "ci": [
+       0.0119,
+       0.047
+      ]
+     }
+    }
+   }
+  },
+  "full@K98": {
+   "means": {
+    "maskedkd": {
+     "kl": 0.1395,
+     "tckd": 0.0887,
+     "wnckd": 0.0508,
+     "p_true": 0.8694,
+     "acc": 90.3736
+    },
+    "lateroll": {
+     "kl": 0.0921,
+     "tckd": 0.0564,
+     "wnckd": 0.0357,
+     "p_true": 0.8768,
+     "acc": 90.7439
+    },
+    "trustfilt": {
+     "kl": 0.1073,
+     "tckd": 0.0681,
+     "wnckd": 0.0392,
+     "p_true": 0.8739,
+     "acc": 90.7439
+    }
+   },
+   "split_residual_max": 2.5914621559763873e-09,
+   "diff": {
+    "lateroll-maskedkd": {
+     "kl": {
+      "mean": -0.0474,
+      "ci": [
+       -0.0623,
+       -0.0325
+      ]
+     },
+     "tckd": {
+      "mean": -0.0323,
+      "ci": [
+       -0.0457,
+       -0.0202
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0151,
+      "ci": [
+       -0.0211,
+       -0.009
+      ]
+     }
+    },
+    "trustfilt-maskedkd": {
+     "kl": {
+      "mean": -0.0322,
+      "ci": [
+       -0.0483,
+       -0.0163
+      ]
+     },
+     "tckd": {
+      "mean": -0.0205,
+      "ci": [
+       -0.0356,
+       -0.0066
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0116,
+      "ci": [
+       -0.0173,
+       -0.0057
+      ]
+     }
+    },
+    "trustfilt-lateroll": {
+     "kl": {
+      "mean": 0.0152,
+      "ci": [
+       0.0045,
+       0.0263
+      ]
+     },
+     "tckd": {
+      "mean": 0.0118,
+      "ci": [
+       0.0023,
+       0.022
+      ]
+     },
+     "wnckd": {
+      "mean": 0.0034,
+      "ci": [
+       -0.0008,
+       0.0075
+      ]
+     }
+    }
+   }
+  },
+  "maskedkd98@K29": {
+   "means": {
+    "maskedkd": {
+     "kl": 2.9982,
+     "tckd": 2.6855,
+     "wnckd": 0.3127,
+     "p_true": 0.3132,
+     "acc": 37.1929
+    },
+    "lateroll": {
+     "kl": 1.9702,
+     "tckd": 1.7012,
+     "wnckd": 0.269,
+     "p_true": 0.4655,
+     "acc": 54.1568
+    },
+    "trustfilt": {
+     "kl": 2.6749,
+     "tckd": 2.3789,
+     "wnckd": 0.296,
+     "p_true": 0.3493,
+     "acc": 42.0397
+    }
+   },
+   "split_residual_max": 9.946156609430545e-08,
+   "diff": {
+    "lateroll-maskedkd": {
+     "kl": {
+      "mean": -1.028,
+      "ci": [
+       -1.1151,
+       -0.9454
+      ]
+     },
+     "tckd": {
+      "mean": -0.9843,
+      "ci": [
+       -1.0688,
+       -0.9023
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0437,
+      "ci": [
+       -0.0612,
+       -0.0254
+      ]
+     }
+    },
+    "trustfilt-maskedkd": {
+     "kl": {
+      "mean": -0.3233,
+      "ci": [
+       -0.4196,
+       -0.2205
+      ]
+     },
+     "tckd": {
+      "mean": -0.3066,
+      "ci": [
+       -0.402,
+       -0.2098
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0167,
+      "ci": [
+       -0.0375,
+       0.0051
+      ]
+     }
+    },
+    "trustfilt-lateroll": {
+     "kl": {
+      "mean": 0.7047,
+      "ci": [
+       0.6175,
+       0.7955
+      ]
+     },
+     "tckd": {
+      "mean": 0.6777,
+      "ci": [
+       0.5931,
+       0.7674
+      ]
+     },
+     "wnckd": {
+      "mean": 0.0269,
+      "ci": [
+       0.0091,
+       0.045
+      ]
+     }
+    }
+   }
+  },
+  "maskedkd98@K98": {
+   "means": {
+    "maskedkd": {
+     "kl": 0.138,
+     "tckd": 0.0885,
+     "wnckd": 0.0495,
+     "p_true": 0.867,
+     "acc": 90.0707
+    },
+    "lateroll": {
+     "kl": 0.0947,
+     "tckd": 0.0598,
+     "wnckd": 0.0349,
+     "p_true": 0.8765,
+     "acc": 90.6765
+    },
+    "trustfilt": {
+     "kl": 0.1031,
+     "tckd": 0.0676,
+     "wnckd": 0.0355,
+     "p_true": 0.8734,
+     "acc": 90.3063
+    }
+   },
+   "split_residual_max": 3.216491184510062e-09,
+   "diff": {
+    "lateroll-maskedkd": {
+     "kl": {
+      "mean": -0.0433,
+      "ci": [
+       -0.0589,
+       -0.0279
+      ]
+     },
+     "tckd": {
+      "mean": -0.0287,
+      "ci": [
+       -0.0419,
+       -0.015
+      ]
+     },
+     "wnckd": {
+      "mean": -0.0146,
+      "ci": [
+       -0.0208,
+       -0.0087
+      ]
+     }
+    },
+    "trustfilt-maskedkd": {
+     "kl": {
+      "mean": -0.0349,
+      "ci": [
+       -0.0509,
+       -0.0184
+      ]
+     },
+     "tckd": {
+      "mean": -0.0209,
+      "ci": [
+       -0.0351,
+       -0.0065
+      ]
+     },
+     "wnckd": {
+      "mean": -0.014,
+      "ci": [
+       -0.0204,
+       -0.0079
+      ]
+     }
+    },
+    "trustfilt-lateroll": {
+     "kl": {
+      "mean": 0.0084,
+      "ci": [
+       -0.0028,
+       0.0203
+      ]
+     },
+     "tckd": {
+      "mean": 0.0078,
+      "ci": [
+       -0.0029,
+       0.0188
+      ]
+     },
+     "wnckd": {
+      "mean": 0.0006,
+      "ci": [
+       -0.0031,
+       0.0046
+      ]
+     }
+    }
+   }
+  }
+ },
+ "note": "KL(full teacher || keep-only masked teacher) = TCKD + wNCKD, T=1, nats; 95% percentile bootstrap over val images (2000 resamples, shared indices); seed-1 students only"
+}
