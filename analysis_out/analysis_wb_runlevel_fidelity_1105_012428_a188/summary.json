@@ -1,0 +1,290 @@
+{
+ "n_val": 1199,
+ "n_g2": 133,
+ "K": 29,
+ "n_runs": 18,
+ "P1_spearman_kl_wga_runs": [
+  0.1352,
+  0.6776,
+  0.3254
+ ],
+ "P2_spearman_kl_acc_runs": [
+  -0.4737,
+  0.0266,
+  0.9744
+ ],
+ "record": {
+  "spearman_kl_wga_arms": [
+   0.1429,
+   0.6349,
+   0.4066
+  ],
+  "spearman_kl_acc_arms": [
+   -0.3714,
+   0.2515,
+   0.7873
+  ],
+  "spearman_klg2_wga_runs": [
+   -0.5253,
+   0.0164,
+   0.9841
+  ],
+  "spearman_tacc_wga_runs": [
+   -0.3106,
+   0.1244,
+   0.8768
+  ],
+  "spearman_taccg2_wga_runs": [
+   0.5562,
+   0.9895,
+   0.0106
+  ],
+  "spearman_kl_wga_runs_no_maskedkd": [
+   0.4607,
+   0.9377,
+   0.0643
+  ],
+  "spearman_kl_acc_runs_no_maskedkd": [
+   -0.3821,
+   0.0728,
+   0.9293
+  ],
+  "arm_means": {
+   "maskedkd": {
+    "kl": 0.3223,
+    "kl_g2": 1.2502,
+    "t_acc": 80.6505,
+    "t_acc_g2": 21.3033,
+    "acc": 87.7398,
+    "wga": 38.5933
+   },
+   "rollout": {
+    "kl": 0.2241,
+    "kl_g2": 0.4713,
+    "t_acc": 85.2933,
+    "t_acc_g2": 58.1454,
+    "acc": 89.5746,
+    "wga": 62.1567
+   },
+   "lateroll": {
+    "kl": 0.1685,
+    "kl_g2": 0.5223,
+    "t_acc": 88.2402,
+    "t_acc_g2": 51.6291,
+    "acc": 90.7145,
+    "wga": 63.9067
+   },
+   "trustmask_v1": {
+    "kl": 0.1664,
+    "kl_g2": 0.5047,
+    "t_acc": 88.1012,
+    "t_acc_g2": 49.3734,
+    "acc": 90.6033,
+    "wga": 62.4033
+   },
+   "trustfilt": {
+    "kl": 0.3176,
+    "kl_g2": 0.4315,
+    "t_acc": 80.1501,
+    "t_acc_g2": 58.1454,
+    "acc": 90.9369,
+    "wga": 72.68
+   },
+   "teacher_topk": {
+    "kl": 0.3804,
+    "kl_g2": 0.6611,
+    "t_acc": 73.8115,
+    "t_acc_g2": 43.609,
+    "acc": 89.7136,
+    "wga": 64.41
+   }
+  }
+ },
+ "per_run": {
+  "waterbirds_final_maskedkd_k29_s1_1031_201502_4be8": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 87.24,
+   "val_wga_last": 37.59,
+   "kl": 0.3236,
+   "kl_g2": 1.2557,
+   "t_acc": 80.4003,
+   "t_acc_g2": 19.5489
+  },
+  "waterbirds_final_maskedkd_k29_s2_1103_170931_92bd": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 87.66,
+   "val_wga_last": 37.59,
+   "kl": 0.3098,
+   "kl_g2": 1.1976,
+   "t_acc": 80.4003,
+   "t_acc_g2": 21.0526
+  },
+  "waterbirds_final_maskedkd_k29_s3_1103_170935_907a": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 88.32,
+   "val_wga_last": 40.6,
+   "kl": 0.3337,
+   "kl_g2": 1.2974,
+   "t_acc": 81.151,
+   "t_acc_g2": 23.3083
+  },
+  "waterbirds_final_rollout_k29_s1_1031_201502_e135": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 89.91,
+   "val_wga_last": 63.16,
+   "kl": 0.2392,
+   "kl_g2": 0.4301,
+   "t_acc": 84.2369,
+   "t_acc_g2": 58.6466
+  },
+  "waterbirds_final_rollout_k29_s2_1103_170940_2b72": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 88.82,
+   "val_wga_last": 59.4,
+   "kl": 0.2111,
+   "kl_g2": 0.5087,
+   "t_acc": 86.5721,
+   "t_acc_g2": 57.8947
+  },
+  "waterbirds_final_rollout_k29_s3_1103_170944_dd2c": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 89.99,
+   "val_wga_last": 63.91,
+   "kl": 0.2221,
+   "kl_g2": 0.4751,
+   "t_acc": 85.0709,
+   "t_acc_g2": 57.8947
+  },
+  "waterbirds_final_lateroll_k29_s1_1104_025003_b396": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 90.99,
+   "val_wga_last": 65.41,
+   "kl": 0.169,
+   "kl_g2": 0.5063,
+   "t_acc": 88.2402,
+   "t_acc_g2": 52.6316
+  },
+  "waterbirds_final_lateroll_k29_s2_1104_025008_c94e": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 90.41,
+   "val_wga_last": 61.65,
+   "kl": 0.1598,
+   "kl_g2": 0.4588,
+   "t_acc": 88.2402,
+   "t_acc_g2": 54.8872
+  },
+  "waterbirds_final_lateroll_k29_s3_1104_025012_629b": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 90.74,
+   "val_wga_last": 64.66,
+   "kl": 0.1767,
+   "kl_g2": 0.6018,
+   "t_acc": 88.2402,
+   "t_acc_g2": 47.3684
+  },
+  "waterbirds_final_trustmask_v1_k29_s1_1103_170855_2e3c": {
+   "arm": "trustmask_v1",
+   "seed": 1,
+   "val_acc_last": 90.24,
+   "val_wga_last": 61.65,
+   "kl": 0.1641,
+   "kl_g2": 0.4726,
+   "t_acc": 86.9058,
+   "t_acc_g2": 42.8571
+  },
+  "waterbirds_final_trustmask_v1_k29_s2_1103_170951_279c": {
+   "arm": "trustmask_v1",
+   "seed": 2,
+   "val_acc_last": 90.24,
+   "val_wga_last": 60.9,
+   "kl": 0.1762,
+   "kl_g2": 0.5422,
+   "t_acc": 88.407,
+   "t_acc_g2": 50.3759
+  },
+  "waterbirds_final_trustmask_v1_k29_s3_1103_170956_fdca": {
+   "arm": "trustmask_v1",
+   "seed": 3,
+   "val_acc_last": 91.33,
+   "val_wga_last": 64.66,
+   "kl": 0.1589,
+   "kl_g2": 0.4992,
+   "t_acc": 88.9908,
+   "t_acc_g2": 54.8872
+  },
+  "waterbirds_final_trustfilt_k29_s1_1103_171121_24be": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 91.49,
+   "val_wga_last": 72.18,
+   "kl": 0.3181,
+   "kl_g2": 0.419,
+   "t_acc": 80.3169,
+   "t_acc_g2": 59.3985
+  },
+  "waterbirds_final_trustfilt_k29_s2_1103_171126_b33d": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 90.41,
+   "val_wga_last": 72.18,
+   "kl": 0.3164,
+   "kl_g2": 0.4325,
+   "t_acc": 80.0667,
+   "t_acc_g2": 55.6391
+  },
+  "waterbirds_final_trustfilt_k29_s3_1103_171130_db65": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 90.91,
+   "val_wga_last": 73.68,
+   "kl": 0.3182,
+   "kl_g2": 0.4429,
+   "t_acc": 80.0667,
+   "t_acc_g2": 59.3985
+  },
+  "waterbirds_final_teacher_topk_k29_s1_1103_170914_f015": {
+   "arm": "teacher_topk",
+   "seed": 1,
+   "val_acc_last": 89.74,
+   "val_wga_last": 64.66,
+   "kl": 0.3804,
+   "kl_g2": 0.6611,
+   "t_acc": 73.8115,
+   "t_acc_g2": 43.609
+  },
+  "waterbirds_final_teacher_topk_k29_s2_1103_170918_4535": {
+   "arm": "teacher_topk",
+   "seed": 2,
+   "val_acc_last": 89.49,
+   "val_wga_last": 63.91,
+   "kl": 0.3804,
+   "kl_g2": 0.6611,
+   "t_acc": 73.8115,
+   "t_acc_g2": 43.609
+  },
+  "waterbirds_final_teacher_topk_k29_s3_1103_170923_d12a": {
+   "arm": "teacher_topk",
+   "seed": 3,
+   "val_acc_last": 89.91,
+   "val_wga_last": 64.66,
+   "kl": 0.3804,
+   "kl_g2": 0.6611,
+   "t_acc": 73.8115,
+   "t_acc_g2": 43.609
+  }
+ },
+ "verdict": {
+  "P1": "uncertain",
+  "P2": "negative"
+ },
+ "note": "permutation entries are [rho, p_lower (rho <= observed), p_upper (rho >= observed)]; one rng shared in order P1, P2, then record keys in listed order"
+}
