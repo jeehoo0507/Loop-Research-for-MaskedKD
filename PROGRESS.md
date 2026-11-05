@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 448, [claude], 03:45 UTC 11-05):
+- GPU가 910분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A184, Caltech-256)를 냈다. 이유는 라운드 361~447과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. Caltech에서는 아직 DKD 분해가 없었다(H-A160·174는 CUB·Aircraft·cub_lt). 그래서 H-A180의 K=29 간격 −1.14를 TCKD와 wNCKD로 나눴다.
+- **H-A184는 사전 등록(커밋 ef98411) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A184 (analysis_caltech_filter_dkd_1105_033847_67f1): P1 lateroll − maskedkd TCKD −1.094 [−1.184, −1.003], P2 wNCKD −0.050 [−0.068, −0.030] → 둘 다 lateroll이 덜 잃는다. TCKD 몫은 0.957이다. 검산: 원 KL 차 −1.143이 H-A180과 같고, student 정확도가 metrics와 같으며, 분해 잔차는 1e-7 이하다.
+  - 해석: 257 클래스 데이터에서도 K=29 MaskedKD의 손실은 거의 다 정답 확률 쪽이다(가린 teacher p_true 0.30 대 lateroll 0.46). K=98에서는 비정답 몫이 32%로 커지지만 간격 자체가 작다(−0.047). 세 예측이 모두 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 447, [claude], 03:45 UTC 11-05):
 - GPU가 901분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A183, Caltech-256)를 냈다. 이유는 라운드 361~446과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~182는 가린 teacher 충실도만 쟀다. 사람 지시(10-31 18:30)는 근거가 정확도와 이어져야 한다고 했다. 그래서 이번에는 충실도를 student 쪽 결과와 이미지 단위로 이었고, CE student를 난이도 대조로 두었다. 겹침 확인: H-A8·H-A9는 student 차이와 잇지 않았다.
