@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_aug_fidelity_1105_030940_4124",
+ "name": "caltech_aug_fidelity",
+ "source_sha": "4124457ac6862b542af9a3bdd4cd1cee6250c412fd8c1ffda0e64d502e5757d6",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 crop+flip views of val, is the lateroll / trustfilt masked teacher still closer to the full teacher than the MaskedKD masked teacher at K=29 (H-A180 was clean view only)?",
+  "method": "keep-only masked-teacher KL to the full teacher on RandomResizedCrop+flip views, attention rollout, warped cached teacher map, image bootstrap",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Szegedy et al. 2015 (RandomResizedCrop); Beyer et al. CVPR 2022 (consistent teaching); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 99.4
+}
