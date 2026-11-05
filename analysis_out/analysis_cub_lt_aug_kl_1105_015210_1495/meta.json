@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_aug_kl_1105_015210_1495",
+ "name": "cub_lt_aug_kl",
+ "source_sha": "1495e56f056aaa0ac30b89019aebb0db45401a6cc64992ea6cb47f18931f75ee",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 runs, on training-like crop+flip views is trustfilt's masked teacher closer (KL) to the full teacher on the same view than maskedkd's, and does the aug-view KL rank run accuracy?",
+  "method": "keep-only masked-teacher faithfulness (KL to the full teacher on the same RandomResizedCrop+flip view) per token rule; student/teacher attention rollout (teacher map warped as the training cache) and last-block CLS attention; paired t CI; Spearman across runs with permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Beyer et al. CVPR 2022 (consistent teaching); Hinton et al. 2015 (KD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 26.1
+}
