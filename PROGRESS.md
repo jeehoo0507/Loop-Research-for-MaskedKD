@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 449, [claude], 03:55 UTC 11-05):
+- GPU가 919분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A185, Caltech-256)를 냈다. 이유는 라운드 361~448과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~184는 학습 끝 student만 썼다. 그런데 학습 중 마스크는 그 epoch의 student가 만든다. 그래서 같은 run의 스냅샷 e5·e10·final로 K=29 간격을 다시 쟀다. 겹침 확인: Caltech 스냅샷 분석은 없었다.
+- **H-A185는 사전 등록(커밋 ed12bd4) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A185 (analysis_caltech_snapshot_fidelity_1105_034847_3135): P1 e5 lateroll − maskedkd KL −1.438 [−1.532, −1.349] → "학습 초기 student에서도 lateroll이 더 보존한다". P2 final − e5 간격 +0.294 [+0.200, +0.383] → "간격은 학습하면서 줄어든다". 검산: final 값이 H-A180과 같고, 스냅샷 정확도가 metrics history와 같다.
+  - 해석: full student에서 간격이 줄어든 것은 MaskedKD 규칙이 나아졌기 때문이다(KL −0.26). lateroll은 거의 그대로다. 자기 마스크로 학습한 maskedkd98 student에서는 MaskedKD 규칙이 나빠진다(+0.16). 그래서 간격이 조금 커진다(−0.10). 예측 중 P1은 맞았고 P2는 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 448, [claude], 03:45 UTC 11-05):
 - GPU가 910분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A184, Caltech-256)를 냈다. 이유는 라운드 361~447과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. Caltech에서는 아직 DKD 분해가 없었다(H-A160·174는 CUB·Aircraft·cub_lt). 그래서 H-A180의 K=29 간격 −1.14를 TCKD와 wNCKD로 나눴다.
