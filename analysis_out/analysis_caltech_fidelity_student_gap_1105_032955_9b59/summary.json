@@ -1,0 +1,151 @@
+{
+ "n_val": 2971,
+ "K": 98,
+ "teacher_acc": 92.595,
+ "student_acc_check": {
+  "full": [
+   84.349,
+   84.3487024307251
+  ],
+  "maskedkd98": [
+   83.81,
+   83.81016254425049
+  ],
+  "ce": [
+   83.305,
+   83.30528736114502
+  ]
+ },
+ "student_teacher_kl_mean": {
+  "full": 0.4745,
+  "maskedkd98": 0.4847,
+  "ce": 0.5936
+ },
+ "G_mk_mean": 0.0102,
+ "G_ce_mean": 0.119,
+ "P1_spearman_F_maskedkd98own_vs_Gmk": {
+  "mean": 0.0705,
+  "ci": [
+   0.0268,
+   0.1106
+  ]
+ },
+ "P2_spearman_Gmk_minus_Gce": {
+  "mean": -0.0323,
+  "ci": [
+   -0.079,
+   0.0131
+  ]
+ },
+ "record": {
+  "F_full_maskedkd": {
+   "F_mean": 0.1395,
+   "spearman_F_Gmk": {
+    "mean": 0.0631,
+    "ci": [
+     0.021,
+     0.102
+    ]
+   },
+   "spearman_F_Gce": {
+    "mean": 0.1025,
+    "ci": [
+     0.0637,
+     0.1411
+    ]
+   },
+   "tercile_acc_gap": {
+    "full-maskedkd98": {
+     "bottom_third": 0.101,
+     "top_third": 1.818
+    },
+    "full-ce": {
+     "bottom_third": 0.404,
+     "top_third": 1.414
+    }
+   }
+  },
+  "F_full_lateroll": {
+   "F_mean": 0.0921,
+   "spearman_F_Gmk": {
+    "mean": 0.0584,
+    "ci": [
+     0.0155,
+     0.0978
+    ]
+   },
+   "spearman_F_Gce": {
+    "mean": 0.0938,
+    "ci": [
+     0.0553,
+     0.1328
+    ]
+   },
+   "tercile_acc_gap": {
+    "full-maskedkd98": {
+     "bottom_third": 0.202,
+     "top_third": 2.121
+    },
+    "full-ce": {
+     "bottom_third": 0.505,
+     "top_third": 1.414
+    }
+   }
+  },
+  "F_maskedkd98_maskedkd": {
+   "F_mean": 0.138,
+   "spearman_F_Gmk": {
+    "mean": 0.0705,
+    "ci": [
+     0.0268,
+     0.1106
+    ]
+   },
+   "spearman_F_Gce": {
+    "mean": 0.1028,
+    "ci": [
+     0.0643,
+     0.1428
+    ]
+   },
+   "tercile_acc_gap": {
+    "full-maskedkd98": {
+     "bottom_third": -0.101,
+     "top_third": 1.717
+    },
+    "full-ce": {
+     "bottom_third": 0.303,
+     "top_third": 1.616
+    }
+   }
+  },
+  "F_maskedkd98_lateroll": {
+   "F_mean": 0.0947,
+   "spearman_F_Gmk": {
+    "mean": 0.0668,
+    "ci": [
+     0.0252,
+     0.1061
+    ]
+   },
+   "spearman_F_Gce": {
+    "mean": 0.1083,
+    "ci": [
+     0.0694,
+     0.148
+    ]
+   },
+   "tercile_acc_gap": {
+    "full-maskedkd98": {
+     "bottom_third": 0.101,
+     "top_third": 2.121
+    },
+    "full-ce": {
+     "bottom_third": 0.303,
+     "top_third": 2.02
+    }
+   }
+  }
+ },
+ "note": "F = KL(full teacher || keep-only masked teacher, K=98), G = KL(teacher||student) - KL(teacher||full student), T=1, nats; 95% percentile bootstrap over val images (2000 resamples); seed-1 students only"
+}

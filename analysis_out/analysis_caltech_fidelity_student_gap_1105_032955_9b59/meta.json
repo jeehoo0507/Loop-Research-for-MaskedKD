@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_fidelity_student_gap_1105_032955_9b59",
+ "name": "caltech_fidelity_student_gap",
+ "source_sha": "9b59cadea16983a7fa62bd8b471adf213ec7d2900af4e13fbbb17a9ca2ff6c10",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, are images whose MaskedKD@98 masked teacher is far from the full teacher the images where the MaskedKD@98 student is farther from the teacher than the Full KD student, beyond what image difficulty (CE student gap) explains?",
+  "method": "per-image keep-only masked-teacher KL vs per-image student-teacher KL gap, Spearman with image bootstrap and a CE-student negative control",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Hinton et al. 2015 (KD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 22.2
+}
