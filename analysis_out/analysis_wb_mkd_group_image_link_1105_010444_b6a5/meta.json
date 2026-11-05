@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_mkd_group_image_link_1105_010444_b6a5",
+ "name": "wb_mkd_group_image_link",
+ "source_sha": "b6a5d3fc0c0ef9540e4852dc12981f6b6b4651b76c2a3d53a342abdea4dee221",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds final K=29 group-2 images, are images where the maskedkd mask turns the masked teacher wrong (maskedkd vs lateroll) also images where the maskedkd student is wrong more often?",
+  "method": "per-image seed-averaged masked-teacher and student error differences, group contrast inside each val group with image bootstrap CI, seed-wise contrast t CI",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 11.9
+}
