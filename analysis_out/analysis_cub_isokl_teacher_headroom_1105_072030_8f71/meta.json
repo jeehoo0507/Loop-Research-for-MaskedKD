@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_isokl_teacher_headroom_1105_072030_8f71",
+ "name": "cub_isokl_teacher_headroom",
+ "source_sha": "8f718c65423f6e3cbdb95a85e9c059e25d3f8915743cc3aa42db78bf8d9808a8",
+ "status": "done",
+ "meta": {
+  "question": "on CUB-200-2011 crop+flip views of val, how many teacher tokens do teacher-side rollout scores (on the view = oracle, cached clean map warped to the view = cost-free) need to match the masked-teacher KL that student block 6-11 rollout reaches with 29 tokens?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views over a token-budget grid, iso-KL budget by linear interpolation, paired image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993; Wah et al. 2011 (CUB)"
+ },
+ "seconds": 26.0
+}
