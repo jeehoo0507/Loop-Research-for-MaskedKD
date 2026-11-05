@@ -1,0 +1,739 @@
+{
+ "n_val": 2971,
+ "views_per_image": 2,
+ "full_teacher_acc": {
+  "clean": 92.595,
+  "aug": 85.241
+ },
+ "student_acc_check": {
+  "full": [
+   84.349,
+   84.3487024307251
+  ],
+  "maskedkd98": [
+   83.81,
+   83.81016254425049
+  ]
+ },
+ "P1_sink_share_maskedkd_minus_lateroll_aug_full_K29": {
+  "mean": 0.3585,
+  "ci": [
+   0.352,
+   0.3654
+  ]
+ },
+ "P2_closure_kl_aug_full_K29": {
+  "mean": 0.5473,
+  "ci": [
+   0.5007,
+   0.5962
+  ]
+ },
+ "record": {
+  "full": {
+   "student_acc": 84.349,
+   "clean": {
+    "sink_count_mean": 20.83,
+    "last_attn_mass_on_sinks": 0.4227,
+    "K12": {
+     "sink_share": {
+      "maskedkd": 0.6794,
+      "lateroll": 0.1429
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.5365,
+      "ci": [
+       0.5264,
+       0.5472
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 5.1457,
+      "nosink": 4.6877,
+      "lateroll": 4.6382
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.155,
+      "nosink": 14.709,
+      "lateroll": 15.247
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.4579,
+       "ci": [
+        -0.5392,
+        -0.3817
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.5075,
+       "ci": [
+        -0.5985,
+        -0.4205
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.0495,
+       "ci": [
+        -0.0354,
+        0.1339
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.9024,
+      "ci": [
+       0.7582,
+       1.0759
+      ]
+     }
+    },
+    "K29": {
+     "sink_share": {
+      "maskedkd": 0.4847,
+      "lateroll": 0.1162
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.3686,
+      "ci": [
+       0.3598,
+       0.377
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 3.0984,
+      "nosink": 2.3551,
+      "lateroll": 1.9576
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 36.149,
+      "nosink": 45.776,
+      "lateroll": 54.527
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.7434,
+       "ci": [
+        -0.8207,
+        -0.6632
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -1.1409,
+       "ci": [
+        -1.2297,
+        -1.0461
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.3975,
+       "ci": [
+        0.3173,
+        0.4794
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.6516,
+      "ci": [
+       0.5914,
+       0.7131
+      ]
+     }
+    },
+    "K49": {
+     "sink_share": {
+      "maskedkd": 0.3517,
+      "lateroll": 0.1033
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.2484,
+      "ci": [
+       0.2418,
+       0.255
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 1.136,
+      "nosink": 0.8708,
+      "lateroll": 0.6529
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 69.606,
+      "nosink": 74.689,
+      "lateroll": 78.93
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.2652,
+       "ci": [
+        -0.3169,
+        -0.2123
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.4831,
+       "ci": [
+        -0.5436,
+        -0.4234
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2179,
+       "ci": [
+        0.1683,
+        0.2685
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.5489,
+      "ci": [
+       0.4589,
+       0.6354
+      ]
+     }
+    }
+   },
+   "aug": {
+    "sink_count_mean": 20.391,
+    "last_attn_mass_on_sinks": 0.3955,
+    "K12": {
+     "sink_share": {
+      "maskedkd": 0.6729,
+      "lateroll": 0.1376
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.5353,
+      "ci": [
+       0.5269,
+       0.5435
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 4.9578,
+      "nosink": 4.5198,
+      "lateroll": 4.295
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.357,
+      "nosink": 13.598,
+      "lateroll": 16.51
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.438,
+       "ci": [
+        -0.4988,
+        -0.3802
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.6628,
+       "ci": [
+        -0.731,
+        -0.5955
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2248,
+       "ci": [
+        0.1598,
+        0.2867
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.6609,
+      "ci": [
+       0.5859,
+       0.7471
+      ]
+     }
+    },
+    "K29": {
+     "sink_share": {
+      "maskedkd": 0.4742,
+      "lateroll": 0.1157
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.3585,
+      "ci": [
+       0.352,
+       0.3654
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 3.1545,
+      "nosink": 2.5998,
+      "lateroll": 2.1409
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 30.815,
+      "nosink": 38.455,
+      "lateroll": 46.567
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.5547,
+       "ci": [
+        -0.6153,
+        -0.4969
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -1.0136,
+       "ci": [
+        -1.084,
+        -0.9405
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.4589,
+       "ci": [
+        0.3961,
+        0.5177
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.5473,
+      "ci": [
+       0.5007,
+       0.5962
+      ]
+     }
+    },
+    "K49": {
+     "sink_share": {
+      "maskedkd": 0.3431,
+      "lateroll": 0.1052
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.238,
+      "ci": [
+       0.2329,
+       0.2432
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 1.3665,
+      "nosink": 1.1628,
+      "lateroll": 0.8664
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 59.963,
+      "nosink": 63.346,
+      "lateroll": 68.967
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.2037,
+       "ci": [
+        -0.2427,
+        -0.1631
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.5001,
+       "ci": [
+        -0.548,
+        -0.4505
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2964,
+       "ci": [
+        0.2532,
+        0.3373
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.4073,
+      "ci": [
+       0.3406,
+       0.4735
+      ]
+     }
+    }
+   },
+   "aug_minus_clean_closure": {
+    "K12": {
+     "mean": -0.2415,
+     "ci": [
+      -0.4181,
+      -0.0893
+     ]
+    },
+    "K29": {
+     "mean": -0.1043,
+     "ci": [
+      -0.1715,
+      -0.0375
+     ]
+    },
+    "K49": {
+     "mean": -0.1416,
+     "ci": [
+      -0.2389,
+      -0.0481
+     ]
+    }
+   }
+  },
+  "maskedkd98": {
+   "student_acc": 83.81,
+   "clean": {
+    "sink_count_mean": 20.333,
+    "last_attn_mass_on_sinks": 0.3794,
+    "K12": {
+     "sink_share": {
+      "maskedkd": 0.6086,
+      "lateroll": 0.1377
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.4708,
+      "ci": [
+       0.4612,
+       0.4814
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 5.1061,
+      "nosink": 4.6733,
+      "lateroll": 4.5707
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.862,
+      "nosink": 14.271,
+      "lateroll": 16.19
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.4328,
+       "ci": [
+        -0.5086,
+        -0.356
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.5354,
+       "ci": [
+        -0.6188,
+        -0.4492
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.1026,
+       "ci": [
+        0.0233,
+        0.1914
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.8084,
+      "ci": [
+       0.6708,
+       0.9497
+      ]
+     }
+    },
+    "K29": {
+     "sink_share": {
+      "maskedkd": 0.4373,
+      "lateroll": 0.1119
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.3254,
+      "ci": [
+       0.3174,
+       0.3335
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 2.9999,
+      "nosink": 2.3345,
+      "lateroll": 1.9702
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 37.294,
+      "nosink": 46.685,
+      "lateroll": 54.157
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.6653,
+       "ci": [
+        -0.7454,
+        -0.5887
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -1.0297,
+       "ci": [
+        -1.1178,
+        -0.9419
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.3644,
+       "ci": [
+        0.2862,
+        0.4421
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.6461,
+      "ci": [
+       0.585,
+       0.7085
+      ]
+     }
+    },
+    "K49": {
+     "sink_share": {
+      "maskedkd": 0.3233,
+      "lateroll": 0.0983
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.225,
+      "ci": [
+       0.2189,
+       0.2312
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 1.0872,
+      "nosink": 0.8591,
+      "lateroll": 0.6676
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 70.919,
+      "nosink": 74.689,
+      "lateroll": 78.997
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.2281,
+       "ci": [
+        -0.2785,
+        -0.1779
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.4196,
+       "ci": [
+        -0.4758,
+        -0.3584
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.1915,
+       "ci": [
+        0.1423,
+        0.2394
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.5436,
+      "ci": [
+       0.4526,
+       0.64
+      ]
+     }
+    }
+   },
+   "aug": {
+    "sink_count_mean": 19.938,
+    "last_attn_mass_on_sinks": 0.356,
+    "K12": {
+     "sink_share": {
+      "maskedkd": 0.6037,
+      "lateroll": 0.1365
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.4672,
+      "ci": [
+       0.459,
+       0.4758
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 4.9123,
+      "nosink": 4.5458,
+      "lateroll": 4.2719
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.677,
+      "nosink": 12.891,
+      "lateroll": 16.913
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.3665,
+       "ci": [
+        -0.4252,
+        -0.3138
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.6404,
+       "ci": [
+        -0.705,
+        -0.5749
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2738,
+       "ci": [
+        0.2087,
+        0.3319
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.5724,
+      "ci": [
+       0.4994,
+       0.6531
+      ]
+     }
+    },
+    "K29": {
+     "sink_share": {
+      "maskedkd": 0.4301,
+      "lateroll": 0.1135
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.3166,
+      "ci": [
+       0.3104,
+       0.3234
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 3.0801,
+      "nosink": 2.5973,
+      "lateroll": 2.0946
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 32.868,
+      "nosink": 39.414,
+      "lateroll": 47.189
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.4828,
+       "ci": [
+        -0.5382,
+        -0.4244
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.9854,
+       "ci": [
+        -1.055,
+        -0.9175
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.5026,
+       "ci": [
+        0.4436,
+        0.5617
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.49,
+      "ci": [
+       0.4438,
+       0.5363
+      ]
+     }
+    },
+    "K49": {
+     "sink_share": {
+      "maskedkd": 0.3183,
+      "lateroll": 0.1029
+     },
+     "sink_share_diff_mkd-lateroll": {
+      "mean": 0.2154,
+      "ci": [
+       0.2105,
+       0.2204
+      ]
+     },
+     "kl_mean": {
+      "maskedkd": 1.3352,
+      "nosink": 1.1464,
+      "lateroll": 0.8608
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 59.408,
+      "nosink": 63.497,
+      "lateroll": 69.253
+     },
+     "kl_diff": {
+      "nosink-maskedkd": {
+       "mean": -0.1888,
+       "ci": [
+        -0.2266,
+        -0.1484
+       ]
+      },
+      "lateroll-maskedkd": {
+       "mean": -0.4744,
+       "ci": [
+        -0.5207,
+        -0.4284
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2857,
+       "ci": [
+        0.2443,
+        0.3272
+       ]
+      }
+     },
+     "closure_kl": {
+      "mean": 0.3979,
+      "ci": [
+       0.3224,
+       0.4666
+      ]
+     }
+    }
+   },
+   "aug_minus_clean_closure": {
+    "K12": {
+     "mean": -0.236,
+     "ci": [
+      -0.3919,
+      -0.0827
+     ]
+    },
+    "K29": {
+     "mean": -0.1562,
+     "ci": [
+      -0.2244,
+      -0.0912
+     ]
+    },
+    "K49": {
+     "mean": -0.1457,
+     "ci": [
+      -0.2508,
+      -0.0424
+     ]
+    }
+   }
+  }
+ },
+ "note": "KL(full teacher on view || keep-only masked teacher on same view), T=1, nats; aug = mean over V crop+flip views per image (H-A181 draws); sinks = block-10 output patch norm > median + 3 MAD per view; closure = mean(KL_mkd - KL_nosink) / mean(KL_mkd - KL_lateroll); 95% percentile bootstrap over val images (2000 resamples, shared index); seed-1 students only"
+}

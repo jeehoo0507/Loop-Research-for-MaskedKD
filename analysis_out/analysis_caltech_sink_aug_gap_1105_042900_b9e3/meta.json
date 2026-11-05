@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_sink_aug_gap_1105_042900_b9e3",
+ "name": "caltech_sink_aug_gap",
+ "source_sha": "b9e3c9c921386608d7d05c6ffa7a33c9882327298cc48b90c7a6cd9500eb9bfe",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 crop+flip views of val, does MaskedKD's K=29 last-block attention still spend its budget on student high-norm sink tokens, and does excluding them still close the lateroll - MaskedKD masked-teacher KL gap (H-A186 was clean view only)?",
+  "method": "high-norm artifact token detection (per-view median+3MAD of block-10 token norms), keep-only masked-teacher KL on RandomResizedCrop+flip views, attention rollout, paired image bootstrap",
+  "paper": "Darcet et al. ICLR 2024 (ViTs need registers); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 53.8
+}
