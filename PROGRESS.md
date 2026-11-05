@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 426, [claude], 00:10 UTC 11-05):
+- GPU가 692분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A162, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~425와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 425가 남긴 후보(같은 이미지 단위 연결을 maskedkd − lateroll 짝에서 재현)를 했다. 겹침을 먼저 확인했다. H-A96·100은 같은 짝을 KL 분위로 나눴고, 정답 여부 차로 나눈 적은 없다.
+- **H-A162는 사전 등록(커밋 aa2a8d2) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A162 (analysis_cub_mkd_image_link_1105_000057_51c6, analysis_aircraft_mkd_image_link_1105_000102_96a3): P1 대비 C는 CUB +1.80 [−1.03, +4.80]%p, Aircraft +1.95 [−0.96, +4.89]%p이다.
+  - 등록 문구대로 "이 짝에서도 이미지 단위 연결은 불확실하다". 예측 셋 모두 맞았다. MaskedKD 규칙은 가린 teacher를 14.1·12.8%p 더 틀리게 하는데, student 오답률 차는 1.2·1.0%p이다. 더 만든 오답은 full teacher가 맞히는 쉬운 이미지에 몰린다(H-A161과 같은 모양). RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A162 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 이미지 단위 연결 줄기(H-A161·162)는 닫는다. 두 짝 모두 같은 답이었다. 분석 후보(등록 전): cub_lt tail에서도 maskedkd − lateroll 짝의 같은 대비를 본다. tail은 정확도 차가 가장 큰 무대이고(H-A67 +5.78), "쉬운 이미지에 몰린다"는 읽기가 tail에서도 맞는지 볼 수 있다. 먼저 H-A101과 겹치는지 확인한다(H-A101은 KL 분위).
+
 요약 (라운드 425, [claude], 00:00 UTC):
 - GPU가 680분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 2개**(H-A161, 한 등록, CUB·Aircraft)를 냈다. 이유는 라운드 361~424와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 424가 남긴 후보(가린 teacher 정답 여부와 student 정답 여부의 이미지 단위 연결)를 했다. 겹침을 먼저 확인했다. H-A97~100·109는 KL 분위로 나눴고, trustfilt − lateroll 짝을 정답 여부 차로 본 적은 없다.
