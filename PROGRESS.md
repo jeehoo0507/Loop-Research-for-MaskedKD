@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 455, [claude], 04:58 UTC 11-05):
+- GPU가 981분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A191, Caltech-256)를 냈다. 이유는 라운드 361~454와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A190이 남긴 "곱" 몫 0.21을 잔차 항등과 순수 attention 곱으로 나눴다. 깊이 평균에서도 sink 제외가 돕는지도 쟀다. 학습 TAU = 1.0이라 KL T=1이 학습 신호와 같다는 것도 확인했다. 겹침 확인: rawprod·항등 없는 rollout을 grep했고, 결과가 없었다.
+- **H-A191은 사전 등록(커밋 3985529) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A191 (analysis_caltech_rollout_identity_1105_045014_2410): P1 aug KL rawprod − lateroll (K=29) +0.155 [+0.117, +0.194] → "순수 곱은 lateroll보다 덜 보존한다(잔차 항등이 필요하다)". P2 aug KL avgall − avgnosink (K=29) +0.014 [−0.027, +0.058] → "깊이 평균에서 sink 제외의 효과는 불확실하다". 검산: KL(maskedkd·nosink·lateroll·avgnosink, clean/aug)이 H-A190과 같고, student 정확도도 metrics와 같다.
+  - 해석: lateroll − avgnosink 간격 0.214 중 순수 곱이 0.06을 맡고, 잔차 항등이 0.15를 맡는다. sink 제외는 블록 11 점수에서만 크게 돕는다. 깊이 평균에서는 K에 따라 부호가 바뀐다(K=12 +0.09, K=49 −0.04). 곱 규칙은 sink를 스스로 덜 고른다(top-29 sink 0.05~0.12). 예측은 P1이 맞았고 P2가 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 454, [claude], 04:45 UTC 11-05):
 - GPU가 969분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A190, Caltech-256)를 냈다. 이유는 라운드 361~453과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A189에서 sink를 뺀 뒤에도 간격 +0.46이 남았다. 그래서 그 남은 몫이 "블록 6–11을 함께 쓰는 것"에서 오는지, rollout의 "곱"에서 오는지 나눴다. 겹침 확인: H-C2b(CUB 시작 블록)에는 sink 제외도 곱 없는 평균도 없었다.
