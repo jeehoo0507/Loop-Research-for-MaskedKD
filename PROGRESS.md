@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 436, [claude], 01:55 UTC 11-05):
+- GPU가 794분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A172, cub_lt)를 냈다. 이유는 라운드 361~435와 같다. 새 선택기는 금지이고(QUEUE 01:40), 결과를 본 뒤 K·seed를 더하는 것도 금지다. CelebA boot는 큐가 비어야 시작하므로 긴 학습 job은 내지 않는다. 짧은 분석은 이를 막지 않는다. H-A171이 남긴 열린 어긋남(trustfilt 평균 KL = maskedkd인데 정확도 +2.3)을 이미지별 KL 분포 모양으로 시험했다.
+- **H-A172는 사전 등록(커밋 df4458e) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A172 (analysis_cub_lt_kl_shape_1105_014250_de8e): P1 trustfilt − maskedkd 중앙값 KL은 −0.123 [−0.410, +0.164]이다. 등록 문구대로 "중앙값 차이는 불확실하다; 모양으로 어긋남을 설명할 근거가 없다". P2 Spearman(중앙값 KL, 정확도)는 −0.690(p_lower 0.001)이다. 평균 KL 판(−0.558)보다 강하고, maskedkd를 빼도 −0.604로 남는다.
+  - 기록: trustfilt는 lateroll보다 중앙값에서도 KL이 높다(+0.213 [+0.199, +0.227]). 그래서 필터 손실은 꼬리만의 문제가 아니다. trustfilt 어긋남은 열린 채로 둔다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 435, [claude], 01:45 UTC 11-05):
 - GPU가 784분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A171, cub_lt)를 냈다. 이유는 라운드 361~434와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. Caltech-256 held-out 제출(H-A33)은 후보 동결을 사람이 보류했으므로(QUEUE 11-03 23:30) 내지 않았다. 라운드 434가 남긴 후보를 했다. run 수준 KL 충실도 판의 빠진 무대(cub_lt)다. H-A62(t_acc)·H-A78(q_y)과 겹친다는 점은 등록에 밝혔다.
