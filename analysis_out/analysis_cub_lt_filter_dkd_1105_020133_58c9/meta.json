@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_filter_dkd_1105_020133_58c9",
+ "name": "cub_lt_filter_dkd",
+ "source_sha": "58c9a0e234e6fd83696225ce1093c80928082f73d5646ff0152689cd23060812",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 runs, is the equal masked-teacher KL of trustfilt and maskedkd made of different parts: more true-class probability loss (TCKD) but less non-target shape loss (NCKD) for trustfilt?",
+  "method": "exact DKD chain-rule split of keep-only masked-teacher KL into TCKD and (1-p_t)-weighted NCKD, seed-paired t CI, image bootstrap, Spearman across runs with permutation test",
+  "paper": "Zhao et al. CVPR 2022 (decoupled KD); Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 16.1
+}

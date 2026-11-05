@@ -1,0 +1,523 @@
+{
+ "n_val": 600,
+ "n_tail": 300,
+ "K": 29,
+ "n_runs": 18,
+ "full_teacher_p_true": 0.8008,
+ "P1_trustfilt_minus_maskedkd_tckd_seed_t": [
+  -0.0019,
+  -0.1459,
+  0.1421,
+  [
+   -0.0678,
+   0.0207,
+   0.0413
+  ]
+ ],
+ "P2_trustfilt_minus_maskedkd_wnckd_seed_t": [
+  -0.0029,
+  -0.0135,
+  0.0078,
+  [
+   0.0018,
+   -0.0038,
+   -0.0066
+  ]
+ ],
+ "record": {
+  "trustfilt_minus_maskedkd_kl_seed_t": [
+   -0.0049,
+   -0.1385,
+   0.1287,
+   [
+    -0.0661,
+    0.0168,
+    0.0347
+   ]
+  ],
+  "trustfilt_minus_maskedkd_tckd_boot": [
+   -0.0019,
+   -0.107,
+   0.0969
+  ],
+  "trustfilt_minus_maskedkd_wnckd_boot": [
+   -0.0029,
+   -0.0537,
+   0.0517
+  ],
+  "trustfilt_minus_maskedkd_tail_tckd_seed_t": [
+   0.2071,
+   0.0103,
+   0.4038,
+   [
+    0.1242,
+    0.282,
+    0.215
+   ]
+  ],
+  "trustfilt_minus_maskedkd_tail_wnckd_seed_t": [
+   0.0381,
+   0.0182,
+   0.0581,
+   [
+    0.0448,
+    0.0404,
+    0.0292
+   ]
+  ],
+  "trustfilt_minus_maskedkd_tail_tckd_boot": [
+   0.2071,
+   0.0796,
+   0.3407
+  ],
+  "trustfilt_minus_maskedkd_tail_wnckd_boot": [
+   0.0381,
+   -0.0368,
+   0.1125
+  ],
+  "trustfilt_minus_maskedkd_p_true_seed_t": [
+   0.0176,
+   -0.0399,
+   0.0751,
+   [
+    0.0404,
+    0.0183,
+    -0.0059
+   ]
+  ],
+  "trustfilt_minus_maskedkd_top1_agree_seed_t": [
+   1.89,
+   -5.1936,
+   8.9736,
+   [
+    5.17,
+    0.5,
+    0.0
+   ]
+  ],
+  "trustfilt_minus_maskedkd_t_acc_seed_t": [
+   1.0,
+   -5.8536,
+   7.8536,
+   [
+    3.84,
+    0.83,
+    -1.67
+   ]
+  ],
+  "trustfilt_minus_lateroll_tckd_seed_t": [
+   0.4291,
+   0.3942,
+   0.464,
+   [
+    0.4133,
+    0.434,
+    0.4401
+   ]
+  ],
+  "trustfilt_minus_lateroll_wnckd_seed_t": [
+   0.1132,
+   0.1069,
+   0.1195,
+   [
+    0.1149,
+    0.1144,
+    0.1103
+   ]
+  ],
+  "teacher_topk_minus_maskedkd_tckd_seed_t": [
+   0.2904,
+   0.1447,
+   0.4361,
+   [
+    0.224,
+    0.3121,
+    0.3351
+   ]
+  ],
+  "teacher_topk_minus_maskedkd_wnckd_seed_t": [
+   0.0544,
+   0.0425,
+   0.0664,
+   [
+    0.0558,
+    0.0491,
+    0.0584
+   ]
+  ],
+  "tckd_share_of_kl_gap": 0.3878,
+  "spearman": {
+   "tckd_acc_18runs": [
+    -0.5583,
+    0.0084,
+    0.9921
+   ],
+   "wnckd_acc_18runs": [
+    -0.5728,
+    0.0073,
+    0.9927
+   ],
+   "tail_tckd_tail_18runs": [
+    -0.5789,
+    0.0051,
+    0.9952
+   ],
+   "tail_wnckd_tail_18runs": [
+    -0.6223,
+    0.0023,
+    0.9977
+   ]
+  },
+  "arm_means_kl_tckd_wnckd_ptrue_agree_acc_tail": {
+   "maskedkd": [
+    1.1567,
+    0.7866,
+    0.3701,
+    0.5145,
+    63.2767,
+    62.3333,
+    44.0
+   ],
+   "rollout": [
+    0.7569,
+    0.4708,
+    0.2861,
+    0.6278,
+    74.8333,
+    64.5556,
+    48.7767
+   ],
+   "lateroll": [
+    0.6096,
+    0.3555,
+    0.254,
+    0.647,
+    78.0,
+    65.2778,
+    49.7767
+   ],
+   "trustmask_v1": [
+    0.6267,
+    0.3709,
+    0.2558,
+    0.644,
+    77.5533,
+    65.8333,
+    50.3333
+   ],
+   "trustfilt": [
+    1.1518,
+    0.7847,
+    0.3672,
+    0.5321,
+    65.1667,
+    64.6667,
+    47.3333
+   ],
+   "teacher_topk": [
+    1.5015,
+    1.077,
+    0.4245,
+    0.4586,
+    59.0,
+    63.3889,
+    46.11
+   ]
+  }
+ },
+ "per_run": {
+  "cub_lt_final_maskedkd_k29_s1_1103_234609_76d1": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 62.833333015441895,
+   "val_tail_last": 44.0,
+   "kl": 1.2218,
+   "tckd": 0.853,
+   "wnckd": 0.3687,
+   "tail_kl": 1.1323,
+   "tail_tckd": 0.7882,
+   "tail_wnckd": 0.3441,
+   "split_residual": 0.0,
+   "p_true": 0.4913,
+   "top1_agree_full": 59.83,
+   "t_acc": 57.33
+  },
+  "cub_lt_final_maskedkd_k29_s2_1103_234647_0c6c": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 61.83333396911621,
+   "val_tail_last": 44.0,
+   "kl": 1.1403,
+   "tckd": 0.7649,
+   "wnckd": 0.3754,
+   "tail_kl": 0.9812,
+   "tail_tckd": 0.6322,
+   "tail_wnckd": 0.349,
+   "split_residual": 0.0,
+   "p_true": 0.5142,
+   "top1_agree_full": 64.67,
+   "t_acc": 60.67
+  },
+  "cub_lt_final_maskedkd_k29_s3_1103_234704_b28b": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 62.33333349227905,
+   "val_tail_last": 44.0,
+   "kl": 1.108,
+   "tckd": 0.7419,
+   "wnckd": 0.3661,
+   "tail_kl": 1.0286,
+   "tail_tckd": 0.6782,
+   "tail_wnckd": 0.3505,
+   "split_residual": 0.0,
+   "p_true": 0.538,
+   "top1_agree_full": 65.33,
+   "t_acc": 63.0
+  },
+  "cub_lt_final_rollout_k29_s1_1103_234609_8382": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 64.83333110809326,
+   "val_tail_last": 49.33,
+   "kl": 0.781,
+   "tckd": 0.484,
+   "wnckd": 0.297,
+   "tail_kl": 0.7823,
+   "tail_tckd": 0.51,
+   "tail_wnckd": 0.2723,
+   "split_residual": 0.0,
+   "p_true": 0.6239,
+   "top1_agree_full": 75.5,
+   "t_acc": 70.67
+  },
+  "cub_lt_final_rollout_k29_s2_1103_234647_9b4c": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 63.66666555404663,
+   "val_tail_last": 47.33,
+   "kl": 0.7432,
+   "tckd": 0.4609,
+   "wnckd": 0.2823,
+   "tail_kl": 0.7655,
+   "tail_tckd": 0.4895,
+   "tail_wnckd": 0.276,
+   "split_residual": 0.0,
+   "p_true": 0.6286,
+   "top1_agree_full": 74.0,
+   "t_acc": 69.83
+  },
+  "cub_lt_final_rollout_k29_s3_1103_234704_0edf": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 65.16666412353516,
+   "val_tail_last": 49.67,
+   "kl": 0.7466,
+   "tckd": 0.4675,
+   "wnckd": 0.2791,
+   "tail_kl": 0.7467,
+   "tail_tckd": 0.4932,
+   "tail_wnckd": 0.2535,
+   "split_residual": 0.0,
+   "p_true": 0.6308,
+   "top1_agree_full": 75.0,
+   "t_acc": 71.33
+  },
+  "cub_lt_final_lateroll_k29_s1_1104_084157_2b15": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.33333563804626,
+   "val_tail_last": 51.67,
+   "kl": 0.6275,
+   "tckd": 0.3719,
+   "wnckd": 0.2556,
+   "tail_kl": 0.6033,
+   "tail_tckd": 0.373,
+   "tail_wnckd": 0.2303,
+   "split_residual": 0.0,
+   "p_true": 0.6428,
+   "top1_agree_full": 76.83,
+   "t_acc": 72.17
+  },
+  "cub_lt_final_lateroll_k29_s2_1104_084204_9f09": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 65.16666412353516,
+   "val_tail_last": 49.33,
+   "kl": 0.6089,
+   "tckd": 0.3516,
+   "wnckd": 0.2572,
+   "tail_kl": 0.6025,
+   "tail_tckd": 0.3546,
+   "tail_wnckd": 0.248,
+   "split_residual": 0.0,
+   "p_true": 0.6491,
+   "top1_agree_full": 77.5,
+   "t_acc": 71.33
+  },
+  "cub_lt_final_lateroll_k29_s3_1104_084209_a3f8": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.33333158493042,
+   "val_tail_last": 48.33,
+   "kl": 0.5923,
+   "tckd": 0.3431,
+   "wnckd": 0.2492,
+   "tail_kl": 0.5741,
+   "tail_tckd": 0.339,
+   "tail_wnckd": 0.2351,
+   "split_residual": 0.0,
+   "p_true": 0.649,
+   "top1_agree_full": 79.67,
+   "t_acc": 73.17
+  },
+  "cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df": {
+   "arm": "trustmask_v1",
+   "seed": 1,
+   "val_acc_last": 67.5000011920929,
+   "val_tail_last": 52.33,
+   "kl": 0.6184,
+   "tckd": 0.3601,
+   "wnckd": 0.2584,
+   "tail_kl": 0.5992,
+   "tail_tckd": 0.3582,
+   "tail_wnckd": 0.241,
+   "split_residual": 0.0,
+   "p_true": 0.6501,
+   "top1_agree_full": 78.83,
+   "t_acc": 73.0
+  },
+  "cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79": {
+   "arm": "trustmask_v1",
+   "seed": 2,
+   "val_acc_last": 65.3333306312561,
+   "val_tail_last": 50.0,
+   "kl": 0.6048,
+   "tckd": 0.351,
+   "wnckd": 0.2538,
+   "tail_kl": 0.6186,
+   "tail_tckd": 0.3783,
+   "tail_wnckd": 0.2404,
+   "split_residual": 0.0,
+   "p_true": 0.6501,
+   "top1_agree_full": 78.5,
+   "t_acc": 73.5
+  },
+  "cub_lt_final_trustmask_v1_k29_s3_1103_234704_d748": {
+   "arm": "trustmask_v1",
+   "seed": 3,
+   "val_acc_last": 64.66666460037231,
+   "val_tail_last": 48.67,
+   "kl": 0.6569,
+   "tckd": 0.4016,
+   "wnckd": 0.2553,
+   "tail_kl": 0.6642,
+   "tail_tckd": 0.4191,
+   "tail_wnckd": 0.2451,
+   "split_residual": 0.0,
+   "p_true": 0.6317,
+   "top1_agree_full": 75.33,
+   "t_acc": 69.5
+  },
+  "cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 66.8333351612091,
+   "val_tail_last": 50.33,
+   "kl": 1.1557,
+   "tckd": 0.7852,
+   "wnckd": 0.3705,
+   "tail_kl": 1.3013,
+   "tail_tckd": 0.9124,
+   "tail_wnckd": 0.3889,
+   "split_residual": 0.0,
+   "p_true": 0.5317,
+   "top1_agree_full": 65.0,
+   "t_acc": 61.17
+  },
+  "cub_lt_final_trustfilt_k29_s2_1103_234647_43e9": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 63.333332538604736,
+   "val_tail_last": 46.67,
+   "kl": 1.1571,
+   "tckd": 0.7856,
+   "wnckd": 0.3716,
+   "tail_kl": 1.3036,
+   "tail_tckd": 0.9142,
+   "tail_wnckd": 0.3894,
+   "split_residual": 0.0,
+   "p_true": 0.5325,
+   "top1_agree_full": 65.17,
+   "t_acc": 61.5
+  },
+  "cub_lt_final_trustfilt_k29_s3_1103_234704_8732": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 63.83333206176758,
+   "val_tail_last": 45.0,
+   "kl": 1.1427,
+   "tckd": 0.7832,
+   "wnckd": 0.3595,
+   "tail_kl": 1.2729,
+   "tail_tckd": 0.8932,
+   "tail_wnckd": 0.3797,
+   "split_residual": 0.0,
+   "p_true": 0.5321,
+   "top1_agree_full": 65.33,
+   "t_acc": 61.33
+  },
+  "cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0": {
+   "arm": "teacher_topk",
+   "seed": 1,
+   "val_acc_last": 64.49999809265137,
+   "val_tail_last": 47.33,
+   "kl": 1.5015,
+   "tckd": 1.077,
+   "wnckd": 0.4245,
+   "tail_kl": 1.6544,
+   "tail_tckd": 1.2274,
+   "tail_wnckd": 0.427,
+   "split_residual": 0.0,
+   "p_true": 0.4586,
+   "top1_agree_full": 59.0,
+   "t_acc": 56.67
+  },
+  "cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0": {
+   "arm": "teacher_topk",
+   "seed": 2,
+   "val_acc_last": 63.999998569488525,
+   "val_tail_last": 48.0,
+   "kl": 1.5015,
+   "tckd": 1.077,
+   "wnckd": 0.4245,
+   "tail_kl": 1.6544,
+   "tail_tckd": 1.2274,
+   "tail_wnckd": 0.427,
+   "split_residual": 0.0,
+   "p_true": 0.4586,
+   "top1_agree_full": 59.0,
+   "t_acc": 56.67
+  },
+  "cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91": {
+   "arm": "teacher_topk",
+   "seed": 3,
+   "val_acc_last": 61.666667461395264,
+   "val_tail_last": 43.0,
+   "kl": 1.5015,
+   "tckd": 1.077,
+   "wnckd": 0.4245,
+   "tail_kl": 1.6544,
+   "tail_tckd": 1.2274,
+   "tail_wnckd": 0.427,
+   "split_residual": 0.0,
+   "p_true": 0.4586,
+   "top1_agree_full": 59.0,
+   "t_acc": 56.67
+  }
+ },
+ "verdict": {
+  "P1": "uncertain",
+  "P2": "uncertain"
+ },
+ "note": "CI entries are [mean, low, high(, per-seed diffs s1..s3)]; seed_t pairs run s_i of one arm with s_i of the other; TCKD/NCKD use the ground-truth class; one rng shared in order: boot keys as listed, then spearman keys as listed; permutation entries are [rho, p_lower, p_upper]; kl should equal H-A171"
+}
