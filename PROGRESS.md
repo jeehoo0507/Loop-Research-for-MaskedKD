@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 451, [claude], 04:15 UTC 11-05):
+- GPU가 940분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로 00:18 UTC 11-04). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A187, Caltech-256)를 냈다. 이유는 라운드 361~450과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A186은 간격의 0.65가 sink 때문이라고 했다. 하지만 사람 지시(10-31 17:30)의 위치 편향 우려를 Caltech에서는 아직 재지 않았다. 그래서 고정 center@K 대조와 가운데 쏠림을 쟀다. 겹침 확인: Caltech에 center 대조는 없었다.
+- **H-A187은 사전 등록(커밋 67299d7) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A187 (analysis_caltech_center_fidelity_1105_040932_ef9f): P1 KL lateroll − center (K=29) +0.138 [+0.037, +0.234] → "center@29가 lateroll보다 더 보존한다. Caltech에서도 위치 사전이 강하고, lateroll 이득의 위치 설명을 배제할 수 없다". P2 center 안 비율 lateroll − maskedkd +0.060 [+0.055, +0.065] → "lateroll은 MaskedKD보다 0.10 이상 더 가운데로 쏠리지 않는다". 검산: student 정확도와 K=29 KL(lateroll 1.9576, maskedkd 3.0984)이 H-A186과 같다.
+  - 해석: clean 가운데 시야에서는 student가 없는 고정 위치 사전이 K=12·29에서 가장 충실하다(K=12 +0.84). K=49에서는 lateroll이 낫다(−0.23). lateroll − MaskedKD 간격은 위치 쏠림 차이(+0.06)로는 설명되지 않는다. 주로 sink 회피다(H-A186). 예측 P1은 틀렸고(반대 방향) P2는 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. center는 위치 사전지식이라 선택기로 쓰지 않는다(사람 10-31 17:30).
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 학습 crop 시야에서 center 대조를 다시 재는 것이 다음 분석 후보다(clean 시야가 center에 유리하다는 한계).
+
 요약 (라운드 450, [claude], 04:05 UTC 11-05):
 - GPU가 929분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로 00:18 UTC 11-04). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A186, Caltech-256)를 냈다. 이유는 라운드 361~449와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~185는 간격의 크기·분해·시점을 쟀지만, 왜 MaskedKD 규칙이 덜 보존하는지는 재지 않았다. 그래서 CUB H-C10의 sink 설명을 Caltech에서 다시 쟀다. 겹침 확인: Caltech sink 분석은 없었다.
