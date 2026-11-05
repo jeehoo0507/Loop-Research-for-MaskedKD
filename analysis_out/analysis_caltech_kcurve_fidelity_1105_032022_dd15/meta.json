@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_kcurve_fidelity_1105_032022_dd15",
+ "name": "caltech_kcurve_fidelity",
+ "source_sha": "dd1559c386789660f9d6faa0d67f283f6b8bf65c54f852b6db9c6c006637988a",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, how does the lateroll - MaskedKD masked-teacher KL gap change with K (12, 29, 49), and is the MaskedKD masked teacher closer to the full teacher than a random keep?",
+  "method": "keep-only masked-teacher KL to the full teacher under several token rules incl. random, attention rollout, image bootstrap",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 48.2
+}
