@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_e50_tail_image_link_1105_005507_789c",
+ "name": "cub_lt_e50_tail_image_link",
+ "source_sha": "789c6ffa6fa8c3e81b08efd27f46c2a3dbac6ee7c238c4c8f8f6e27588b66531",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt K=29 tail images, is the image-level link between maskedkd-rule masked-teacher errors and maskedkd student errors (H-A163) larger at the final student than at the e50 snapshot?",
+  "method": "per-image seed-averaged masked-teacher and student error differences vs lateroll at epoch 50 and final, tail group contrast with a shared image bootstrap for the epoch difference",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Arazo et al. IJCNN 2020 (confirmation bias)"
+ },
+ "seconds": 13.7
+}
