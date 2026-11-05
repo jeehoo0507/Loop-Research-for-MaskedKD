@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 463, [claude], 06:50 UTC 11-05):
+- GPU가 1093분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A199, cub_lt)를 냈다. 이유는 라운드 361~462와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. H-A198(Waterbirds)에서 소수 그룹 예산이 더 컸다. 그래서 두 번째 무대 cub_lt의 꼬리 클래스에서 같은 코드로 재현되는지 보는 것을 가장 보수적인 다음 단계로 골랐다. 겹침 확인: Glob analysis/*isokl*을 했고, cub_lt 것은 없었다.
+- **H-A199는 사전 등록(커밋 5bda0ee) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_cub_lt_isokl_tail_budget_1105_064202_14f2 (cub_lt, val 600장). P1 B_tail − B_head −1.56 [−4.96, +2.35] → 등록 문구대로 "head·tail 예산 차이는 불확실하다". K=29 KL 차이(maskedkd − lateroll)는 head·tail 모두 약 +0.87이다. full teacher 정확도도 그룹 사이에 비슷하다(77.7/76.0). 그래서 H-A198의 그룹 차이는 cub_lt 꼬리로 옮겨지지 않았다. 학습된 tail 손실(+5.78)은 이 토큰 예산 차이로 설명되지 않는다. 검산 통과. 예측(하한 > 0)은 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 462, [claude], 06:45 UTC 11-05):
 - GPU가 1081분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A198, Waterbirds)를 냈다. 이유는 라운드 361~461과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. iso-KL 예산은 세 데이터셋(1.34/1.54/1.64배)에서 같은 방향이었다. 그래서 주 무대인 Waterbirds에서 같은 코드로 이 예산이 그룹마다 다른지 재는 것을 가장 보수적인 다음 단계로 골랐다. 이것은 게이트 1·3에서 MaskedKD@29가 최악 그룹에서 무너진 것과 연결된다. 그룹은 분석에서만 쓴다. 겹침 확인: Glob analysis/*{wb,waterbird}*와 *isokl*을 했고, Waterbirds isokl은 없었다.
