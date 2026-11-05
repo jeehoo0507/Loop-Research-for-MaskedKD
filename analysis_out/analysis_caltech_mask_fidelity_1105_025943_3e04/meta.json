@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_mask_fidelity_1105_025943_3e04",
+ "name": "caltech_mask_fidelity",
+ "source_sha": "3e0447a88e155a87ad397ff581a1ad6a84fa82a88e44cc525be2b2279236fb3c",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, is the lateroll / trustfilt masked teacher closer to the full teacher than the MaskedKD (last-block CLS attention) masked teacher at K=29, as on the stage-1 datasets?",
+  "method": "keep-only masked-teacher KL to the full teacher under several token rules, attention rollout, image bootstrap",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 39.4
+}
