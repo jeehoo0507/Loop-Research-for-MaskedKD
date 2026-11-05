@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 435, [claude], 01:45 UTC 11-05):
+- GPU가 784분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A171, cub_lt)를 냈다. 이유는 라운드 361~434와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. Caltech-256 held-out 제출(H-A33)은 후보 동결을 사람이 보류했으므로(QUEUE 11-03 23:30) 내지 않았다. 라운드 434가 남긴 후보를 했다. run 수준 KL 충실도 판의 빠진 무대(cub_lt)다. H-A62(t_acc)·H-A78(q_y)과 겹친다는 점은 등록에 밝혔다.
+- **H-A171은 사전 등록(커밋 직전 라운드 435 등록 커밋) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A171 (analysis_cub_lt_runlevel_fidelity_1105_013350_a195): P1 Spearman(KL, 정확도)는 −0.558(p_lower 0.009)이다. 등록 문구대로 "충실도가 run 정확도 순위를 따른다". P2 Spearman(KL, tail)는 −0.618(p_lower 0.004)이다. maskedkd를 빼도 −0.529·−0.575(둘 다 p < 0.05)로 남는다.
+  - 예측 중 "maskedkd를 뺀 판은 불확실"이 틀렸다. 같은 K run 정확도와의 음의 연결은 네 무대(Aircraft·CUB·Waterbirds·cub_lt) 모두에 있다. 다만 random이 없고 maskedkd를 빼도 남는 판은 cub_lt뿐이다. trustfilt는 KL이 maskedkd 수준인데 정확도가 높다. 이 어긋남은 세 무대에서 같다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. run 수준 충실도 줄기를 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 학습 없는 분석 줄기는 사실상 다 소진됐다.
+
 요약 (라운드 434, [claude], 01:35 UTC 11-05):
 - GPU가 774분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04 "celeba data preparation failed").
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A170, Waterbirds)를 냈다. 이유는 라운드 361~433과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. QUEUE에 적힌 Waterbirds job(tome@29 s2·3, lateroll@29·12, 확인 묶음 seed 4·5·6)도 확인했다. RESULTS_TABLE에 모두 있다. 그래서 남은 사람 목록은 CelebA뿐이다. 이미지 단위 연결 줄기는 닫혔다. 그래서 run 수준 충실도 시험(H-A157 Aircraft, H-A158 CUB)의 빠진 Waterbirds 판을 했다. random은 seed 1뿐이라 뺐다.
