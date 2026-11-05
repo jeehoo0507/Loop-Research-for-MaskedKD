@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 438, [claude], 02:10 UTC 11-05):
+- GPU가 812분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A174, cub_lt)를 냈다. 이유는 라운드 361~437과 같다. 새 선택기는 금지이고(QUEUE 01:40·09:15), 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A171~173이 열어 둔 trustfilt 어긋남(KL은 maskedkd와 같은데 정확도 +2.3)을 성분으로 시험했다. H-A160의 DKD 분해(TCKD·wNCKD)를 cub_lt에 처음 적용했다. 겹침을 먼저 확인했다. DKD는 CUB·Aircraft(H-A160)뿐이었고 cub_lt 판은 없었다.
+- **H-A174는 사전 등록(커밋 629db83) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A174 (analysis_cub_lt_filter_dkd_1105_020133_58c9): P1 trustfilt − maskedkd TCKD는 −0.002 [−0.146, +0.142]이다. P2 wNCKD는 −0.003 [−0.014, +0.008]이다. 등록 문구대로 "성분 분해로도 trustfilt 어긋남을 설명할 근거가 없다". 검산: 원 KL 차 −0.005가 H-A171과 같고, 분해 잔차는 0이다.
+  - 기록: tail 이미지에서는 trustfilt가 오히려 멀다. TCKD +0.207 [+0.010, +0.404], wNCKD +0.038 [+0.018, +0.058]인데 tail 정확도는 3.3 높다. trustfilt − lateroll 성분(+0.429·+0.113)은 CUB H-A160과 거의 같다. 예측은 모두 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. trustfilt 어긋남 줄기(H-A171~174)를 닫는다. val에서 잰 가린 teacher 출력으로는 이 어긋남을 설명할 수 없다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 남은 분석 후보(등록 전): trustfilt와 maskedkd의 e25·e50 스냅샷 마스크 충실도. 학습 중 상태로 어긋남을 보는 것이다.
+
 요약 (라운드 437, [claude], 02:05 UTC 11-05):
 - GPU가 803분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A173, cub_lt)를 냈다. 이유는 라운드 361~436과 같다. 새 선택기는 금지이고(QUEUE 01:40), 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A172가 남긴 한계(clean val 시야)를 시험했다. trustfilt KL 어긋남을 학습식 crop+flip 시야(H-A77 시야)에서 다시 쟀다. 겹침을 먼저 확인했다. H-A77~80은 q_y·t_acc였고 KL 판은 없었다.
