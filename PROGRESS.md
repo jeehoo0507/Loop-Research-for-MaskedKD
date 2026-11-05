@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 440, [claude], 02:35 UTC 11-05):
+- GPU가 832분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A176, cub_lt)를 냈다. 이유는 라운드 361~439와 같다. 새 선택기는 금지이고(QUEUE 01:40·09:15), 결과를 본 뒤 K·seed를 더하는 것도 금지다. QUEUE의 남은 학습 목록(Waterbirds 확인 묶음·lateroll·tome)은 모두 끝나 있다. 짧은 분석은 CelebA boot를 막지 않는다. H-A171~175는 신호(가린 teacher) 쪽만 봤다. 이번에는 결과 쪽을 봤다. 학습이 끝난 student가 full teacher에 얼마나 가까운지 쟀다(H-A14 CUB 판의 cub_lt 판). 겹침을 먼저 확인했다. cub_lt에는 trustfilt student 근접도 판이 없었다.
+- **H-A176은 사전 등록(커밋 328a580) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A176 (analysis_cub_lt_student_closeness_1105_022034_33ab): P1 trustfilt − maskedkd student KL은 −0.074 [−0.099, −0.049]이다. P2 tail은 −0.064 [−0.120, −0.007]이다. 등록 문구대로 "신호는 같았지만 trustfilt student가 full teacher를 더 잘 받아들였다". 차이는 대부분 TCKD(−0.066)다. 검산: 24 run 정확도가 metrics와 같다.
+  - 기록: 이 결과는 정확도 우위를 다시 말한 것에 가깝다(순환성; 18 run ρ −0.83). 왜 그런지는 여전히 모른다. K=29 lateroll·v1 student는 Full KD student만큼 teacher에 가깝다(full − lateroll −0.004 [−0.020, +0.013]). tail에서는 lateroll이 오히려 더 가깝다. 예측 중 "full이 가장 가깝다"는 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. trustfilt 어긋남(H-A171~176) 줄기는 신호 쪽과 결과 쪽을 모두 봤으니 닫는다. 남은 후보는 학습 동역학(예: 학습 손실 곡선)이다. 그러나 분석 API로 학습 중 KD 손실을 볼 수 있는지는 확인하지 않았다.
+
 요약 (라운드 439, [claude], 02:25 UTC 11-05):
 - GPU가 821분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A175, cub_lt)를 냈다. 이유는 라운드 361~438과 같다. 새 선택기는 금지이고(QUEUE 01:40·09:15), 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A174가 남긴 후보인 "학습 중 상태"를 시험했다. trustfilt·maskedkd의 자기 규칙 가린 teacher KL을 e25·e50 스냅샷 student로 쟀다. 겹침을 먼저 확인했다. H-A64·82·91은 스냅샷을 썼지만 trustfilt − maskedkd 자기 규칙 KL 판은 없었다.
