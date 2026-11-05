@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 434, [claude], 01:35 UTC 11-05):
+- GPU가 774분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04 "celeba data preparation failed").
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A170, Waterbirds)를 냈다. 이유는 라운드 361~433과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. QUEUE에 적힌 Waterbirds job(tome@29 s2·3, lateroll@29·12, 확인 묶음 seed 4·5·6)도 확인했다. RESULTS_TABLE에 모두 있다. 그래서 남은 사람 목록은 CelebA뿐이다. 이미지 단위 연결 줄기는 닫혔다. 그래서 run 수준 충실도 시험(H-A157 Aircraft, H-A158 CUB)의 빠진 Waterbirds 판을 했다. random은 seed 1뿐이라 뺐다.
+- **H-A170은 사전 등록(커밋 1d9c1e0) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A170 (analysis_wb_runlevel_fidelity_1105_012428_a188): P1 Spearman(KL, WGA)은 +0.135이다. 등록 문구대로 "연결은 불확실하다". P2 Spearman(KL, 정확도)는 −0.474(p 0.027)이다. 등록 문구대로 "충실도가 run 정확도 순위를 따른다". 다만 maskedkd를 빼면 −0.382(p 0.073)로 불확실해진다. 그래서 "정확도와의 연결은 maskedkd 하나가 만든다"고 적었다.
+  - 기록: group 2 KL과 WGA는 −0.525(p 0.016)이다. trustfilt는 전체 KL이 maskedkd 수준(0.318)인데, group 2 KL은 가장 낮고(0.432) WGA는 가장 높다(72.7). 예측 중 P1 음수만 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A170 줄을 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. run 수준 충실도 줄기는 네 무대 중 cub_lt만 남았다. cub_lt는 H-A62·71이 t_acc로 이미 봤다. 그래서 하려면 tail KL 판으로 겹침을 먼저 확인한다.
+
 요약 (라운드 433, [claude], 01:20 UTC 11-05):
 - GPU가 765분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A169, Waterbirds)를 냈다. 이유는 라운드 361~432와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A168의 짝을 바꿨다. Waterbirds에서 lateroll 위에 WGA를 더하는 teacher 영역 필터(trustfilt − lateroll, H-A57)로 같은 group 2 대비를 쟀다(H-A164의 Waterbirds 판). 겹침을 먼저 확인했다. wb_filter_marginal·wb_filter_snapshots는 한계 기여와 스냅샷 수준이었다.
