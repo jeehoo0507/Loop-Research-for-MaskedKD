@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 460, [claude], 06:20 UTC 11-05):
+- GPU가 1062분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A196, CUB)를 냈다. 이유는 라운드 361~459와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. H-A195에서 Caltech 단독 결과(H-A194)가 CUB에서 재현되지 않았다. 그래서 FLOPs 단위로 쓴 유일한 숫자인 H-A192의 iso-KL 토큰 예산을 같은 코드로 CUB에서 재현하는 것을 가장 보수적인 다음 단계로 골랐다. 겹침 확인: Glob *isokl*·grep "iso-KL"을 했고, Caltech 것만 있었다.
+- **H-A196은 사전 등록(커밋 02fe439) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_cub_isokl_budget_1105_061104_7aeb (cub, val 600장). P1 aug KL maskedkd@49 − lateroll@29 −0.172 [−0.237, −0.106], P2 maskedkd@69 − lateroll@29 −0.541 [−0.604, −0.479] → 둘 다 "H-A192가 CUB에서 재현된다". iso-KL 예산은 maskedkd 44.5개 [42.7, 46.3](1.54배), nosink 37.3개(1.29배)다. Caltech(1.34배)보다 크다. 비율은 두 데이터셋 모두 K가 클수록 줄어든다. 검산 통과(lateroll KL·student 정확도가 H-A195와 같다). 세 예측 모두 맞았다(비율 ±0.2는 겨우). RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 459, [claude], 06:05 UTC 11-05):
 - GPU가 1048분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
 - **H-A194 판정 (한 번만):** analysis_caltech_mass_shrink_1105_052938_a01c. P1 aug M=29 KL mass0.5 − uniform −0.033 [−0.057, −0.008] → "절반 수축한 질량 배분은 같은 평균 토큰 수에서 고정 K보다 더 보존한다". P2 mass0.5 − mass1.0 −0.041 [−0.067, −0.012] → "수축이 질량 배분을 낫게 한다". 검산 통과(H-A193 값과 같음). 예측 P1 "CI ∋ 0"은 틀렸다.
