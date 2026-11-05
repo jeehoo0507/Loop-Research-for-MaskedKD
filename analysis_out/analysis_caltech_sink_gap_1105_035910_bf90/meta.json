@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_sink_gap_1105_035910_bf90",
+ "name": "caltech_sink_gap",
+ "source_sha": "bf90e67144db880dd29b712292521b2786574a9b6e3c940c3486d85ad8c0bb66",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, does MaskedKD's K=29 last-block attention pick student high-norm sink tokens, and does excluding them close the lateroll - MaskedKD masked-teacher KL gap?",
+  "method": "high-norm artifact token detection (per-image median+3MAD of block-10 token norms), keep-only masked-teacher KL and DKD TCKD, attention rollout, paired image bootstrap",
+  "paper": "Darcet et al. ICLR 2024 (ViTs need registers); Abnar & Zuidema ACL 2020 (rollout); Zhao et al. CVPR 2022 (DKD); Son et al. ECCV 2024 (MaskedKD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 21.8
+}
