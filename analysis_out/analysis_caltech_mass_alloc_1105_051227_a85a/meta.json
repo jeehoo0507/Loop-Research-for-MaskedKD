@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_mass_alloc_1105_051227_a85a",
+ "name": "caltech_mass_alloc",
+ "source_sha": "a85af190417a21fb87c2108f9983a9d6e21f17671c8be45d9ca54dc1a9894384",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 crop+flip views of val, at a matched mean teacher-token budget, does a per-view token count set by a student-rollout mass threshold preserve the full-teacher soft label better than a fixed K, and better than the same counts shuffled across images?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views, lateroll ranking, mass-threshold vs fixed vs shuffled per-view token counts at equal mean count, paired image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Holtzman et al. ICLR 2020 (top-p nucleus threshold); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993"
+ },
+ "seconds": 460.8
+}

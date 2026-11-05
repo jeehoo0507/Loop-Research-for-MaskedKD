@@ -1,0 +1,709 @@
+{
+ "n_val": 2971,
+ "views_per_image": 2,
+ "full_teacher_acc": {
+  "clean": 92.595,
+  "aug": 85.241
+ },
+ "student_acc_check": {
+  "full": [
+   84.349,
+   84.3487024307251
+  ],
+  "maskedkd98": [
+   83.81,
+   83.81016254425049
+  ]
+ },
+ "P1_kl_mass_minus_uniform_M29_aug_full": {
+  "mean": 0.0075,
+  "ci": [
+   -0.0339,
+   0.0492
+  ]
+ },
+ "P2_kl_mass_minus_shuffle_M29_aug_full": {
+  "mean": -0.1188,
+  "ci": [
+   -0.1661,
+   -0.0669
+  ]
+ },
+ "record": {
+  "full": {
+   "student_acc": 84.349,
+   "clean": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 4.6382,
+      "mass": 4.7348,
+      "shuffle": 4.6293
+     },
+     "masked_teacher_acc": {
+      "uniform": 15.247,
+      "mass": 14.002,
+      "shuffle": 15.954
+     },
+     "mass-uniform": {
+      "mean": 0.0967,
+      "ci": [
+       0.0442,
+       0.1506
+      ]
+     },
+     "mass-shuffle": {
+      "mean": 0.1056,
+      "ci": [
+       0.047,
+       0.1661
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": -0.0089,
+      "ci": [
+       -0.0576,
+       0.0422
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.2454,
+      "ci": [
+       -2.2551,
+       -0.2693
+      ]
+     },
+     "counts": {
+      "q": 0.1677,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.0703,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       10,
+       12,
+       14,
+       17
+      ],
+      "frac_at_kmin": 0.0111,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2242
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 1.9576,
+      "mass": 2.0208,
+      "shuffle": 2.13
+     },
+     "masked_teacher_acc": {
+      "uniform": 54.527,
+      "mass": 53.012,
+      "shuffle": 51.834
+     },
+     "mass-uniform": {
+      "mean": 0.0632,
+      "ci": [
+       0.0086,
+       0.1195
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.1092,
+      "ci": [
+       -0.1793,
+       -0.0405
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1724,
+      "ci": [
+       0.119,
+       0.2261
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.5146,
+      "ci": [
+       -2.8618,
+       -0.1346
+      ]
+     },
+     "counts": {
+      "q": 0.33761,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.0606,
+      "k_quantiles_5_25_50_75_95": [
+       16,
+       24,
+       30,
+       34,
+       40
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2389
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.6529,
+      "mass": 0.6993,
+      "shuffle": 0.8012
+     },
+     "masked_teacher_acc": {
+      "uniform": 78.93,
+      "mass": 77.853,
+      "shuffle": 76.338
+     },
+     "mass-uniform": {
+      "mean": 0.0465,
+      "ci": [
+       0.0139,
+       0.0805
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.1018,
+      "ci": [
+       -0.1476,
+       -0.0572
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1483,
+      "ci": [
+       0.1104,
+       0.1886
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.0771,
+      "ci": [
+       -2.1205,
+       -0.0328
+      ]
+     },
+     "counts": {
+      "q": 0.49358,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0511,
+      "k_quantiles_5_25_50_75_95": [
+       28,
+       42,
+       51,
+       57,
+       65
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.1703
+     }
+    }
+   },
+   "aug": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 4.295,
+      "mass": 4.3958,
+      "shuffle": 4.2807
+     },
+     "masked_teacher_acc": {
+      "uniform": 16.51,
+      "mass": 14.44,
+      "shuffle": 16.813
+     },
+     "mass-uniform": {
+      "mean": 0.1008,
+      "ci": [
+       0.0617,
+       0.1414
+      ]
+     },
+     "mass-shuffle": {
+      "mean": 0.1151,
+      "ci": [
+       0.0692,
+       0.1627
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": -0.0143,
+      "ci": [
+       -0.0509,
+       0.0222
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -2.07,
+      "ci": [
+       -2.8442,
+       -1.3127
+      ]
+     },
+     "counts": {
+      "q": 0.17299,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.0859,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       10,
+       12,
+       15,
+       17
+      ],
+      "frac_at_kmin": 0.0252,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.3083
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 2.1409,
+      "mass": 2.1483,
+      "shuffle": 2.2671
+     },
+     "masked_teacher_acc": {
+      "uniform": 46.567,
+      "mass": 46.6,
+      "shuffle": 45.709
+     },
+     "mass-uniform": {
+      "mean": 0.0075,
+      "ci": [
+       -0.0339,
+       0.0492
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.1188,
+      "ci": [
+       -0.1661,
+       -0.0669
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1262,
+      "ci": [
+       0.0886,
+       0.1619
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": 0.0337,
+      "ci": [
+       -1.0098,
+       1.0434
+      ]
+     },
+     "counts": {
+      "q": 0.34249,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.0705,
+      "k_quantiles_5_25_50_75_95": [
+       15,
+       24,
+       30,
+       35,
+       40
+      ],
+      "frac_at_kmin": 0.001,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2432
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.8664,
+      "mass": 0.8757,
+      "shuffle": 1.0167
+     },
+     "masked_teacher_acc": {
+      "uniform": 68.967,
+      "mass": 69.034,
+      "shuffle": 66.392
+     },
+     "mass-uniform": {
+      "mean": 0.0092,
+      "ci": [
+       -0.0195,
+       0.0381
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.141,
+      "ci": [
+       -0.1801,
+       -0.1024
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1502,
+      "ci": [
+       0.1212,
+       0.1803
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": 0.0673,
+      "ci": [
+       -0.7746,
+       0.892
+      ]
+     },
+     "counts": {
+      "q": 0.4951,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0561,
+      "k_quantiles_5_25_50_75_95": [
+       27,
+       42,
+       51,
+       58,
+       65
+      ],
+      "frac_at_kmin": 0.0003,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.1204
+     }
+    }
+   }
+  },
+  "maskedkd98": {
+   "student_acc": 83.81,
+   "clean": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 4.5707,
+      "mass": 4.6615,
+      "shuffle": 4.5855
+     },
+     "masked_teacher_acc": {
+      "uniform": 16.19,
+      "mass": 14.473,
+      "shuffle": 16.661
+     },
+     "mass-uniform": {
+      "mean": 0.0908,
+      "ci": [
+       0.0362,
+       0.1459
+      ]
+     },
+     "mass-shuffle": {
+      "mean": 0.076,
+      "ci": [
+       0.0128,
+       0.1415
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.0148,
+      "ci": [
+       -0.0368,
+       0.0642
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.7166,
+      "ci": [
+       -2.7937,
+       -0.7068
+      ]
+     },
+     "counts": {
+      "q": 0.17114,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.0725,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       10,
+       12,
+       14,
+       17
+      ],
+      "frac_at_kmin": 0.0131,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2146
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 1.9702,
+      "mass": 2.014,
+      "shuffle": 2.1081
+     },
+     "masked_teacher_acc": {
+      "uniform": 54.157,
+      "mass": 53.08,
+      "shuffle": 52.743
+     },
+     "mass-uniform": {
+      "mean": 0.0438,
+      "ci": [
+       -0.0107,
+       0.1021
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.0941,
+      "ci": [
+       -0.164,
+       -0.0247
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1379,
+      "ci": [
+       0.087,
+       0.1944
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.0771,
+      "ci": [
+       -2.4571,
+       0.3029
+      ]
+     },
+     "counts": {
+      "q": 0.34298,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.0626,
+      "k_quantiles_5_25_50_75_95": [
+       16,
+       24,
+       30,
+       34,
+       40
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2245
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.6676,
+      "mass": 0.7068,
+      "shuffle": 0.8031
+     },
+     "masked_teacher_acc": {
+      "uniform": 78.997,
+      "mass": 77.954,
+      "shuffle": 76.473
+     },
+     "mass-uniform": {
+      "mean": 0.0392,
+      "ci": [
+       0.0033,
+       0.0723
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.0963,
+      "ci": [
+       -0.1426,
+       -0.0514
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1355,
+      "ci": [
+       0.099,
+       0.1731
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.0434,
+      "ci": [
+       -2.1205,
+       0.0673
+      ]
+     },
+     "counts": {
+      "q": 0.49955,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0532,
+      "k_quantiles_5_25_50_75_95": [
+       28,
+       42,
+       50,
+       57,
+       65
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.1509
+     }
+    }
+   },
+   "aug": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 4.2719,
+      "mass": 4.3319,
+      "shuffle": 4.2652
+     },
+     "masked_teacher_acc": {
+      "uniform": 16.913,
+      "mass": 15.735,
+      "shuffle": 17.25
+     },
+     "mass-uniform": {
+      "mean": 0.06,
+      "ci": [
+       0.0208,
+       0.0984
+      ]
+     },
+     "mass-shuffle": {
+      "mean": 0.0667,
+      "ci": [
+       0.0223,
+       0.1118
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": -0.0067,
+      "ci": [
+       -0.0422,
+       0.0283
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": -1.1781,
+      "ci": [
+       -1.969,
+       -0.4376
+      ]
+     },
+     "counts": {
+      "q": 0.17716,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.0854,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       10,
+       12,
+       15,
+       17
+      ],
+      "frac_at_kmin": 0.0257,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2945
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 2.0946,
+      "mass": 2.1011,
+      "shuffle": 2.2316
+     },
+     "masked_teacher_acc": {
+      "uniform": 47.189,
+      "mass": 47.391,
+      "shuffle": 46.483
+     },
+     "mass-uniform": {
+      "mean": 0.0065,
+      "ci": [
+       -0.0335,
+       0.0492
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.1305,
+      "ci": [
+       -0.1804,
+       -0.0785
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1369,
+      "ci": [
+       0.0982,
+       0.1738
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": 0.202,
+      "ci": [
+       -0.8078,
+       1.2285
+      ]
+     },
+     "counts": {
+      "q": 0.34844,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.0708,
+      "k_quantiles_5_25_50_75_95": [
+       15,
+       24,
+       30,
+       35,
+       40
+      ],
+      "frac_at_kmin": 0.0015,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.2078
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.8608,
+      "mass": 0.8785,
+      "shuffle": 1.0033
+     },
+     "masked_teacher_acc": {
+      "uniform": 69.253,
+      "mass": 69.371,
+      "shuffle": 66.93
+     },
+     "mass-uniform": {
+      "mean": 0.0178,
+      "ci": [
+       -0.011,
+       0.0477
+      ]
+     },
+     "mass-shuffle": {
+      "mean": -0.1248,
+      "ci": [
+       -0.1607,
+       -0.0876
+      ]
+     },
+     "shuffle-uniform": {
+      "mean": 0.1425,
+      "ci": [
+       0.115,
+       0.1701
+      ]
+     },
+     "acc_mass-uniform": {
+      "mean": 0.1178,
+      "ci": [
+       -0.7068,
+       0.892
+      ]
+     },
+     "counts": {
+      "q": 0.50165,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0567,
+      "k_quantiles_5_25_50_75_95": [
+       27,
+       42,
+       51,
+       58,
+       65
+      ],
+      "frac_at_kmin": 0.0003,
+      "frac_at_196": 0.0,
+      "spearman_k_vs_kl_uniform": 0.1
+     }
+    }
+   }
+  }
+ },
+ "note": "KL(full teacher on view || keep-only masked teacher on same view), T=1, nats; aug = mean over V crop+flip views per image (H-A181 draws); lateroll = student rollout blocks 6-11 with residual identity, normalised; mass arm K_i = fewest lateroll-ranked tokens with cumulative mass >= q, clamp [4, 196], q fitted per (student, view set, M) so mean K_i ~ M; shuffle = same counts permuted across images within each view index; teacher attention FLOPs grow with mean K^2 (mean_k2_over_m2); 95% percentile bootstrap over val images (2000 resamples, shared index); seed-1 students only"
+}
