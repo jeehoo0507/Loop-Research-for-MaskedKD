@@ -1,0 +1,363 @@
+{
+ "n_val": 2971,
+ "teacher_acc": 92.595,
+ "student_acc_final_check": {
+  "full": [
+   84.349,
+   84.3487024307251
+  ],
+  "maskedkd98": [
+   83.81,
+   83.81016254425049
+  ]
+ },
+ "P1_lateroll_minus_maskedkd_kl_full_e5_K29": {
+  "mean": -1.4375,
+  "ci": [
+   -1.5317,
+   -1.3489
+  ]
+ },
+ "P2_gap_final_minus_gap_e5_full_K29": {
+  "mean": 0.2943,
+  "ci": [
+   0.2,
+   0.3833
+  ]
+ },
+ "record": {
+  "full@e5": {
+   "student_acc": 67.115,
+   "kl_mean": {
+    "maskedkd": 3.36,
+    "lateroll": 1.9224,
+    "trustfilt": 2.692
+   },
+   "masked_teacher_acc": {
+    "maskedkd": 32.413,
+    "lateroll": 54.157,
+    "trustfilt": 41.198
+   },
+   "kl_diff": {
+    "lateroll-maskedkd": {
+     "mean": -1.4375,
+     "ci": [
+      -1.5317,
+      -1.3489
+     ]
+    },
+    "trustfilt-maskedkd": {
+     "mean": -0.668,
+     "ci": [
+      -0.7724,
+      -0.5616
+     ]
+    },
+    "trustfilt-lateroll": {
+     "mean": 0.7695,
+     "ci": [
+      0.6811,
+      0.8563
+     ]
+    }
+   },
+   "acc_diff_lateroll-maskedkd": {
+    "mean": 21.7435,
+    "ci": [
+     19.7913,
+     23.763
+    ]
+   }
+  },
+  "full@e10": {
+   "student_acc": 81.084,
+   "kl_mean": {
+    "maskedkd": 3.0356,
+    "lateroll": 1.9785,
+    "trustfilt": 2.6634
+   },
+   "masked_teacher_acc": {
+    "maskedkd": 37.058,
+    "lateroll": 53.551,
+    "trustfilt": 41.838
+   },
+   "kl_diff": {
+    "lateroll-maskedkd": {
+     "mean": -1.0572,
+     "ci": [
+      -1.146,
+      -0.9703
+     ]
+    },
+    "trustfilt-maskedkd": {
+     "mean": -0.3722,
+     "ci": [
+      -0.4725,
+      -0.2722
+     ]
+    },
+    "trustfilt-lateroll": {
+     "mean": 0.685,
+     "ci": [
+      0.6023,
+      0.7698
+     ]
+    }
+   },
+   "acc_diff_lateroll-maskedkd": {
+    "mean": 16.4928,
+    "ci": [
+     14.607,
+     18.4113
+    ]
+   }
+  },
+  "full@final": {
+   "student_acc": 84.349,
+   "kl_mean": {
+    "maskedkd": 3.1008,
+    "lateroll": 1.9576,
+    "trustfilt": 2.6536
+   },
+   "masked_teacher_acc": {
+    "maskedkd": 35.914,
+    "lateroll": 54.527,
+    "trustfilt": 42.713
+   },
+   "kl_diff": {
+    "lateroll-maskedkd": {
+     "mean": -1.1432,
+     "ci": [
+      -1.2396,
+      -1.0538
+     ]
+    },
+    "trustfilt-maskedkd": {
+     "mean": -0.4472,
+     "ci": [
+      -0.5503,
+      -0.3463
+     ]
+    },
+    "trustfilt-lateroll": {
+     "mean": 0.696,
+     "ci": [
+      0.6121,
+      0.7838
+     ]
+    }
+   },
+   "acc_diff_lateroll-maskedkd": {
+    "mean": 18.6133,
+    "ci": [
+     16.6611,
+     20.5991
+    ]
+   }
+  },
+  "full_gap_change": {
+   "final-e5": {
+    "mean": 0.2943,
+    "ci": [
+     0.2,
+     0.3833
+    ]
+   },
+   "final-e10": {
+    "mean": -0.086,
+    "ci": [
+     -0.1594,
+     -0.0112
+    ]
+   },
+   "e10-e5": {
+    "mean": 0.3804,
+    "ci": [
+     0.295,
+     0.4741
+    ]
+   },
+   "maskedkd_kl_final-e5": {
+    "mean": -0.2592,
+    "ci": [
+     -0.3347,
+     -0.1784
+    ]
+   },
+   "lateroll_kl_final-e5": {
+    "mean": 0.0351,
+    "ci": [
+     -0.0158,
+     0.0889
+    ]
+   }
+  },
+  "maskedkd98@e5": {
+   "student_acc": 68.596,
+   "kl_mean": {
+    "maskedkd": 2.8388,
+    "lateroll": 1.9089,
+    "trustfilt": 2.6762
+   },
+   "masked_teacher_acc": {
+    "maskedkd": 39.717,
+    "lateroll": 55.099,
+    "trustfilt": 41.4
+   },
+   "kl_diff": {
+    "lateroll-maskedkd": {
+     "mean": -0.9298,
+     "ci": [
+      -1.0145,
+      -0.8411
+     ]
+    },
+    "trustfilt-maskedkd": {
+     "mean": -0.1626,
+     "ci": [
+      -0.262,
+      -0.064
+     ]
+    },
+    "trustfilt-lateroll": {
+     "mean": 0.7673,
+     "ci": [
+      0.6763,
+      0.853
+     ]
+    }
+   },
+   "acc_diff_lateroll-maskedkd": {
+    "mean": 15.382,
+    "ci": [
+     13.6318,
+     17.1996
+    ]
+   }
+  },
+  "maskedkd98@e10": {
+   "student_acc": 80.747,
+   "kl_mean": {
+    "maskedkd": 2.8511,
+    "lateroll": 1.9641,
+    "trustfilt": 2.6672
+   },
+   "masked_teacher_acc": {
+    "maskedkd": 38.708,
+    "lateroll": 54.897,
+    "trustfilt": 41.737
+   },
+   "kl_diff": {
+    "lateroll-maskedkd": {
+     "mean": -0.887,
+     "ci": [
+      -0.9776,
+      -0.8055
+     ]
+    },
+    "trustfilt-maskedkd": {
+     "mean": -0.1839,
+     "ci": [
+      -0.2844,
+      -0.0907
+     ]
+    },
+    "trustfilt-lateroll": {
+     "mean": 0.703,
+     "ci": [
+      0.6169,
+      0.7848
+     ]
+    }
+   },
+   "acc_diff_lateroll-maskedkd": {
+    "mean": 16.1898,
+    "ci": [
+     14.3714,
+     18.1084
+    ]
+   }
+  },
+  "maskedkd98@final": {
+   "student_acc": 83.81,
+   "kl_mean": {
+    "maskedkd": 2.9982,
+    "lateroll": 1.9702,
+    "trustfilt": 2.6749
+   },
+   "masked_teacher_acc": {
+    "maskedkd": 37.193,
+    "lateroll": 54.157,
+    "trustfilt": 42.04
+   },
+   "kl_diff": {
+    "lateroll-maskedkd": {
+     "mean": -1.028,
+     "ci": [
+      -1.1191,
+      -0.9412
+     ]
+    },
+    "trustfilt-maskedkd": {
+     "mean": -0.3233,
+     "ci": [
+      -0.4242,
+      -0.2229
+     ]
+    },
+    "trustfilt-lateroll": {
+     "mean": 0.7047,
+     "ci": [
+      0.6182,
+      0.7884
+     ]
+    }
+   },
+   "acc_diff_lateroll-maskedkd": {
+    "mean": 16.964,
+    "ci": [
+     15.0446,
+     18.8825
+    ]
+   }
+  },
+  "maskedkd98_gap_change": {
+   "final-e5": {
+    "mean": -0.0982,
+    "ci": [
+     -0.1911,
+     -0.0097
+    ]
+   },
+   "final-e10": {
+    "mean": -0.141,
+    "ci": [
+     -0.2183,
+     -0.0611
+    ]
+   },
+   "e10-e5": {
+    "mean": 0.0429,
+    "ci": [
+     -0.049,
+     0.1325
+    ]
+   },
+   "maskedkd_kl_final-e5": {
+    "mean": 0.1595,
+    "ci": [
+     0.086,
+     0.2394
+    ]
+   },
+   "lateroll_kl_final-e5": {
+    "mean": 0.0613,
+    "ci": [
+     0.0091,
+     0.1167
+    ]
+   }
+  }
+ },
+ "note": "KL(full teacher || keep-only masked teacher), T=1, nats; 95% percentile bootstrap over val images (2000 resamples, shared index); seed-1 students only; snapshots e5, e10, final(e20)"
+}

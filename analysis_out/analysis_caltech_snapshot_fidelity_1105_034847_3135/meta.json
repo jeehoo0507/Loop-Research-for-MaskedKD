@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_snapshot_fidelity_1105_034847_3135",
+ "name": "caltech_snapshot_fidelity",
+ "source_sha": "3135834a4401df476de0985c4c9c96e3917b859e585e18b242dc2d00921fa9fb",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, is the K=29 lateroll - MaskedKD masked-teacher KL gap already present in early student snapshots (e5, e10) or does it grow during training?",
+  "method": "keep-only masked-teacher KL to the full teacher under student-attention token rules at training snapshots, attention rollout, paired image bootstrap",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 32.2
+}
