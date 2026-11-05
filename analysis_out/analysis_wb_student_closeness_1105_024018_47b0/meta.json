@@ -1,0 +1,12 @@
+{
+ "id": "analysis_wb_student_closeness_1105_024018_47b0",
+ "name": "wb_student_closeness",
+ "source_sha": "47b0e69a59d15444a8cc87d53236205745dda994a0aeee6da28012fdbc0677aa",
+ "status": "done",
+ "meta": {
+  "question": "on Waterbirds K=29, is the trustfilt student (higher WGA than Full KD) closer to the full teacher than the Full KD student on the worst group, or is its worst-group gain not imitation of the teacher?",
+  "method": "teacher-student output divergence per group on held-out images, seed-paired t CI, run-level Spearman with permutation p, image bootstrap",
+  "paper": "Hinton et al. 2015 (KD); Stanton et al. NeurIPS 2021 (does KD really work? student-teacher fidelity); Son et al. ECCV 2024 (MaskedKD); Sagawa et al. ICLR 2020 (Waterbirds groups)"
+ },
+ "seconds": 14.0
+}
