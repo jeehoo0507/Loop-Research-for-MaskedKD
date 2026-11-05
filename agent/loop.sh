@@ -12,7 +12,7 @@
 # at least every HEARTBEAT seconds, and is forced when the GPU has been idle for IDLE_FORCE seconds.
 set -u
 cd "$(dirname "$0")/.."
-END_DATE="${END_DATE:-2026-12-31}"
+END_DATE="${END_DATE:-2026-11-05}"  # 2026-11-05 16:50 KST human: close the loop (side project); restore 2026-12-31 to resume
 POLL="${POLL:-300}"                 # seconds between checks
 HEARTBEAT="${HEARTBEAT:-3600}"      # max seconds without a round
 IDLE_FORCE="${IDLE_FORCE:-1800}"    # GPU idle this long -> forced round
