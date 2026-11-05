@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_sink_residual_depth_1105_043830_4d02",
+ "name": "caltech_sink_residual_depth",
+ "source_sha": "4d0272e470f862b1fade23e29fe9915b6a8a906a4cc2e19765b89be7ed2435d4",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 crop+flip views of val, after excluding student high-norm sink tokens, does averaging CLS attention over blocks 6-11 (no product) close the remaining nosink - lateroll masked-teacher KL gap at K=29, or is the rollout product needed?",
+  "method": "high-norm artifact token detection (per-view median+3MAD of block-10 token norms), per-block and depth-averaged CLS attention vs attention rollout, keep-only masked-teacher KL on RandomResizedCrop+flip views, paired image bootstrap",
+  "paper": "Darcet et al. ICLR 2024 (ViTs need registers); Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 138.5
+}

@@ -1,0 +1,1273 @@
+{
+ "n_val": 2971,
+ "views_per_image": 2,
+ "full_teacher_acc": {
+  "clean": 92.595,
+  "aug": 85.241
+ },
+ "student_acc_check": {
+  "full": [
+   84.349,
+   84.3487024307251
+  ],
+  "maskedkd98": [
+   83.81,
+   83.81016254425049
+  ]
+ },
+ "P1_kl_avgnosink_minus_nosink_aug_full_K29": {
+  "mean": -0.2445,
+  "ci": [
+   -0.2901,
+   -0.198
+  ]
+ },
+ "P2_residual_closure_avgnosink_aug_full_K29": {
+  "mean": 0.5329,
+  "ci": [
+   0.4521,
+   0.6144
+  ]
+ },
+ "record": {
+  "full": {
+   "student_acc": 84.349,
+   "clean": {
+    "K12": {
+     "kl_mean": {
+      "maskedkd": 5.1457,
+      "nosink": 4.6877,
+      "avgnosink": 4.6053,
+      "lateroll": 4.6382,
+      "rollnosink": 4.6579,
+      "blk6": 4.978,
+      "blk7": 4.9916,
+      "blk8": 4.6142,
+      "blk9": 4.4974,
+      "blk10": 4.5038
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.155,
+      "nosink": 14.709,
+      "avgnosink": 15.685,
+      "lateroll": 15.247,
+      "rollnosink": 14.036,
+      "blk6": 10.771,
+      "blk7": 10.804,
+      "blk8": 15.954,
+      "blk9": 17.166,
+      "blk10": 16.796
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.6067,
+      "lateroll": 0.3163
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.0824,
+       "ci": [
+        -0.1525,
+        -0.0115
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": -0.0329,
+       "ci": [
+        -0.1064,
+        0.0452
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.0495,
+       "ci": [
+        -0.0358,
+        0.1352
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0197,
+       "ci": [
+        -0.0254,
+        0.0663
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.2903,
+       "ci": [
+        0.2016,
+        0.3764
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.3039,
+       "ci": [
+        0.2194,
+        0.3861
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.0735,
+       "ci": [
+        -0.1606,
+        0.0119
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.1904,
+       "ci": [
+        -0.2683,
+        -0.1129
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.1839,
+       "ci": [
+        -0.2509,
+        -0.1143
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 1.6645,
+      "ci": [
+       -10.6284,
+       12.0922
+      ]
+     }
+    },
+    "K29": {
+     "kl_mean": {
+      "maskedkd": 3.0984,
+      "nosink": 2.3551,
+      "avgnosink": 2.1567,
+      "lateroll": 1.9576,
+      "rollnosink": 2.0742,
+      "blk6": 2.5468,
+      "blk7": 2.622,
+      "blk8": 2.4162,
+      "blk9": 2.1724,
+      "blk10": 2.1887
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 36.149,
+      "nosink": 45.776,
+      "avgnosink": 49.142,
+      "lateroll": 54.527,
+      "rollnosink": 51.397,
+      "blk6": 43.891,
+      "blk7": 41.669,
+      "blk8": 46.382,
+      "blk9": 50.286,
+      "blk10": 49.007
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.7006,
+      "lateroll": 0.4384
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1983,
+       "ci": [
+        -0.2619,
+        -0.133
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.1992,
+       "ci": [
+        0.1338,
+        0.2645
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.3975,
+       "ci": [
+        0.3145,
+        0.4772
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.1167,
+       "ci": [
+        0.0743,
+        0.1595
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.1917,
+       "ci": [
+        0.1023,
+        0.2829
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.2669,
+       "ci": [
+        0.1813,
+        0.3559
+       ]
+      },
+      "blk8-nosink": {
+       "mean": 0.0611,
+       "ci": [
+        -0.0157,
+        0.1431
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.1827,
+       "ci": [
+        -0.2474,
+        -0.1174
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.1663,
+       "ci": [
+        -0.227,
+        -0.1051
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.499,
+      "ci": [
+       0.3719,
+       0.6321
+      ]
+     }
+    },
+    "K49": {
+     "kl_mean": {
+      "maskedkd": 1.136,
+      "nosink": 0.8708,
+      "avgnosink": 0.7559,
+      "lateroll": 0.6529,
+      "rollnosink": 0.7005,
+      "blk6": 0.935,
+      "blk7": 1.0036,
+      "blk8": 0.9195,
+      "blk9": 0.8344,
+      "blk10": 0.82
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 69.606,
+      "nosink": 74.689,
+      "avgnosink": 76.372,
+      "lateroll": 78.93,
+      "rollnosink": 77.92,
+      "blk6": 73.645,
+      "blk7": 71.491,
+      "blk8": 73.713,
+      "blk9": 76.001,
+      "blk10": 75.227
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.7623,
+      "lateroll": 0.5335
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1149,
+       "ci": [
+        -0.1543,
+        -0.0777
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.1031,
+       "ci": [
+        0.0624,
+        0.1435
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2179,
+       "ci": [
+        0.1675,
+        0.2703
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0476,
+       "ci": [
+        0.0256,
+        0.0716
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.0642,
+       "ci": [
+        0.004,
+        0.1224
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.1328,
+       "ci": [
+        0.0763,
+        0.1904
+       ]
+      },
+      "blk8-nosink": {
+       "mean": 0.0487,
+       "ci": [
+        -0.0031,
+        0.0975
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.0364,
+       "ci": [
+        -0.0752,
+        0.0025
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.0508,
+       "ci": [
+        -0.0845,
+        -0.0182
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.527,
+      "ci": [
+       0.3878,
+       0.6691
+      ]
+     }
+    }
+   },
+   "aug": {
+    "K12": {
+     "kl_mean": {
+      "maskedkd": 4.9578,
+      "nosink": 4.5198,
+      "avgnosink": 4.3785,
+      "lateroll": 4.295,
+      "rollnosink": 4.3611,
+      "blk6": 4.5567,
+      "blk7": 4.6897,
+      "blk8": 4.2364,
+      "blk9": 4.3783,
+      "blk10": 4.3677
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.357,
+      "nosink": 13.598,
+      "avgnosink": 15.231,
+      "lateroll": 16.51,
+      "rollnosink": 15.281,
+      "blk6": 12.874,
+      "blk7": 11.36,
+      "blk8": 16.796,
+      "blk9": 15.651,
+      "blk10": 15.702
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.6074,
+      "lateroll": 0.33
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1412,
+       "ci": [
+        -0.1907,
+        -0.0909
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.0835,
+       "ci": [
+        0.0298,
+        0.1342
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2248,
+       "ci": [
+        0.1668,
+        0.2837
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0661,
+       "ci": [
+        0.0328,
+        0.1002
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.037,
+       "ci": [
+        -0.0245,
+        0.1004
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.1699,
+       "ci": [
+        0.1099,
+        0.2296
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.2833,
+       "ci": [
+        -0.3413,
+        -0.2213
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.1415,
+       "ci": [
+        -0.1951,
+        -0.0895
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.152,
+       "ci": [
+        -0.2003,
+        -0.1035
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.6284,
+      "ci": [
+       0.4383,
+       0.85
+      ]
+     }
+    },
+    "K29": {
+     "kl_mean": {
+      "maskedkd": 3.1545,
+      "nosink": 2.5998,
+      "avgnosink": 2.3552,
+      "lateroll": 2.1409,
+      "rollnosink": 2.2545,
+      "blk6": 2.5409,
+      "blk7": 2.7495,
+      "blk8": 2.4671,
+      "blk9": 2.4293,
+      "blk10": 2.4195
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 30.815,
+      "nosink": 38.455,
+      "avgnosink": 42.831,
+      "lateroll": 46.567,
+      "rollnosink": 44.396,
+      "blk6": 38.741,
+      "blk7": 36.503,
+      "blk8": 41.501,
+      "blk9": 41.804,
+      "blk10": 41.686
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.6939,
+      "lateroll": 0.4357
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.2445,
+       "ci": [
+        -0.2901,
+        -0.198
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.2143,
+       "ci": [
+        0.1649,
+        0.2629
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.4589,
+       "ci": [
+        0.396,
+        0.5194
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.1136,
+       "ci": [
+        0.083,
+        0.1433
+       ]
+      },
+      "blk6-nosink": {
+       "mean": -0.0588,
+       "ci": [
+        -0.1228,
+        0.0025
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.1498,
+       "ci": [
+        0.0872,
+        0.2121
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.1326,
+       "ci": [
+        -0.1933,
+        -0.0708
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.1705,
+       "ci": [
+        -0.2213,
+        -0.1216
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.1803,
+       "ci": [
+        -0.2251,
+        -0.1336
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.5329,
+      "ci": [
+       0.4521,
+       0.6144
+      ]
+     }
+    },
+    "K49": {
+     "kl_mean": {
+      "maskedkd": 1.3665,
+      "nosink": 1.1628,
+      "avgnosink": 1.0091,
+      "lateroll": 0.8664,
+      "rollnosink": 0.9328,
+      "blk6": 1.1054,
+      "blk7": 1.2347,
+      "blk8": 1.1348,
+      "blk9": 1.1193,
+      "blk10": 1.0875
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 59.963,
+      "nosink": 63.346,
+      "avgnosink": 66.375,
+      "lateroll": 68.967,
+      "rollnosink": 67.402,
+      "blk6": 64.086,
+      "blk7": 61.579,
+      "blk8": 63.598,
+      "blk9": 64.49,
+      "blk10": 64.81
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.7521,
+      "lateroll": 0.5225
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1538,
+       "ci": [
+        -0.1862,
+        -0.1211
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.1426,
+       "ci": [
+        0.1083,
+        0.1764
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2964,
+       "ci": [
+        0.2527,
+        0.3384
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0664,
+       "ci": [
+        0.0472,
+        0.0862
+       ]
+      },
+      "blk6-nosink": {
+       "mean": -0.0574,
+       "ci": [
+        -0.1057,
+        -0.0116
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.0718,
+       "ci": [
+        0.0278,
+        0.12
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.028,
+       "ci": [
+        -0.0671,
+        0.0143
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.0436,
+       "ci": [
+        -0.0775,
+        -0.0097
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.0753,
+       "ci": [
+        -0.1049,
+        -0.0467
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.5189,
+      "ci": [
+       0.4372,
+       0.6018
+      ]
+     }
+    }
+   }
+  },
+  "maskedkd98": {
+   "student_acc": 83.81,
+   "clean": {
+    "K12": {
+     "kl_mean": {
+      "maskedkd": 5.1061,
+      "nosink": 4.6733,
+      "avgnosink": 4.5364,
+      "lateroll": 4.5707,
+      "rollnosink": 4.596,
+      "blk6": 4.914,
+      "blk7": 4.9614,
+      "blk8": 4.5808,
+      "blk9": 4.4491,
+      "blk10": 4.4675
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.862,
+      "nosink": 14.271,
+      "avgnosink": 15.921,
+      "lateroll": 16.19,
+      "rollnosink": 14.642,
+      "blk6": 11.478,
+      "blk7": 10.804,
+      "blk8": 16.089,
+      "blk9": 16.493,
+      "blk10": 17.099
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.6248,
+      "lateroll": 0.3346
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1369,
+       "ci": [
+        -0.2061,
+        -0.0642
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": -0.0343,
+       "ci": [
+        -0.1103,
+        0.0374
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.1026,
+       "ci": [
+        0.0164,
+        0.1856
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0253,
+       "ci": [
+        -0.0214,
+        0.0748
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.2407,
+       "ci": [
+        0.1547,
+        0.3249
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.2881,
+       "ci": [
+        0.2091,
+        0.3702
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.0925,
+       "ci": [
+        -0.1757,
+        -0.01
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.2241,
+       "ci": [
+        -0.3004,
+        -0.1501
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.2057,
+       "ci": [
+        -0.2777,
+        -0.1319
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 1.3345,
+      "ci": [
+       0.6964,
+       4.5837
+      ]
+     }
+    },
+    "K29": {
+     "kl_mean": {
+      "maskedkd": 2.9999,
+      "nosink": 2.3345,
+      "avgnosink": 2.1527,
+      "lateroll": 1.9702,
+      "rollnosink": 2.099,
+      "blk6": 2.5263,
+      "blk7": 2.6007,
+      "blk8": 2.3915,
+      "blk9": 2.0926,
+      "blk10": 2.1685
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 37.294,
+      "nosink": 46.685,
+      "avgnosink": 50.421,
+      "lateroll": 54.157,
+      "rollnosink": 51.33,
+      "blk6": 43.285,
+      "blk7": 42.511,
+      "blk8": 45.877,
+      "blk9": 51.498,
+      "blk10": 50.421
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.7191,
+      "lateroll": 0.4569
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1819,
+       "ci": [
+        -0.243,
+        -0.1224
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.1825,
+       "ci": [
+        0.1239,
+        0.2477
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.3644,
+       "ci": [
+        0.289,
+        0.4414
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.1288,
+       "ci": [
+        0.0874,
+        0.1706
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.1917,
+       "ci": [
+        0.1051,
+        0.2755
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.2662,
+       "ci": [
+        0.1865,
+        0.3478
+       ]
+      },
+      "blk8-nosink": {
+       "mean": 0.0569,
+       "ci": [
+        -0.0216,
+        0.1277
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.2419,
+       "ci": [
+        -0.3053,
+        -0.1798
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.166,
+       "ci": [
+        -0.2246,
+        -0.109
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.4991,
+      "ci": [
+       0.3655,
+       0.6333
+      ]
+     }
+    },
+    "K49": {
+     "kl_mean": {
+      "maskedkd": 1.0872,
+      "nosink": 0.8591,
+      "avgnosink": 0.7794,
+      "lateroll": 0.6676,
+      "rollnosink": 0.7284,
+      "blk6": 0.9138,
+      "blk7": 0.9875,
+      "blk8": 0.9253,
+      "blk9": 0.8413,
+      "blk10": 0.82
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 70.919,
+      "nosink": 74.689,
+      "avgnosink": 76.944,
+      "lateroll": 78.997,
+      "rollnosink": 77.078,
+      "blk6": 73.376,
+      "blk7": 72.467,
+      "blk8": 73.915,
+      "blk9": 75.261,
+      "blk10": 75.564
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.7772,
+      "lateroll": 0.5519
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.0797,
+       "ci": [
+        -0.1144,
+        -0.045
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.1118,
+       "ci": [
+        0.0715,
+        0.153
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.1915,
+       "ci": [
+        0.1444,
+        0.2406
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0607,
+       "ci": [
+        0.0358,
+        0.086
+       ]
+      },
+      "blk6-nosink": {
+       "mean": 0.0547,
+       "ci": [
+        0.0006,
+        0.1088
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.1284,
+       "ci": [
+        0.0772,
+        0.1823
+       ]
+      },
+      "blk8-nosink": {
+       "mean": 0.0662,
+       "ci": [
+        0.0206,
+        0.1136
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.0178,
+       "ci": [
+        -0.0544,
+        0.0195
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.0391,
+       "ci": [
+        -0.072,
+        -0.0072
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.4161,
+      "ci": [
+       0.2649,
+       0.5726
+      ]
+     }
+    }
+   },
+   "aug": {
+    "K12": {
+     "kl_mean": {
+      "maskedkd": 4.9123,
+      "nosink": 4.5458,
+      "avgnosink": 4.3161,
+      "lateroll": 4.2719,
+      "rollnosink": 4.3085,
+      "blk6": 4.4991,
+      "blk7": 4.6558,
+      "blk8": 4.2375,
+      "blk9": 4.3255,
+      "blk10": 4.3501
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 9.677,
+      "nosink": 12.891,
+      "avgnosink": 15.853,
+      "lateroll": 16.913,
+      "rollnosink": 15.466,
+      "blk6": 12.841,
+      "blk7": 12.302,
+      "blk8": 17.284,
+      "blk9": 15.668,
+      "blk10": 16.005
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.6225,
+      "lateroll": 0.3447
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.2296,
+       "ci": [
+        -0.2786,
+        -0.176
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.0442,
+       "ci": [
+        -0.0074,
+        0.0993
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2738,
+       "ci": [
+        0.2123,
+        0.3388
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0366,
+       "ci": [
+        0.0026,
+        0.0734
+       ]
+      },
+      "blk6-nosink": {
+       "mean": -0.0467,
+       "ci": [
+        -0.1093,
+        0.0181
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.11,
+       "ci": [
+        0.05,
+        0.1725
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.3083,
+       "ci": [
+        -0.3715,
+        -0.2423
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.2203,
+       "ci": [
+        -0.2759,
+        -0.164
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.1956,
+       "ci": [
+        -0.247,
+        -0.1467
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.8386,
+      "ci": [
+       0.6758,
+       1.0303
+      ]
+     }
+    },
+    "K29": {
+     "kl_mean": {
+      "maskedkd": 3.0801,
+      "nosink": 2.5973,
+      "avgnosink": 2.3134,
+      "lateroll": 2.0946,
+      "rollnosink": 2.1852,
+      "blk6": 2.4742,
+      "blk7": 2.7134,
+      "blk8": 2.4413,
+      "blk9": 2.435,
+      "blk10": 2.4035
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 32.868,
+      "nosink": 39.414,
+      "avgnosink": 43.302,
+      "lateroll": 47.189,
+      "rollnosink": 45.624,
+      "blk6": 40.121,
+      "blk7": 36.873,
+      "blk8": 41.35,
+      "blk9": 41.821,
+      "blk10": 42.158
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.7113,
+      "lateroll": 0.4549
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.2838,
+       "ci": [
+        -0.3301,
+        -0.2372
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.2188,
+       "ci": [
+        0.1706,
+        0.2652
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.5026,
+       "ci": [
+        0.4453,
+        0.5626
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0905,
+       "ci": [
+        0.0596,
+        0.1212
+       ]
+      },
+      "blk6-nosink": {
+       "mean": -0.123,
+       "ci": [
+        -0.187,
+        -0.063
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.1162,
+       "ci": [
+        0.054,
+        0.1752
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.1559,
+       "ci": [
+        -0.2167,
+        -0.0985
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.1623,
+       "ci": [
+        -0.2154,
+        -0.1116
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.1938,
+       "ci": [
+        -0.2405,
+        -0.1475
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.5647,
+      "ci": [
+       0.4901,
+       0.6404
+      ]
+     }
+    },
+    "K49": {
+     "kl_mean": {
+      "maskedkd": 1.3352,
+      "nosink": 1.1464,
+      "avgnosink": 1.0099,
+      "lateroll": 0.8608,
+      "rollnosink": 0.9226,
+      "blk6": 1.065,
+      "blk7": 1.2084,
+      "blk8": 1.113,
+      "blk9": 1.1286,
+      "blk10": 1.0854
+     },
+     "masked_teacher_acc": {
+      "maskedkd": 59.408,
+      "nosink": 63.497,
+      "avgnosink": 66.543,
+      "lateroll": 69.253,
+      "rollnosink": 67.671,
+      "blk6": 64.642,
+      "blk7": 62.689,
+      "blk8": 63.968,
+      "blk9": 63.851,
+      "blk10": 64.911
+     },
+     "overlap_with_nosink": {
+      "avgnosink": 0.766,
+      "lateroll": 0.5392
+     },
+     "kl_diff": {
+      "avgnosink-nosink": {
+       "mean": -0.1365,
+       "ci": [
+        -0.1668,
+        -0.1078
+       ]
+      },
+      "avgnosink-lateroll": {
+       "mean": 0.1492,
+       "ci": [
+        0.1151,
+        0.1843
+       ]
+      },
+      "nosink-lateroll": {
+       "mean": 0.2857,
+       "ci": [
+        0.2458,
+        0.3268
+       ]
+      },
+      "rollnosink-lateroll": {
+       "mean": 0.0619,
+       "ci": [
+        0.0405,
+        0.0838
+       ]
+      },
+      "blk6-nosink": {
+       "mean": -0.0815,
+       "ci": [
+        -0.126,
+        -0.0359
+       ]
+      },
+      "blk7-nosink": {
+       "mean": 0.062,
+       "ci": [
+        0.0178,
+        0.1072
+       ]
+      },
+      "blk8-nosink": {
+       "mean": -0.0334,
+       "ci": [
+        -0.073,
+        0.0061
+       ]
+      },
+      "blk9-nosink": {
+       "mean": -0.0179,
+       "ci": [
+        -0.05,
+        0.0127
+       ]
+      },
+      "blk10-nosink": {
+       "mean": -0.0611,
+       "ci": [
+        -0.0893,
+        -0.0347
+       ]
+      }
+     },
+     "residual_closure_avgnosink": {
+      "mean": 0.4778,
+      "ci": [
+       0.3946,
+       0.5639
+      ]
+     }
+    }
+   }
+  }
+ },
+ "note": "KL(full teacher on view || keep-only masked teacher on same view), T=1, nats; aug = mean over V crop+flip views per image (H-A181 draws); sinks = block-10 output patch norm > median + 3 MAD per view; avgnosink = mean over blocks 6-11 of head-mean CLS->patch attention with sinks set to -1; residual closure = mean(KL_nosink - KL_avgnosink) / mean(KL_nosink - KL_lateroll); 95% percentile bootstrap over val images (2000 resamples, shared index); seed-1 students only"
+}
