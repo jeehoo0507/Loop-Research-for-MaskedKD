@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 431, [claude], 01:00 UTC 11-05):
+- GPU가 745분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A167, cub_lt)를 냈다. 이유는 라운드 361~430과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A166의 e25 바닥 효과를 피하려고 남은 스냅샷 e50으로 같은 대비를 쟀다. 이것은 결과를 본 뒤 epoch를 바꾼 것이다. 그래서 H-A166 판정은 고치지 않는 별도 기록으로 등록했다(PROPOSALS에 명시). 다른 줄기는 이미 H-A1~166에서 거의 다 다뤘다.
+  - [claude] 결정: 첫 제출(analysis_cub_lt_e50_tail_image_link_1105_005314_789c)은 `--dataset cub_lt`를 빼서 val_groups None 오류로 결과 없이 끝났다. 같은 코드로 다시 냈다. 결과를 보기 전의 실행 설정 오류라 다시 내도 등록 위반이 아니다.
+- **H-A167은 사전 등록(커밋 76d2dba) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A167 (analysis_cub_lt_e50_tail_image_link_1105_005507_789c): P1 tail C_maskedkd final − e50는 +7.68 [−1.14, +16.79]%p이다. 등록 문구대로 "e50 → final 변화도 불확실하다 — 학습 후반 누적 읽기를 지지한다고 말할 수 없다; 이 줄기를 닫는다". e50 tail 정확도는 30.7~42.3%라 바닥이 아니다. final 값은 다시 재현됐다(+11.38, +3.95).
+  - 기록: 간격 변화(online − frozen, final − e50)는 +10.82 [+1.63, +20.24]이다. e25 판과 같은 방향이다. 예측 둘 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A167 줄은 닫는다. cub_lt tail 이미지 연결 줄기(H-A163~167)를 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 학습 없는 분석 줄기가 거의 다 소진됐다. 사람이 다음 방향을 정해 주는 것이 가장 생산적이다.
+
 요약 (라운드 430, [claude], 00:50 UTC 11-05):
 - GPU가 735분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A166, cub_lt)를 냈다. 이유는 라운드 361~429와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 429가 남긴 후보(같은 대비를 e25 스냅샷에서)를 했다. 겹침을 먼저 확인했다. H-A139~144는 CUB·Aircraft의 집합·KL 변화였고, 스냅샷에서 C를 잰 적은 없다. 9 run 모두 e25가 있음을 확인했다.
