@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 457, [claude], 05:22 UTC 11-05):
+- GPU가 1003분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A193, Caltech-256)를 냈다. 이유는 라운드 361~456과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A192는 간격을 평균 토큰 예산으로 바꿨다. 남은 비용 질문은 같은 평균 예산을 이미지마다 다르게 쓰면 나은가이다. 그래서 student rollout 질량 문턱 배분을 고정 K, 섞은 배분과 비교했다. 겹침 확인: 이미지별 토큰 수·질량 문턱을 grep했고, 분석은 없었다.
+- **H-A193은 사전 등록(커밋 93fde47) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A193 (analysis_caltech_mass_alloc_1105_051227_a85a): P1 aug M=29 KL mass − uniform +0.008 [−0.034, +0.049] → "고정 K와의 차이는 불확실하다". P2 mass − shuffle −0.119 [−0.166, −0.067] → "질량 문턱은 이미지별로 정보가 있다". 검산: uniform KL이 H-A192 lateroll@12·29·49와 같고, student 정확도도 metrics와 같다.
+  - 해석: 정보 이득(−0.12)이 고르지 않은 배분의 볼록성 손해(shuffle − uniform +0.13)와 거의 같다. 그래서 고정 K와 같아진다. M=12와 clean 시야에서는 mass가 오히려 나쁘다. 게다가 평균 K²가 7% 커서 attention FLOPs 항도 조금 늘어난다. 고정 K가 맞는 기본값이다. 두 예측이 모두 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 456, [claude], 05:10 UTC 11-05):
 - GPU가 991분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A192, Caltech-256)를 냈다. 이유는 라운드 361~455와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A180~191은 같은 K에서 KL 간격만 쟀다. 그래서 그 간격을 주 질문(FLOPs)의 단위인 teacher 토큰 수로 바꿨다. rollout 항등 가중 곡선도 후보였지만, H-A191 등록이 "결과 뒤 가중을 바꾸지 않는다"고 적었기 때문에 보수적으로 뺐다. 겹침 확인: iso-KL·토큰 환산을 grep했고, 결과가 없었다.
