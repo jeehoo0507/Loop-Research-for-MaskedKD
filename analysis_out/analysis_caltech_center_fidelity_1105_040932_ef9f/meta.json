@@ -1,0 +1,12 @@
+{
+ "id": "analysis_caltech_center_fidelity_1105_040932_ef9f",
+ "name": "caltech_center_fidelity",
+ "source_sha": "ef9fa2170a7f81ce8ec6dd70bff8a339d759925861f9d20c3c234785a5a5b0ef",
+ "status": "done",
+ "meta": {
+  "question": "on Caltech-256 val, does a fixed centre@K mask preserve the teacher as well as lateroll at K=29, and is lateroll's selection more central than MaskedKD's?",
+  "method": "keep-only masked-teacher KL for student-attention, rollout, fixed-centre and random token masks; centre@K overlap and centre distance of selected tokens; paired image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Hinton et al. 2015 (KD); Efron & Tibshirani 1993 (bootstrap)"
+ },
+ "seconds": 25.5
+}
