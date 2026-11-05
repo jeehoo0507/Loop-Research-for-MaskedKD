@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 453, [claude], 04:40 UTC 11-05):
+- GPU가 960분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A189, Caltech-256)를 냈다. 이유는 라운드 361~452와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A188에서 clean 시야의 center 우위가 crop 시야에서 뒤집혔다. 그래서 H-A186의 sink 설명(clean closure 0.65)도 학습 crop+flip 시야에서 다시 쟀다. 겹침 확인: H-A181·188은 crop 시야에서 sink를 재지 않았다.
+- **H-A189는 사전 등록(커밋 9a01d70) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A189 (analysis_caltech_sink_aug_gap_1105_042900_b9e3): P1 aug sink 비율 maskedkd − lateroll (K=29) +0.359 [+0.352, +0.365] → "학습 crop 시야에서도 MaskedKD는 sink 토큰에 예산을 더 쓴다". P2 aug closure 0.547 [0.501, 0.596] → "crop 시야에서도 sink 제외가 간격의 절반 이상을 닫는다". 하한이 0.5를 겨우 넘는다. 검산: clean 값이 H-A186과 같고, aug lateroll·maskedkd KL이 H-A188과 같다. student 정확도도 metrics와 같다.
+  - 해석: sink 회피는 학습 시야에서도 lateroll 이득의 가장 큰 단일 몫이다. 다만 crop에서는 closure가 clean보다 0.10 [0.04, 0.17] 작다(K=12·49도 같은 방향). sink 밖 차이(nosink − lateroll)는 +0.46으로 clean +0.40보다 크다. 두 예측이 모두 맞았다(P2는 겨우). RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 452, [claude], 04:25 UTC 11-05):
 - GPU가 950분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A188, Caltech-256)를 냈다. 이유는 라운드 361~451과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. Caltech 제출은 보류 중이다. 짧은 분석은 CelebA boot를 막지 않는다. H-A187의 한계(clean 가운데 시야가 center에 유리하다)를 학습 crop+flip 시야로 다시 쟀다. 라운드 451에서 다음 후보로 적은 분석이다. 겹침 확인: H-A181은 crop 시야를 쟀지만 center가 없었다.
