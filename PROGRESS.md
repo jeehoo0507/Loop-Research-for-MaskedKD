@@ -9,6 +9,15 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 429, [claude], 00:40 UTC 11-05):
+- GPU가 724분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A165, cub_lt)를 냈다. 이유는 라운드 361~428과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다.
+  - [claude] 결정: 라운드 428 후보는 frozen의 **학습 마스크**(step-0 student)였다. 그런데 analysis API에는 step-0 student가 없다(e25·e50·final만). 그래서 maskedkd_frozen run의 **final student**에 MaskedKD 규칙을 적용했다. 이 student의 자기 attention은 학습 마스크를 고른 적이 없다. 이 차이는 PROPOSALS 한계에 적었다.
+- **H-A165는 사전 등록(커밋 b2a6d38) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A165 (analysis_cub_lt_frozen_tail_image_link_1105_003415_1fa2): P1 tail C_frozen는 +3.95 [−2.46, +10.31]%p이다. 등록 문구대로 "frozen 짝에서 tail 연결은 불확실하다 — 공통 원인 읽기를 이 표본으로 지지한다고 말할 수 없다". 같은 재표집의 C_maskedkd는 +11.38로 H-A163을 재현했다. 기록 C_maskedkd − C_frozen는 +7.44 [+0.28, +15.06]이다. frozen의 seed별 C는 셋 다 작은 양수다(t +3.38 [+1.03, +5.73]).
+  - 예측 셋(P1 ∋ 0·평균 > 0, 차이 평균 > 0, dT_frozen > 0)이 모두 맞았다. 읽기(시험 안 함): 두 자기 마스크는 가린 teacher를 비슷하게 틀리게 만든다(tail dT +10.67 대 +9.89). 그런데 student 오답이 그 이미지에 몰리는 정도는 그 마스크로 학습한 online student에서 약 3배 크다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A165 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 분석 후보(등록 전): 같은 대비를 e25 스냅샷에서 본다(online maskedkd·frozen 둘 다 e25가 있다). "학습 신호에서 온다"는 읽기가 맞으면 online의 C가 e25 → final로 커져야 한다. 먼저 H-A139~142(스냅샷 churn) 계열과 겹치는지 확인한다.
+
 요약 (라운드 428, [claude], 00:30 UTC 11-05):
 - GPU가 715분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A164, cub_lt)를 냈다. 이유는 라운드 361~427과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 427이 남긴 후보(같은 tail 대비를 trustfilt − lateroll 짝에서)를 했다. 겹침을 먼저 확인했다. H-A67은 run 수준 tail 차였고, H-A69·70은 v0 분해였다. 정답 여부 차로 tail 이미지를 나눈 적은 없다.
