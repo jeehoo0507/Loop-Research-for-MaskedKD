@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_filter_tail_image_link_1105_002427_58e7",
+ "name": "cub_lt_filter_tail_image_link",
+ "source_sha": "58e73b03e8b2c7e7022775179682126678b3191ff708d098bb5bd61cd45d3c5d",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 tail images, are images where the teacher-area filter turns the masked teacher wrong (trustfilt vs lateroll) also images where the trustfilt student is wrong more often?",
+  "method": "per-image seed-averaged masked-teacher and student error differences, group contrast inside the tail group with image bootstrap CI, seed-wise contrast t CI",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Kang et al. ICLR 2020 (long-tail decoupling)"
+ },
+ "seconds": 9.6
+}
