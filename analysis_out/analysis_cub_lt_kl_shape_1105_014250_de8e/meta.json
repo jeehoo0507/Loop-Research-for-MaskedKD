@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_kl_shape_1105_014250_de8e",
+ "name": "cub_lt_kl_shape",
+ "source_sha": "de8e0fc2d4b5bec70262727ac0c5ddcc466ef1abc766b9a427155d536b20ab39",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 runs, is trustfilt's mean masked-teacher KL (equal to maskedkd's) driven by a heavy tail of images, with a lower median KL, and does the median KL rank run accuracy?",
+  "method": "keep-only masked-teacher faithfulness (KL to the full teacher) per token rule, student/teacher attention rollout and last-block CLS attention; Spearman across runs with permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 20.8
+}
