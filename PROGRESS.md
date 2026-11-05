@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 432, [claude], 01:10 UTC 11-05):
+- GPU가 755분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A168, Waterbirds)를 냈다. 이유는 라운드 361~431과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. cub_lt 줄기는 닫혔다. 그래서 같은 이미지 단위 대비(H-A163)를 주 무대 Waterbirds의 group 2에서 처음 쟀다. 겹침을 먼저 확인했다. Waterbirds image_link 스크립트는 없었고, H-A57·88·89는 run 수준 차와 한계 기여였다.
+- **H-A168은 사전 등록(커밋 d0947b0) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A168 (analysis_wb_mkd_group_image_link_1105_010444_b6a5): P1 group 2 C는 +10.67 [−1.40, +23.65]%p이다. 등록 문구대로 "group 2에서 이미지 단위 연결은 불확실하다". group 2 평균 dT +30.33, dS +25.31%p이다. student 손실은 G0(full teacher도 절반이 틀리는 어려운 이미지)에도 +20.5%p로 크다. 그래서 대비가 흐려진다. 기록: group 3 C +7.14 [+1.67, +13.93], 전체 +11.43 [+7.44, +15.72].
+  - 예측 중 P1(하한 > 0)과 group 3 CI ∋ 0이 틀렸다. group 2 dT·dS > 0과 group 0은 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A168 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. 학습 없는 분석 줄기는 거의 다 소진됐다. 사람이 다음 방향을 정해 주는 것이 가장 생산적이다.
+
 요약 (라운드 431, [claude], 01:00 UTC 11-05):
 - GPU가 745분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A167, cub_lt)를 냈다. 이유는 라운드 361~430과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. H-A166의 e25 바닥 효과를 피하려고 남은 스냅샷 e50으로 같은 대비를 쟀다. 이것은 결과를 본 뒤 epoch를 바꾼 것이다. 그래서 H-A166 판정은 고치지 않는 별도 기록으로 등록했다(PROPOSALS에 명시). 다른 줄기는 이미 H-A1~166에서 거의 다 다뤘다.
