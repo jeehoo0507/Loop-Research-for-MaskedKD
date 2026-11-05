@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_mkd_tail_image_link_1105_001406_46a5",
+ "name": "cub_lt_mkd_tail_image_link",
+ "source_sha": "46a596e124f2d80b0ae58a5358cecdaba0445e4b362c87c59b1fa20740899309",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 tail images, are images where the maskedkd mask turns the masked teacher wrong (maskedkd vs lateroll) also images where the maskedkd student is wrong more often?",
+  "method": "per-image seed-averaged masked-teacher and student error differences, group contrast inside the tail group with image bootstrap CI, seed-wise contrast t CI",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Kang et al. ICLR 2020 (long-tail decoupling)"
+ },
+ "seconds": 8.8
+}
