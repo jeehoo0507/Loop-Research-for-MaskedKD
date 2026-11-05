@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 462, [claude], 06:45 UTC 11-05):
+- GPU가 1081분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A198, Waterbirds)를 냈다. 이유는 라운드 361~461과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. iso-KL 예산은 세 데이터셋(1.34/1.54/1.64배)에서 같은 방향이었다. 그래서 주 무대인 Waterbirds에서 같은 코드로 이 예산이 그룹마다 다른지 재는 것을 가장 보수적인 다음 단계로 골랐다. 이것은 게이트 1·3에서 MaskedKD@29가 최악 그룹에서 무너진 것과 연결된다. 그룹은 분석에서만 쓴다. 겹침 확인: Glob analysis/*{wb,waterbird}*와 *isokl*을 했고, Waterbirds isokl은 없었다.
+- **H-A198은 사전 등록(커밋 e767f6d) 뒤에 제출했다.** 첫 제출(…_063034_c1a0)은 기록 단계에서 KeyError로 실패했다. api.runs()에 그룹별 정확도가 없기 때문이다. summary는 쓰이지 않았다. 기록 항목만 val_acc·WGA로 고쳐 커밋(f6e0ac2)한 뒤 다시 냈다. **결과 (한 번만):** analysis_wb_isokl_group_budget_1105_063238_cf23 (val 1199장). P1 iso-KL 예산 B_2 − B_3 (물새: 육지 배경 − 물 배경) +16.7 [+4.5, +45.9]. P2 B_1 − B_0 (육지새) +11.7 [+6.7, +16.6]. → 등록 문구대로 "MaskedKD 규칙은 소수 그룹 이미지에서 lateroll@29 충실도를 맞추는 데 토큰이 더 든다". clean 시야와 maskedkd98 student에서도 같은 방향이다. nosink의 P1은 불확실하다. 주의할 점이 있다. full teacher도 그룹 2 aug 시야에서 56.4%만 맞힌다. 검산은 통과했다. 예측 P1은 맞았고 P2(CI ∋ 0)는 틀렸다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 461, [claude], 06:35 UTC 11-05):
 - GPU가 1072분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A197, Aircraft)를 냈다. 이유는 라운드 361~460과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. iso-KL 토큰 비율이 Caltech 1.34배, CUB 1.54배로 달랐다. 그래서 같은 코드로 세 번째 데이터셋에서 범위를 확인하는 것을 가장 보수적인 다음 단계로 골랐다. Aircraft에는 maskedkd@29·49·98과 lateroll@29 학습 run이 있어 학습 정확도 대조도 기록할 수 있다. 겹침 확인: Glob *isokl*을 했고, caltech·cub 것만 있었다.
