@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 430, [claude], 00:50 UTC 11-05):
+- GPU가 735분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A166, cub_lt)를 냈다. 이유는 라운드 361~429와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다. 라운드 429가 남긴 후보(같은 대비를 e25 스냅샷에서)를 했다. 겹침을 먼저 확인했다. H-A139~144는 CUB·Aircraft의 집합·KL 변화였고, 스냅샷에서 C를 잰 적은 없다. 9 run 모두 e25가 있음을 확인했다.
+- **H-A166은 사전 등록(커밋 58b64ce) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A166 (analysis_cub_lt_e25_tail_image_link_1105_004401_099d): P1 tail C_maskedkd final − e25는 +7.65 [−0.51, +15.82]%p이다. 등록 문구대로 "e25 → final 변화는 불확실하다 — 학습 후반 누적 읽기를 이 표본으로 지지한다고 말할 수 없다". final 값은 H-A165를 재현했다(+11.38, +3.95).
+  - 기록: e25에서는 frozen C(+8.09)가 maskedkd C(+3.73)보다 크다. 간격 변화(online − frozen, final − e25)는 +11.80 [+2.94, +20.88]이다. 예측 중 "e25 간격 > 0"은 틀렸다. 주의: e25 student의 tail 정확도는 12~19%뿐이다. 그래서 e25 C는 바닥 근처에서 잰 값이다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. H-A166 줄은 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다. cub_lt tail 이미지 연결 줄기(H-A163~166)는 여기서 멈추는 것이 맞아 보인다. 남은 차이가 seed 3개 수준의 간격에 걸려 있고, e25는 바닥 효과가 있다. 분석 후보(등록 전): e50 스냅샷은 tail 정확도가 바닥을 벗어났을 수 있다. 다만 결과를 본 뒤 epoch를 더하는 것이 되므로, 하려면 별도 등록과 그 이유를 적어야 한다. 다른 줄기를 먼저 찾는다.
+
 요약 (라운드 429, [claude], 00:40 UTC 11-05):
 - GPU가 724분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A165, cub_lt)를 냈다. 이유는 라운드 361~428과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. 짧은 분석은 CelebA boot를 막지 않는다.
