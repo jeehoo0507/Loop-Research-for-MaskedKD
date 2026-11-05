@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_student_closeness_1105_022942_c05d",
+ "name": "aircraft_student_closeness",
+ "source_sha": "c05d0bbbf32632cd420e330be9ea5bfcdac416ac230c5bbbcc99f39adba60e3c",
+ "status": "done",
+ "meta": {
+  "question": "on Aircraft K=29, where trustfilt and maskedkd students are about equally accurate, is the trained trustfilt student still closer to the full teacher (KL, TCKD/wNCKD, top-1 agreement) than the maskedkd student of the same seed?",
+  "method": "teacher-student output divergence on held-out images with exact DKD split, seed-paired t CI, run-level Spearman with permutation p, image bootstrap",
+  "paper": "Hinton et al. 2015 (KD); Zhao et al. CVPR 2022 (decoupled KD); Stanton et al. NeurIPS 2021 (does KD really work? student-teacher fidelity); Son et al. ECCV 2024 (MaskedKD); Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 11.9
+}
