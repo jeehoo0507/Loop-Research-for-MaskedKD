@@ -1,0 +1,290 @@
+{
+ "n_val": 600,
+ "n_tail": 300,
+ "K": 29,
+ "n_runs": 18,
+ "P1_spearman_kl_acc_runs": [
+  -0.5583,
+  0.0092,
+  0.9909
+ ],
+ "P2_spearman_kl_tail_runs": [
+  -0.6182,
+  0.0044,
+  0.9958
+ ],
+ "record": {
+  "spearman_kl_acc_arms": [
+   -0.8286,
+   0.029,
+   0.9837
+  ],
+  "spearman_kl_tail_arms": [
+   -0.8857,
+   0.0162,
+   0.9933
+  ],
+  "spearman_kltail_tail_runs": [
+   -0.6037,
+   0.0028,
+   0.9975
+  ],
+  "spearman_tacc_acc_runs": [
+   0.5872,
+   0.9954,
+   0.0046
+  ],
+  "spearman_tacctail_tail_runs": [
+   0.612,
+   0.9958,
+   0.0042
+  ],
+  "spearman_kl_acc_runs_no_maskedkd": [
+   -0.5286,
+   0.0236,
+   0.9772
+  ],
+  "spearman_kl_tail_runs_no_maskedkd": [
+   -0.575,
+   0.012,
+   0.9886
+  ],
+  "arm_means": {
+   "maskedkd": {
+    "kl": 1.1567,
+    "kl_tail": 1.0474,
+    "t_acc": 60.3333,
+    "t_acc_tail": 61.6667,
+    "acc": 62.3333,
+    "tail": 44.0
+   },
+   "rollout": {
+    "kl": 0.7569,
+    "kl_tail": 0.7648,
+    "t_acc": 70.6111,
+    "t_acc_tail": 68.3333,
+    "acc": 64.5556,
+    "tail": 48.7767
+   },
+   "lateroll": {
+    "kl": 0.6096,
+    "kl_tail": 0.5933,
+    "t_acc": 72.2222,
+    "t_acc_tail": 71.5556,
+    "acc": 65.2778,
+    "tail": 49.7767
+   },
+   "trustmask_v1": {
+    "kl": 0.6267,
+    "kl_tail": 0.6274,
+    "t_acc": 72.0,
+    "t_acc_tail": 72.1111,
+    "acc": 65.8333,
+    "tail": 50.3333
+   },
+   "trustfilt": {
+    "kl": 1.1519,
+    "kl_tail": 1.2926,
+    "t_acc": 61.3333,
+    "t_acc_tail": 57.2222,
+    "acc": 64.6667,
+    "tail": 47.3333
+   },
+   "teacher_topk": {
+    "kl": 1.5015,
+    "kl_tail": 1.6544,
+    "t_acc": 56.6667,
+    "t_acc_tail": 52.3333,
+    "acc": 63.3889,
+    "tail": 46.11
+   }
+  }
+ },
+ "per_run": {
+  "cub_lt_final_maskedkd_k29_s1_1103_234609_76d1": {
+   "arm": "maskedkd",
+   "seed": 1,
+   "val_acc_last": 62.83,
+   "val_tail_last": 44.0,
+   "kl": 1.2218,
+   "kl_tail": 1.1323,
+   "t_acc": 57.3333,
+   "t_acc_tail": 59.6667
+  },
+  "cub_lt_final_maskedkd_k29_s2_1103_234647_0c6c": {
+   "arm": "maskedkd",
+   "seed": 2,
+   "val_acc_last": 61.83,
+   "val_tail_last": 44.0,
+   "kl": 1.1403,
+   "kl_tail": 0.9812,
+   "t_acc": 60.6667,
+   "t_acc_tail": 63.0
+  },
+  "cub_lt_final_maskedkd_k29_s3_1103_234704_b28b": {
+   "arm": "maskedkd",
+   "seed": 3,
+   "val_acc_last": 62.33,
+   "val_tail_last": 44.0,
+   "kl": 1.108,
+   "kl_tail": 1.0286,
+   "t_acc": 63.0,
+   "t_acc_tail": 62.3333
+  },
+  "cub_lt_final_rollout_k29_s1_1103_234609_8382": {
+   "arm": "rollout",
+   "seed": 1,
+   "val_acc_last": 64.83,
+   "val_tail_last": 49.33,
+   "kl": 0.781,
+   "kl_tail": 0.7823,
+   "t_acc": 70.6667,
+   "t_acc_tail": 69.0
+  },
+  "cub_lt_final_rollout_k29_s2_1103_234647_9b4c": {
+   "arm": "rollout",
+   "seed": 2,
+   "val_acc_last": 63.67,
+   "val_tail_last": 47.33,
+   "kl": 0.7432,
+   "kl_tail": 0.7655,
+   "t_acc": 69.8333,
+   "t_acc_tail": 68.0
+  },
+  "cub_lt_final_rollout_k29_s3_1103_234704_0edf": {
+   "arm": "rollout",
+   "seed": 3,
+   "val_acc_last": 65.17,
+   "val_tail_last": 49.67,
+   "kl": 0.7466,
+   "kl_tail": 0.7467,
+   "t_acc": 71.3333,
+   "t_acc_tail": 68.0
+  },
+  "cub_lt_final_lateroll_k29_s1_1104_084157_2b15": {
+   "arm": "lateroll",
+   "seed": 1,
+   "val_acc_last": 66.33,
+   "val_tail_last": 51.67,
+   "kl": 0.6275,
+   "kl_tail": 0.6033,
+   "t_acc": 72.1667,
+   "t_acc_tail": 71.6667
+  },
+  "cub_lt_final_lateroll_k29_s2_1104_084204_9f09": {
+   "arm": "lateroll",
+   "seed": 2,
+   "val_acc_last": 65.17,
+   "val_tail_last": 49.33,
+   "kl": 0.6089,
+   "kl_tail": 0.6025,
+   "t_acc": 71.3333,
+   "t_acc_tail": 70.6667
+  },
+  "cub_lt_final_lateroll_k29_s3_1104_084209_a3f8": {
+   "arm": "lateroll",
+   "seed": 3,
+   "val_acc_last": 64.33,
+   "val_tail_last": 48.33,
+   "kl": 0.5923,
+   "kl_tail": 0.5741,
+   "t_acc": 73.1667,
+   "t_acc_tail": 72.3333
+  },
+  "cub_lt_final_trustmask_v1_k29_s1_1103_234609_10df": {
+   "arm": "trustmask_v1",
+   "seed": 1,
+   "val_acc_last": 67.5,
+   "val_tail_last": 52.33,
+   "kl": 0.6184,
+   "kl_tail": 0.5992,
+   "t_acc": 73.0,
+   "t_acc_tail": 73.0
+  },
+  "cub_lt_final_trustmask_v1_k29_s2_1103_234647_4e79": {
+   "arm": "trustmask_v1",
+   "seed": 2,
+   "val_acc_last": 65.33,
+   "val_tail_last": 50.0,
+   "kl": 0.6048,
+   "kl_tail": 0.6186,
+   "t_acc": 73.5,
+   "t_acc_tail": 72.6667
+  },
+  "cub_lt_final_trustmask_v1_k29_s3_1103_234704_d748": {
+   "arm": "trustmask_v1",
+   "seed": 3,
+   "val_acc_last": 64.67,
+   "val_tail_last": 48.67,
+   "kl": 0.6569,
+   "kl_tail": 0.6642,
+   "t_acc": 69.5,
+   "t_acc_tail": 70.6667
+  },
+  "cub_lt_final_trustfilt_k29_s1_1103_234609_dbe3": {
+   "arm": "trustfilt",
+   "seed": 1,
+   "val_acc_last": 66.83,
+   "val_tail_last": 50.33,
+   "kl": 1.1557,
+   "kl_tail": 1.3013,
+   "t_acc": 61.1667,
+   "t_acc_tail": 57.3333
+  },
+  "cub_lt_final_trustfilt_k29_s2_1103_234647_43e9": {
+   "arm": "trustfilt",
+   "seed": 2,
+   "val_acc_last": 63.33,
+   "val_tail_last": 46.67,
+   "kl": 1.1571,
+   "kl_tail": 1.3036,
+   "t_acc": 61.5,
+   "t_acc_tail": 56.3333
+  },
+  "cub_lt_final_trustfilt_k29_s3_1103_234704_8732": {
+   "arm": "trustfilt",
+   "seed": 3,
+   "val_acc_last": 63.83,
+   "val_tail_last": 45.0,
+   "kl": 1.1427,
+   "kl_tail": 1.2729,
+   "t_acc": 61.3333,
+   "t_acc_tail": 58.0
+  },
+  "cub_lt_final_teacher_topk_k29_s1_1103_234627_9ef0": {
+   "arm": "teacher_topk",
+   "seed": 1,
+   "val_acc_last": 64.5,
+   "val_tail_last": 47.33,
+   "kl": 1.5015,
+   "kl_tail": 1.6544,
+   "t_acc": 56.6667,
+   "t_acc_tail": 52.3333
+  },
+  "cub_lt_final_teacher_topk_k29_s2_1103_234655_cfa0": {
+   "arm": "teacher_topk",
+   "seed": 2,
+   "val_acc_last": 64.0,
+   "val_tail_last": 48.0,
+   "kl": 1.5015,
+   "kl_tail": 1.6544,
+   "t_acc": 56.6667,
+   "t_acc_tail": 52.3333
+  },
+  "cub_lt_final_teacher_topk_k29_s3_1103_234716_6d91": {
+   "arm": "teacher_topk",
+   "seed": 3,
+   "val_acc_last": 61.67,
+   "val_tail_last": 43.0,
+   "kl": 1.5015,
+   "kl_tail": 1.6544,
+   "t_acc": 56.6667,
+   "t_acc_tail": 52.3333
+  }
+ },
+ "verdict": {
+  "P1": "negative",
+  "P2": "negative"
+ },
+ "note": "permutation entries are [rho, p_lower (rho <= observed), p_upper (rho >= observed)]; one rng shared in order P1, P2, then record keys in listed order; val_wga_last is tail accuracy"
+}

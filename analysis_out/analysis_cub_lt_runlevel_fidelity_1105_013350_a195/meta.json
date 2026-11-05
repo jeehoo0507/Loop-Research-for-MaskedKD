@@ -1,0 +1,12 @@
+{
+ "id": "analysis_cub_lt_runlevel_fidelity_1105_013350_a195",
+ "name": "cub_lt_runlevel_fidelity",
+ "source_sha": "a1956bb2c7ee6a8643ba720fe7bab6a0dd861921e2dcf0d34ba418f591606784",
+ "status": "done",
+ "meta": {
+  "question": "on cub_lt final K=29 runs (six token rules, seeds 1-3), does the masked teacher's fidelity to the full teacher under each run's own rule and own student rank the runs' val accuracy and tail accuracy?",
+  "method": "keep-only masked-teacher faithfulness (KL to the full teacher) per token rule, student/teacher attention rollout and last-block CLS attention; Spearman across runs with permutation test",
+  "paper": "Hooker et al. NeurIPS 2019 (keep-only evaluation); Abnar & Zuidema ACL 2020 (attention rollout); Son et al. ECCV 2024 (MaskedKD); Hinton et al. 2015 (KD); Wah et al. 2011 (CUB-200-2011)"
+ },
+ "seconds": 21.0
+}
