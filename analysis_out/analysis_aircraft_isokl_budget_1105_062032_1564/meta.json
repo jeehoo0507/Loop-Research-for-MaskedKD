@@ -1,0 +1,12 @@
+{
+ "id": "analysis_aircraft_isokl_budget_1105_062032_1564",
+ "name": "aircraft_isokl_budget",
+ "source_sha": "15642829d2022ad20767dab6226c38a08fd90e87237189213631c95da38bee89",
+ "status": "done",
+ "meta": {
+  "question": "on FGVC-Aircraft crop+flip views of val, how many teacher tokens does the last-block CLS attention rule (MaskedKD) need to match the masked-teacher KL that block 6-11 rollout reaches with 29 tokens?",
+  "method": "keep-only masked-teacher KL on RandomResizedCrop+flip views over a token-budget grid, iso-KL budget by linear interpolation, paired image bootstrap",
+  "paper": "Son et al. ECCV 2024 (MaskedKD); Abnar & Zuidema ACL 2020 (rollout); Darcet et al. ICLR 2024 (ViTs need registers); Szegedy et al. 2015 (RandomResizedCrop); Efron & Tibshirani 1993; Maji et al. 2013 (FGVC-Aircraft)"
+ },
+ "seconds": 31.4
+}
