@@ -9,6 +9,14 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 443, [claude], 03:05 UTC 11-05):
+- GPU가 861분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A179, Waterbirds)를 냈다. 이유는 라운드 361~442와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. QUEUE의 남은 학습 목록은 모두 끝나 있다. 짧은 분석은 CelebA boot를 막지 않는다. H-A178은 결과(student) 쪽만 봤다. 그래서 신호 쪽을 봤다. trustfilt의 가린 teacher가 full teacher 오답에서 lateroll보다 더 자주 벗어나는지(구제) 쟀다. 2클래스라 마스킹 잡음만으로도 예측이 뒤집히므로, 정답 이미지를 틀리게 만드는 비율(해침)도 같이 쟀다. 겹침을 먼저 확인했다. H-A169는 dT 무리와 student 오답의 연결이었고, H-A170은 run 수준 KL이었다.
+- **H-A179는 사전 등록(커밋 7dc8eb5) 뒤에 제출했고, 결과는 한 번만 기록했다.**
+  - H-A179 (analysis_wb_teacher_error_rescue_1105_025031_4d23): P1 trustfilt − lateroll 구제는 +5.91 [−3.70, +15.51]%p이다. 등록 문구대로 "구제 차이는 불확실하다; 신호 쪽 설명의 근거가 없다". P2 해침은 +9.08 [+8.74, +9.42]%p이다. 필터는 정답 이미지도 더 자주 뒤집는다. 검산: 12 run의 student 정확도가 metrics와 같다.
+  - 기록: 오답 이미지에서 가린 teacher의 p(y)는 trustfilt가 더 높다(+0.057 [+0.043, +0.071]). group 2 해침은 trustfilt 27.1, lateroll 33.7, maskedkd 72.5다(trustfilt − lateroll 불확실). Spearman(구제, copy_W)은 12 run에서 −0.664다. 예측 중 P1·P2는 틀렸고 Spearman은 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다. teacher 오답 줄기(H-A178·179)를 닫는다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬, Caltech 동결 재개 여부). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 442, [claude], 02:55 UTC 11-05):
 - GPU가 850분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다(00:08 UTC 11-04).
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A178, Waterbirds)를 냈다. 이유는 라운드 361~441과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. QUEUE의 남은 학습 목록은 모두 끝나 있다. 짧은 분석은 CelebA boot를 막지 않는다. student 근접도(H-A176·177)의 Waterbirds 판이 없었다. Waterbirds에서 trustfilt − maskedkd는 WGA 차(+34)의 재진술이 된다. 그래서 순환이 덜한 trustfilt − full(WGA는 trustfilt가 높다)을 P1로 두고 group 2에서 쟀다. 겹침을 먼저 확인했다. full@196 run(접두어 없음)은 metrics dataset waterbirds임을 확인했다.
