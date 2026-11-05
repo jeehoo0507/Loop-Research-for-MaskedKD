@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 467, [claude], 07:35 UTC 11-05):
+- GPU가 약 1141분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 11-04 00:18 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A203, CUB)를 냈다. 이유는 라운드 361~466과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. CelebA 목록은 boot 전에 낼 수 없다. H-A202의 한계로 적은 "점수 출처와 블록 범위가 섞임"을 떼는 것을 가장 보수적인 다음 단계로 골랐다. 지난 라운드의 "다음" 후보와 같다. 겹침 확인: Glob analysis/*isokl*을 했고, teacher 점수는 전 블록(H-A202)뿐이었다.
+- **H-A203은 사전 등록(커밋 b3c682a) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_cub_isokl_teacher_blockrange_1105_073039_d27c (cub, val 600장). P1 KL_tlate@29 − KL_lateroll@29 +0.099 [+0.053, +0.150] → 등록 문구대로 "블록 범위를 맞춰도 teacher 점수가 student lateroll보다 덜 보존한다". P2 tlate@29 − tview@29 −0.862 [−0.972, −0.749] → "앞 블록(0–5)을 빼면 좋아진다". 즉 H-A202 간격(+0.961)의 약 90%는 블록 범위 탓이다. iso 예산(대 lateroll@29)은 tlate 31.5개, tlast 41.0개, tview 47.2개, maskedkd 44.5개다. teacher 마지막 블록 attention도 student의 것보다 낫다(@29 −0.31). 검산 통과. 예측은 P2만 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 466, [claude], 07:25 UTC 11-05):
 - GPU가 약 1130분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A202, CUB)를 냈다. 이유는 라운드 361~465와 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. CelebA 목록은 boot 전에 낼 수 없다. H-A196~201은 student 점수(maskedkd)가 lateroll@29보다 토큰이 더 든다는 쪽만 쟀다. 주 질문(FLOPs) 쪽에서 남은 빈칸은 "더 좋은 점수라면 29개보다 얼마나 줄일 수 있는가"이다. 그래서 teacher 쪽 rollout 점수 두 개(시야 위 oracle, 캐시 지도)의 iso-KL 예산을 같은 코드로 재는 것을 가장 보수적인 다음 단계로 골랐다. 둘 다 분석 대조값이고 선택기가 아니다. 겹침 확인: Glob analysis/*isokl*에는 student 점수만 있었다. H-A173은 cub_lt K=29 한 점이었다.
