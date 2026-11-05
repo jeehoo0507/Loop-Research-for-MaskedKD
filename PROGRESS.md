@@ -9,6 +9,12 @@ STUCK: 게이트 1 P1 감사(H-A37 v1 − teacher_topk −2.01 [−6.32, +2.31])
 5. **두 무대 방향:** "MaskedKD(student 마지막 층 attention)가 소수/꼬리 그룹에서 가장 나쁘다"는 Waterbirds와 cub_lt에서 같은 방향. 가장 좋은 방법은 다르다(Waterbirds v0, cub_lt v1).
 6. **CelebA:** boot가 00:08 UTC "celeba data preparation failed"로 STOPPED 그대로. prepare_data는 연구자가 실행할 수 없어 사람 조치가 필요하다.
 
+요약 (라운드 468, [claude], 07:45 UTC 11-05):
+- GPU가 약 1151분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 11-04 00:18 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
+  - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A204, CUB)를 냈다. 이유는 라운드 361~467과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. CelebA 목록은 boot 전에 낼 수 없다. H-A203에서 student lateroll이 teacher 자신의 블록 6–11 rollout보다 조금 더 보존했다. 그 이유가 KD 학습인지 가리는 것을 가장 보수적인 다음 단계로 골랐다. 이미 있는 CE student(seed 1)와 full e25 snapshot만 쓴다. 블록 시작점 sweep은 H-C2b가 이미 했으므로 고르지 않았다. 겹침 확인: Glob analysis/*isokl*에 CE student 판은 없었다.
+- **H-A204는 사전 등록(커밋 065613b) 뒤에 제출했고, 라운드 안에 끝나 결과를 한 번만 기록했다:** analysis_cub_isokl_student_kdsource_1105_074004_0866 (cub, val 600장). P1 lateroll@29 ce − full +0.004 [−0.032, +0.041] → 등록 문구대로 "KD 학습 유무의 차이는 불확실하다". P2 ce lateroll@29 − tlate@29 −0.096 [−0.148, −0.045] → "student 우위는 KD 학습 없이도 있다". iso 예산(대 full lateroll@29)은 ce lateroll 29.1개, e25 30.7개, tlate 31.6개, maskedkd 42.9~44.5개다. 검산 통과(tlate는 0.001 어긋남, 이유는 PROPOSALS에 적음). 예측은 둘 다 맞았다. RESULTS "분석에서 배운 것"과 PROPOSALS에 적었다.
+- 다음: 사람 지시를 기다린다(CelebA 데이터 준비, AUDIT_PROMPT 정렬). boot에 "celeba gate submitted"가 보이면 QUEUE 08:58·09:03·09:10 목록대로 사전 등록한 뒤 제출한다.
+
 요약 (라운드 467, [claude], 07:35 UTC 11-05):
 - GPU가 약 1141분째 놀았다(큐 비어 있음). 새 사람 지시나 감사는 없다(QUEUE 마지막 09:15 KST 11-04, AUDIT.md 11-04 00:18 그대로). CelebA는 data/에 없고, boot는 STOPPED 그대로다.
   - [claude] 결정: 이번에도 학습 job 대신 **분석 1개**(H-A203, CUB)를 냈다. 이유는 라운드 361~466과 같다. 새 선택기는 금지이고, 결과를 본 뒤 K·seed를 더하는 것도 금지다. CelebA 목록은 boot 전에 낼 수 없다. H-A202의 한계로 적은 "점수 출처와 블록 범위가 섞임"을 떼는 것을 가장 보수적인 다음 단계로 골랐다. 지난 라운드의 "다음" 후보와 같다. 겹침 확인: Glob analysis/*isokl*을 했고, teacher 점수는 전 블록(H-A202)뿐이었다.
