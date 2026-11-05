@@ -1,0 +1,2389 @@
+{
+ "n_val": 600,
+ "views_per_image": 2,
+ "full_teacher_acc": {
+  "clean": 84.667,
+  "aug": 76.833
+ },
+ "student_acc_check": {
+  "full": [
+   82.833,
+   82.833331823349
+  ],
+  "maskedkd98": [
+   83.5,
+   83.49999785423279
+  ]
+ },
+ "P1_kl_mass0.5_minus_uniform_M29_aug_full": {
+  "mean": -0.0065,
+  "ci": [
+   -0.0404,
+   0.0291
+  ]
+ },
+ "P2_kl_mass0.5_minus_mass1.0_M29_aug_full": {
+  "mean": -0.131,
+  "ci": [
+   -0.1772,
+   -0.0893
+  ]
+ },
+ "record": {
+  "full": {
+   "student_acc": 82.833,
+   "clean": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 2.2247,
+      "mass0.25": 2.2719,
+      "mass0.5": 2.331,
+      "mass0.75": 2.3643,
+      "mass1.0": 2.4775,
+      "shuf0.25": 2.212,
+      "shuf0.5": 2.2705,
+      "shuf0.75": 2.3242,
+      "shuf1.0": 2.4128
+     },
+     "masked_teacher_acc": {
+      "uniform": 39.0,
+      "mass0.25": 38.333,
+      "mass0.5": 36.833,
+      "mass0.75": 39.167,
+      "mass1.0": 38.333,
+      "shuf0.25": 39.833,
+      "shuf0.5": 39.167,
+      "shuf0.75": 38.667,
+      "shuf1.0": 39.0
+     },
+     "counts": {
+      "q": 0.27677,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.1294,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       9,
+       11,
+       14,
+       20
+      ],
+      "frac_at_kmin": 0.0067,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 11.988,
+      "mean_k2_over_m2_lam0.25": 1.0067,
+      "mean_k_lam0.5": 11.997,
+      "mean_k2_over_m2_lam0.5": 1.0325,
+      "mean_k_lam0.75": 12.012,
+      "mean_k2_over_m2_lam0.75": 1.0755,
+      "mean_k_lam1.0": 12.0,
+      "mean_k2_over_m2_lam1.0": 1.1294,
+      "spearman_k_vs_kl_uniform": 0.1167
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": 0.0471,
+       "ci": [
+        0.0009,
+        0.0928
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0599,
+       "ci": [
+        -0.0006,
+        0.1201
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": -0.0127,
+       "ci": [
+        -0.0629,
+        0.0391
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.2056,
+       "ci": [
+        -0.3112,
+        -0.1083
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.6667,
+       "ci": [
+        -2.5,
+        1.0042
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": 0.1062,
+       "ci": [
+        0.0319,
+        0.1826
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0605,
+       "ci": [
+        -0.0375,
+        0.1618
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0458,
+       "ci": [
+        -0.0291,
+        0.121
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1465,
+       "ci": [
+        -0.2324,
+        -0.07
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -2.1667,
+       "ci": [
+        -4.5,
+        0.3333
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.1396,
+       "ci": [
+        0.044,
+        0.2434
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0401,
+       "ci": [
+        -0.0911,
+        0.167
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0995,
+       "ci": [
+        0.0018,
+        0.202
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1132,
+       "ci": [
+        -0.1731,
+        -0.0565
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.1667,
+       "ci": [
+        -2.8333,
+        3.3333
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.2528,
+       "ci": [
+        0.1389,
+        0.3775
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0647,
+       "ci": [
+        -0.0863,
+        0.223
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1881,
+       "ci": [
+        0.0693,
+        0.3096
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.6667,
+       "ci": [
+        -3.8333,
+        2.6667
+       ]
+      }
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 0.6235,
+      "mass0.25": 0.6064,
+      "mass0.5": 0.6057,
+      "mass0.75": 0.646,
+      "mass1.0": 0.6927,
+      "shuf0.25": 0.6359,
+      "shuf0.5": 0.6509,
+      "shuf0.75": 0.6963,
+      "shuf1.0": 0.7885
+     },
+     "masked_teacher_acc": {
+      "uniform": 73.333,
+      "mass0.25": 72.667,
+      "mass0.5": 72.667,
+      "mass0.75": 72.333,
+      "mass1.0": 72.833,
+      "shuf0.25": 72.333,
+      "shuf0.5": 72.5,
+      "shuf0.75": 70.833,
+      "shuf1.0": 70.167
+     },
+     "counts": {
+      "q": 0.50093,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.1054,
+      "k_quantiles_5_25_50_75_95": [
+       15,
+       22,
+       28,
+       35,
+       46
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 28.998,
+      "mean_k2_over_m2_lam0.25": 1.0066,
+      "mean_k_lam0.5": 29.01,
+      "mean_k2_over_m2_lam0.5": 1.027,
+      "mean_k_lam0.75": 29.002,
+      "mean_k2_over_m2_lam0.75": 1.0595,
+      "mean_k_lam1.0": 29.0,
+      "mean_k2_over_m2_lam1.0": 1.1054,
+      "spearman_k_vs_kl_uniform": 0.1922
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.017,
+       "ci": [
+        -0.0408,
+        0.0062
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0294,
+       "ci": [
+        -0.0584,
+        -0.0025
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0124,
+       "ci": [
+        -0.0114,
+        0.0361
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0863,
+       "ci": [
+        -0.1408,
+        -0.0299
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.6667,
+       "ci": [
+        -2.3333,
+        1.0
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.0178,
+       "ci": [
+        -0.0584,
+        0.0197
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0452,
+       "ci": [
+        -0.0928,
+        0.0004
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0275,
+       "ci": [
+        -0.013,
+        0.0671
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.087,
+       "ci": [
+        -0.1283,
+        -0.0452
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.6667,
+       "ci": [
+        -2.6667,
+        1.5
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0225,
+       "ci": [
+        -0.0325,
+        0.0731
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0503,
+       "ci": [
+        -0.1093,
+        0.0084
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0729,
+       "ci": [
+        0.0238,
+        0.1201
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0467,
+       "ci": [
+        -0.0764,
+        -0.0181
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.0,
+       "ci": [
+        -3.3333,
+        1.3333
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.0692,
+       "ci": [
+        -0.0,
+        0.1348
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0958,
+       "ci": [
+        -0.1742,
+        -0.0105
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.165,
+       "ci": [
+        0.098,
+        0.2272
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.5,
+       "ci": [
+        -3.0042,
+        2.1667
+       ]
+      }
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.2313,
+      "mass0.25": 0.2223,
+      "mass0.5": 0.2161,
+      "mass0.75": 0.2257,
+      "mass1.0": 0.2395,
+      "shuf0.25": 0.2299,
+      "shuf0.5": 0.2323,
+      "shuf0.75": 0.253,
+      "shuf1.0": 0.2906
+     },
+     "masked_teacher_acc": {
+      "uniform": 81.667,
+      "mass0.25": 81.333,
+      "mass0.5": 81.667,
+      "mass0.75": 81.333,
+      "mass1.0": 81.833,
+      "shuf0.25": 81.167,
+      "shuf0.5": 81.333,
+      "shuf0.75": 80.667,
+      "shuf1.0": 81.333
+     },
+     "counts": {
+      "q": 0.65902,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0735,
+      "k_quantiles_5_25_50_75_95": [
+       28,
+       39,
+       48,
+       58,
+       73
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 48.993,
+      "mean_k2_over_m2_lam0.25": 1.0044,
+      "mean_k_lam0.5": 48.99,
+      "mean_k2_over_m2_lam0.5": 1.018,
+      "mean_k_lam0.75": 49.007,
+      "mean_k2_over_m2_lam0.75": 1.0416,
+      "mean_k_lam1.0": 49.0,
+      "mean_k2_over_m2_lam1.0": 1.0735,
+      "spearman_k_vs_kl_uniform": 0.1852
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.009,
+       "ci": [
+        -0.0191,
+        0.0004
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0076,
+       "ci": [
+        -0.0182,
+        0.0025
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": -0.0014,
+       "ci": [
+        -0.0106,
+        0.0073
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0172,
+       "ci": [
+        -0.0431,
+        0.0051
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.3333,
+       "ci": [
+        -1.5,
+        0.8333
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.0152,
+       "ci": [
+        -0.0307,
+        -0.0011
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0162,
+       "ci": [
+        -0.0331,
+        -0.0008
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.001,
+       "ci": [
+        -0.014,
+        0.0145
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0234,
+       "ci": [
+        -0.0459,
+        -0.004
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.0,
+       "ci": [
+        -1.3333,
+        1.5
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": -0.0056,
+       "ci": [
+        -0.0275,
+        0.0193
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0273,
+       "ci": [
+        -0.0565,
+        0.0016
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0217,
+       "ci": [
+        -0.0024,
+        0.0455
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0138,
+       "ci": [
+        -0.0305,
+        -0.0019
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.3333,
+       "ci": [
+        -1.8333,
+        1.1667
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.0082,
+       "ci": [
+        -0.02,
+        0.0392
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0511,
+       "ci": [
+        -0.0958,
+        -0.0098
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0593,
+       "ci": [
+        0.022,
+        0.1001
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.1667,
+       "ci": [
+        -1.6667,
+        1.8375
+       ]
+      }
+     }
+    }
+   },
+   "aug": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 2.5129,
+      "mass0.25": 2.524,
+      "mass0.5": 2.5213,
+      "mass0.75": 2.6149,
+      "mass1.0": 2.7156,
+      "shuf0.25": 2.5218,
+      "shuf0.5": 2.5512,
+      "shuf0.75": 2.6442,
+      "shuf1.0": 2.7414
+     },
+     "masked_teacher_acc": {
+      "uniform": 30.167,
+      "mass0.25": 31.0,
+      "mass0.5": 31.083,
+      "mass0.75": 29.917,
+      "mass1.0": 29.917,
+      "shuf0.25": 30.917,
+      "shuf0.5": 30.833,
+      "shuf0.75": 30.25,
+      "shuf1.0": 29.583
+     },
+     "counts": {
+      "q": 0.23862,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.1327,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       9,
+       11,
+       15,
+       20
+      ],
+      "frac_at_kmin": 0.02,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 11.984,
+      "mean_k2_over_m2_lam0.25": 1.0066,
+      "mean_k_lam0.5": 11.994,
+      "mean_k2_over_m2_lam0.5": 1.0332,
+      "mean_k_lam0.75": 12.016,
+      "mean_k2_over_m2_lam0.75": 1.077,
+      "mean_k_lam1.0": 12.0,
+      "mean_k2_over_m2_lam1.0": 1.1327,
+      "spearman_k_vs_kl_uniform": 0.1195
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": 0.0111,
+       "ci": [
+        -0.0257,
+        0.0466
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0022,
+       "ci": [
+        -0.0415,
+        0.0463
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0089,
+       "ci": [
+        -0.0248,
+        0.0444
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1915,
+       "ci": [
+        -0.2662,
+        -0.1188
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.8333,
+       "ci": [
+        -0.5,
+        2.25
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": 0.0084,
+       "ci": [
+        -0.0467,
+        0.0616
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0299,
+       "ci": [
+        -0.0989,
+        0.0366
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0382,
+       "ci": [
+        -0.0118,
+        0.0905
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1943,
+       "ci": [
+        -0.2547,
+        -0.1408
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.9167,
+       "ci": [
+        -0.8333,
+        2.6667
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.1019,
+       "ci": [
+        0.0253,
+        0.1728
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0294,
+       "ci": [
+        -0.1151,
+        0.0513
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1313,
+       "ci": [
+        0.0664,
+        0.1987
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1007,
+       "ci": [
+        -0.1428,
+        -0.0592
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.25,
+       "ci": [
+        -2.4167,
+        1.75
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.2026,
+       "ci": [
+        0.1117,
+        0.2934
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0258,
+       "ci": [
+        -0.1369,
+        0.0821
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.2285,
+       "ci": [
+        0.1446,
+        0.3152
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.25,
+       "ci": [
+        -2.5,
+        2.0
+       ]
+      }
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 0.8575,
+      "mass0.25": 0.8427,
+      "mass0.5": 0.8511,
+      "mass0.75": 0.9065,
+      "mass1.0": 0.982,
+      "shuf0.25": 0.8795,
+      "shuf0.5": 0.8946,
+      "shuf0.75": 0.9461,
+      "shuf1.0": 1.0296
+     },
+     "masked_teacher_acc": {
+      "uniform": 60.5,
+      "mass0.25": 60.417,
+      "mass0.5": 61.167,
+      "mass0.75": 60.417,
+      "mass1.0": 59.417,
+      "shuf0.25": 60.333,
+      "shuf0.5": 61.083,
+      "shuf0.75": 60.333,
+      "shuf1.0": 58.083
+     },
+     "counts": {
+      "q": 0.44116,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.1133,
+      "k_quantiles_5_25_50_75_95": [
+       14,
+       22,
+       28,
+       36,
+       46
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 28.996,
+      "mean_k2_over_m2_lam0.25": 1.0069,
+      "mean_k_lam0.5": 29.01,
+      "mean_k2_over_m2_lam0.5": 1.0291,
+      "mean_k_lam0.75": 29.004,
+      "mean_k2_over_m2_lam0.75": 1.0641,
+      "mean_k_lam1.0": 29.0,
+      "mean_k2_over_m2_lam1.0": 1.1133,
+      "spearman_k_vs_kl_uniform": 0.1827
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.0148,
+       "ci": [
+        -0.038,
+        0.0074
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0368,
+       "ci": [
+        -0.0596,
+        -0.0132
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.022,
+       "ci": [
+        0.002,
+        0.0423
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1393,
+       "ci": [
+        -0.1993,
+        -0.0849
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.0833,
+       "ci": [
+        -1.1667,
+        1.0
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.0065,
+       "ci": [
+        -0.0404,
+        0.0291
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0435,
+       "ci": [
+        -0.0811,
+        -0.0073
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0371,
+       "ci": [
+        0.0095,
+        0.0675
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.131,
+       "ci": [
+        -0.1772,
+        -0.0893
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.6667,
+       "ci": [
+        -0.75,
+        2.25
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.049,
+       "ci": [
+        0.0025,
+        0.0994
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0396,
+       "ci": [
+        -0.0939,
+        0.0121
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0886,
+       "ci": [
+        0.0506,
+        0.1309
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0755,
+       "ci": [
+        -0.1069,
+        -0.0451
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.0833,
+       "ci": [
+        -1.9167,
+        1.75
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.1245,
+       "ci": [
+        0.0605,
+        0.1919
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0476,
+       "ci": [
+        -0.1242,
+        0.0242
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1721,
+       "ci": [
+        0.1245,
+        0.2259
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.0833,
+       "ci": [
+        -3.25,
+        1.0
+       ]
+      }
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.3739,
+      "mass0.25": 0.3658,
+      "mass0.5": 0.3679,
+      "mass0.75": 0.3805,
+      "mass1.0": 0.4024,
+      "shuf0.25": 0.3813,
+      "shuf0.5": 0.3919,
+      "shuf0.75": 0.414,
+      "shuf1.0": 0.4609
+     },
+     "masked_teacher_acc": {
+      "uniform": 72.083,
+      "mass0.25": 71.917,
+      "mass0.5": 72.167,
+      "mass0.75": 71.417,
+      "mass1.0": 70.75,
+      "shuf0.25": 71.667,
+      "shuf0.5": 71.75,
+      "shuf0.75": 70.333,
+      "shuf1.0": 70.167
+     },
+     "counts": {
+      "q": 0.60269,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0879,
+      "k_quantiles_5_25_50_75_95": [
+       25,
+       38,
+       48,
+       60,
+       74
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 49.009,
+      "mean_k2_over_m2_lam0.25": 1.0059,
+      "mean_k_lam0.5": 48.995,
+      "mean_k2_over_m2_lam0.5": 1.0219,
+      "mean_k_lam0.75": 48.991,
+      "mean_k2_over_m2_lam0.75": 1.0492,
+      "mean_k_lam1.0": 49.0,
+      "mean_k2_over_m2_lam1.0": 1.0879,
+      "spearman_k_vs_kl_uniform": 0.1758
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.008,
+       "ci": [
+        -0.0207,
+        0.0038
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0154,
+       "ci": [
+        -0.0307,
+        -0.0015
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0074,
+       "ci": [
+        -0.0048,
+        0.0204
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0366,
+       "ci": [
+        -0.0634,
+        -0.0115
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.1667,
+       "ci": [
+        -1.0833,
+        0.8333
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.006,
+       "ci": [
+        -0.0247,
+        0.0118
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.024,
+       "ci": [
+        -0.0468,
+        -0.0019
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.018,
+       "ci": [
+        -0.0008,
+        0.0372
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0345,
+       "ci": [
+        -0.056,
+        -0.0147
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.0833,
+       "ci": [
+        -1.1667,
+        1.3333
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0067,
+       "ci": [
+        -0.0172,
+        0.0318
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0335,
+       "ci": [
+        -0.0657,
+        -0.0049
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0402,
+       "ci": [
+        0.0167,
+        0.0642
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0219,
+       "ci": [
+        -0.0386,
+        -0.007
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.6667,
+       "ci": [
+        -2.0833,
+        0.75
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.0286,
+       "ci": [
+        -0.0031,
+        0.0609
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0584,
+       "ci": [
+        -0.1037,
+        -0.0175
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.087,
+       "ci": [
+        0.0556,
+        0.1205
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.3333,
+       "ci": [
+        -3.0,
+        0.25
+       ]
+      }
+     }
+    }
+   }
+  },
+  "maskedkd98": {
+   "student_acc": 83.5,
+   "clean": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 2.2715,
+      "mass0.25": 2.3057,
+      "mass0.5": 2.3295,
+      "mass0.75": 2.3873,
+      "mass1.0": 2.4781,
+      "shuf0.25": 2.2418,
+      "shuf0.5": 2.2716,
+      "shuf0.75": 2.3337,
+      "shuf1.0": 2.4297
+     },
+     "masked_teacher_acc": {
+      "uniform": 37.167,
+      "mass0.25": 37.0,
+      "mass0.5": 35.333,
+      "mass0.75": 36.667,
+      "mass1.0": 35.5,
+      "shuf0.25": 37.833,
+      "shuf0.5": 37.833,
+      "shuf0.75": 40.0,
+      "shuf1.0": 39.167
+     },
+     "counts": {
+      "q": 0.28423,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.1383,
+      "k_quantiles_5_25_50_75_95": [
+       6,
+       8,
+       11,
+       15,
+       20
+      ],
+      "frac_at_kmin": 0.0083,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 11.993,
+      "mean_k2_over_m2_lam0.25": 1.008,
+      "mean_k_lam0.5": 11.995,
+      "mean_k2_over_m2_lam0.5": 1.0341,
+      "mean_k_lam0.75": 12.007,
+      "mean_k2_over_m2_lam0.75": 1.0798,
+      "mean_k_lam1.0": 12.0,
+      "mean_k2_over_m2_lam1.0": 1.1383,
+      "spearman_k_vs_kl_uniform": 0.075
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": 0.0341,
+       "ci": [
+        -0.0112,
+        0.0773
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0639,
+       "ci": [
+        0.0022,
+        0.1232
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": -0.0297,
+       "ci": [
+        -0.08,
+        0.0201
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1724,
+       "ci": [
+        -0.2778,
+        -0.075
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.1667,
+       "ci": [
+        -2.3333,
+        1.8333
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": 0.058,
+       "ci": [
+        -0.0143,
+        0.1293
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0579,
+       "ci": [
+        -0.0297,
+        0.147
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0001,
+       "ci": [
+        -0.0741,
+        0.0744
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1486,
+       "ci": [
+        -0.2305,
+        -0.0758
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.8333,
+       "ci": [
+        -4.5,
+        0.8333
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.1158,
+       "ci": [
+        0.0232,
+        0.2144
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0537,
+       "ci": [
+        -0.0674,
+        0.1777
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0621,
+       "ci": [
+        -0.0351,
+        0.1617
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0908,
+       "ci": [
+        -0.144,
+        -0.0352
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.5,
+       "ci": [
+        -3.8333,
+        2.6708
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.2066,
+       "ci": [
+        0.0953,
+        0.3251
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0484,
+       "ci": [
+        -0.1023,
+        0.1993
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1581,
+       "ci": [
+        0.0393,
+        0.2858
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.6667,
+       "ci": [
+        -5.3333,
+        1.8333
+       ]
+      }
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 0.6203,
+      "mass0.25": 0.5895,
+      "mass0.5": 0.5888,
+      "mass0.75": 0.6299,
+      "mass1.0": 0.7054,
+      "shuf0.25": 0.6104,
+      "shuf0.5": 0.6245,
+      "shuf0.75": 0.6922,
+      "shuf1.0": 0.7918
+     },
+     "masked_teacher_acc": {
+      "uniform": 71.833,
+      "mass0.25": 73.833,
+      "mass0.5": 73.5,
+      "mass0.75": 72.167,
+      "mass1.0": 70.667,
+      "shuf0.25": 72.333,
+      "shuf0.5": 72.667,
+      "shuf0.75": 71.167,
+      "shuf1.0": 68.667
+     },
+     "counts": {
+      "q": 0.51177,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.1122,
+      "k_quantiles_5_25_50_75_95": [
+       15,
+       21,
+       28,
+       35,
+       46
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 29.007,
+      "mean_k2_over_m2_lam0.25": 1.0075,
+      "mean_k_lam0.5": 29.0,
+      "mean_k2_over_m2_lam0.5": 1.0283,
+      "mean_k_lam0.75": 28.993,
+      "mean_k2_over_m2_lam0.75": 1.0629,
+      "mean_k_lam1.0": 29.0,
+      "mean_k2_over_m2_lam1.0": 1.1122,
+      "spearman_k_vs_kl_uniform": 0.1811
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.0307,
+       "ci": [
+        -0.0581,
+        -0.0045
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0209,
+       "ci": [
+        -0.0556,
+        0.0135
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": -0.0098,
+       "ci": [
+        -0.0374,
+        0.0156
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1158,
+       "ci": [
+        -0.1683,
+        -0.0613
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 2.0,
+       "ci": [
+        0.1667,
+        3.6667
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.0314,
+       "ci": [
+        -0.0739,
+        0.0075
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0357,
+       "ci": [
+        -0.0836,
+        0.0131
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0042,
+       "ci": [
+        -0.0344,
+        0.0411
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1165,
+       "ci": [
+        -0.1583,
+        -0.0746
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 1.6667,
+       "ci": [
+        -0.3333,
+        3.8333
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0096,
+       "ci": [
+        -0.0421,
+        0.0578
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0624,
+       "ci": [
+        -0.1308,
+        0.0047
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.072,
+       "ci": [
+        0.0169,
+        0.1274
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0755,
+       "ci": [
+        -0.1061,
+        -0.0456
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.3333,
+       "ci": [
+        -2.0,
+        2.5
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.0851,
+       "ci": [
+        0.0171,
+        0.1483
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0864,
+       "ci": [
+        -0.1744,
+        -0.0008
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1715,
+       "ci": [
+        0.1013,
+        0.2435
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.1667,
+       "ci": [
+        -3.6667,
+        1.3333
+       ]
+      }
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.2178,
+      "mass0.25": 0.2152,
+      "mass0.5": 0.2127,
+      "mass0.75": 0.2207,
+      "mass1.0": 0.2381,
+      "shuf0.25": 0.2304,
+      "shuf0.5": 0.2373,
+      "shuf0.75": 0.261,
+      "shuf1.0": 0.2849
+     },
+     "masked_teacher_acc": {
+      "uniform": 81.333,
+      "mass0.25": 81.667,
+      "mass0.5": 82.667,
+      "mass0.75": 81.667,
+      "mass1.0": 81.167,
+      "shuf0.25": 80.333,
+      "shuf0.5": 80.5,
+      "shuf0.75": 80.333,
+      "shuf1.0": 80.667
+     },
+     "counts": {
+      "q": 0.66952,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.0767,
+      "k_quantiles_5_25_50_75_95": [
+       29,
+       39,
+       48,
+       58,
+       73
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 49.003,
+      "mean_k2_over_m2_lam0.25": 1.005,
+      "mean_k_lam0.5": 49.017,
+      "mean_k2_over_m2_lam0.5": 1.0199,
+      "mean_k_lam0.75": 48.997,
+      "mean_k2_over_m2_lam0.75": 1.0429,
+      "mean_k_lam1.0": 49.0,
+      "mean_k2_over_m2_lam1.0": 1.0767,
+      "spearman_k_vs_kl_uniform": 0.1887
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.0026,
+       "ci": [
+        -0.0139,
+        0.0087
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0152,
+       "ci": [
+        -0.0309,
+        -0.0
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0126,
+       "ci": [
+        0.0016,
+        0.0249
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0228,
+       "ci": [
+        -0.0456,
+        -0.0012
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.3333,
+       "ci": [
+        -0.5,
+        1.1667
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.0051,
+       "ci": [
+        -0.0202,
+        0.0095
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0246,
+       "ci": [
+        -0.0448,
+        -0.0045
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0195,
+       "ci": [
+        0.0041,
+        0.0361
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0254,
+       "ci": [
+        -0.045,
+        -0.0069
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 1.3333,
+       "ci": [
+        0.1667,
+        2.6667
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0029,
+       "ci": [
+        -0.0174,
+        0.0238
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0403,
+       "ci": [
+        -0.0711,
+        -0.0112
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0432,
+       "ci": [
+        0.0189,
+        0.0688
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0174,
+       "ci": [
+        -0.033,
+        -0.0026
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.3333,
+       "ci": [
+        -1.1667,
+        1.8333
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.0203,
+       "ci": [
+        -0.0057,
+        0.0476
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0468,
+       "ci": [
+        -0.0872,
+        -0.0061
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0671,
+       "ci": [
+        0.0323,
+        0.1035
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.1667,
+       "ci": [
+        -1.8333,
+        1.3333
+       ]
+      }
+     }
+    }
+   },
+   "aug": {
+    "M12": {
+     "kl_mean": {
+      "uniform": 2.5229,
+      "mass0.25": 2.5198,
+      "mass0.5": 2.5565,
+      "mass0.75": 2.5943,
+      "mass1.0": 2.6732,
+      "shuf0.25": 2.4766,
+      "shuf0.5": 2.5795,
+      "shuf0.75": 2.622,
+      "shuf1.0": 2.6913
+     },
+     "masked_teacher_acc": {
+      "uniform": 30.5,
+      "mass0.25": 31.0,
+      "mass0.5": 30.333,
+      "mass0.75": 30.75,
+      "mass1.0": 29.167,
+      "shuf0.25": 32.167,
+      "shuf0.5": 30.5,
+      "shuf0.75": 29.583,
+      "shuf1.0": 29.25
+     },
+     "counts": {
+      "q": 0.24438,
+      "mean_k": 12.0,
+      "mean_k2_over_m2": 1.1404,
+      "k_quantiles_5_25_50_75_95": [
+       5,
+       9,
+       11,
+       15,
+       20
+      ],
+      "frac_at_kmin": 0.025,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 11.988,
+      "mean_k2_over_m2_lam0.25": 1.0078,
+      "mean_k_lam0.5": 11.996,
+      "mean_k2_over_m2_lam0.5": 1.0355,
+      "mean_k_lam0.75": 12.012,
+      "mean_k2_over_m2_lam0.75": 1.0807,
+      "mean_k_lam1.0": 12.0,
+      "mean_k2_over_m2_lam1.0": 1.1404,
+      "spearman_k_vs_kl_uniform": 0.1095
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.0031,
+       "ci": [
+        -0.043,
+        0.0365
+       ]
+      },
+      "mass-shuffle": {
+       "mean": 0.0432,
+       "ci": [
+        -0.0005,
+        0.0841
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": -0.0463,
+       "ci": [
+        -0.0802,
+        -0.0111
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1534,
+       "ci": [
+        -0.2308,
+        -0.0761
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.5,
+       "ci": [
+        -1.0833,
+        2.0
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": 0.0335,
+       "ci": [
+        -0.0253,
+        0.0944
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0231,
+       "ci": [
+        -0.0936,
+        0.0431
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0566,
+       "ci": [
+        0.0027,
+        0.1131
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1167,
+       "ci": [
+        -0.1775,
+        -0.056
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.1667,
+       "ci": [
+        -2.0,
+        1.6667
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0714,
+       "ci": [
+        -0.0033,
+        0.1495
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0277,
+       "ci": [
+        -0.1127,
+        0.0575
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0991,
+       "ci": [
+        0.0301,
+        0.1661
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0789,
+       "ci": [
+        -0.1232,
+        -0.0385
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.25,
+       "ci": [
+        -2.0833,
+        2.4167
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.1503,
+       "ci": [
+        0.0589,
+        0.2487
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0181,
+       "ci": [
+        -0.1212,
+        0.0856
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1684,
+       "ci": [
+        0.0899,
+        0.2501
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.3333,
+       "ci": [
+        -3.8333,
+        1.0833
+       ]
+      }
+     }
+    },
+    "M29": {
+     "kl_mean": {
+      "uniform": 0.8375,
+      "mass0.25": 0.8385,
+      "mass0.5": 0.8394,
+      "mass0.75": 0.8929,
+      "mass1.0": 0.9888,
+      "shuf0.25": 0.8504,
+      "shuf0.5": 0.8755,
+      "shuf0.75": 0.9375,
+      "shuf1.0": 1.0262
+     },
+     "masked_teacher_acc": {
+      "uniform": 61.75,
+      "mass0.25": 62.083,
+      "mass0.5": 61.833,
+      "mass0.75": 60.75,
+      "mass1.0": 59.25,
+      "shuf0.25": 60.917,
+      "shuf0.5": 60.667,
+      "shuf0.75": 59.25,
+      "shuf1.0": 59.5
+     },
+     "counts": {
+      "q": 0.44997,
+      "mean_k": 29.0,
+      "mean_k2_over_m2": 1.1216,
+      "k_quantiles_5_25_50_75_95": [
+       14,
+       22,
+       28,
+       36,
+       47
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 29.011,
+      "mean_k2_over_m2_lam0.25": 1.0086,
+      "mean_k_lam0.5": 29.005,
+      "mean_k2_over_m2_lam0.5": 1.0305,
+      "mean_k_lam0.75": 28.989,
+      "mean_k2_over_m2_lam0.75": 1.0674,
+      "mean_k_lam1.0": 29.0,
+      "mean_k2_over_m2_lam1.0": 1.1216,
+      "spearman_k_vs_kl_uniform": 0.1662
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": 0.001,
+       "ci": [
+        -0.0209,
+        0.0222
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0119,
+       "ci": [
+        -0.0356,
+        0.0134
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0129,
+       "ci": [
+        -0.0045,
+        0.0317
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1503,
+       "ci": [
+        -0.2094,
+        -0.0987
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.3333,
+       "ci": [
+        -1.0,
+        1.6667
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": 0.0019,
+       "ci": [
+        -0.0313,
+        0.0348
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0361,
+       "ci": [
+        -0.0792,
+        0.0044
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0379,
+       "ci": [
+        0.0099,
+        0.0679
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.1494,
+       "ci": [
+        -0.1956,
+        -0.1085
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.0833,
+       "ci": [
+        -1.6667,
+        1.6687
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0554,
+       "ci": [
+        0.0101,
+        0.1062
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0446,
+       "ci": [
+        -0.1055,
+        0.0161
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1,
+       "ci": [
+        0.0592,
+        0.1453
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0959,
+       "ci": [
+        -0.1263,
+        -0.0677
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.0,
+       "ci": [
+        -3.0,
+        0.8333
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.1513,
+       "ci": [
+        0.0905,
+        0.2166
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0374,
+       "ci": [
+        -0.1152,
+        0.0386
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.1887,
+       "ci": [
+        0.1336,
+        0.2481
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -2.5,
+       "ci": [
+        -4.75,
+        -0.4979
+       ]
+      }
+     }
+    },
+    "M49": {
+     "kl_mean": {
+      "uniform": 0.3597,
+      "mass0.25": 0.3549,
+      "mass0.5": 0.3564,
+      "mass0.75": 0.3671,
+      "mass1.0": 0.3997,
+      "shuf0.25": 0.3651,
+      "shuf0.5": 0.3779,
+      "shuf0.75": 0.4072,
+      "shuf1.0": 0.4503
+     },
+     "masked_teacher_acc": {
+      "uniform": 72.583,
+      "mass0.25": 72.667,
+      "mass0.5": 72.667,
+      "mass0.75": 72.083,
+      "mass1.0": 71.25,
+      "shuf0.25": 72.5,
+      "shuf0.5": 71.917,
+      "shuf0.75": 71.167,
+      "shuf1.0": 70.667
+     },
+     "counts": {
+      "q": 0.61227,
+      "mean_k": 49.0,
+      "mean_k2_over_m2": 1.094,
+      "k_quantiles_5_25_50_75_95": [
+       25,
+       38,
+       48,
+       60,
+       75
+      ],
+      "frac_at_kmin": 0.0,
+      "frac_at_196": 0.0,
+      "mean_k_lam0.25": 49.007,
+      "mean_k2_over_m2_lam0.25": 1.0062,
+      "mean_k_lam0.5": 49.013,
+      "mean_k2_over_m2_lam0.5": 1.024,
+      "mean_k_lam0.75": 48.993,
+      "mean_k2_over_m2_lam0.75": 1.0526,
+      "mean_k_lam1.0": 49.0,
+      "mean_k2_over_m2_lam1.0": 1.094,
+      "spearman_k_vs_kl_uniform": 0.1621
+     },
+     "lam0.25": {
+      "mass-uniform": {
+       "mean": -0.0048,
+       "ci": [
+        -0.0155,
+        0.0057
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0102,
+       "ci": [
+        -0.022,
+        0.0009
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0054,
+       "ci": [
+        -0.0045,
+        0.0156
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0448,
+       "ci": [
+        -0.0748,
+        -0.0158
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.0833,
+       "ci": [
+        -0.8333,
+        1.0021
+       ]
+      }
+     },
+     "lam0.5": {
+      "mass-uniform": {
+       "mean": -0.0033,
+       "ci": [
+        -0.0185,
+        0.0125
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0215,
+       "ci": [
+        -0.0413,
+        -0.0036
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0182,
+       "ci": [
+        0.0026,
+        0.036
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0434,
+       "ci": [
+        -0.0699,
+        -0.0195
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": 0.0833,
+       "ci": [
+        -1.1667,
+        1.3333
+       ]
+      }
+     },
+     "lam0.75": {
+      "mass-uniform": {
+       "mean": 0.0074,
+       "ci": [
+        -0.0144,
+        0.0293
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0401,
+       "ci": [
+        -0.0694,
+        -0.0128
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0475,
+       "ci": [
+        0.0241,
+        0.0718
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": -0.0326,
+       "ci": [
+        -0.0524,
+        -0.0154
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -0.5,
+       "ci": [
+        -1.8333,
+        0.8333
+       ]
+      }
+     },
+     "lam1.0": {
+      "mass-uniform": {
+       "mean": 0.04,
+       "ci": [
+        0.007,
+        0.0744
+       ]
+      },
+      "mass-shuffle": {
+       "mean": -0.0506,
+       "ci": [
+        -0.0959,
+        -0.0082
+       ]
+      },
+      "shuffle-uniform": {
+       "mean": 0.0906,
+       "ci": [
+        0.0583,
+        0.124
+       ]
+      },
+      "mass-mass1.0": {
+       "mean": 0.0,
+       "ci": [
+        0.0,
+        0.0
+       ]
+      },
+      "acc_mass-uniform": {
+       "mean": -1.3333,
+       "ci": [
+        -2.8333,
+        0.1667
+       ]
+      }
+     }
+    }
+   }
+  }
+ },
+ "note": "KL(full teacher on view || keep-only masked teacher on same view), T=1, nats; aug = mean over V crop+flip views per image (H-A181 draws); lateroll = student rollout blocks 6-11 with residual identity, normalised; mass1.0 K_i = fewest lateroll-ranked tokens with cumulative mass >= q, clamp [4, 196], q fitted per (student, view set, M) so mean K_i ~ M (= H-A193 mass); massL = clip(rint(M + L (K_i - M)), 4, 196); shufL = same counts permuted across images within each view index (H-A193 permutation); teacher attention FLOPs grow with mean K^2 (mean_k2_over_m2*); 95% percentile bootstrap over val images (2000 resamples, shared index); seed-1 students only"
+}
