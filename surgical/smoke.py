@@ -268,9 +268,16 @@ def end_to_end(dataset):
            "selector_sha": hashlib.sha256(src.encode()).hexdigest(), "note": "surgical smoke", "by": "smoke",
            "priority": 0, "lr": None}
     tmp = tempfile.mkdtemp(prefix="surgical_smoke_")
-    old = C.RUNS
+    old, old_load = C.RUNS, train.load_teacher
+    here = teacher_sha(C.TEACHER_SHARED.get(dataset, dataset)) is not None
     try:
         C.RUNS = type(old)(tmp)
+        if not here:
+            # 2026-11-13: a teacher record from git without its checkpoint (state/*.pt is not in git) made the
+            # harness refuse; the smoke run only checks the path, so it uses a random-init teacher, as harness smoke
+            # runs do before a teacher exists. autorun fine-tunes the real one next.
+            train.load_teacher = lambda device, ds, allow_random=False: (
+                make_teacher(ds, pretrained=False).to(device).eval(), "smoke-random")
         jp = os.path.join(tmp, "job.json")
         with open(jp, "w") as fh:
             json.dump(job, fh)
@@ -279,9 +286,9 @@ def end_to_end(dataset):
         m = json.loads((C.RUNS / job["id"] / "metrics.json").read_text())
         return {"returncode": rc, "status": m["status"], "seconds": round(time.time() - t0, 1),
                 "mean_kept": m["mean_kept"], "val_acc": m["val_acc_last"], "val_wga": m["val_wga_last"],
-                "teacher": "this dataset's" if teacher_paths(dataset)[1].exists() else "random-init (no teacher yet)"}
+                "teacher": "this dataset's" if here else "random-init (no checkpoint here yet)"}
     finally:
-        C.RUNS = old
+        C.RUNS, train.load_teacher = old, old_load
         shutil.rmtree(tmp, ignore_errors=True)
 
 

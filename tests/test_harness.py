@@ -1173,3 +1173,22 @@ def test_autorun_gate_rule(tmp_path, monkeypatch):
         assert held is want and "per seed" in text
     monkeypatch.setattr(table, "arms_by_seed", lambda d, k: {"CE": {1: {}, 2: {}}, "Full KD": {1: {}, 2: {}}})
     assert autorun.gate_verdict("cifar10") is None
+
+
+def test_smoke_end_to_end_without_a_teacher_checkpoint(tmp_path, monkeypatch):
+    """A teacher record from git without its checkpoint (a new server) must not fail the smoke run: it uses a
+    random-init teacher, and the harness's own load_teacher is restored afterwards."""
+    from harness import train
+    from surgical import smoke
+    monkeypatch.setattr(C, "STATE", tmp_path)
+    (tmp_path / "teacher.json").write_text(json.dumps({"sha256": "from another server"}))
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    monkeypatch.delenv("MASKEDKD_FAKE_DATA")
+    monkeypatch.setattr(train, "load_split", lambda split, ds: (torch.randint(0, 256, (16, 3, 64, 64), dtype=torch.uint8),
+                                                                torch.arange(16) % 2))
+    monkeypatch.setattr(train, "load_groups", lambda split, ds: torch.arange(16) % 4)
+    monkeypatch.setattr(train, "make_student", lambda ds: make_student(ds, pretrained=False))
+    before = train.load_teacher
+    r = smoke.end_to_end("waterbirds")
+    assert r["status"] == "done" and r["teacher"].startswith("random-init") and train.load_teacher is before
