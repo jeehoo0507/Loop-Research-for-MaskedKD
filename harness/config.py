@@ -22,7 +22,8 @@ NUM_PATCHES = (IMG_SIZE // PATCH) ** 2   # 196 spatial tokens (CLS not counted i
 # student, 100 epochs; CUB: KD - CE = +1.62 %p over 3 seeds), and on Waterbirds MaskedKD at 15 % of the tokens cost
 # 18.5 %p of worst-group accuracy against Full KD: token choice matters there. Recipe = aim-lab-test-5
 # docs/maskedkd_settings.md section 6, except that augmentation runs on the GPU from stored 256x256 images.
-DATASETS = ("waterbirds", "cub", "aircraft", "caltech256", "cub_lt", "celeba")
+DATASETS = ("waterbirds", "cub", "aircraft", "caltech256", "cub_lt", "celeba",
+            "cifar10", "cifar10c_gaussian_noise", "cifar10c_defocus_blur", "cifar10c_frost")   # new ones go last
 # 2026-10-31: the search moved to CUB. The aim is FLOPs-efficient KD, not robustness: Waterbirds was picked only because
 # KD > CE there, but with 2 classes the teacher's soft labels carry almost no class-relation information (the thing KD
 # transfers), so a token-selection result there says little about MaskedKD's multi-class setting. CUB (200 classes)
@@ -58,13 +59,29 @@ CELEBA_SHARDS = 132
 # CELEBA_TRAIN_FRACTION of the official train (correlation preserved) and val/test cap every group at CELEBA_EVAL_CAP
 # images (the minority groups are kept whole, so worst-group accuracy is measured on all of them).
 CELEBA_TRAIN_FRACTION, CELEBA_EVAL_CAP = 0.12, 2000
+# 2026-11-12 (human): input-level shift, after Surgical Fine-Tuning (Lee et al. ICLR 2023). CIFAR-10-C (Hendrycks &
+# Dietterich 2019) is the CIFAR-10 test set, 10,000 images, under one corruption at 5 severities, in test-set order.
+# Each corruption at CIFAR_C_SEVERITY is one dataset; "cifar10" is the same 10,000 clean images. All of them share
+# one split (per class CIFAR_SPLIT of train / val / test, random.Random(CUB_VAL_SEED + class)), so an image is in the
+# same split clean and corrupted: the clean run is the paired "no shift" control of each corrupted run. Stored at
+# 32x32; the GPU augmentation and the eval transform resample to 224 (bilinear), as they do for every dataset.
+CIFAR_C = {"cifar10c_gaussian_noise": "gaussian_noise", "cifar10c_defocus_blur": "defocus_blur",
+           "cifar10c_frost": "frost"}
+CIFAR_SETS = ("cifar10",) + tuple(CIFAR_C)
+CIFAR_C_SEVERITY = 5
+CIFAR_SPLIT = (0.8, 0.1, 0.1)
+CIFAR_URLS = {"clean": ["https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"],   # binary version: no pickle
+              "c": ["https://zenodo.org/records/2535967/files/CIFAR-10-C.tar?download=1"]}
+for _d in CIFAR_SETS:
+    NUM_CLASSES[_d], NUM_GROUPS[_d] = 10, 0
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
                   "cub_lt": {"val": 600, "test": 5794, "partial": True},   # train = CUB train with the tail cut (size logged)
                   "celeba": {"train": 19532, "partial": True},   # round(0.12 * 162770); val/test sizes logged (group caps)
                   "aircraft": {"train": 5967, "val": 700, "test": 3333},  # Aircraft (100 variants): val = 10 % per
                   # class of official trainval (the CUB rule), official test
-                  "caltech256": {"total": 29780}}  # 256 object classes (257.clutter dropped); per class 80/10/10
+                  "caltech256": {"total": 29780},  # 256 object classes (257.clutter dropped); per class 80/10/10
+                  **{d: {"train": 8000, "val": 1000, "test": 1000} for d in CIFAR_SETS}}
 CUB_VAL_FRACTION, CUB_VAL_SEED = 0.10, 0     # same split rule as aim-lab-test-5 (teachers are interchangeable)
 TRIM_BOTTOM = {"aircraft": 20}               # Aircraft images carry a 20-px copyright banner (removed, as is standard)
 STAGE0_OUTPUTS = Path(os.environ.get("STAGE0_OUTPUTS", Path.home() / "stage0" / "outputs"))  # aim-lab-test-5 results
@@ -96,7 +113,8 @@ TAU = 1.0
 # Teacher fine-tune (no mixup, label smoothing 0: LS 0.1 flattened the teacher in aim-lab-test-4; best val epoch kept)
 TEACHER_BATCH = 64       # DeiT-B full fine-tune fits a 24 GB GPU at this batch
 TEACHER_EPOCHS = 100
-TEACHER_EPOCHS_BY = {"caltech256": 20, "celeba": 8}   # same number of images seen as 100 epochs of a ~6k-image set
+TEACHER_EPOCHS_BY = {"caltech256": 20, "celeba": 8,   # same number of images seen as 100 epochs of a ~6k-image set
+                     **{d: 30 for d in CIFAR_SETS}}   # 8k images x 30: a pretrained DeiT-B is at its CIFAR plateau
 TEACHER_LR = 1e-4
 TEACHER_WARMUP_EPOCHS = 5
 
@@ -146,6 +164,7 @@ TIER_EPOCHS = {
     "waterbirds": {"smoke": 1, "screen": 100, "final": 100},   # earlier check
     "aircraft": {"smoke": 1, "screen": 100, "final": 100},     # stage 2: only harness jobs and audited methods
     "caltech256": {"smoke": 1, "final": 20},                   # held-out check: final tier only (see HOLDOUT)
+    **{d: {"smoke": 1, "screen": 75, "final": 75} for d in CIFAR_SETS},   # 8k x 75 = 600k images, a CUB run
 }
 TIER_MAX_STEPS = {"smoke": 30}   # smoke = a few minutes: catches CUDA/shape errors, nothing else
 SMOKE_VAL_LIMIT = 500

@@ -28,6 +28,11 @@ from .train import evaluate, lr_at, sha256_file, teacher_paths
 def write_recipe(dataset):
     sel = C.STAGE0_OUTPUTS / dataset / "lr_selection.json"
     d = json.loads(C.RECIPE_FILE.read_text()) if C.RECIPE_FILE.exists() else {}
+    if d.get(dataset, {}).get("student_lr"):
+        # 2026-11-12: the teacher checkpoints are not in git, so on a new server the teacher is fine-tuned again; the
+        # student lr this dataset already has (a sweep, or the lr every earlier run used) stays as it is
+        print("recipe (kept):", json.dumps(d[dataset]))
+        return
     if sel.exists():
         s = json.loads(sel.read_text())["student"]
         d[dataset] = {"student_lr": float(s["lr"]), "source": f"aim-lab-test-5 {sel}", "scores": s.get("scores")}

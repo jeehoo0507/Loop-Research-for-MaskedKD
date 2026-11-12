@@ -985,3 +985,191 @@ def test_celeba_split_groups_and_caps(tmp_path, monkeypatch):
     assert submit.make_job("good", 29, 1, "final", dataset="celeba")["stage2"] == "robustness_check"
     with pytest.raises(SystemExit, match="needs final seeds"):
         submit.make_job("good", 29, 1, "final", dataset="caltech256")
+
+
+def test_layerroll_equals_the_references(models):
+    """selectors/layerroll.py is the common form of the reference selectors: layers=[11] is MaskedKD, all 12 blocks
+    is the rollout baseline, blocks 6..11 is selectors/lateroll.py, all bit-identical; a block set or a single head
+    changes the mask; sel_args reach the selector through load_selector."""
+    from harness.baselines import Rollout
+    s, _ = models
+    s.eval()
+    x = torch.randn(3, 3, 224, 224)
+    with torch.no_grad():
+        out = student_forward(s, x, attn_layers=range(12))
+    ctx = Context(images=x, student=s, out=out, budget=29, num_patches=196, epoch=0, progress=0.0)
+    mk = lambda **kw: load_selector("layerroll", kwargs=kw)[0]   # noqa: E731
+    one, allb, late = mk(layers=[11]), mk(), mk(layers=[6, 7, 8, 9, 10, 11])
+    assert one.NEEDS["attn"] == [11] and allb.NEEDS["attn"] == list(range(12))
+    assert torch.equal(one.select(ctx), MaskedKD().select(ctx))
+    assert torch.equal(mk(layers=[-1]).select(ctx), MaskedKD().select(ctx))
+    assert torch.equal(allb.select(ctx), Rollout().select(ctx))
+    assert torch.equal(late.select(ctx), load_selector("lateroll")[0].select(ctx))
+    assert torch.equal(mk(layers=[9]).select(ctx), load_selector("midattn", kwargs={"layer": 9})[0].select(ctx))
+    masks = {name: mk(layers=ls).select(ctx) for name, ls in
+             {"b1": [0, 1, 2], "b4": [9, 10, 11], "no_last": list(range(11)), "no_first": list(range(3, 12))}.items()}
+    for m in masks.values():
+        assert m.shape == (3, 196) and m.dtype == torch.bool and (m.sum(1) == 29).all()
+    assert not torch.equal(masks["b1"], masks["b4"]) and not torch.equal(masks["no_last"], allb.select(ctx))
+    h0 = mk(layers=[11], head=0).select(ctx)
+    ref = torch.zeros(3, 196, dtype=torch.bool).scatter_(1, out.attn[11][:, 0, 0, 1:].topk(29, dim=1).indices, True)
+    assert torch.equal(h0, ref) and not torch.equal(h0, one.select(ctx))
+    with pytest.raises(ValueError):
+        mk(layers=[])
+
+
+def test_cifar_sets_share_one_split_and_stay_paired(tmp_path, monkeypatch):
+    """CIFAR-10 / CIFAR-10-C: every set gets the same rows in every split, a corrupted set takes the severity block
+    config.CIFAR_C_SEVERITY, labels that are not the clean test labels are refused, and the stored 32px arrays go
+    through the training augmentation and the eval transform like any other dataset."""
+    import numpy as np
+    from harness import prepare_data as P, data as D
+    raw = tmp_path / "data" / "raw"
+    (raw / "cifar-10-batches-bin").mkdir(parents=True)
+    (raw / "CIFAR-10-C").mkdir()
+    n = 200
+    rng = np.random.default_rng(0)
+    y = np.arange(n) % 10
+    x = rng.integers(0, 200, (n, 3, 32, 32), dtype=np.uint8)
+    np.concatenate([y[:, None].astype(np.uint8), x.reshape(n, -1)], axis=1).tofile(raw / "cifar-10-batches-bin" / "test_batch.bin")
+    blocks = [x.transpose(0, 2, 3, 1) + sev for sev in range(1, 6)]   # severity block s = clean + s
+    np.save(raw / "CIFAR-10-C" / "gaussian_noise.npy", np.concatenate(blocks))
+    np.save(raw / "CIFAR-10-C" / "labels.npy", np.tile(y, 5))
+
+    clean, noisy = P.cifar_arrays("cifar10", raw), P.cifar_arrays("cifar10c_gaussian_noise", raw)
+    assert {k: len(v[1]) for k, v in clean.items()} == {"train": 160, "val": 20, "test": 20}
+    for split in ("train", "val", "test"):
+        (xc, yc), (xn, yn) = clean[split], noisy[split]
+        assert np.array_equal(yc, yn) and np.bincount(yc, minlength=10).tolist() == [len(yc) // 10] * 10
+        assert ((xn.astype(int) - xc.astype(int)) == C.CIFAR_C_SEVERITY).all()   # same image, severity-5 block
+    rows = P.cifar_split(y)
+    assert sorted(rows["train"] + rows["val"] + rows["test"]) == list(range(n))
+
+    np.save(raw / "CIFAR-10-C" / "labels.npy", np.tile(np.roll(y, 1), 5))
+    with pytest.raises(SystemExit, match="pairing broken"):
+        P.cifar_arrays("cifar10c_gaussian_noise", raw)
+
+    monkeypatch.setattr(C, "DATA_ROOT", tmp_path / "data")
+    monkeypatch.setitem(C.EXPECTED_SIZES, "cifar10", {"train": 160, "val": 20, "test": 20})
+    P.prepare("cifar10", workers=1)
+    monkeypatch.delenv("MASKEDKD_FAKE_DATA")
+    xtr, ytr = D.load_split("train", "cifar10")
+    assert tuple(xtr.shape) == (160, 3, 32, 32) and torch.equal(ytr, torch.from_numpy(clean["train"][1]))
+    assert torch.equal(xtr, torch.from_numpy(clean["train"][0])) and D.load_groups("val", "cifar10") is None
+    xa, ya = GpuAugment(torch.device("cpu"), 10)(xtr[:8], ytr[:8])
+    assert xa.shape == (8, 3, 224, 224) and ya.shape == (8, 10) and torch.isfinite(xa).all()
+    assert D.normalize_resize(D.load_split("val", "cifar10")[0][:4]).shape == (4, 3, 224, 224)
+    assert set(C.CIFAR_SETS) <= set(C.DATASETS) and all(C.TIER_EPOCHS[d]["final"] == 75 for d in C.CIFAR_SETS)
+
+
+def test_surgical_layer_sweep_runs_and_grid_names_its_arms(tmp_path, monkeypatch):
+    """analysis/surgical_layer_sweep.py passes the analysis validator and writes, per student and K, every arm with
+    its fidelity, group accuracies and the paired difference to L11 (= MaskedKD, so that difference is 0 for L11);
+    surgical.submit_grid plans the 11 default arms and surgical.arms maps a finished run back to its arm."""
+    from harness.analysis_api import AnalysisAPI
+    from harness.validate import analysis_source, load_analysis
+    from surgical import arms as A
+    from surgical.submit_grid import plan
+    run, _ = load_analysis("surgical_layer_sweep", analysis_source("surgical_layer_sweep"))
+    run.__globals__.update(K_LIST=(29,), NBOOT=20, BATCH=4)
+    student = make_student("waterbirds", pretrained=False).eval()
+
+    class SmallAPI(AnalysisAPI):
+        def val_batches(self, batch=100, limit=None):
+            return super().val_batches(batch=batch, limit=8)
+
+        def val_groups(self):
+            return super().val_groups()[:8]
+
+        def runs(self):
+            return {"r_ce": {"method": "ce", "tier": "final", "seed": 1, "dataset": "waterbirds"},
+                    "r_other": {"method": "full", "tier": "final", "seed": 1, "dataset": "cub"}}
+
+        def student(self, run_id, epoch=None):
+            return student
+
+    api = SmallAPI(tmp_path, torch.device("cpu"), make_teacher("waterbirds", pretrained=False).eval(), "waterbirds")
+    run(api)
+    s = json.loads((tmp_path / "summary.json").read_text())
+    assert s["students"] == {"ce": "r_ce"} and s["n_val"] == 8
+    block = s["results"]["ce"]["29"]
+    assert len(block) == 12 + 12 * 3 + 4 + 7 + 1 and {"L11", "L0H2", "B1 0-2", "no last 0-10", "random"} <= set(block)
+    assert block["L11"]["acc_minus_L11"] == 0 and block["L11"]["acc_minus_L11_ci"] == [0, 0]
+    assert all(0 <= r["acc"] <= 100 and r["kl"] >= 0 and "worst_group_acc" in r for r in block.values())
+    assert len(s["curves"]["ce"]["29"]["blocks"]) == 12 and s["curves"]["ce"]["29"]["measure"] == "worst_group_acc"
+
+    rows = list(plan([1, 4], A.K, extra=False, only=None))
+    assert len(rows) == 22 and {r[4] for r in rows if r[3] == 1} == {"final"} and {r[4] for r in rows if r[3] == 4} == {"screen"}
+    assert ("CE", "ce", 0, 1, "final", {}) in rows and ("Full KD", "full", 196, 1, "final", {}) in rows
+    assert A.arm_of("layerroll", {"layers": [0, 1, 2]}) == "B1 0-2" and A.arm_of("maskedkd", {}) == "last (MaskedKD)"
+    assert A.arm_of("layerroll", {"layers": [5]}) is None and A.arm_of("lateroll", {}) == "late 6-11 (lateroll)"
+    for name, (method, args) in {**A.SELECT, **A.EXTRA}.items():   # every selecting arm loads and keeps K tokens
+        load_selector(method, kwargs=args)
+
+
+def test_layerroll_trains_on_a_cifar_set_with_its_block_set(tmp_path, monkeypatch):
+    """A layerroll job with sel_args runs end to end on a new CIFAR dataset (final seeds allowed, no stage rule) and
+    gives the teacher as many tokens as MaskedKD at the same K (the block set changes which tokens, not how many)."""
+    from harness import submit, train
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    assert submit.make_job("layerroll", 29, 1, "final", {"layers": [0, 1, 2]}, by="human",
+                           dataset="cifar10c_gaussian_noise")["stage2"] is None
+    ms = {}
+    for method, args in (("layerroll", {"layers": [3, 4, 5]}), ("maskedkd", {})):
+        job = submit.make_job(method, 29, 0, "smoke", args, force=True, dataset="cifar10c_gaussian_noise")
+        jp = tmp_path / f"{method}.json"
+        jp.write_text(json.dumps(job))
+        assert train.run(str(jp)) == 0
+        ms[method] = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
+    m = ms["layerroll"]
+    assert m["dataset"] == "cifar10c_gaussian_noise" and m["mean_kept"] == 29.0 and m["sel_args"] == {"layers": [3, 4, 5]}
+    assert m["status"] == "done" and ms["maskedkd"]["mean_kept"] == 29.0   # same token count as MaskedKD at this K
+
+
+def test_new_server_keeps_the_student_lr_and_reuses_only_its_own_teachers_runs(tmp_path, monkeypatch):
+    """The teacher checkpoints are not in git. Fine-tuning a teacher again must not reset a student lr the recipe
+    already has, and the surgical scripts reuse a finished KD run only if it was made with this server's teacher
+    (a CE run has no teacher and is always reusable)."""
+    from harness import finetune_teacher as F
+    from harness.train import sha256_file
+    from surgical import arms as A
+    monkeypatch.setattr(C, "RECIPE_FILE", tmp_path / "recipe.json")
+    monkeypatch.setattr(C, "STATE", tmp_path)
+    monkeypatch.setattr(C, "STAGE0_OUTPUTS", tmp_path / "none")
+    (tmp_path / "recipe.json").write_text(json.dumps({"cub": {"student_lr": 3e-4, "swept": True}}))
+    F.write_recipe("cub")
+    F.write_recipe("cifar10")
+    d = json.loads((tmp_path / "recipe.json").read_text())
+    assert d["cub"] == {"student_lr": 3e-4, "swept": True} and d["cifar10"]["student_lr"] == C.STUDENT_LR_DEFAULT
+
+    assert A.teacher_sha("cifar10") is None                       # no checkpoint here
+    (tmp_path / "teacher_cifar10.json").write_text(json.dumps({"sha256": "from another server"}))
+    assert A.teacher_sha("cifar10") is None                       # a record without its checkpoint
+    (tmp_path / "teacher_cifar10.pt").write_bytes(b"weights")
+    assert A.teacher_sha("cifar10") is None                       # a checkpoint that is not the recorded one
+    sha = sha256_file(tmp_path / "teacher_cifar10.pt")
+    (tmp_path / "teacher_cifar10.json").write_text(json.dumps({"sha256": sha}))
+    assert A.teacher_sha("cifar10") == sha
+    assert A.usable({"method": "ce", "teacher_sha": None}, None) and A.usable({"method": "full", "teacher_sha": sha}, sha)
+    assert not A.usable({"method": "full", "teacher_sha": "old"}, sha) and not A.usable({"method": "full", "teacher_sha": None}, None)
+
+
+def test_autorun_gate_rule(tmp_path, monkeypatch):
+    """surgical.autorun reads the gate only when CE and Full KD have all of seeds 1-3, with the plan's rule:
+    Full KD - CE mean > 0 and at least 2 of 3 seeds > 0."""
+    from surgical import autorun, table
+    def runs(full_minus_ce):
+        out = {"CE": {}, "Full KD": {}}
+        for s, d in zip((1, 2, 3), full_minus_ce):
+            out["CE"][s] = {"val_acc_last": 80.0, "flops": None}
+            out["Full KD"][s] = {"val_acc_last": 80.0 + d, "flops": None}
+        return out
+    for diffs, want in (((1.0, 0.5, -0.2), True), ((2.0, -0.5, -0.4), False), ((-0.1, -0.2, 0.1), False)):
+        monkeypatch.setattr(table, "arms_by_seed", lambda d, k, r=runs(diffs): r)
+        held, text = autorun.gate_verdict("cifar10")
+        assert held is want and "per seed" in text
+    monkeypatch.setattr(table, "arms_by_seed", lambda d, k: {"CE": {1: {}, 2: {}}, "Full KD": {1: {}, 2: {}}})
+    assert autorun.gate_verdict("cifar10") is None

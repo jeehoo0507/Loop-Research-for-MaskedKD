@@ -12,6 +12,8 @@ Splits (same as aim-lab-test-5, so its teachers can be reused):
 Stored per dataset in $DATA_ROOT/<dataset>/: {split}_x.u8 (memmap uint8 [N,3,H,W]), {split}_y.npy, {split}_g.npy,
 meta.json. Train images: Resize(256, bicubic) -> CenterCrop(256) (RandomResizedCrop to 224 runs on the GPU).
 Val / test: Resize(256, bicubic) -> CenterCrop(224), exactly the evaluation view.
+CIFAR-10 / CIFAR-10-C (config.CIFAR_SETS) come as arrays, not image files: stored at 32x32 as they are; every
+split of every CIFAR set holds the same test-set images (see cifar_arrays).
 """
 import argparse
 import csv
@@ -74,16 +76,22 @@ def _source_celeba(raw):
         f = shards / name
         if not f.exists() or f.stat().st_size < 1 << 16:
             print(f"downloading {name}", flush=True)
-            subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-A", "Mozilla/5.0",
-                            "-o", str(f), base + name])
+            rc = subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-A",
+                                 "Mozilla/5.0", "-o", str(f), base + name]).returncode
+            if rc:
+                print(f"curl exit code {rc} for {base + name}", flush=True)
         if not f.exists() or f.stat().st_size < 1 << 16:
             raise SystemExit(f"could not download {name}; put the shards in {shards} by hand")
-        t = pq.read_table(f, columns=["image", "image_id", "Blond_Hair", "Male"]).to_pylist()
-        for r in t:
-            img = out / "img" / r["image_id"]
-            if not img.exists():
-                img.write_bytes(r["image"]["bytes"])
-            rows.append((r["image_id"], int(r["Blond_Hair"]), int(r["Male"])))
+        # 2026-11-04 the first run died here without a message (stage2_boot.log ends at "downloading train-00000"):
+        # read in small batches (never a whole shard as Python objects) and print before reading; main() turns on
+        # faulthandler so a crash inside pyarrow leaves a traceback
+        print(f"reading {name} ({f.stat().st_size} bytes)", flush=True)
+        for batch in pq.ParquetFile(f).iter_batches(batch_size=256, columns=["image", "image_id", "Blond_Hair", "Male"]):
+            for r in batch.to_pylist():
+                img = out / "img" / r["image_id"]
+                if not img.exists():
+                    img.write_bytes(r["image"]["bytes"])
+                rows.append((r["image_id"], int(r["Blond_Hair"]), int(r["Male"])))
     with open(out / "attrs.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["image_id", "blond", "male"])
@@ -230,6 +238,101 @@ def splits_celeba(root):
     return out
 
 
+def _fetch(urls, arc, min_size=1 << 20):
+    """Download `arc` from the first URL that works (resumable); a file already there is kept."""
+    arc.parent.mkdir(parents=True, exist_ok=True)
+    for url in urls:
+        if arc.exists() and arc.stat().st_size >= min_size:
+            break
+        print(f"downloading {url}", flush=True)
+        rc = subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-C", "-", "-A",
+                             "Mozilla/5.0", "-o", str(arc), url]).returncode
+        if rc:
+            print(f"curl exit code {rc} for {url}", flush=True)
+    if not arc.exists() or arc.stat().st_size < min_size:
+        raise SystemExit(f"could not download {arc.name}; put it at {arc} by hand")
+    return arc
+
+
+def _extract(arc, wanted, raw):
+    """Extract only the members named in `wanted` (paths inside the archive, with or without a leading './')."""
+    left = set(wanted)
+    with tarfile.open(arc) as t:
+        for m in t:
+            name = m.name[2:] if m.name.startswith("./") else m.name
+            if name in left:
+                m.name = name
+                t.extract(m, raw, filter="data")
+                left.discard(name)
+            if not left:
+                break
+    if left:
+        raise SystemExit(f"{arc.name} has no member {sorted(left)}")
+
+
+def _cifar_clean(raw):
+    """CIFAR-10 test set from the binary archive: 10,000 records of 1 label byte + 3072 pixel bytes (R, G, B planes,
+    row-major). Returns (uint8 [10000,3,32,32], int64 [10000])."""
+    f = raw / "cifar-10-batches-bin" / "test_batch.bin"
+    if not f.exists():
+        _extract(_fetch(C.CIFAR_URLS["clean"], raw / "cifar-10-binary.tar.gz"), ["cifar-10-batches-bin/test_batch.bin"], raw)
+    rec = np.fromfile(f, dtype=np.uint8).reshape(-1, 3073)
+    return np.ascontiguousarray(rec[:, 1:].reshape(-1, 3, 32, 32)), rec[:, 0].astype(np.int64)
+
+
+def _cifar_c(raw, corruption):
+    """One corruption of CIFAR-10-C: <corruption>.npy is uint8 [5 * 10000, 32, 32, 3], severity 1..5 in blocks of
+    10,000, each block in CIFAR-10 test-set order; labels.npy repeats the test labels 5 times.
+    Returns (uint8 [10000,3,32,32] at config.CIFAR_C_SEVERITY, int64 [10000])."""
+    d = raw / "CIFAR-10-C"
+    need = [f"CIFAR-10-C/{corruption}.npy", "CIFAR-10-C/labels.npy"]
+    missing = [n for n in need if not (raw / n).exists()]
+    if missing:   # only the files this corruption needs (the archive holds 19 corruptions, 2.9 GB)
+        _extract(_fetch(C.CIFAR_URLS["c"], raw / "CIFAR-10-C.tar"), missing, raw)
+    x, y = np.load(d / f"{corruption}.npy", mmap_mode="r"), np.load(d / "labels.npy")
+    n = len(y) // 5
+    lo = (C.CIFAR_C_SEVERITY - 1) * n
+    return np.ascontiguousarray(x[lo:lo + n].transpose(0, 3, 1, 2)), y[lo:lo + n].astype(np.int64)
+
+
+def cifar_split(labels):
+    """Row indices {train, val, test} of the test-set images: per class, shuffled with random.Random(CUB_VAL_SEED +
+    class), the first CIFAR_SPLIT[2] go to test, the next CIFAR_SPLIT[1] to val, the rest to train (the Caltech-256
+    rule). It depends on the labels only, so the clean set and every corruption get the same rows."""
+    by_class = defaultdict(list)
+    for i, c in enumerate(labels.tolist()):
+        by_class[c].append(i)
+    out = {"train": [], "val": [], "test": []}
+    for c in sorted(by_class):
+        ids = by_class[c]
+        random.Random(C.CUB_VAL_SEED + c).shuffle(ids)
+        n_test, n_val = round(C.CIFAR_SPLIT[2] * len(ids)), round(C.CIFAR_SPLIT[1] * len(ids))
+        out["test"] += ids[:n_test]
+        out["val"] += ids[n_test:n_test + n_val]
+        out["train"] += ids[n_test + n_val:]
+    return {k: sorted(v) for k, v in out.items()}
+
+
+def cifar_arrays(dataset, raw):
+    """{split: (uint8 [N,3,32,32], int64 [N])} for a config.CIFAR_SETS dataset. A corrupted set must carry the clean
+    test labels in the same order, or its images are not the paired versions of the clean ones: checked here."""
+    x, y = _cifar_clean(raw)
+    if dataset in C.CIFAR_C:
+        x, yc = _cifar_c(raw, C.CIFAR_C[dataset])
+        if not np.array_equal(y, yc):
+            raise SystemExit(f"{dataset}: CIFAR-10-C labels are not the CIFAR-10 test labels in order (pairing broken)")
+    return {split: (x[rows], y[rows]) for split, rows in cifar_split(y).items()}
+
+
+def _write_arrays(out, split, x, y):
+    arr = np.memmap(out / f"{split}_x.u8", dtype=np.uint8, mode="w+", shape=x.shape)
+    arr[:] = x
+    arr.flush()
+    np.save(out / f"{split}_y.npy", y)
+    np.save(out / f"{split}_g.npy", np.full(len(y), -1, dtype=np.int64))
+    return list(x.shape)
+
+
 SPLITS = {"waterbirds": splits_waterbirds, "cub": splits_cub, "aircraft": splits_aircraft, "caltech256": splits_caltech256,
           "cub_lt": splits_cub_lt, "celeba": splits_celeba}
 
@@ -238,6 +341,18 @@ def prepare(dataset, workers):
     out = C.DATA_ROOT / dataset
     if (out / "meta.json").exists():
         print(f"{dataset}: already prepared ({out})")
+        return
+    if dataset in C.CIFAR_SETS:
+        raw = C.DATA_ROOT / "raw"
+        sp = cifar_arrays(dataset, raw)
+        sizes = {k: len(v[1]) for k, v in sp.items()}
+        if sizes != C.EXPECTED_SIZES[dataset]:
+            raise SystemExit(f"{dataset} split sizes {sizes} != expected {C.EXPECTED_SIZES[dataset]}")
+        out.mkdir(parents=True, exist_ok=True)
+        shapes = {s: _write_arrays(out, s, *sp[s]) for s in ("train", "val", "test")}
+        (out / "meta.json").write_text(json.dumps({"dataset": dataset, "source": str(raw), "shapes": shapes,
+                                                   "sizes": sizes, "trim_bottom": 0}, indent=1))
+        print(f"{dataset}: {sizes} -> {out}")
         return
     root = _source(dataset)
     sp = SPLITS[dataset](root)
@@ -263,5 +378,7 @@ if __name__ == "__main__":
     ap.add_argument("--datasets", nargs="+", default=list(C.DATASETS), choices=list(C.DATASETS))
     ap.add_argument("--workers", type=int, default=8)
     a = ap.parse_args()
+    import faulthandler
+    faulthandler.enable()   # a crash in native code (pyarrow, PIL) prints a Python traceback instead of nothing
     for d in a.datasets:
         prepare(d, a.workers)
