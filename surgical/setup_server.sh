@@ -46,7 +46,7 @@ if [ -n "$(git status --porcelain -- harness tests)" ]; then
   exit 1
 fi
 say "lock: bash agent/relock.sh (runs the CPU tests)"
-bash agent/relock.sh
+CUDA_VISIBLE_DEVICES= bash agent/relock.sh   # tests on the CPU: running jobs may hold the GPU
 # a scheduler started before this checkout would keep the old code: restart it
 tmux kill-session -t sched 2>/dev/null || true
 bash agent/start.sh sched >/dev/null
