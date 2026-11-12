@@ -59,6 +59,7 @@ CELEBA_SHARDS = 132
 # CELEBA_TRAIN_FRACTION of the official train (correlation preserved) and val/test cap every group at CELEBA_EVAL_CAP
 # images (the minority groups are kept whole, so worst-group accuracy is measured on all of them).
 CELEBA_TRAIN_FRACTION, CELEBA_EVAL_CAP = 0.12, 2000
+CELEBA_MAX_BAD_SHARDS = 3   # shards the mirror serves broken that may be left out (each about 0.8 % of the images)
 # 2026-11-12 (human): input-level shift, after Surgical Fine-Tuning (Lee et al. ICLR 2023). CIFAR-10-C (Hendrycks &
 # Dietterich 2019) is the CIFAR-10 test set, 10,000 images, under one corruption at 5 severities, in test-set order.
 # Each corruption at CIFAR_C_SEVERITY is one dataset; "cifar10" is the same 10,000 clean images. All of them share
@@ -71,13 +72,18 @@ CIFAR_SETS = ("cifar10",) + tuple(CIFAR_C)
 CIFAR_C_SEVERITY = 5
 CIFAR_SPLIT = (0.8, 0.1, 0.1)
 CIFAR_URLS = {"clean": ["https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz"],   # binary version: no pickle
-              "c": ["https://zenodo.org/records/2535967/files/CIFAR-10-C.tar?download=1"]}
+              # Zenodo answers 403 to this server (2026-11-13); the Hugging Face copy is the same archive, same size
+              "c": ["https://huggingface.co/datasets/Sijiax/CIFAR-10-C/resolve/main/CIFAR-10-C.tar",
+                    "https://zenodo.org/records/2535967/files/CIFAR-10-C.tar?download=1"]}
+CIFAR_C_TAR_BYTES = 2918471680   # Zenodo record 2535967 (Hendrycks & Dietterich 2019)
 for _d in CIFAR_SETS:
     NUM_CLASSES[_d], NUM_GROUPS[_d] = 10, 0
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
                   "cub_lt": {"val": 600, "test": 5794, "partial": True},   # train = CUB train with the tail cut (size logged)
-                  "celeba": {"train": 19532, "partial": True},   # round(0.12 * 162770); val/test sizes logged (group caps)
+                  # round(0.12 * 162770) = 19532 when every shard reads; the mirror's shard 11 is broken (2026-11-13), so
+                  # train is 0.12 of the official train images that are there, and the size is logged, not checked
+                  "celeba": {"partial": True},
                   "aircraft": {"train": 5967, "val": 700, "test": 3333},  # Aircraft (100 variants): val = 10 % per
                   # class of official trainval (the CUB rule), official test
                   "caltech256": {"total": 29780},  # 256 object classes (257.clutter dropped); per class 80/10/10

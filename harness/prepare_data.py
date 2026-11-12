@@ -70,7 +70,7 @@ def _source_celeba(raw):
     (out / "img").mkdir(parents=True, exist_ok=True)
     shards.mkdir(parents=True, exist_ok=True)
     base = C.DATA_URLS["celeba"][0]
-    rows = []
+    rows, bad = [], []
     for i in range(C.CELEBA_SHARDS):
         name = f"train-{i:05d}-of-{C.CELEBA_SHARDS:05d}.parquet"
         f = shards / name
@@ -93,8 +93,12 @@ def _source_celeba(raw):
             except Exception as e:   # 2026-11-13: a shard cut short by a killed download is "not a parquet file"
                 print(f"{name} unreadable ({type(e).__name__}: {e}); downloading it again", flush=True)
                 f.unlink(missing_ok=True)
-                if attempt == 2:
-                    raise SystemExit(f"{name} is unreadable after a fresh download")
+                if attempt == 2:   # 2026-11-13: the mirror's own shard 11 has no parquet footer (same bytes twice)
+                    bad.append(name)
+                    print(f"{name}: broken on the mirror too; left out ({len(bad)} so far)", flush=True)
+                    if len(bad) > C.CELEBA_MAX_BAD_SHARDS:
+                        raise SystemExit(f"more than {C.CELEBA_MAX_BAD_SHARDS} CelebA shards are broken: {bad}")
+    (out / "missing_shards.txt").write_text("".join(f"{b}\n" for b in bad))
     with open(out / "attrs.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["image_id", "blond", "male"])
@@ -308,7 +312,11 @@ def _cifar_c(raw, corruption):
     need = [f"CIFAR-10-C/{corruption}.npy", "CIFAR-10-C/labels.npy"]
     missing = [n for n in need if not (raw / n).exists()]
     if missing:   # only the files this corruption needs (the archive holds 19 corruptions, 2.9 GB)
-        _extract(C.CIFAR_URLS["c"], raw / "CIFAR-10-C.tar", missing, raw)
+        arc = raw / "CIFAR-10-C.tar"
+        if arc.exists() and arc.stat().st_size != C.CIFAR_C_TAR_BYTES:
+            print(f"{arc.name}: {arc.stat().st_size} bytes, the archive has {C.CIFAR_C_TAR_BYTES}; fetching it again")
+            arc.unlink()
+        _extract(C.CIFAR_URLS["c"], arc, missing, raw)
     x, y = np.load(d / f"{corruption}.npy", mmap_mode="r"), np.load(d / "labels.npy")
     n = len(y) // 5
     lo = (C.CIFAR_C_SEVERITY - 1) * n
