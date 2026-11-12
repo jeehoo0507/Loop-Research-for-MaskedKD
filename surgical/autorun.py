@@ -121,7 +121,10 @@ def teachers(datasets):
                 continue
             meta = json.loads((C.STATE / ("teacher.json" if t == "waterbirds" else f"teacher_{t}.json")).read_text())
             say(f"teacher {t}: val acc {meta['val_acc']}")
-        sh("bash", "agent/relock.sh")   # recipe.json (locked) gained the new datasets' student lr
+        # recipe.json (locked) gained the new datasets' student lr. Tests on the CPU: the GPU may hold jobs (OOM)
+        if subprocess.run(["bash", "agent/relock.sh"], cwd=C.ROOT, env={**__import__("os").environ,
+                          "CUDA_VISIBLE_DEVICES": ""}).returncode != 0:
+            raise RuntimeError("bash agent/relock.sh failed")
         say("lock renewed after the teacher fine-tunes")
     finally:
         HOLD.unlink(missing_ok=True)
