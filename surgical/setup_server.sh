@@ -12,6 +12,18 @@ set -eu
 cd "$(dirname "$0")/.."
 say() { echo "[setup $(date '+%H:%M:%S')] $*"; }
 
+# --go: everything runs in tmux session 'setup' (then 'surgical'), so the terminal can be closed right away
+if [ "${1:-}" = "--go" ] && [ -z "${TMUX:-}" ]; then
+  command -v tmux >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq tmux; }
+  if tmux has-session -t setup 2>/dev/null; then
+    say "setup is already running (tmux attach -t setup)"
+  else
+    tmux new -d -s setup "bash surgical/setup_server.sh --go 2>&1 | tee -a surgical/setup.log"
+    say "running in the background (tmux 'setup'). The terminal can be closed. Watch: tail -f surgical/setup.log surgical/STATUS.md"
+  fi
+  exit 0
+fi
+
 command -v nvidia-smi >/dev/null && nvidia-smi --query-gpu=name,memory.total --format=csv,noheader \
   || { say "no GPU visible (nvidia-smi failed)"; exit 1; }
 command -v tmux >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq tmux; }
