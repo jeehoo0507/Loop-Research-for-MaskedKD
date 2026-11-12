@@ -30,7 +30,7 @@ import numpy as np
 from . import config as C
 
 FOLDER = {"waterbirds": "waterbird_complete95_forest2water2", "cub": "CUB_200_2011", "aircraft": "fgvc-aircraft-2013b",
-          "caltech256": "256_ObjectCategories", "cub_lt": "CUB_200_2011", "celeba": "celeba"}
+          "caltech256": "256_ObjectCategories", "cub_lt": "CUB_200_2011", "celeba": "celeba_flwr"}
 ARCHIVE = {"waterbirds": "waterbird_complete95_forest2water2.tar.gz", "cub": "CUB_200_2011.tgz",
            "aircraft": "fgvc-aircraft-2013b.tar.gz", "caltech256": "256_ObjectCategories.tar", "cub_lt": "CUB_200_2011.tgz"}
 
@@ -63,46 +63,48 @@ def _write(out, split, items, crop, workers, trim=0):
 
 
 def _source_celeba(raw):
-    """CelebA from the parquet shards (config.DATA_URLS): images written as raw/celeba/img/<image_id> and the two
-    attributes this harness uses as raw/celeba/attrs.csv (image_id, blond, male; -1/1 as in the official file)."""
+    """CelebA (aligned images, 40 attributes, official train / valid / test) from the parquet shards of
+    config.CELEBA_URL. 2026-11-13: the first mirror (huggan/CelebA-faces-with-attributes) serves several shards without
+    a parquet footer (its own files: sha256 = the hub's LFS id), so this one is used. It has no file names; image n of
+    the official numbering is restored from the split and the position in it (train 1..162770, then valid, then test),
+    which is all splits_celeba reads from a name. Writes raw/<FOLDER>/img/<n>.jpg and attrs.csv (image_id, blond, male;
+    -1/1 as in the official list_attr_celeba.txt)."""
     import pyarrow.parquet as pq
-    out, shards = raw / FOLDER["celeba"], raw / "celeba_parquet"
+    out, shards = raw / FOLDER["celeba"], raw / "celeba_flwr_parquet"
     (out / "img").mkdir(parents=True, exist_ok=True)
     shards.mkdir(parents=True, exist_ok=True)
-    base = C.DATA_URLS["celeba"][0]
-    rows, bad = [], []
-    for i in range(C.CELEBA_SHARDS):
-        name = f"train-{i:05d}-of-{C.CELEBA_SHARDS:05d}.parquet"
-        f = shards / name
-        for attempt in (1, 2):
-            _fetch([base + name], f, min_size=1 << 16)
-            # 2026-11-04 the first run died here without a message: read in small batches and print before reading;
-            # main() turns on faulthandler so a crash inside pyarrow leaves a traceback
-            print(f"reading {name} ({f.stat().st_size} bytes)", flush=True)
-            try:
-                got = []
-                for batch in pq.ParquetFile(f).iter_batches(batch_size=256,
-                                                            columns=["image", "image_id", "Blond_Hair", "Male"]):
-                    for r in batch.to_pylist():
-                        img = out / "img" / r["image_id"]
-                        if not img.exists():
-                            img.write_bytes(r["image"]["bytes"])
-                        got.append((r["image_id"], int(r["Blond_Hair"]), int(r["Male"])))
-                rows += got
-                break
-            except Exception as e:   # 2026-11-13: a shard cut short by a killed download is "not a parquet file"
-                print(f"{name} unreadable ({type(e).__name__}: {e}); downloading it again", flush=True)
-                f.unlink(missing_ok=True)
-                if attempt == 2:   # 2026-11-13: the mirror's own shard 11 has no parquet footer (same bytes twice)
-                    bad.append(name)
-                    print(f"{name}: broken on the mirror too; left out ({len(bad)} so far)", flush=True)
-                    if len(bad) > C.CELEBA_MAX_BAD_SHARDS:
-                        raise SystemExit(f"more than {C.CELEBA_MAX_BAD_SHARDS} CelebA shards are broken: {bad}")
-    (out / "missing_shards.txt").write_text("".join(f"{b}\n" for b in bad))
+    rows, n = [], 0
+    for split, count in C.CELEBA_SPLITS:
+        got = 0
+        for i in range(C.CELEBA_SHARDS[split]):
+            name = f"{split}-{i:05d}-of-{C.CELEBA_SHARDS[split]:05d}.parquet"
+            f = shards / name
+            for attempt in (1, 2):
+                _fetch([C.CELEBA_URL + name], f)
+                print(f"reading {name} ({f.stat().st_size} bytes)", flush=True)
+                try:
+                    pf = pq.ParquetFile(f)
+                    break
+                except Exception as e:
+                    print(f"{name} unreadable ({type(e).__name__}: {e}); downloading it again", flush=True)
+                    f.unlink(missing_ok=True)
+                    if attempt == 2:
+                        raise SystemExit(f"{name} is unreadable after a fresh download")
+            for batch in pf.iter_batches(batch_size=256, columns=["image", "Blond_Hair", "Male"]):
+                for r in batch.to_pylist():
+                    n += 1
+                    got += 1
+                    iid = f"{n:06d}.jpg"
+                    img = out / "img" / iid
+                    if not img.exists():
+                        img.write_bytes(r["image"]["bytes"])
+                    rows.append((iid, 1 if r["Blond_Hair"] else -1, 1 if r["Male"] else -1))
+        if got != count:
+            raise SystemExit(f"CelebA {split}: {got} images, the official split has {count}")
     with open(out / "attrs.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["image_id", "blond", "male"])
-        w.writerows(sorted(rows))
+        w.writerows(rows)
     return out
 
 

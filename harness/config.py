@@ -50,16 +50,19 @@ DATA_URLS = {
     # CelebA (Liu et al. 2015) as 132 parquet shards with the 40 attributes and image_id (official numbering, so the
     # official train/val/test partition is recovered from the id): the official Google Drive link refuses automated
     # downloads. Shard i is this prefix + f"train-{i:05d}-of-00132.parquet".
-    "celeba": ["https://huggingface.co/datasets/huggan/CelebA-faces-with-attributes/resolve/main/data/"],
+    "celeba": ["https://huggingface.co/datasets/flwrlabs/celeba/resolve/main/img_align%2Bidentity%2Battr/"],
 }
-CELEBA_SHARDS = 132
+# 2026-11-13: huggan/CelebA-faces-with-attributes serves broken shards (no parquet footer); flwrlabs/celeba has the
+# official partition as its splits (11.7 GB, aligned images)
+CELEBA_URL = DATA_URLS["celeba"][0]
+CELEBA_SHARDS = {"train": 19, "valid": 3, "test": 3}
+CELEBA_SPLITS = (("train", 162770), ("valid", 19867), ("test", 19962))   # official sizes, in official order
 # CelebA spurious-correlation setting (Sagawa et al. ICLR 2020): y = Blond_Hair, spurious attribute = Male, group =
 # 2*y + male; the worst group is blond men. Official partition by image number: 1..162770 train, ..182637 val, rest
 # test. To fit the harness (every train image in RAM per job, 4 jobs) the train split is a random
 # CELEBA_TRAIN_FRACTION of the official train (correlation preserved) and val/test cap every group at CELEBA_EVAL_CAP
 # images (the minority groups are kept whole, so worst-group accuracy is measured on all of them).
 CELEBA_TRAIN_FRACTION, CELEBA_EVAL_CAP = 0.12, 2000
-CELEBA_MAX_BAD_SHARDS = 3   # shards the mirror serves broken that may be left out (each about 0.8 % of the images)
 # 2026-11-12 (human): input-level shift, after Surgical Fine-Tuning (Lee et al. ICLR 2023). CIFAR-10-C (Hendrycks &
 # Dietterich 2019) is the CIFAR-10 test set, 10,000 images, under one corruption at 5 severities, in test-set order.
 # Each corruption at CIFAR_C_SEVERITY is one dataset; "cifar10" is the same 10,000 clean images. All of them share
@@ -81,9 +84,7 @@ for _d in CIFAR_SETS:
 EXPECTED_SIZES = {"waterbirds": {"train": 4795, "val": 1199, "test": 5794},
                   "cub": {"train": 5394, "val": 600, "test": 5794},     # CUB val = 10 % per class of official train
                   "cub_lt": {"val": 600, "test": 5794, "partial": True},   # train = CUB train with the tail cut (size logged)
-                  # round(0.12 * 162770) = 19532 when every shard reads; the mirror's shard 11 is broken (2026-11-13), so
-                  # train is 0.12 of the official train images that are there, and the size is logged, not checked
-                  "celeba": {"partial": True},
+                  "celeba": {"train": 19532, "partial": True},   # round(0.12 * 162770); val/test sizes logged (group caps)
                   "aircraft": {"train": 5967, "val": 700, "test": 3333},  # Aircraft (100 variants): val = 10 % per
                   # class of official trainval (the CUB rule), official test
                   "caltech256": {"total": 29780},  # 256 object classes (257.clutter dropped); per class 80/10/10
