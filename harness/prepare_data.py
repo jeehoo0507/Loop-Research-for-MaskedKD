@@ -74,24 +74,27 @@ def _source_celeba(raw):
     for i in range(C.CELEBA_SHARDS):
         name = f"train-{i:05d}-of-{C.CELEBA_SHARDS:05d}.parquet"
         f = shards / name
-        if not f.exists() or f.stat().st_size < 1 << 16:
-            print(f"downloading {name}", flush=True)
-            rc = subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-A",
-                                 "Mozilla/5.0", "-o", str(f), base + name]).returncode
-            if rc:
-                print(f"curl exit code {rc} for {base + name}", flush=True)
-        if not f.exists() or f.stat().st_size < 1 << 16:
-            raise SystemExit(f"could not download {name}; put the shards in {shards} by hand")
-        # 2026-11-04 the first run died here without a message (stage2_boot.log ends at "downloading train-00000"):
-        # read in small batches (never a whole shard as Python objects) and print before reading; main() turns on
-        # faulthandler so a crash inside pyarrow leaves a traceback
-        print(f"reading {name} ({f.stat().st_size} bytes)", flush=True)
-        for batch in pq.ParquetFile(f).iter_batches(batch_size=256, columns=["image", "image_id", "Blond_Hair", "Male"]):
-            for r in batch.to_pylist():
-                img = out / "img" / r["image_id"]
-                if not img.exists():
-                    img.write_bytes(r["image"]["bytes"])
-                rows.append((r["image_id"], int(r["Blond_Hair"]), int(r["Male"])))
+        for attempt in (1, 2):
+            _fetch([base + name], f, min_size=1 << 16)
+            # 2026-11-04 the first run died here without a message: read in small batches and print before reading;
+            # main() turns on faulthandler so a crash inside pyarrow leaves a traceback
+            print(f"reading {name} ({f.stat().st_size} bytes)", flush=True)
+            try:
+                got = []
+                for batch in pq.ParquetFile(f).iter_batches(batch_size=256,
+                                                            columns=["image", "image_id", "Blond_Hair", "Male"]):
+                    for r in batch.to_pylist():
+                        img = out / "img" / r["image_id"]
+                        if not img.exists():
+                            img.write_bytes(r["image"]["bytes"])
+                        got.append((r["image_id"], int(r["Blond_Hair"]), int(r["Male"])))
+                rows += got
+                break
+            except Exception as e:   # 2026-11-13: a shard cut short by a killed download is "not a parquet file"
+                print(f"{name} unreadable ({type(e).__name__}: {e}); downloading it again", flush=True)
+                f.unlink(missing_ok=True)
+                if attempt == 2:
+                    raise SystemExit(f"{name} is unreadable after a fresh download")
     with open(out / "attrs.csv", "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["image_id", "blond", "male"])
@@ -239,35 +242,52 @@ def splits_celeba(root):
 
 
 def _fetch(urls, arc, min_size=1 << 20):
-    """Download `arc` from the first URL that works (resumable); a file already there is kept."""
+    """Download `arc` from the first URL that works. It goes to <arc>.part (resumed if a download was cut) and is
+    renamed only when curl finished, so a file at `arc` is complete. A file already at `arc` is kept."""
     arc.parent.mkdir(parents=True, exist_ok=True)
+    part = arc.with_name(arc.name + ".part")
     for url in urls:
         if arc.exists() and arc.stat().st_size >= min_size:
             break
-        print(f"downloading {url}", flush=True)
+        print(f"downloading {url}" + (f" (resuming at {part.stat().st_size} bytes)" if part.exists() else ""), flush=True)
         rc = subprocess.run(["curl", "-sSL", "--fail", "--retry", "5", "--connect-timeout", "30", "-C", "-", "-A",
-                             "Mozilla/5.0", "-o", str(arc), url]).returncode
-        if rc:
+                             "Mozilla/5.0", "-o", str(part), url]).returncode
+        if rc == 0 and part.exists() and part.stat().st_size >= min_size:
+            part.rename(arc)
+        else:
             print(f"curl exit code {rc} for {url}", flush=True)
     if not arc.exists() or arc.stat().st_size < min_size:
         raise SystemExit(f"could not download {arc.name}; put it at {arc} by hand")
     return arc
 
 
-def _extract(arc, wanted, raw):
-    """Extract only the members named in `wanted` (paths inside the archive, with or without a leading './')."""
-    left = set(wanted)
-    with tarfile.open(arc) as t:
-        for m in t:
-            name = m.name[2:] if m.name.startswith("./") else m.name
-            if name in left:
-                m.name = name
-                t.extract(m, raw, filter="data")
-                left.discard(name)
-            if not left:
-                break
-    if left:
-        raise SystemExit(f"{arc.name} has no member {sorted(left)}")
+def _extract(urls, arc, wanted, raw):
+    """Fetch `arc` and extract only the members named in `wanted` (paths inside the archive, with or without a
+    leading './'). An archive that is cut short (a download killed before the .part rule, 2026-11-13) is deleted and
+    fetched again once."""
+    import zlib
+    for attempt in (1, 2):
+        _fetch(urls, arc)
+        left = set(wanted)
+        try:
+            with tarfile.open(arc) as t:
+                for m in t:
+                    name = m.name[2:] if m.name.startswith("./") else m.name
+                    if name in left:
+                        m.name = name
+                        t.extract(m, raw, filter="data")
+                        left.discard(name)
+                    if not left:
+                        break
+        except (tarfile.TarError, EOFError, zlib.error, OSError) as e:
+            print(f"{arc.name} is broken ({type(e).__name__}: {e}); downloading it again", flush=True)
+            arc.unlink(missing_ok=True)
+            if attempt == 2:
+                raise SystemExit(f"{arc.name} is broken after a fresh download")
+            continue
+        if left:
+            raise SystemExit(f"{arc.name} has no member {sorted(left)}")
+        return
 
 
 def _cifar_clean(raw):
@@ -275,7 +295,7 @@ def _cifar_clean(raw):
     row-major). Returns (uint8 [10000,3,32,32], int64 [10000])."""
     f = raw / "cifar-10-batches-bin" / "test_batch.bin"
     if not f.exists():
-        _extract(_fetch(C.CIFAR_URLS["clean"], raw / "cifar-10-binary.tar.gz"), ["cifar-10-batches-bin/test_batch.bin"], raw)
+        _extract(C.CIFAR_URLS["clean"], raw / "cifar-10-binary.tar.gz", ["cifar-10-batches-bin/test_batch.bin"], raw)
     rec = np.fromfile(f, dtype=np.uint8).reshape(-1, 3073)
     return np.ascontiguousarray(rec[:, 1:].reshape(-1, 3, 32, 32)), rec[:, 0].astype(np.int64)
 
@@ -288,7 +308,7 @@ def _cifar_c(raw, corruption):
     need = [f"CIFAR-10-C/{corruption}.npy", "CIFAR-10-C/labels.npy"]
     missing = [n for n in need if not (raw / n).exists()]
     if missing:   # only the files this corruption needs (the archive holds 19 corruptions, 2.9 GB)
-        _extract(_fetch(C.CIFAR_URLS["c"], raw / "CIFAR-10-C.tar"), missing, raw)
+        _extract(C.CIFAR_URLS["c"], raw / "CIFAR-10-C.tar", missing, raw)
     x, y = np.load(d / f"{corruption}.npy", mmap_mode="r"), np.load(d / "labels.npy")
     n = len(y) // 5
     lo = (C.CIFAR_C_SEVERITY - 1) * n

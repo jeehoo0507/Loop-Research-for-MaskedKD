@@ -1192,3 +1192,27 @@ def test_smoke_end_to_end_without_a_teacher_checkpoint(tmp_path, monkeypatch):
     before = train.load_teacher
     r = smoke.end_to_end("waterbirds")
     assert r["status"] == "done" and r["teacher"].startswith("random-init") and train.load_teacher is before
+
+
+def test_cut_downloads_are_resumed_or_fetched_again(tmp_path, monkeypatch):
+    """A download goes to .part and is renamed only when curl succeeded; an archive left cut short by an older
+    download is deleted and fetched again (2026-11-13: a killed CIFAR download was taken as complete)."""
+    import io, tarfile as T, subprocess as SP
+    from harness import prepare_data as P
+    good = tmp_path / "src.tar.gz"
+    with T.open(good, "w:gz") as t:
+        data = os.urandom(3 << 20)   # incompressible: the archive stays over _fetch's 1 MiB floor
+        info = T.TarInfo("d/f.bin"); info.size = len(data)
+        t.addfile(info, io.BytesIO(data))
+    calls = []
+    def fake_run(cmd, **kw):
+        out = Path(cmd[cmd.index("-o") + 1]); calls.append(out.name)
+        out.write_bytes(good.read_bytes())
+        return SP.CompletedProcess(cmd, 0)
+    monkeypatch.setattr(P.subprocess, "run", fake_run)
+    arc = tmp_path / "raw" / "a.tar.gz"
+    arc.parent.mkdir()
+    arc.write_bytes(good.read_bytes()[: 1 << 21])   # cut short, but over the size floor: looks complete
+    P._extract(["http://x"], arc, ["d/f.bin"], tmp_path / "raw")
+    assert (tmp_path / "raw" / "d" / "f.bin").read_bytes() == data
+    assert calls == ["a.tar.gz.part"] and arc.exists() and not (tmp_path / "raw" / "a.tar.gz.part").exists()

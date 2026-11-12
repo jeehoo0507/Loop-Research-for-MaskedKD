@@ -181,8 +181,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--datasets", nargs="+", default=list(DEFAULT), choices=list(C.DATASETS))
     ap.add_argument("--skip-smoke", action="store_true")
+    ap.add_argument("--retry-dropped", action="store_true", help="give datasets dropped earlier another try")
     a = ap.parse_args()
     state = load_state()
+    if a.retry_dropped:
+        state["dropped"] = {}
+        save_state(state)
     say(f"start: {a.datasets}")
     datasets = [d for d in a.datasets if d not in state["dropped"]]
     if not a.skip_smoke and not state.get("smoke_done"):
@@ -190,8 +194,16 @@ def main():
         state["dropped"].update(bad)
         state["smoke_done"] = True
         save_state(state)
+    for d in list(datasets):   # also when the smoke was skipped: a teacher fine-tune needs the data on disk
+        if not (C.DATA_ROOT / d / "meta.json").exists():
+            say(f"{d}: preparing data")
+            if subprocess.run([PY, "-m", "harness.prepare_data", "--datasets", d], cwd=C.ROOT).returncode != 0:
+                datasets.remove(d)
+                state["dropped"][d] = "data preparation failed (see surgical/autorun.log)"
+                say(f"{d}: data preparation FAILED; dropped")
+    save_state(state)
     if not datasets:
-        say("every dataset failed the smoke test: stopping (surgical_smoke_report.md)")
+        say("no dataset left (surgical_smoke_report.md, surgical/autorun.log): stopping")
         return 1
     scheduler_up()
     for t in teachers(datasets):
