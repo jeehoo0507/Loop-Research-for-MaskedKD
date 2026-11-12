@@ -30,12 +30,10 @@ command -v tmux >/dev/null || { sudo apt-get update -qq && sudo apt-get install 
 free_gb=$(df -Pk . | awk 'NR==2 {print int($4/1048576)}')
 say "free disk here: ${free_gb} GiB (the four default datasets need about 15 GiB)"
 
-if [ -x .venv/bin/python ] && .venv/bin/python -c "import torch, timm, pyarrow" 2>/dev/null; then
-  say "Python env: already there"
-else
-  say "Python env: bash setup.sh (about 10 minutes)"
-  bash setup.sh
-fi
+# always: an env from an older checkout imports fine but can hold versions requirements.txt has since pinned
+# (2026-11-13: huggingface_hub 1.x from 10-29 broke timm's pretrained download). uv only installs what differs.
+say "Python env: bash setup.sh (installs what requirements.txt pins; about 1 minute if the env is there, 10 if not)"
+bash setup.sh
 .venv/bin/python -c "import torch; assert torch.cuda.is_available(), 'torch does not see the GPU'"
 
 touch agent/STOP   # the agent loop must not come back while this study runs (the scheduler revives it otherwise)
