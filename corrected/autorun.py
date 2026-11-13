@@ -54,10 +54,13 @@ def ensure(dataset, method, keep, seed, sel_args, note, priority, dry):
 
 def queue_base(dataset, seeds, dry=False):
     new = 0
-    for seed in seeds:
-        for name, (method, keep, args) in REFERENCE.items():
-            new += ensure(dataset, method, keep, seed, args, name, 16, dry)[1]
-    new += ensure(dataset, "maskedkd", 29, seeds[0], {}, "MaskedKD (for the dissection)", 16, dry)[1]
+    rows = [(name, m, k, a, seed) for seed in seeds for name, (m, k, a) in REFERENCE.items()]
+    rows.append(("MaskedKD (for the dissection)", "maskedkd", 29, {}, seeds[0]))
+    for name, method, keep, args, seed in rows:
+        got, made = ensure(dataset, method, keep, seed, args, name, 16, dry)
+        new += made
+        if dry:
+            print(f"{dataset} seed {seed} base: {name:32s} = {method} keep {keep:g}{'  (exists: ' + got + ')' if got else '  NEW'}")
     return new
 
 
@@ -72,7 +75,7 @@ def queue_grid(dataset, seeds, seeds_more, dry=False):
                 new += made
                 if dry:
                     print(f"{dataset} seed {seed} budget {budget}: {name:32s} = {method} keep {keep:g} {args or ''}"
-                          f"{'  (exists: ' + got + ')' if got else ''}")
+                          f"{'  (exists: ' + got + ')' if got else '  NEW'}")
     return new
 
 
@@ -177,9 +180,9 @@ def main():
     later = [d for d in a.datasets if d not in now]
     if a.dry_run:
         for d in now:
-            print(f"{d}: base runs to queue: {queue_base(d, a.seeds, dry=True)} (0 in a dry run), students ready: "
-                  f"{students_ready(d, a.seeds[0])}")
+            queue_base(d, a.seeds, dry=True)
             queue_grid(d, a.seeds, a.seeds_more, dry=True)
+            print(f"{d}: students for the dissection here: {students_ready(d, a.seeds[0])}")
         print(f"not set up here (data or teacher missing): {later or 'none'}")
         return 0
     state = json.loads(STATE.read_text()) if STATE.exists() else {"datasets": {}}
