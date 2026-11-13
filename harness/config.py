@@ -214,7 +214,9 @@ def tolerance(full_acc, ce_acc):
 KEEP_GRID = (196, 98, 49, 25, 12)
 ANALYSIS_ONLY = ("oracle",)   # methods that may run but never count toward claims or the primary metric
 BASELINES = ("ce", "full", "maskedkd", "random", "grid", "center", "rollout", "tome", "oracle", "teacher_topk",
-             "rand_alloc", "dynkd", "rand_dyn", "sal_ratio", "kd_sched", "ent_weight")   # harness-owned reference methods
+             "rand_alloc", "dynkd", "rand_dyn", "sal_ratio", "kd_sched", "ent_weight",
+             "twophase")   # harness-owned reference methods. twophase (2026-11-13): harness/twophase.py; one method
+                           # name for a family of losses, told apart by sel_args (corrected/table.py reads them)
 # A per-image budget method (QUEUE 2026-11-01) must also beat each of these at the same mean budget
 ALLOC_REFS = ("rand_alloc", "dynkd", "rand_dyn", "sal_ratio", "kd_sched", "ent_weight")
 # A claim at budget K must beat every one of these at the same K (spatial ones: no interpretability signal at all)

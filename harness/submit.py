@@ -118,6 +118,12 @@ def make_job(method, keep, seed, tier, sel_args=None, note="", by="agent", prior
         raise SystemExit(f"keep must be in [0, {C.NUM_PATCHES}]")
     if method == "full":
         keep = C.NUM_PATCHES
+    if method == "twophase":   # its sel_args are the loss config (harness/twophase.py): checked before it is queued
+        from .twophase import parse
+        try:
+            parse(sel_args, keep)
+        except ValueError as e:
+            raise SystemExit(f"REJECTED: {e}")
     src, sha = None, "builtin"
     if method not in C.BASELINES:
         try:

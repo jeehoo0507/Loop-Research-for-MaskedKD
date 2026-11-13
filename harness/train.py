@@ -25,8 +25,9 @@ from .lock import harness_digest
 from .models import make_student, make_teacher, student_forward, teacher_forward_keepmask
 from . import teacher_cache
 from .selector_api import Context, Feedback
-from .baselines import oracle_keep
+from .baselines import BUILTIN, oracle_keep
 from .tome import r_for_budget, teacher_forward_tome
+from .twophase import TwoPhase, parse as parse_twophase
 from .validate import load_selector
 
 
@@ -123,7 +124,7 @@ class Segments:
 
 
 def train_step(student, teacher, selector, method, budget, x, y, opt, criterion, epoch, progress, segs, teacher_map=None,
-               sample_idx=None):
+               sample_idx=None, tp=None):
     """One optimizer step. Returns (loss, mean kept tokens or None). teacher_map: [B,196] cached teacher
     attribution for selectors that declare it (harness/teacher_cache.py), else None. sample_idx: [B] training-set
     row of each image (selectors that track each image's learning state across epochs), else None.
@@ -131,7 +132,11 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
     Per-image budgets (QUEUE 2026-11-01): a selector may keep a different number of tokens per image, 0 included.
     An image with 0 kept tokens gets no teacher forward and is trained on CE alone; the others get
     (1-ALPHA)*CE + ALPHA*w*KD, w = 1 or the selector's kd_weight. A batch may keep up to 2x the budget on average,
-    the run as a whole at most the budget (checked in run())."""
+    the run as a whole at most the budget (checked in run()).
+
+    method "twophase" (harness/twophase.py, 2026-11-13): tp holds its config and what it fits. The selector, if any,
+    picks tp's mask_keep tokens for every image; tp draws the images that also get the full teacher and builds the
+    loss. Teacher tokens per image (masked pass + full passes) may not exceed the budget in any step."""
     device = x.device
     needs = getattr(selector, "NEEDS", {}) if selector is not None else {}
     opt.zero_grad(set_to_none=True)
@@ -140,6 +145,16 @@ def train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
         base = criterion(out.logits.float(), y)
         if method == "ce":
             loss, kept = base, None
+        elif method == "twophase":
+            keep = None
+            if selector is not None:
+                ctx = Context(images=x, student=student, out=out, budget=float(tp.cfg["mask_keep"]),
+                              num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress, sample_idx=sample_idx)
+                with segs.seg("selector"):
+                    keep = to_keep_mask(selector.select(ctx), x.shape[0])
+            loss, kept = tp.step(out.logits, y, x, teacher, keep, segs)
+            if kept > float(budget) + 1e-6:
+                raise HarnessViolation(f"twophase spent {kept:.2f} teacher tokens/img in one batch > budget {budget}")
         else:
             ctx = Context(images=x, student=student, out=out, budget=float(budget),
                           num_patches=C.NUM_PATCHES, epoch=epoch, progress=progress, teacher_map=teacher_map,
@@ -243,8 +258,12 @@ def run(job_path):
     method = job["method"]          # "ce" or a selector name (builtin or selectors/<name>.py)
     budget = job["keep"]
 
-    selector, meta, sel_sha = (None, None, None)
-    if method not in ("ce", "oracle", "tome"):
+    selector, meta, sel_sha, tp_cfg = (None, None, None, None)
+    if method == "twophase":   # a harness method: its sel_args are the loss config, its selector a builtin
+        tp_cfg = parse_twophase(job.get("sel_args"), budget)
+        selector = BUILTIN[tp_cfg["selector"]]() if tp_cfg["mask_keep"] else None
+        meta, sel_sha = {"method": "builtin:twophase", "config": tp_cfg}, "builtin"
+    elif method not in ("ce", "oracle", "tome"):
         src = job.get("selector_src")
         selector, meta, sel_sha = load_selector(method, src=src, kwargs=job.get("sel_args", {}))
         if sel_sha != job.get("selector_sha", "builtin"):
@@ -262,6 +281,7 @@ def run(job_path):
     student = make_student(dataset).to(device)
     lr = float(job.get("lr") or C.student_lr(dataset))   # job lr: only the bootstrap lr sweep sets it
     teacher, teacher_sha = (None, None) if method == "ce" else load_teacher(device, dataset, job["tier"] == "smoke")
+    tp = TwoPhase(tp_cfg, C.NUM_CLASSES[dataset], device) if tp_cfg else None
     tmaps, cache_gflops = None, 0.0
     if uses_teacher_cache(selector, meta):
         tmaps, per_image = teacher_cache.load_or_build(dataset, teacher, teacher_sha, device)
@@ -285,6 +305,8 @@ def run(job_path):
         if device.type == "cuda" and ck.get("cuda_rng") is not None:
             torch.cuda.set_rng_state(ck["cuda_rng"])
         state = ck["state"]
+        if tp is not None and ck.get("twophase"):
+            tp.load_state_dict(ck["twophase"])
         say(f"resumed at epoch {state['epoch']}")
 
     say(f"job {rid} method={method} keep={budget} seed={job['seed']} epochs={epochs} device={device}")
@@ -317,7 +339,7 @@ def run(job_path):
                 with FlopCounterMode(display=False) as fc:
                     loss, kept = train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
                                             epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm,
-                                            sample_idx=loader.last_idx)
+                                            sample_idx=loader.last_idx, tp=tp)
                 state["_flop_g"].append(g)
                 segs.flops["total"] = segs.flops.get("total", 0) + fc.get_total_flops()
                 segs.flops["images"] = x.shape[0]
@@ -337,7 +359,7 @@ def run(job_path):
             else:
                 loss, kept = train_step(student, teacher, selector, method, budget, x, y, opt, criterion,
                                         epoch, g / (epochs * steps_per_epoch), segs, teacher_map=tm,
-                                        sample_idx=loader.last_idx)
+                                        sample_idx=loader.last_idx, tp=tp)
             if not math.isfinite(loss):
                 raise HarnessViolation(f"non-finite loss at epoch {epoch} step {step}")
             loss_sum += loss
@@ -355,6 +377,9 @@ def run(job_path):
         if kept_n:
             rec["mean_kept"] = kept_sum / kept_n
             state["kept"].append(rec["mean_kept"])
+        diag = tp.pop_diag() if tp is not None else None
+        if diag:
+            rec["tp"] = diag   # over the images that got both teacher passes this epoch (harness/twophase.py)
         if (epoch + 1) % C.EVAL_EVERY == 0 or epoch + 1 == epochs:
             ev = evaluate(student, xva, yva, device, gva)
             if isinstance(ev, dict):
@@ -367,7 +392,8 @@ def run(job_path):
         if (epoch + 1) % C.CKPT_EVERY == 0 or epoch + 1 == epochs:
             torch.save({"student": student.state_dict(), "opt": opt.state_dict(), "state": state,
                         "loader_rng": loader.g.get_state(), "cpu_rng": torch.get_rng_state(),
-                        "cuda_rng": torch.cuda.get_rng_state() if device.type == "cuda" else None}, ckpt_path)
+                        "cuda_rng": torch.cuda.get_rng_state() if device.type == "cuda" else None,
+                        "twophase": tp.state_dict() if tp is not None else None}, ckpt_path)
         for frac in C.SNAPSHOT_FRACS:   # snapshots for analysis jobs (e.g. how attention changes during training)
             if epoch + 1 == max(1, int(round(frac * epochs))) and epoch + 1 < epochs:
                 torch.save(student.state_dict(), rdir / f"student_e{epoch + 1}.pt")

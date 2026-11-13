@@ -1216,3 +1216,309 @@ def test_cut_downloads_are_resumed_or_fetched_again(tmp_path, monkeypatch):
     P._extract(["http://x"], arc, ["d/f.bin"], tmp_path / "raw")
     assert (tmp_path / "raw" / "d" / "f.bin").read_bytes() == data
     assert calls == ["a.tar.gz.part"] and arc.exists() and not (tmp_path / "raw" / "a.tar.gz.part").exists()
+
+
+def test_twophase_config_rules():
+    """harness/twophase.py: the config of a twophase job is its sel_args; teacher tokens per image (masked pass on
+    every image + full passes on full_n of the batch) may not exceed the job's keep, and a config that pays for a
+    pass it does not use, or has nothing to fit its map on, is refused."""
+    from harness.twophase import parse
+    ok = parse({"cv": "fit", "mask_keep": 12, "full_n": 11}, 29, batch=128)
+    assert ok["selector"] == "maskedkd" and ok["rho"] == 1.0 and ok["tokens_per_image"] == 12 + 11 * 196 / 128
+    assert parse({"cv": "student", "full_n": 18}, 29, batch=128)["selector"] is None
+    assert parse({"cv": "label", "full_n": 32}, 49, batch=128)["tokens_per_image"] == 49.0
+    assert parse({"cv": "masked", "mask_keep": 29}, 29, batch=128)["full_n"] == 0          # MaskedKD itself
+    assert parse({"cv": "channel", "mask_keep": 25, "full_n": 2}, 29, batch=128)["rho"] == 0.0
+    for bad in ({"cv": "fit", "mask_keep": 12, "full_n": 12},        # 30.4 tokens > 29
+                {"cv": "student", "full_n": 19},                      # 29.1 tokens > 29
+                {"cv": "masked", "full_n": 5},                        # no masked pass
+                {"cv": "label", "mask_keep": 12, "full_n": 5},        # pays for a masked pass it does not use
+                {"cv": "student"},                                     # no teacher at all
+                {"cv": "recal", "mask_keep": 12},                     # nothing to fit the map on
+                {"cv": "channel", "mask_keep": 12, "full_n": 2, "rho": 1.0},
+                {"cv": "fit", "mask_keep": 12, "full_n": 11, "selector": "lateroll"},
+                {"cv": "student", "full_n": 1, "selector": "maskedkd"},
+                {"cv": "student", "full_n": 1, "rho": 1.5}, {"cv": "student", "full_n": True},
+                {"cv": "nope", "full_n": 1}, {"cv": "student", "full_n": 1, "extra": 1}, None):
+        with pytest.raises(ValueError):
+            parse(bad, 29, batch=128)
+
+
+def test_twophase_step_is_unbiased_for_full_kd_whatever_the_cheap_answer():
+    """Over every equally likely draw of the m images that get the full teacher, the mean gradient of the twophase
+    KD loss in the student's logits is the full-KD gradient softmax(z) - T(x), for any cheap answer h (not on the
+    simplex either); with rho < 1 it is not. nnls finds the non-negative mix and drops a regressor that would need
+    a negative weight."""
+    import itertools
+    from harness.twophase import kd_loss, nnls, target
+    g = torch.Generator().manual_seed(0)
+    B, n_cls, m = 6, 5, 2
+    u = torch.randn(B, n_cls, generator=g, requires_grad=True)
+    pt = torch.randn(B, n_cls, generator=g).softmax(1)
+    want = (u.detach().softmax(1) - pt) / B
+    for h in (torch.randn(B, n_cls, generator=g).softmax(1), u.detach().softmax(1), torch.zeros(B, n_cls),
+              0.3 * torch.randn(B, n_cls, generator=g)):
+        grads = []
+        for idx in itertools.combinations(range(B), m):
+            idx = torch.tensor(idx)
+            grads.append(torch.autograd.grad(kd_loss(u, target(h, pt[idx], idx, 1.0)).mean(), u)[0])
+        assert torch.allclose(torch.stack(grads).mean(0), want, atol=1e-6)
+    idx = torch.tensor([0, 1])
+    half = torch.stack([torch.autograd.grad(kd_loss(u, target(torch.zeros(B, n_cls), pt[torch.tensor(i)], torch.tensor(i), 0.5)).mean(), u)[0]
+                        for i in itertools.combinations(range(B), m)]).mean(0)
+    assert not torch.allclose(half, want, atol=1e-3)
+    assert target(pt, pt[idx], None, 1.0) is pt and target(pt, pt[idx], idx, 0.0) is pt     # no draw, or rho 0: h itself
+
+    r = torch.randn(40, 3, n_cls, generator=g).softmax(2)
+    for w_true, cols, w_want in (((0.3, 0.7, 0.0), [0, 1, 2], (0.3, 0.7, 0.0)), ((0.5, 0.5, 0.0), [0], None)):
+        t = sum(w * r[:, j] for j, w in enumerate(w_true))
+        R = torch.cat([r, t.unsqueeze(1)], 1)
+        w, res = nnls((R.unsqueeze(2) * R.unsqueeze(1)).sum((0, 3)), cols)
+        if w_want:
+            assert torch.allclose(w, torch.tensor(w_want), atol=5e-3) and res < 1e-3
+        else:
+            assert w[1] == 0 and w[2] == 0 and w[0] > 0 and res > 1e-3
+    t = 1.2 * r[:, 0] - 0.4 * r[:, 1]                      # the best free fit has a negative weight on r_1
+    R = torch.cat([r, t.unsqueeze(1)], 1)
+    w, _ = nnls((R.unsqueeze(2) * R.unsqueeze(1)).sum((0, 3)), [0, 1])
+    assert w[1] == 0 and w[0] > 0
+
+
+def test_twophase_reduces_to_maskedkd_and_to_full_kd(models):
+    """cv masked with no full pass is MaskedKD, and a full pass for every image is full KD: same loss up to the
+    entropy of the target (twophase uses the cross-entropy to the target, the old path the KL; same gradient).
+    A draw of 2 of 4 images with 12 masked tokens costs 12 + 2 * 196 / 4 teacher tokens per image; one step over
+    the budget is refused."""
+    from harness.twophase import TwoPhase, parse
+    s, t = models
+    s.eval()                                                # no drop path: the two calls see the same student
+    opt = torch.optim.SGD(s.parameters(), lr=0.0)
+    n_cls = C.NUM_CLASSES[C.STAGE1]
+    aug = GpuAugment(torch.device("cpu"), n_cls)
+    x, y = aug(torch.randint(0, 256, (4, 3, 64, 64), dtype=torch.uint8), torch.arange(4) % n_cls)
+    crit, dev = SoftTargetCrossEntropy(), torch.device("cpu")
+
+    def ent(logits):
+        p = logits.float().softmax(1)
+        return float(-(p * p.clamp_min(1e-12).log()).sum(1).mean())
+
+    with torch.no_grad():
+        attn = student_forward(s, x, [-1]).attn[-1].float().mean(1)[:, 0, 1:]
+        keep = torch.zeros(4, 196, dtype=torch.bool).scatter_(1, attn.topk(12, dim=1).indices, True)
+        ent_masked, ent_full = ent(teacher_forward_keepmask(t, x, keep)), ent(t(x))
+    old, _ = train_step(s, t, MaskedKD(), "maskedkd", 12, x, y, opt, crit, 0, 0.0, Segments(False))
+    tp = TwoPhase(parse({"cv": "masked", "mask_keep": 12}, 12, batch=4), n_cls, dev)
+    new, kept = train_step(s, t, MaskedKD(), "twophase", 12, x, y, opt, crit, 0, 0.0, Segments(False), tp=tp)
+    assert kept == 12 and abs(new - C.ALPHA * ent_masked - old) < 1e-4 and tp.pop_diag() is None
+    old, _ = train_step(s, t, Full(), "full", 196, x, y, opt, crit, 0, 0.0, Segments(False))
+    for cv in ("student", "label"):
+        tp = TwoPhase(parse({"cv": cv, "full_n": 4}, 196, batch=4), n_cls, dev)
+        new, kept = train_step(s, t, None, "twophase", 196, x, y, opt, crit, 0, 0.0, Segments(False), tp=tp)
+        assert kept == 196 and abs(new - C.ALPHA * ent_full - old) < 1e-4
+
+    cfg = parse({"cv": "fit", "mask_keep": 12, "full_n": 2}, 110, batch=4)
+    tp = TwoPhase(cfg, n_cls, dev)
+    segs = Segments(True)
+    loss, kept = train_step(s, t, MaskedKD(), "twophase", 110, x, y, opt, crit, 0, 0.0, segs, tp=tp)
+    assert kept == 12 + 2 * 196 / 4 == cfg["tokens_per_image"] and torch.isfinite(torch.tensor(loss))
+    assert segs.flops["teacher"] > 0 and "selector" in segs.flops    # both teacher passes are billed to the teacher
+    d = tp.pop_diag()
+    assert d["pairs"] == 2 and {"res_student", "res_label", "res_free", "res_masked", "res_recal", "res_all", "w_all",
+                                "w_used", "kl_masked", "map_a", "channel_a"} <= set(d)
+    assert d["res_all"] <= d["res_free"] + 1e-6 <= min(d["res_student"], d["res_label"]) + 2e-6 and tp.pop_diag() is None
+    other = TwoPhase(cfg, n_cls, dev)
+    other.load_state_dict(tp.state_dict())                  # what a resumed run restores
+    assert torch.equal(other.w, tp.w) and torch.equal(other.rev.p[1], tp.rev.p[1]) and other.fwd.t == tp.fwd.t == 1
+    with pytest.raises(HarnessViolation):
+        train_step(s, t, MaskedKD(), "twophase", 100, x, y, opt, crit, 0, 0.0, Segments(False), tp=TwoPhase(cfg, n_cls, dev))
+    s.train()
+
+
+def test_twophase_runs_end_to_end_and_submit_checks_its_budget(tmp_path, monkeypatch):
+    """A twophase job trains end to end for every kind of cheap answer, spends exactly the tokens its config says,
+    records the config and the per-epoch diagnostics, and a config over its keep is refused when it is queued."""
+    from harness import submit, train
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setitem(C.TIER_MAX_STEPS, "smoke", 2)
+    monkeypatch.setattr(C, "BATCH", 8)
+    with pytest.raises(SystemExit):
+        submit.make_job("twophase", 29, 0, "smoke", {"cv": "student", "full_n": 2}, force=True, dataset="cifar10")   # 49 > 29
+    with pytest.raises(SystemExit):
+        submit.make_job("twophase", 29, 0, "smoke", {}, force=True, dataset="cifar10")
+    assert submit.make_job("twophase", 61, 1, "final", {"cv": "fit", "mask_keep": 12, "full_n": 2}, by="human",
+                           dataset="waterbirds")["selector_sha"] == "builtin"
+    for args, keep, spent in (({"cv": "fit", "mask_keep": 12, "full_n": 2, "selector": "rollout"}, 61, 61.0),
+                              ({"cv": "recal", "mask_keep": 12, "full_n": 2}, 61, 61.0),
+                              ({"cv": "student", "full_n": 2}, 49, 49.0),
+                              ({"cv": "fit", "full_n": 1}, 29, 24.5),
+                              ({"cv": "channel", "mask_keep": 12, "full_n": 1}, 37, 36.5)):
+        job = submit.make_job("twophase", keep, 0, "smoke", args, force=True, dataset="cifar10")
+        jp = tmp_path / "job.json"
+        jp.write_text(json.dumps(job))
+        assert train.run(str(jp)) == 0
+        m = json.loads((tmp_path / "runs" / job["id"] / "metrics.json").read_text())
+        assert m["status"] == "done" and m["mean_kept"] == spent and m["sel_args"] == args
+        assert m["selector_meta"]["config"]["cv"] == args["cv"] and m["val_acc_last"] is not None
+        d = m["history"][-1]["tp"]
+        assert d["pairs"] == 2 * args["full_n"] and d["res_free"] <= min(d["res_student"], d["res_label"]) + 1e-5
+        assert ("res_all" in d) == ("mask_keep" in args) and ("w_used" in d) == (args["cv"] == "fit")
+
+
+def test_dissection_runs_and_checks_the_designs_that_are_trained(tmp_path):
+    """analysis/masked_teacher_dissection.py passes the analysis validator, and its "design" block compares exactly
+    the two designs corrected/arms.py trains (same splits); adding the masked answer to the free ones cannot leave
+    more variance, and a full pass costs 1."""
+    from harness.analysis_api import AnalysisAPI
+    from harness.validate import analysis_source, load_analysis
+    from corrected import arms as A
+    run, _ = load_analysis("masked_teacher_dissection", analysis_source("masked_teacher_dissection"))
+    G = run.__globals__
+    assert G["DESIGNS"] == {b: (s["img"], *s["two"]) for b, s in A.SPLITS.items()} and G["BATCH"] == A.BATCH == C.BATCH
+    assert G["_teacher_cost"](196) == 1.0 and abs(G["_teacher_cost"](29) - 5.327 / 33.695) < 2e-3
+    G.update(RULES=("maskedkd",), EVAL_BATCH=4, FIT_STEPS=10)
+    student = make_student("waterbirds", pretrained=False).eval()
+
+    class SmallAPI(AnalysisAPI):
+        def val_batches(self, batch=100, limit=None):
+            return super().val_batches(batch=batch, limit=12)
+
+        def val_groups(self):
+            return super().val_groups()[:12]
+
+        def runs(self):
+            return {"r_ce": {"method": "ce", "tier": "final", "seed": 1, "dataset": "waterbirds", "keep": 0, "snapshots": []}}
+
+        def student(self, run_id, epoch=None):
+            return student
+
+    run(SmallAPI(tmp_path, torch.device("cpu"), make_teacher("waterbirds", pretrained=False).eval(), "waterbirds"))
+    s = json.loads((tmp_path / "summary.json").read_text())
+    assert s["students"] == {"ce": "r_ce"} and s["n_val"] == 12 and set(s["design"]["ce"]) == {"29", "49"}
+    for budget, d in s["design"]["ce"].items():
+        m1, k, m2 = G["DESIGNS"][int(budget)]
+        assert d["images_only_m"] == m1 and d["tokens_images_k_m"] == [k, m2]
+        assert d["predicted_better"] in ("tokens + images", "images only") and d["gain_beyond_free"] <= 1
+        assert abs(d["gain_needed"] - (1 - (1 / m1 - 1 / 128) / (1 / m2 - 1 / 128))) < 1e-9
+        assert (d["predicted_better"] == "tokens + images") == (d["gain_beyond_free"] > d["gain_needed"])
+    for r in s["results"]["ce"].values():
+        for kind in ("raw", "recal"):
+            g = r[kind]
+            assert g["v_all"] <= g["v_free"] * (1 + 1e-4) + 1e-9 and g["v_free"] <= g["v_student"] * (1 + 1e-4) + 1e-9
+            assert all(w >= 0 for w in g["w_all_student_label_masked"])
+
+
+def test_corrected_arms_spend_the_teacher_compute_of_maskedkd(models):
+    """corrected/arms.py: every twophase arm is a valid config at its keep; rand_dyn draws as many images as the
+    images-only arms; and, counted by FlopCounterMode on the teacher, no arm of a budget spends more than MaskedKD
+    at that K (tokens + images: within 0.5 %)."""
+    from torch.utils.flop_counter import FlopCounterMode
+    from corrected import arms as A
+    from corrected.table import needed_gain
+    from harness.twophase import parse
+    t = models[1]
+    x = torch.randn(1, 3, 224, 224)
+    cost = {}
+    for k in (12, 25, 29, 45, 49, 196):
+        keep = torch.zeros(1, 196, dtype=torch.bool)
+        keep[:, :k] = True
+        with torch.no_grad(), FlopCounterMode(display=False) as fc:
+            teacher_forward_keepmask(t, x, keep)
+        cost[k] = fc.get_total_flops()
+    for budget in A.BUDGETS:
+        table, split = A.arms(budget), A.SPLITS[budget]
+        assert len(table) == 11 and table[A.MASKEDKD] == ("maskedkd", budget, {})
+        for name, (method, keep, args) in table.items():
+            if method != "twophase":
+                continue
+            cfg = parse(args, keep, batch=A.BATCH)
+            spent = (cost[cfg["mask_keep"]] if cfg["mask_keep"] else 0) + cfg["full_n"] / A.BATCH * cost[196]
+            assert spent <= cost[budget] * (1.005 if cfg["mask_keep"] else 1.0), name
+            assert spent >= 0.95 * cost[budget], name                       # and not far below it
+            assert A.arm_of(method, keep, args) == (budget, name)
+        _, keep, _ = table["images, unweighted (rand_dyn)"]
+        assert int(keep * A.BATCH // 196) == split["img"] == table["images"][2]["full_n"]
+        assert 0 < needed_gain(budget) < 1
+    assert A.arm_of("ce", 0, {}) == (None, "CE") and A.arm_of("maskedkd", 12, {}) is None
+    assert A.arm_of("twophase", 29, {"cv": "fit", "mask_keep": 12, "full_n": 10}) is None
+    assert set(A.UNBIASED) < set(A.arms(29)) and A.IMAGES in A.UNBIASED and A.TOKENS in A.UNBIASED
+
+
+def test_corrected_autorun_orders_base_dissection_grid_and_table_reads_them(tmp_path, monkeypatch):
+    """corrected.autorun queues the base runs first, the dissection once their students are here, and the grid only
+    after the prediction is written; runs that exist are reused. corrected.table puts each run under its arm and
+    prints the fixed readings with the prediction next to what training gave."""
+    from corrected import arms as A, autorun, table
+    from harness import submit
+    monkeypatch.setattr(C, "QUEUE", tmp_path / "q")
+    monkeypatch.setattr(C, "RUNS", tmp_path / "runs")
+    monkeypatch.setattr(C, "ROOT", tmp_path)
+    monkeypatch.setattr(autorun, "PREDICTIONS", tmp_path / "PREDICTIONS.md")
+    monkeypatch.setattr(autorun.S, "STATUS", tmp_path / "STATUS.md")
+    for mod in (autorun, table):
+        monkeypatch.setattr(mod, "teacher_sha", lambda d: "T")
+    d, a = "waterbirds", argparse_ns(seeds=[1, 2, 3], seeds_more=[1])
+    assert autorun.queue_base(d, a.seeds) == 7 and autorun.queue_base(d, a.seeds) == 0      # 3 CE, 3 Full KD, MaskedKD@29
+    st = {"stage": "base"}
+    autorun.advance(d, st, a)
+    assert st == {"stage": "base"} and not autorun.students_ready(d, 1)
+
+    def finish(job, acc, wga, extra=None):   # the scheduler's part: a queued job becomes a finished run
+        j = json.loads(job.read_text())
+        r = tmp_path / "runs" / j["id"]
+        r.mkdir(parents=True)
+        (r / "student.pt").write_bytes(b"")
+        (r / "metrics.json").write_text(json.dumps({
+            **{k: j[k] for k in ("id", "method", "keep", "seed", "tier", "epochs", "sel_args", "dataset")},
+            "status": "done", "val_acc_last": acc, "val_wga_last": wga, "teacher_sha": "T",
+            "flops": {"total_gflops_per_img": 9.0, "teacher_gflops_per_img": 5.3}, "history": extra or []}))
+        job.rename(tmp_path / "q" / "done" / job.name)
+
+    for job in sorted((tmp_path / "q" / "pending").glob("*.json")):
+        finish(job, 90.0, 50.0 + json.loads(job.read_text())["seed"])
+    assert autorun.students_ready(d, 1)
+    autorun.advance(d, st, a)
+    assert st["stage"] == "dissect" and st["analysis"].startswith("analysis_masked_teacher_dissection")
+    autorun.advance(d, st, a)
+    assert st["stage"] == "dissect"                                                          # still running
+    out = tmp_path / "analysis_out" / st["analysis"]
+    out.mkdir(parents=True)
+    design = {str(b): {"predicted_better": "images only", "images_only_var_over_noise": 0.5,
+                       "tokens_images_var_over_noise": 0.9, "gain_beyond_free": 0.1, "gain_needed": table.needed_gain(b),
+                       "maskedkd_bias_sq_over_noise": 2.0} for b in A.BUDGETS}
+    (out / "summary.json").write_text(json.dumps({"dataset": d, "design": {"ce": design, "full_e25": design, "full": design}}))
+    (out / "meta.json").write_text("{}")
+    autorun.advance(d, st, a)
+    text = (tmp_path / "PREDICTIONS.md").read_text()
+    assert st["stage"] == "grid" and "budget 29: predicted better = **images only** (student full_e25" in text
+    pending = [json.loads(f.read_text()) for f in (tmp_path / "q" / "pending").glob("*.json")]
+    grid = [j for j in pending if j["kind"] == "train"]
+    assert len(grid) == 3 * 11 - 1 + 11                       # budget 29 on three seeds (MaskedKD seed 1 exists), 49 on one
+    assert {j["seed"] for j in grid if float(j["keep"]) in (49.0, 51.0)} == {1}
+    first = [j for j in grid if j["seed"] == 1 and j["method"] == "twophase" and float(j["keep"]) in (29.0, 31.0)]
+    assert len(first) == 8 and all(j["priority"] == 12 for j in first)
+    assert autorun.queue_grid(d, a.seeds, a.seeds_more) == 0                                 # nothing twice
+
+    tp = {"res_student": 0.5, "res_label": 0.4, "res_masked": 0.6, "res_free": 0.3, "res_all": 0.1, "w_all": [0.2, 0.3, 0.5],
+          "w_used": [0.2, 0.3, 0.5]}
+    for job in sorted((tmp_path / "q" / "pending").glob("*.json")):
+        j = json.loads(job.read_text())
+        if j["kind"] != "train":
+            continue
+        better = j["method"] == "twophase" and j["sel_args"].get("cv") != "channel"
+        finish(job, 91.0 + j["seed"] / 10, (70.0 if better else 50.0) + j["seed"], [{"epoch": 1, "tp": tp}])
+    lines = table.section(d)
+    body = "\n".join(lines)
+    assert "### budget 29" in body and "### budget 49" in body and "worst-group acc" in body
+    row = next(l for l in lines if l.startswith(f"| {A.TOKENS} |"))
+    assert "| 1,2,3 |" in row and "+20.00 [+20.00, +20.00] (n=3)" in row and "| 5.30 | 1.000 |" in row
+    r2 = next(l for l in lines if l.startswith("- R2"))
+    assert "predicted better: images only" in r2 and "trained better: no difference" in r2
+    diag = next(l for l in lines if l.startswith("| 0 % |"))
+    assert "| 67 % | 49 % | tokens + images | 0.20 / 0.30 / 0.50 |" in diag
+    assert table.section("cifar10") == []
+
+
+def argparse_ns(**kw):
+    import argparse
+    return argparse.Namespace(**kw)
