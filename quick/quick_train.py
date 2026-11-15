@@ -164,7 +164,7 @@ def evaluate(model, xva, yva, tidx=None, keep=None, student=None):
                 a = student._attn[:, :, 0, 1:].float().mean(1)
                 z = fwd_tokens(model, x, a.topk(round(196 * keep), dim=1).indices)
         z = z.float() if tidx is None else z.float()[:, tidx]
-        hit += (z.argmax(1).cpu() == yva[i:i + 250]).sum().item()
+        hit += (z.argmax(1).cpu() == yva[i:i + 250].cpu()).sum().item()
     return 100 * hit / len(yva)
 
 
