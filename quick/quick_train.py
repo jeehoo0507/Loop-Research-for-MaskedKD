@@ -54,6 +54,7 @@ ap.add_argument("--data", default="imagenette_cache")
 ap.add_argument("--out", default="quick_train_out")
 args = ap.parse_args()
 dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+BF16 = dev.type == "cuda" and torch.cuda.is_bf16_supported()   # fp16 + loss scaling otherwise (T4)
 os.makedirs(args.out, exist_ok=True)
 
 
@@ -154,7 +155,7 @@ def evaluate(model, xva, yva, tidx=None, keep=None, student=None):
     hit = 0
     for i in range(0, len(yva), 250):
         x = normalise(xva[i:i + 250].to(dev))
-        with torch.autocast(dev.type, dtype=torch.bfloat16, enabled=dev.type == "cuda"):
+        with torch.autocast(dev.type, dtype=torch.bfloat16 if BF16 else torch.float16, enabled=dev.type == "cuda"):
             if keep is None:
                 z = model(x)
             else:
@@ -192,6 +193,7 @@ def train(name, teacher, tidx, data):
     nkeep = round(196 * frac)
     tokens, seen, hist, t0 = 0.0, 0, [], time.time()
     gen = torch.Generator(device="cpu").manual_seed(args.seed)
+    scaler = torch.amp.GradScaler("cuda", enabled=dev.type == "cuda" and not BF16)
     for ep in range(args.epochs):
         student.train()
         perm = torch.randperm(len(ytr), generator=gen).to(dev)
@@ -200,12 +202,12 @@ def train(name, teacher, tidx, data):
             idx = perm[st * args.bs:(st + 1) * args.bs]
             x, y = augment(xtr[idx]), ytr[idx]
             B = x.shape[0]
-            with torch.autocast(dev.type, dtype=torch.bfloat16, enabled=dev.type == "cuda"):
+            with torch.autocast(dev.type, dtype=torch.bfloat16 if BF16 else torch.float16, enabled=dev.type == "cuda"):
                 out = student(x)
             logits = out.float()
             loss = F.cross_entropy(logits, y)
             if kind != "ce":
-                with torch.no_grad(), torch.autocast(dev.type, dtype=torch.bfloat16, enabled=dev.type == "cuda"):
+                with torch.no_grad(), torch.autocast(dev.type, dtype=torch.bfloat16 if BF16 else torch.float16, enabled=dev.type == "cuda"):
                     if kind == "full":
                         rows, zt = None, teacher(x)
                         tokens += B * 197
@@ -223,8 +225,9 @@ def train(name, teacher, tidx, data):
                 loss = loss + (pt * (pt.clamp_min(1e-12).log() - ls)).sum(1).mean()
             seen += B
             opt.zero_grad(set_to_none=True)
-            loss.backward()
-            opt.step()
+            scaler.scale(loss).backward()
+            scaler.step(opt)
+            scaler.update()
             sched.step()
             loss_sum += loss.item()
         rec = {"ep": ep + 1, "loss": round(loss_sum / steps_ep, 4), "min": round((time.time() - t0) / 60, 1)}
