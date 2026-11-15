@@ -47,7 +47,7 @@ import timm
 import torch
 import torch.nn.functional as F
 
-URL = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette2-320.tgz"
+URLS = {d: f"https://s3.amazonaws.com/fast-ai-imageclas/{d}2-320.tgz" for d in ("imagenette", "imagewoof")}
 MEAN = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
 STD = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
 RUNS = {
@@ -67,12 +67,17 @@ FAKE = bool(os.environ.get("QUICK_FAKE"))   # random images and weights, a few s
 ap = argparse.ArgumentParser()
 ap.add_argument("--runs", nargs="+", default=DEFAULT, choices=list(RUNS))
 ap.add_argument("--epochs", type=int, default=50)
-ap.add_argument("--seed", type=int, default=1)
+ap.add_argument("--seeds", type=int, nargs="+", default=[1])
+ap.add_argument("--dataset", default="imagenette", choices=list(URLS),
+                help="imagewoof: 10 dog breeds, the teacher is less sure, so its soft answer carries more")
+ap.add_argument("--tau", type=float, default=1.0, help="KD temperature (MaskedKD: 1; classic KD: 4)")
 ap.add_argument("--bs", type=int, default=128)
 ap.add_argument("--lr", type=float, default=5e-4)
-ap.add_argument("--data", default="imagenette_cache")
+ap.add_argument("--data", default=None, help="default: <dataset>_cache")
 ap.add_argument("--out", default="quick_corrected_out")
 args = ap.parse_args()
+args.data = args.data or f"{args.dataset}_cache"
+TAG = f"{args.dataset}_t{args.tau:g}"
 dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 os.makedirs(args.out, exist_ok=True)
 # bf16 where the GPU has it (A100, L4, G4, A5000); fp16 with loss scaling otherwise (T4, V100)
@@ -96,11 +101,11 @@ def prepare():
     from torch.utils.data import DataLoader, Dataset
     from torchvision import transforms
     os.makedirs(args.data, exist_ok=True)
-    root = os.path.join(args.data, "imagenette2-320")
+    root = os.path.join(args.data, f"{args.dataset}2-320")
     if not os.path.isdir(root):
-        tgz = os.path.join(args.data, "imagenette2-320.tgz")
-        print("downloading Imagenette (330 MB)", flush=True)
-        urllib.request.urlretrieve(URL, tgz)
+        tgz = os.path.join(args.data, f"{args.dataset}2-320.tgz")
+        print(f"downloading {args.dataset} (about 330 MB)", flush=True)
+        urllib.request.urlretrieve(URLS[args.dataset], tgz)
         with tarfile.open(tgz) as t:
             t.extractall(args.data)
     classes = sorted(os.listdir(os.path.join(root, "train")))
@@ -219,11 +224,11 @@ def place(score, pbar):
     return pi.clamp(PI_FLOOR, 1.0)
 
 
-def train(name, teacher, tidx, data):
+def train(name, teacher, tidx, data, seed):
     cfg = RUNS[name]
     kind = cfg["kind"]
     xtr, ytr, xva, yva = (t.to(dev) for t in data)
-    torch.manual_seed(args.seed)
+    torch.manual_seed(seed)
     student = make_student()
     decay = [p for n, p in student.named_parameters() if p.ndim > 1 and n not in ("pos_embed", "cls_token")]
     rest = [p for n, p in student.named_parameters() if not (p.ndim > 1 and n not in ("pos_embed", "cls_token"))]
@@ -237,7 +242,7 @@ def train(name, teacher, tidx, data):
     nkeep = round(196 * cfg.get("keep", 0))
     gram, w = None, torch.tensor([0.0, 0.0, 1.0], device=dev)   # mix weights (student, label, masked); start = masked
     tokens, seen, hist, t0, step = 0.0, 0, [], time.time(), 0
-    gen = torch.Generator(device="cpu").manual_seed(args.seed)
+    gen = torch.Generator(device="cpu").manual_seed(seed)
     scaler = torch.amp.GradScaler("cuda", enabled=dev.type == "cuda" and not BF16)
     for ep in range(args.epochs):
         student.train()
@@ -264,17 +269,17 @@ def train(name, teacher, tidx, data):
                         rows = torch.randperm(B, device=dev)[:m]
                         zt = teacher(x[rows])
                         tokens += m * 197
-                pt = F.softmax(zt.float()[:, tidx_t], -1)
-                ls = F.log_softmax(logits if rows is None else logits[rows], -1)
-                loss = loss + (pt * (pt.clamp_min(1e-12).log() - ls)).sum(1).mean()
+                pt = F.softmax(zt.float()[:, tidx_t] / args.tau, -1)
+                ls = F.log_softmax((logits if rows is None else logits[rows]) / args.tau, -1)
+                loss = loss + args.tau ** 2 * (pt * (pt.clamp_min(1e-12).log() - ls)).sum(1).mean()
             elif kind == "corr":
                 with torch.no_grad():
                     a = student._attn[:, :, 0, 1:].float().mean(1)
                     with torch.autocast(**AMP):
                         zm = fwd_tokens(teacher, x, a.topk(nkeep, dim=1).indices)
                     tokens += B * (nkeep + 1)
-                    qm = F.softmax(zm.float()[:, tidx_t], -1)
-                    ps = F.softmax(logits.detach(), -1)
+                    qm = F.softmax(zm.float()[:, tidx_t] / args.tau, -1)
+                    ps = F.softmax(logits.detach() / args.tau, -1)
                     yh = F.one_hot(y, 10).float()
                     h = qm if cfg["cheap"] == "masked" else w[0] * ps + w[1] * yh + w[2] * qm
                     if cfg["place"] == "uniform":
@@ -289,7 +294,7 @@ def train(name, teacher, tidx, data):
                         with torch.autocast(**AMP):
                             zf = teacher(x[b])
                         tokens += int(b.sum()) * 197
-                        pf = F.softmax(zf.float()[:, tidx_t], -1)
+                        pf = F.softmax(zf.float()[:, tidx_t] / args.tau, -1)
                         q[b] = h[b] + rho * (pf - h[b]) / pi[b].unsqueeze(1)
                         R = torch.stack([ps[b], yh[b], qm[b], pf], 1)                 # [m, 4, C]
                         G = torch.einsum("mic,mjc->ij", R, R) / R.shape[0]
@@ -301,7 +306,8 @@ def train(name, teacher, tidx, data):
                         diag["res_mask"] += float(((pf - qm[b]) ** 2).sum(1).sum())
                         diag["pairs"] += int(b.sum())
                 # gradient in the logits is softmax - q, unbiased for full KD when rho = 1 (q may leave the simplex)
-                loss = loss + (torch.logsumexp(logits, 1) - (q * logits).sum(1)).mean()
+                u = logits / args.tau
+                loss = loss + args.tau ** 2 * (torch.logsumexp(u, 1) - (q * u).sum(1)).mean()
             seen += B
             step += 1
             opt.zero_grad(set_to_none=True)
@@ -319,8 +325,9 @@ def train(name, teacher, tidx, data):
         hist.append(rec)
         print(f"[{name}] {json.dumps(rec)}", flush=True)
     res = {"run": name, "cfg": cfg, "acc": hist[-1]["acc"], "teacher_cost": round(tokens / (max(seen, 1) * 197), 3),
-           "minutes": hist[-1]["min"], "seed": args.seed, "epochs": args.epochs, "history": hist}
-    with open(os.path.join(args.out, f"{name}_s{args.seed}.json"), "w") as f:
+           "minutes": hist[-1]["min"], "seed": seed, "dataset": args.dataset, "tau": args.tau, "epochs": args.epochs,
+           "history": hist}
+    with open(os.path.join(args.out, f"{name}_{TAG}_s{seed}.json"), "w") as f:
         json.dump(res, f, indent=1)
     return res
 
@@ -335,26 +342,34 @@ def main():
     print(f"teacher val acc (all tokens) {t_acc:.1f}", flush=True)
     if FAKE:
         args.epochs = 1
-    results = {}
-    for name in args.runs:
-        done = os.path.join(args.out, f"{name}_s{args.seed}.json")
-        if os.path.exists(done) and not FAKE:
-            results[name] = json.load(open(done))
-            print(f"[{name}] already done: {results[name]['acc']}", flush=True)
-            continue
-        results[name] = train(name, teacher, tidx, (xtr, ytr, xva, yva))
-    print(f"\n=== seed {args.seed}, {args.epochs} epochs, teacher {t_acc:.1f}")
-    print(f"{'run':8s} {'val acc':>8s} {'teacher cost':>13s} {'minutes':>8s}")
+    results = {}   # seed -> name -> result
+    for seed in args.seeds:
+        results[seed] = {}
+        for name in args.runs:
+            done = os.path.join(args.out, f"{name}_{TAG}_s{seed}.json")
+            if os.path.exists(done) and not FAKE:
+                results[seed][name] = json.load(open(done))
+                print(f"[{name} s{seed}] already done: {results[seed][name]['acc']}", flush=True)
+                continue
+            print(f"--- {name}, seed {seed}", flush=True)
+            results[seed][name] = train(name, teacher, tidx, (xtr, ytr, xva, yva), seed)
+    seeds = args.seeds
+    sd = lambda v: (sum((a - sum(v) / len(v)) ** 2 for a in v) / (len(v) - 1)) ** 0.5 if len(v) > 1 else 0.0   # noqa: E731
+    print(f"\n=== {args.dataset}, tau {args.tau:g}, seeds {seeds}, {args.epochs} epochs, teacher {t_acc:.1f}")
+    print(f"{'run':8s} {'val acc (mean +- sd)':>22s} {'per seed':>24s} {'teacher cost':>13s}")
     for name in RUNS:
-        if name in results:
-            r = results[name]
-            print(f"{name:8s} {r['acc']:8.2f} {r['teacher_cost']:13.3f} {r['minutes']:8.1f}")
-    g = lambda n: results[n]["acc"] if n in results else None   # noqa: E731
-    for a, b, what in (("full", "ce", "KD gain"), ("corr", "mkd35", "correction helps"),
-                       ("corr_s", "corr", "student placement helps"), ("ours", "corr_s", "mix + ramp help"),
-                       ("ours", "img35", "masking + correction beats fewer images"), ("ours", "mkd35", "ours vs MaskedKD")):
-        if g(a) is not None and g(b) is not None:
-            print(f"{a + ' - ' + b:16s} {g(a) - g(b):+6.2f}   ({what})")
+        accs = [results[s][name]["acc"] for s in seeds if name in results[s]]
+        if accs:
+            cost = results[seeds[0]][name]["teacher_cost"]
+            print(f"{name:8s} {sum(accs) / len(accs):14.2f} +- {sd(accs):4.2f} {str(accs):>24s} {cost:13.3f}")
+    print("\npaired differences (same seed), mean and per seed:")
+    for a, b, what in (("full", "ce", "KD gain: under 2 points nothing below can be read"),
+                       ("corr", "mkd35", "correction helps"), ("corr_s", "corr", "student placement helps"),
+                       ("ours", "corr_s", "mix + ramp help"), ("ours", "img35", "masking + correction beats fewer images"),
+                       ("img35", "mkd35", "fewer images vs fewer tokens"), ("ours", "mkd35", "ours vs MaskedKD")):
+        d = [results[s][a]["acc"] - results[s][b]["acc"] for s in seeds if a in results[s] and b in results[s]]
+        if d:
+            print(f"{a + ' - ' + b:16s} {sum(d) / len(d):+6.2f}  {[round(x, 2) for x in d]}   ({what})")
 
 
 if __name__ == "__main__":
