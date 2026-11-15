@@ -59,6 +59,18 @@ RUNS = {
     "corr_s": dict(kind="corr", keep=0.25, p=0.10, place="student", cheap="masked", ramp=0.0),
     "ours": dict(kind="corr", keep=0.25, p=0.10, place="student", cheap="mix", ramp=0.3),
     "mkd25": dict(kind="mask", keep=0.25),   # not in the default list: how bad the masked part alone is
+    # the plan as first proposed, parts that had not been run (2026-11-16):
+    #   dir     the correction target is the full teacher's ranking at the masked teacher's entropy ("direction
+    #           only"): where the two agree on the ranking the correction is ~0, so it adds far less noise
+    #   dir_s   dir + student placement
+    #   repl_s  the student picks the 10 % it disagrees with the masked teacher most; those images get the full
+    #           answer as it is (no 1/pi weight): biased, but no noise blow-up
+    #   ours_h  ours with a learned cheap answer: softmax(log T_mask + head(T_mask, student, label)), the head
+    #           (zero at start = MaskedKD) trained on the drawn pairs to predict the full answer
+    "dir": dict(kind="corr", keep=0.25, p=0.10, place="uniform", cheap="masked", ramp=0.0, target="dir"),
+    "dir_s": dict(kind="corr", keep=0.25, p=0.10, place="student", cheap="masked", ramp=0.0, target="dir"),
+    "repl_s": dict(kind="corr", keep=0.25, p=0.10, place="topk", cheap="masked", ramp=0.0),
+    "ours_h": dict(kind="corr", keep=0.25, p=0.10, place="student", cheap="head", ramp=0.3),
 }
 DEFAULT = ["ce", "full", "mkd35", "img35", "corr", "corr_s", "ours"]
 PI_FLOOR, PI_MIX, EMA = 0.02, 0.5, 0.99
@@ -77,7 +89,7 @@ ap.add_argument("--data", default=None, help="default: <dataset>_cache")
 ap.add_argument("--out", default="quick_corrected_out")
 args = ap.parse_args()
 args.data = args.data or f"{args.dataset}_cache"
-TAG = f"{args.dataset}_t{args.tau:g}"
+TAG = f"{args.dataset}_t{args.tau:g}" + ("" if args.epochs == 50 else f"_e{args.epochs}")
 dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 os.makedirs(args.out, exist_ok=True)
 # bf16 where the GPU has it (A100, L4, G4, A5000); fp16 with loss scaling otherwise (T4, V100)
@@ -214,6 +226,21 @@ def nnls(G):
     return best_w.float()
 
 
+def ent(p):
+    return -(p * p.clamp_min(1e-12).log()).sum(-1)
+
+
+def match_entropy(u, h_target, iters=30):
+    """softmax(u / t), t per row such that its entropy equals h_target (bisection on log t): the ranking of u with
+    the confidence of another distribution."""
+    lo, hi = torch.full_like(h_target, math.log(0.05)), torch.full_like(h_target, math.log(20.0))
+    for _ in range(iters):
+        mid = (lo + hi) / 2
+        low = ent(F.softmax(u / mid.exp().unsqueeze(-1), -1)) < h_target
+        lo, hi = torch.where(low, mid, lo), torch.where(low, hi, mid)
+    return F.softmax(u / ((lo + hi) / 2).exp().unsqueeze(-1), -1)
+
+
 def place(score, pbar):
     """Draw probabilities with mean pbar: sqrt(score) mixed half and half with uniform, floor PI_FLOOR."""
     s = score.clamp_min(0).sqrt()
@@ -241,6 +268,10 @@ def train(name, teacher, tidx, data, seed):
     tidx_t = torch.tensor(tidx, device=dev)
     nkeep = round(196 * cfg.get("keep", 0))
     gram, w = None, torch.tensor([0.0, 0.0, 1.0], device=dev)   # mix weights (student, label, masked); start = masked
+    head = torch.nn.Sequential(torch.nn.Linear(30, 64), torch.nn.GELU(), torch.nn.Linear(64, 10)).to(dev)
+    torch.nn.init.zeros_(head[2].weight)
+    torch.nn.init.zeros_(head[2].bias)                         # zero correction at the start: h = masked answer
+    head_opt = torch.optim.Adam(head.parameters(), lr=1e-3)
     tokens, seen, hist, t0, step = 0.0, 0, [], time.time(), 0
     gen = torch.Generator(device="cpu").manual_seed(seed)
     scaler = torch.amp.GradScaler("cuda", enabled=dev.type == "cuda" and not BF16)
@@ -273,6 +304,7 @@ def train(name, teacher, tidx, data, seed):
                 ls = F.log_softmax((logits if rows is None else logits[rows]) / args.tau, -1)
                 loss = loss + args.tau ** 2 * (pt * (pt.clamp_min(1e-12).log() - ls)).sum(1).mean()
             elif kind == "corr":
+                pair = None
                 with torch.no_grad():
                     a = student._attn[:, :, 0, 1:].float().mean(1)
                     with torch.autocast(**AMP):
@@ -281,12 +313,21 @@ def train(name, teacher, tidx, data, seed):
                     qm = F.softmax(zm.float()[:, tidx_t] / args.tau, -1)
                     ps = F.softmax(logits.detach() / args.tau, -1)
                     yh = F.one_hot(y, 10).float()
-                    h = qm if cfg["cheap"] == "masked" else w[0] * ps + w[1] * yh + w[2] * qm
-                    if cfg["place"] == "uniform":
-                        pi = torch.full((B,), cfg["p"], device=dev)
+                    feats = torch.cat([qm.clamp_min(1e-6).log(), ps.clamp_min(1e-6).log(), yh], 1)
+                    if cfg["cheap"] == "masked":
+                        h = qm
+                    elif cfg["cheap"] == "mix":
+                        h = w[0] * ps + w[1] * yh + w[2] * qm
                     else:
-                        pi = place(((qm - ps) ** 2).sum(1), cfg["p"])
-                    b = torch.bernoulli(pi).bool()
+                        h = F.softmax(feats[:, :10] + head(feats), -1)
+                    score = ((qm - ps) ** 2).sum(1)
+                    if cfg["place"] == "topk":   # the images the signal ranks highest, taken as they are (pi = 1)
+                        b = torch.zeros(B, dtype=torch.bool, device=dev)
+                        b[score.topk(max(1, round(cfg["p"] * B))).indices] = True
+                        pi = torch.ones(B, device=dev)
+                    else:
+                        pi = torch.full((B,), cfg["p"], device=dev) if cfg["place"] == "uniform" else place(score, cfg["p"])
+                        b = torch.bernoulli(pi).bool()
                     prog = step / max(1, total)
                     rho = min(1.0, prog / cfg["ramp"]) if cfg["ramp"] > 0 else 1.0
                     q = h.clone()
@@ -294,17 +335,26 @@ def train(name, teacher, tidx, data, seed):
                         with torch.autocast(**AMP):
                             zf = teacher(x[b])
                         tokens += int(b.sum()) * 197
-                        pf = F.softmax(zf.float()[:, tidx_t] / args.tau, -1)
-                        q[b] = h[b] + rho * (pf - h[b]) / pi[b].unsqueeze(1)
+                        uf = zf.float()[:, tidx_t] / args.tau
+                        pf = F.softmax(uf, -1)
+                        tgt = match_entropy(uf, ent(qm[b])) if cfg.get("target") == "dir" else pf
+                        q[b] = h[b] + rho * (tgt - h[b]) / pi[b].unsqueeze(1)
                         R = torch.stack([ps[b], yh[b], qm[b], pf], 1)                 # [m, 4, C]
                         G = torch.einsum("mic,mjc->ij", R, R) / R.shape[0]
                         gram = G if gram is None else EMA * gram + (1 - EMA) * G
                         if cfg["cheap"] == "mix":
                             w = nnls(gram).to(dev)                                    # used from the next step on
+                        pair = (feats[b], pf)
                         diag["drawn"] += float(b.float().mean())
                         diag["res_h"] += float(((pf - h[b]) ** 2).sum(1).sum())
                         diag["res_mask"] += float(((pf - qm[b]) ** 2).sum(1).sum())
                         diag["pairs"] += int(b.sum())
+                if cfg["cheap"] == "head" and pair is not None:   # after this step's target was built
+                    fb, pfb = pair
+                    hl = -(pfb * F.log_softmax(fb[:, :10] + head(fb), -1)).sum(1).mean()
+                    head_opt.zero_grad(set_to_none=True)
+                    hl.backward()
+                    head_opt.step()
                 # gradient in the logits is softmax - q, unbiased for full KD when rho = 1 (q may leave the simplex)
                 u = logits / args.tau
                 loss = loss + args.tau ** 2 * (torch.logsumexp(u, 1) - (q * u).sum(1)).mean()
@@ -366,7 +416,12 @@ def main():
     for a, b, what in (("full", "ce", "KD gain: under 2 points nothing below can be read"),
                        ("corr", "mkd35", "correction helps"), ("corr_s", "corr", "student placement helps"),
                        ("ours", "corr_s", "mix + ramp help"), ("ours", "img35", "masking + correction beats fewer images"),
-                       ("img35", "mkd35", "fewer images vs fewer tokens"), ("ours", "mkd35", "ours vs MaskedKD")):
+                       ("img35", "mkd35", "fewer images vs fewer tokens"), ("ours", "mkd35", "ours vs MaskedKD"),
+                       ("mkd35", "mkd25", "what 10 % more tokens buy MaskedKD"),
+                       ("dir", "mkd35", "direction-only correction vs MaskedKD"), ("dir_s", "dir", "student placement, direction-only"),
+                       ("repl_s", "mkd35", "student-routed full answers vs MaskedKD"), ("repl_s", "mkd25", "what the 10 % routed full passes add"),
+                       ("ours_h", "ours", "learned cheap answer vs fitted mix"), ("ours_h", "mkd35", "ours_h vs MaskedKD"),
+                       ("ours_h", "img35", "ours_h vs fewer images")):
         d = [results[s][a]["acc"] - results[s][b]["acc"] for s in seeds if a in results[s] and b in results[s]]
         if d:
             print(f"{a + ' - ' + b:16s} {sum(d) / len(d):+6.2f}  {[round(x, 2) for x in d]}   ({what})")
