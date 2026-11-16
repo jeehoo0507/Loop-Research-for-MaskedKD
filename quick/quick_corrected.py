@@ -101,6 +101,17 @@ RUNS = {
     "masksub25": dict(kind="sv", keep=0.25, mode="msub"),
     "mkd25_msub": dict(kind="sv", keep=0.25, mode="mkd_msub"),
     "mkd15": dict(kind="mask", keep=0.15),
+    # --- why is a masked teacher a good teacher? (2026-11-17) MaskedKD gives a correlation only (curriculum).
+    # 1. Is it the student's OWN, image-specific choice of tokens (a loop: the teacher grades the evidence the
+    #    student picked)?  mkd25_rand: random tokens.  mkd25_shuf: the attention map of ANOTHER image of the batch
+    #    (same spatial habits of the student, but not this image's evidence).
+    # 2. Is it only that the masked answer is less confident?  swap_fr_me: the FULL teacher's ranking at the masked
+    #    teacher's entropy.  swap_mr_fe: the MASKED teacher's ranking at the full teacher's entropy. (Both run both
+    #    teacher passes on every image: analysis, not a method.)
+    "mkd25_rand": dict(kind="mask", keep=0.25, select="random"),
+    "mkd25_shuf": dict(kind="mask", keep=0.25, select="shuffle"),
+    "swap_fr_me": dict(kind="swap", keep=0.25, rank="full"),
+    "swap_mr_fe": dict(kind="swap", keep=0.25, rank="masked"),
     # B. space and time: the teacher's answer is redundant over tokens (masking) and over epochs (the same image
     #    comes back). The cache is a second cheap answer; a few fresh full passes keep both honest.
     "ours_c": dict(kind="corr", keep=0.25, p=0.10, place="student", cheap=("s", "y", "m", "c"), ramp=0.3),
@@ -257,19 +268,25 @@ def evaluate(model, xva, yva, tidx=None):
 
 
 @torch.no_grad()
-def fidelity(student, teacher, xva, tidx):
-    """How close the trained student is to the FULL teacher on val (it may never have seen that teacher):
-    share of images with the same top class (%), and mean KL(teacher || student) at temperature 1."""
+def fidelity(student, teacher, xva, yva, tidx):
+    """The trained student on val. (1) How close it is to the FULL teacher (it may never have seen that teacher):
+    share of images with the same top class (%), mean KL(teacher || student) at temperature 1. (2) How good its
+    attention is as evidence: the teacher's accuracy, and its agreement with its own full answer, when it sees only
+    the 25 % of patches the student's last-block CLS attention ranks highest (sufficiency of the student's choice)."""
     student.eval()
-    same, kl, n = 0, 0.0, len(xva)
+    same, kl, s_acc, s_agree, n = 0, 0.0, 0, 0, len(xva)
     for i in range(0, n, 250):
-        x = normalise(xva[i:i + 250].to(dev))
+        x, y = normalise(xva[i:i + 250].to(dev)), yva[i:i + 250].to(dev)
         with torch.autocast(**AMP):
             zs, zt = student(x).float(), teacher(x).float()[:, tidx]
+            keep = student._attn[:, :, 0, 1:].float().mean(1).topk(49, dim=1).indices
+            zm = fwd_tokens(teacher, x, keep).float()[:, tidx]
         pt = zt.softmax(1)
         same += (zs.argmax(1) == zt.argmax(1)).sum().item()
         kl += (pt * (pt.clamp_min(1e-12).log() - zs.log_softmax(1))).sum().item()
-    return round(100 * same / n, 2), round(kl / n, 4)
+        s_acc += (zm.argmax(1) == y).sum().item()
+        s_agree += (zm.argmax(1) == zt.argmax(1)).sum().item()
+    return round(100 * same / n, 2), round(kl / n, 4), round(100 * s_acc / n, 2), round(100 * s_agree / n, 2)
 
 
 def make_student():
@@ -379,6 +396,10 @@ def train(name, teacher, tidx, data, seed):
                         tokens += B * 197
                     elif kind == "mask":
                         a = student._attn[:, :, 0, 1:].float().mean(1)
+                        if cfg.get("select") == "random":
+                            a = torch.rand_like(a)
+                        elif cfg.get("select") == "shuffle":   # the map of the next image in the batch
+                            a = a.roll(1, dims=0)
                         rows, zt = None, fwd_tokens(teacher, x, a.topk(nkeep, dim=1).indices)
                         tokens += B * (nkeep + 1)
                     else:
@@ -389,6 +410,16 @@ def train(name, teacher, tidx, data, seed):
                 pt = F.softmax(zt.float()[:, tidx_t] / args.tau, -1)
                 ls = F.log_softmax((logits if rows is None else logits[rows]) / args.tau, -1)
                 loss = loss + args.tau ** 2 * (pt * (pt.clamp_min(1e-12).log() - ls)).sum(1).mean()
+            elif kind == "swap":   # ranking from one teacher pass, confidence (entropy) from the other
+                with torch.no_grad():
+                    a = student._attn[:, :, 0, 1:].float().mean(1)
+                    with torch.autocast(**AMP):
+                        zm, zf = fwd_tokens(teacher, x, a.topk(nkeep, dim=1).indices), teacher(x)
+                    tokens += B * (nkeep + 1) + B * 197
+                    um, uf = zm.float()[:, tidx_t] / args.tau, zf.float()[:, tidx_t] / args.tau
+                    pt = (match_entropy(uf, ent(F.softmax(um, -1))) if cfg["rank"] == "full"
+                          else match_entropy(um, ent(F.softmax(uf, -1))))
+                loss = loss + args.tau ** 2 * (pt * (pt.clamp_min(1e-12).log() - F.log_softmax(logits / args.tau, -1))).sum(1).mean()
             elif kind == "corr":
                 pair = None
                 with torch.no_grad():
@@ -506,9 +537,11 @@ def train(name, teacher, tidx, data, seed):
     t_cost, s_cost = tokens / (max(seen, 1) * 197), s_extra / (max(seen, 1) * 197)
     # one training step per image, estimated: student forward + backward (3 x 1.3 GFLOPs, DeiT-Ti) on the full image
     # and on any extra masked view, plus the teacher's forwards (4.6 GFLOPs, DeiT-S, linear in the tokens)
-    agree, kl_full = fidelity(student, teacher, xva, tidx)
+    agree, kl_full, suff_acc, suff_agree = fidelity(student, teacher, xva, yva, tidx)
+    torch.save(student.state_dict(), os.path.join(args.out, f"{name}_{TAG}_s{seed}.pt"))   # for later analyses
     res = {"run": name, "cfg": cfg, "acc": hist[-1]["acc"], "teacher_cost": round(t_cost, 3),
            "student_extra": round(s_cost, 3), "agree_full_teacher": agree, "kl_full_teacher": kl_full,
+           "suff25_teacher_acc": suff_acc, "suff25_teacher_agree": suff_agree,
            "step_gflops": round(3.9 * (1 + s_cost) + TEACHER_GFLOPS[args.teacher] * t_cost, 2),
            "minutes": hist[-1]["min"], "seed": seed, "dataset": args.dataset, "tau": args.tau, "epochs": args.epochs,
            "history": hist}
@@ -552,16 +585,19 @@ def summarise(results, t_acc):
     sd = lambda v: (sum((a - sum(v) / len(v)) ** 2 for a in v) / (len(v) - 1)) ** 0.5 if len(v) > 1 else 0.0   # noqa: E731
     print(f"\n=== {args.dataset}, tau {args.tau:g}, seeds {seeds}, {args.epochs} epochs, teacher {t_acc:.1f}")
     print(f"{'run':10s} {'val acc (mean +- sd)':>22s} {'per seed':>24s} {'teacher cost':>13s} {'step GFLOPs':>12s} "
-          f"{'agrees w/ full T':>17s}")
+          f"{'agrees w/ full T':>17s} {'T acc on its top 25 %':>22s}")
     for name in RUNS:
         accs = [results[s][name]["acc"] for s in seeds if name in results[s]]
         if accs:
             r = results[next(s for s in seeds if name in results[s])][name]
+            su = [results[s][name]["suff25_teacher_acc"] for s in seeds
+                  if name in results[s] and "suff25_teacher_acc" in results[s][name]]
             ag = [results[s][name]["agree_full_teacher"] for s in seeds
                   if name in results[s] and "agree_full_teacher" in results[s][name]]
             print(f"{name:10s} {sum(accs) / len(accs):14.2f} +- {sd(accs):4.2f} {str(accs):>24s} "
                   f"{r['teacher_cost']:13.3f} {r.get('step_gflops', float('nan')):12.2f} "
-                  f"{(sum(ag) / len(ag) if ag else float('nan')):17.2f}")
+                  f"{(sum(ag) / len(ag) if ag else float('nan')):17.2f} "
+                  f"{(sum(su) / len(su) if su else float('nan')):22.2f}")
     print("\npaired differences (same seed), mean and per seed:")
     for a, b, what in (("full", "ce", "KD gain: under 2 points nothing below can be read"),
                        ("corr", "mkd35", "correction helps"), ("corr_s", "corr", "student placement helps"),
@@ -579,7 +615,12 @@ def summarise(results, t_acc):
                        ("ce_aug25", "ce", "masked-view augmentation alone, no teacher"),
                        ("sv25", "mkd25_msub", "A vs MaskedKD + MaskSub (the closest published design, same compute)"),
                        ("mkd25_msub", "mkd25", "what MaskSub's masked branch adds to MaskedKD"),
-                       ("masksub25", "ce", "MaskSub alone, no teacher"), ("sv25", "masksub25", "A vs MaskSub without a teacher"),
+                       ("masksub25", "ce", "MaskSub alone, no teacher"),
+                       ("mkd25", "mkd25_rand", "why: student-chosen vs random tokens"),
+                       ("mkd25", "mkd25_shuf", "why: this image's attention vs another image's (the loop)"),
+                       ("swap_fr_me", "full", "why: full ranking, only made as unsure as the masked teacher"),
+                       ("swap_fr_me", "mkd25", "why: is lower confidence all there is to MaskedKD"),
+                       ("swap_mr_fe", "mkd25", "why: masked ranking made as sure as the full teacher"), ("sv25", "masksub25", "A vs MaskSub without a teacher"),
                        ("sv25", "sv25_cross", "A: same tokens vs a different masked view for the student"),
                        ("sv35", "sv25", "A: more tokens"), ("sv50", "sv25", "A: half of the tokens"), ("mkd15", "mkd25", "MaskedKD: fewer tokens"), ("sv25_rand", "sv25", "A: random instead of student-chosen tokens"),
                        ("sv25_both", "sv25", "A: adding MaskedKD's full-view term"), ("sv15", "sv25", "A: fewer tokens"),
