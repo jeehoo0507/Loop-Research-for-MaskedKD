@@ -91,6 +91,9 @@ RUNS = {
     #               size: does it have to be the same view, or does any masked student view do?
     "mkd25_aug": dict(kind="sv", keep=0.25, mode="aug"),
     "ce_aug25": dict(kind="sv", keep=0.25, mode="ce_aug"),
+    # the student's masked view on RANDOM tokens (MaskedKD's teacher term unchanged): must the student choose its view?
+    "mkd25_aug_rand": dict(kind="sv", keep=0.25, mode="aug", s_select="random"),
+    "ce_aug25_rand": dict(kind="sv", keep=0.25, mode="ce_aug", s_select="random"),
     "sv25_cross": dict(kind="sv", keep=0.25, mode="cross"),
     "sv50": dict(kind="sv", keep=0.50),
     # MaskSub (Heo et al., 2306.11339): the student's masked branch learns from the student's OWN full-view
@@ -494,7 +497,8 @@ def train(name, teacher, tidx, data, seed):
                         keep_idx = torch.rand(B, 196, device=dev).topk(nkeep, dim=1).indices
                     else:
                         keep_idx = student._attn[:, :, 0, 1:].float().mean(1).topk(nkeep, dim=1).indices
-                    s_idx = torch.rand(B, 196, device=dev).topk(nkeep, dim=1).indices if mode == "cross" else keep_idx
+                    s_idx = (torch.rand(B, 196, device=dev).topk(nkeep, dim=1).indices
+                             if mode == "cross" or cfg.get("s_select") == "random" else keep_idx)
                     if mode not in ("ce_aug", "msub"):
                         with torch.autocast(**AMP):
                             zt = fwd_tokens(teacher, x, keep_idx)
@@ -613,6 +617,11 @@ def summarise(results, t_acc):
                        ("sv25", "mkd25_aug", "A: matched target vs label on the masked view (same compute)"),
                        ("mkd25_aug", "mkd25", "what a masked student view with the label adds to MaskedKD"),
                        ("ce_aug25", "ce", "masked-view augmentation alone, no teacher"),
+                       ("mkd25_aug", "ce_aug25", "what the masked teacher adds to the two-view student"),
+                       ("mkd25_aug", "mkd25_aug_rand", "student-chosen vs random tokens for the student's masked view"),
+                       ("ce_aug25", "ce_aug25_rand", "same, without a teacher"),
+                       ("mkd25_aug", "masksub25", "vs MaskSub (no teacher)"), ("mkd25_aug", "full", "vs full KD"),
+                       ("mkd25_aug", "mkd50", "vs MaskedKD at equal step cost"),
                        ("sv25", "mkd25_msub", "A vs MaskedKD + MaskSub (the closest published design, same compute)"),
                        ("mkd25_msub", "mkd25", "what MaskSub's masked branch adds to MaskedKD"),
                        ("masksub25", "ce", "MaskSub alone, no teacher"),
