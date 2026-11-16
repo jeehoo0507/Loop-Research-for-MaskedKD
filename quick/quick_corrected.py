@@ -47,6 +47,8 @@ import timm
 import torch
 import torch.nn.functional as F
 
+TEACHER_GFLOPS = {"deit_small_patch16_224": 4.6, "deit_base_patch16_224": 17.6}
+NC = 10   # classes; set from the data in main()
 URLS = {d: f"https://s3.amazonaws.com/fast-ai-imageclas/{d}2-320.tgz" for d in ("imagenette", "imagewoof")}
 MEAN = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
 STD = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
@@ -81,6 +83,17 @@ RUNS = {
     "sv15": dict(kind="sv", keep=0.15),
     "sv25_rand": dict(kind="sv", keep=0.25, select="random"),      # does student-guided selection still matter
     "sv25_both": dict(kind="sv", keep=0.25, both=True),            # + MaskedKD's own full-view term, half each
+    # controls for A (2026-11-17), same student compute as sv25:
+    #   mkd25_aug   MaskedKD as it is + the student's masked view trained on the LABEL: is the gain of sv25 the
+    #               matched target, or just the student seeing a masked view (token-drop augmentation)?
+    #   ce_aug25    no teacher: label on the full and on the masked view (what the augmentation alone gives)
+    #   sv25_cross  the teacher sees the student-chosen tokens, the student a DIFFERENT random subset of the same
+    #               size: does it have to be the same view, or does any masked student view do?
+    "mkd25_aug": dict(kind="sv", keep=0.25, mode="aug"),
+    "ce_aug25": dict(kind="sv", keep=0.25, mode="ce_aug"),
+    "sv25_cross": dict(kind="sv", keep=0.25, mode="cross"),
+    "sv50": dict(kind="sv", keep=0.50),
+    "mkd15": dict(kind="mask", keep=0.15),
     # B. space and time: the teacher's answer is redundant over tokens (masking) and over epochs (the same image
     #    comes back). The cache is a second cheap answer; a few fresh full passes keep both honest.
     "ours_c": dict(kind="corr", keep=0.25, p=0.10, place="student", cheap=("s", "y", "m", "c"), ramp=0.3),
@@ -101,8 +114,11 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--runs", nargs="+", default=DEFAULT, choices=list(RUNS))
 ap.add_argument("--epochs", type=int, default=50)
 ap.add_argument("--seeds", type=int, nargs="+", default=[1])
-ap.add_argument("--dataset", default="imagenette", choices=list(URLS),
-                help="imagewoof: 10 dog breeds, the teacher is less sure, so its soft answer carries more")
+ap.add_argument("--dataset", default="imagenette", choices=list(URLS) + ["imagenet20"],
+                help="imagewoof: 10 dog breeds, the teacher is less sure, so its soft answer carries more; "
+                     "imagenet20: imagenette + imagewoof together, 20 classes")
+ap.add_argument("--teacher", default="deit_small_patch16_224", choices=list(TEACHER_GFLOPS))
+ap.add_argument("--data-root", default=".", help="folder that holds <dataset>_cache")
 ap.add_argument("--tau", type=float, default=1.0, help="KD temperature (MaskedKD: 1; classic KD: 4)")
 ap.add_argument("--bs", type=int, default=128)
 ap.add_argument("--lr", type=float, default=5e-4)
@@ -110,8 +126,9 @@ ap.add_argument("--data", default=None, help="default: <dataset>_cache")
 ap.add_argument("--out", default="quick_corrected_out")
 ap.add_argument("--summary", action="store_true", help="only print the table from the result files that exist")
 args = ap.parse_args()
-args.data = args.data or f"{args.dataset}_cache"
-TAG = f"{args.dataset}_t{args.tau:g}" + ("" if args.epochs == 50 else f"_e{args.epochs}")
+args.data_root = os.path.expanduser(args.data_root)
+TAG = (f"{args.dataset}_t{args.tau:g}" + ("" if args.epochs == 50 else f"_e{args.epochs}")
+       + ("" if args.teacher.startswith("deit_small") else "_tB"))
 dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 os.makedirs(args.out, exist_ok=True)
 # bf16 where the GPU has it (A100, L4, G4, A5000); fp16 with loss scaling otherwise (T4, V100)
@@ -122,26 +139,36 @@ AMP = dict(device_type=dev.type, dtype=torch.bfloat16 if BF16 else torch.float16
 # ---------------------------------------------------------------- data, decoded once and cached as uint8 tensors
 
 def prepare():
-    cache = os.path.join(args.data, "tensors.pt")
+    """(train x, train y, val x, val y, the teacher's output index of each class). imagenet20 = both sets, the
+    second one's labels shifted by 10."""
+    if args.dataset != "imagenet20":
+        return prepare_one(args.dataset, args.data or os.path.join(args.data_root, f"{args.dataset}_cache"))
+    a, b = (prepare_one(d, os.path.join(args.data_root, f"{d}_cache")) for d in ("imagenette", "imagewoof"))
+    return (torch.cat([a[0], b[0]]), torch.cat([a[1], b[1] + len(a[4])]), torch.cat([a[2], b[2]]),
+            torch.cat([a[3], b[3] + len(a[4])]), list(a[4]) + list(b[4]))
+
+
+def prepare_one(dataset, ddir):
+    cache = os.path.join(ddir, "tensors.pt")
     if FAKE:
-        g = torch.Generator().manual_seed(0)
-        return (torch.randint(0, 256, (256, 3, 256, 256), dtype=torch.uint8, generator=g), torch.arange(256) % 10,
+        g = torch.Generator().manual_seed(len(dataset))
+        return (torch.randint(0, 256, (128, 3, 256, 256), dtype=torch.uint8, generator=g), torch.arange(128) % 10,
                 torch.randint(0, 256, (64, 3, 224, 224), dtype=torch.uint8, generator=g), torch.arange(64) % 10,
-                list(range(10)))
+                list(range(10)) if dataset == "imagenette" else list(range(10, 20)))
     if os.path.exists(cache):
         return torch.load(cache)
     from PIL import Image
     from timm.data import ImageNetInfo
     from torch.utils.data import DataLoader, Dataset
     from torchvision import transforms
-    os.makedirs(args.data, exist_ok=True)
-    root = os.path.join(args.data, f"{args.dataset}2-320")
+    os.makedirs(ddir, exist_ok=True)
+    root = os.path.join(ddir, f"{dataset}2-320")
     if not os.path.isdir(root):
-        tgz = os.path.join(args.data, f"{args.dataset}2-320.tgz")
-        print(f"downloading {args.dataset} (about 330 MB)", flush=True)
-        urllib.request.urlretrieve(URLS[args.dataset], tgz)
+        tgz = os.path.join(ddir, f"{dataset}2-320.tgz")
+        print(f"downloading {dataset} (about 330 MB)", flush=True)
+        urllib.request.urlretrieve(URLS[dataset], tgz)
         with tarfile.open(tgz) as t:
-            t.extractall(args.data)
+            t.extractall(ddir)
     classes = sorted(os.listdir(os.path.join(root, "train")))
     wnids = ImageNetInfo().label_names()
     tidx = [wnids.index(c) for c in classes]
@@ -222,8 +249,24 @@ def evaluate(model, xva, yva, tidx=None):
     return 100 * hit / len(yva)
 
 
+@torch.no_grad()
+def fidelity(student, teacher, xva, tidx):
+    """How close the trained student is to the FULL teacher on val (it may never have seen that teacher):
+    share of images with the same top class (%), and mean KL(teacher || student) at temperature 1."""
+    student.eval()
+    same, kl, n = 0, 0.0, len(xva)
+    for i in range(0, n, 250):
+        x = normalise(xva[i:i + 250].to(dev))
+        with torch.autocast(**AMP):
+            zs, zt = student(x).float(), teacher(x).float()[:, tidx]
+        pt = zt.softmax(1)
+        same += (zs.argmax(1) == zt.argmax(1)).sum().item()
+        kl += (pt * (pt.clamp_min(1e-12).log() - zs.log_softmax(1))).sum().item()
+    return round(100 * same / n, 2), round(kl / n, 4)
+
+
 def make_student():
-    s = timm.create_model("deit_tiny_patch16_224", pretrained=False, num_classes=10, drop_path_rate=0.1).to(dev)
+    s = timm.create_model("deit_tiny_patch16_224", pretrained=False, num_classes=NC, drop_path_rate=0.1).to(dev)
     last = s.blocks[-1].attn
     last.fused_attn = False                                   # explicit softmax, so the attention can be read
     last.attn_drop.register_forward_hook(lambda m, i, o: setattr(s, "_attn", o))
@@ -296,16 +339,16 @@ def train(name, teacher, tidx, data, seed):
         w = torch.zeros(len(cheap), device=dev)
         w[cheap.index(next(n for n in ("m", "y", "c") if n in cheap))] = 1.0
     if cheap == "feat":            # linear on (masked teacher feature, log T_mask, log student, label)
-        head = torch.nn.Linear(teacher.num_features + 30, 10).to(dev)
+        head = torch.nn.Linear(teacher.num_features + 3 * NC, NC).to(dev)
         torch.nn.init.zeros_(head.weight)
         torch.nn.init.zeros_(head.bias)
     else:
-        head = torch.nn.Sequential(torch.nn.Linear(30, 64), torch.nn.GELU(), torch.nn.Linear(64, 10)).to(dev)
+        head = torch.nn.Sequential(torch.nn.Linear(3 * NC, 64), torch.nn.GELU(), torch.nn.Linear(64, NC)).to(dev)
         torch.nn.init.zeros_(head[2].weight)
         torch.nn.init.zeros_(head[2].bias)                     # zero correction at the start: h = masked answer
     head_opt = torch.optim.Adam(head.parameters(), lr=1e-3)
     use_cache = isinstance(cheap, tuple) and "c" in cheap
-    cache = torch.zeros(len(ytr), 10, device=dev)               # last full-teacher answer of each training image
+    cache = torch.zeros(len(ytr), NC, device=dev)               # last full-teacher answer of each training image
     has = torch.zeros(len(ytr), dtype=torch.bool, device=dev)
     s_extra = 0.0
     tokens, seen, hist, t0, step = 0.0, 0, [], time.time(), 0
@@ -343,7 +386,7 @@ def train(name, teacher, tidx, data, seed):
                 pair = None
                 with torch.no_grad():
                     ps = F.softmax(logits.detach() / args.tau, -1)
-                    yh = F.one_hot(y, 10).float()
+                    yh = F.one_hot(y, NC).float()
                     regs, qm = {"s": ps, "y": yh}, None
                     if nkeep:
                         a = student._attn[:, :, 0, 1:].float().mean(1)
@@ -361,7 +404,7 @@ def train(name, teacher, tidx, data, seed):
                     else:
                         feats = torch.cat(([fm.float()] if cheap == "feat" else [])
                                           + [qm.clamp_min(1e-6).log(), ps.clamp_min(1e-6).log(), yh], 1)
-                        h = F.softmax(feats[:, -30:-20] + head(feats), -1)
+                        h = F.softmax(feats[:, -3 * NC:-2 * NC] + head(feats), -1)
                     score = ((regs.get("m", regs.get("c", yh)) - ps) ** 2).sum(1)
                     if cfg["place"] == "topk":   # the images the signal ranks highest, taken as they are
                         b = torch.zeros(B, dtype=torch.bool, device=dev)
@@ -399,7 +442,7 @@ def train(name, teacher, tidx, data, seed):
                         diag["pairs"] += int(b.sum())
                 if pair is not None:   # after this step's target was built
                     fb, pfb = pair
-                    hl = -(pfb * F.log_softmax(fb[:, -30:-20] + head(fb), -1)).sum(1).mean()
+                    hl = -(pfb * F.log_softmax(fb[:, -3 * NC:-2 * NC] + head(fb), -1)).sum(1).mean()
                     head_opt.zero_grad(set_to_none=True)
                     hl.backward()
                     head_opt.step()
@@ -407,22 +450,30 @@ def train(name, teacher, tidx, data, seed):
                 u = logits / args.tau
                 loss = loss + args.tau ** 2 * (torch.logsumexp(u, 1) - (q * u).sum(1)).mean()
             elif kind == "sv":
+                mode = cfg.get("mode", "sv")
                 with torch.no_grad():
                     if cfg.get("select") == "random":
                         keep_idx = torch.rand(B, 196, device=dev).topk(nkeep, dim=1).indices
                     else:
                         keep_idx = student._attn[:, :, 0, 1:].float().mean(1).topk(nkeep, dim=1).indices
-                    with torch.autocast(**AMP):
-                        zt = fwd_tokens(teacher, x, keep_idx)
-                    tokens += B * (nkeep + 1)
-                    pt = F.softmax(zt.float()[:, tidx_t] / args.tau, -1)
+                    s_idx = torch.rand(B, 196, device=dev).topk(nkeep, dim=1).indices if mode == "cross" else keep_idx
+                    if mode != "ce_aug":
+                        with torch.autocast(**AMP):
+                            zt = fwd_tokens(teacher, x, keep_idx)
+                        tokens += B * (nkeep + 1)
+                        pt = F.softmax(zt.float()[:, tidx_t] / args.tau, -1)
                 with torch.autocast(**AMP):
-                    zs = fwd_tokens(student, x, keep_idx).float()      # the student on the same tokens, with gradient
+                    zs = fwd_tokens(student, x, s_idx).float()         # the student on kept tokens, with gradient
                 s_extra += B * (nkeep + 1)
-                kd = (pt * (pt.clamp_min(1e-12).log() - F.log_softmax(zs / args.tau, -1))).sum(1).mean()
-                if cfg.get("both"):   # MaskedKD's term on the full view as well, half each
-                    kd = 0.5 * kd + 0.5 * (pt * (pt.clamp_min(1e-12).log() - F.log_softmax(logits / args.tau, -1))).sum(1).mean()
-                loss = loss + args.tau ** 2 * kd
+                kl_to = lambda z: (pt * (pt.clamp_min(1e-12).log() - F.log_softmax(z / args.tau, -1))).sum(1).mean()   # noqa: E731
+                if mode == "ce_aug":     # no teacher: the label on both views
+                    loss = loss + F.cross_entropy(zs, y)
+                elif mode == "aug":      # MaskedKD's term on the full view + the label on the masked view
+                    loss = loss + args.tau ** 2 * kl_to(logits) + F.cross_entropy(zs, y)
+                elif cfg.get("both"):    # MaskedKD's term on the full view as well, half each
+                    loss = loss + args.tau ** 2 * (0.5 * kl_to(zs) + 0.5 * kl_to(logits))
+                else:                    # sv, cross: the teacher's answer for the student's masked view
+                    loss = loss + args.tau ** 2 * kl_to(zs)
             seen += B
             step += 1
             opt.zero_grad(set_to_none=True)
@@ -444,8 +495,10 @@ def train(name, teacher, tidx, data, seed):
     t_cost, s_cost = tokens / (max(seen, 1) * 197), s_extra / (max(seen, 1) * 197)
     # one training step per image, estimated: student forward + backward (3 x 1.3 GFLOPs, DeiT-Ti) on the full image
     # and on any extra masked view, plus the teacher's forwards (4.6 GFLOPs, DeiT-S, linear in the tokens)
+    agree, kl_full = fidelity(student, teacher, xva, tidx)
     res = {"run": name, "cfg": cfg, "acc": hist[-1]["acc"], "teacher_cost": round(t_cost, 3),
-           "student_extra": round(s_cost, 3), "step_gflops": round(3.9 * (1 + s_cost) + 4.6 * t_cost, 2),
+           "student_extra": round(s_cost, 3), "agree_full_teacher": agree, "kl_full_teacher": kl_full,
+           "step_gflops": round(3.9 * (1 + s_cost) + TEACHER_GFLOPS[args.teacher] * t_cost, 2),
            "minutes": hist[-1]["min"], "seed": seed, "dataset": args.dataset, "tau": args.tau, "epochs": args.epochs,
            "history": hist}
     with open(os.path.join(args.out, f"{name}_{TAG}_s{seed}.json"), "w") as f:
@@ -460,7 +513,9 @@ def main():
                           for s in args.seeds}, float("nan"))
     xtr, ytr, xva, yva, tidx = prepare()
     print(f"train {len(ytr)}, val {len(yva)}, device {dev}", flush=True)
-    teacher = timm.create_model("deit_small_patch16_224", pretrained=not FAKE).to(dev).eval()
+    global NC
+    NC = len(tidx)
+    teacher = timm.create_model(args.teacher, pretrained=not FAKE).to(dev).eval()
     for p in teacher.parameters():
         p.requires_grad_(False)
     t_acc = evaluate(teacher, xva, yva, tidx)
@@ -485,13 +540,17 @@ def summarise(results, t_acc):
     seeds = args.seeds
     sd = lambda v: (sum((a - sum(v) / len(v)) ** 2 for a in v) / (len(v) - 1)) ** 0.5 if len(v) > 1 else 0.0   # noqa: E731
     print(f"\n=== {args.dataset}, tau {args.tau:g}, seeds {seeds}, {args.epochs} epochs, teacher {t_acc:.1f}")
-    print(f"{'run':10s} {'val acc (mean +- sd)':>22s} {'per seed':>24s} {'teacher cost':>13s} {'step GFLOPs':>12s}")
+    print(f"{'run':10s} {'val acc (mean +- sd)':>22s} {'per seed':>24s} {'teacher cost':>13s} {'step GFLOPs':>12s} "
+          f"{'agrees w/ full T':>17s}")
     for name in RUNS:
         accs = [results[s][name]["acc"] for s in seeds if name in results[s]]
         if accs:
             r = results[next(s for s in seeds if name in results[s])][name]
+            ag = [results[s][name]["agree_full_teacher"] for s in seeds
+                  if name in results[s] and "agree_full_teacher" in results[s][name]]
             print(f"{name:10s} {sum(accs) / len(accs):14.2f} +- {sd(accs):4.2f} {str(accs):>24s} "
-                  f"{r['teacher_cost']:13.3f} {r.get('step_gflops', float('nan')):12.2f}")
+                  f"{r['teacher_cost']:13.3f} {r.get('step_gflops', float('nan')):12.2f} "
+                  f"{(sum(ag) / len(ag) if ag else float('nan')):17.2f}")
     print("\npaired differences (same seed), mean and per seed:")
     for a, b, what in (("full", "ce", "KD gain: under 2 points nothing below can be read"),
                        ("corr", "mkd35", "correction helps"), ("corr_s", "corr", "student placement helps"),
@@ -503,7 +562,12 @@ def summarise(results, t_acc):
                        ("ours_h", "ours", "learned cheap answer vs fitted mix"), ("ours_h", "mkd35", "ours_h vs MaskedKD"),
                        ("ours_h", "img35", "ours_h vs fewer images"),
                        ("sv25", "mkd25", "A same view vs MaskedKD, same teacher tokens"), ("sv25", "mkd35", "A vs MaskedKD, similar step cost"),
-                       ("sv25", "full", "A vs full KD"), ("sv25_rand", "sv25", "A: random instead of student-chosen tokens"),
+                       ("sv25", "full", "A vs full KD"), ("sv25", "mkd50", "A vs MaskedKD at equal step cost"),
+                       ("sv25", "mkd25_aug", "A: matched target vs label on the masked view (same compute)"),
+                       ("mkd25_aug", "mkd25", "what a masked student view with the label adds to MaskedKD"),
+                       ("ce_aug25", "ce", "masked-view augmentation alone, no teacher"),
+                       ("sv25", "sv25_cross", "A: same tokens vs a different masked view for the student"),
+                       ("sv35", "sv25", "A: more tokens"), ("sv50", "sv25", "A: half of the tokens"), ("mkd15", "mkd25", "MaskedKD: fewer tokens"), ("sv25_rand", "sv25", "A: random instead of student-chosen tokens"),
                        ("sv25_both", "sv25", "A: adding MaskedKD's full-view term"), ("sv15", "sv25", "A: fewer tokens"),
                        ("ours_c", "ours", "B: what the cache adds to masked + correction"), ("ours_c", "mkd35", "B space + time vs MaskedKD"),
                        ("img_c", "img35", "B: what the cache adds without masking"), ("ours_c", "img_c", "B: masking + cache vs cache alone"),
