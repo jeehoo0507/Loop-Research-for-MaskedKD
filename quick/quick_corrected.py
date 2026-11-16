@@ -93,6 +93,13 @@ RUNS = {
     "ce_aug25": dict(kind="sv", keep=0.25, mode="ce_aug"),
     "sv25_cross": dict(kind="sv", keep=0.25, mode="cross"),
     "sv50": dict(kind="sv", keep=0.50),
+    # MaskSub (Heo et al., 2306.11339): the student's masked branch learns from the student's OWN full-view
+    # output (stop-gradient), no teacher on the masked view. The closest published two-branch design:
+    #   masksub25   no teacher at all (label on the full view + self-distillation on the masked view)
+    #   mkd25_msub  MaskedKD's term on the full view + MaskSub's self-distillation on the masked view
+    # sv25 has to beat mkd25_msub, or its gain is MaskSub's, not the matched teacher target's.
+    "masksub25": dict(kind="sv", keep=0.25, mode="msub"),
+    "mkd25_msub": dict(kind="sv", keep=0.25, mode="mkd_msub"),
     "mkd15": dict(kind="mask", keep=0.15),
     # B. space and time: the teacher's answer is redundant over tokens (masking) and over epochs (the same image
     #    comes back). The cache is a second cheap answer; a few fresh full passes keep both honest.
@@ -457,7 +464,7 @@ def train(name, teacher, tidx, data, seed):
                     else:
                         keep_idx = student._attn[:, :, 0, 1:].float().mean(1).topk(nkeep, dim=1).indices
                     s_idx = torch.rand(B, 196, device=dev).topk(nkeep, dim=1).indices if mode == "cross" else keep_idx
-                    if mode != "ce_aug":
+                    if mode not in ("ce_aug", "msub"):
                         with torch.autocast(**AMP):
                             zt = fwd_tokens(teacher, x, keep_idx)
                         tokens += B * (nkeep + 1)
@@ -466,7 +473,11 @@ def train(name, teacher, tidx, data, seed):
                     zs = fwd_tokens(student, x, s_idx).float()         # the student on kept tokens, with gradient
                 s_extra += B * (nkeep + 1)
                 kl_to = lambda z: (pt * (pt.clamp_min(1e-12).log() - F.log_softmax(z / args.tau, -1))).sum(1).mean()   # noqa: E731
-                if mode == "ce_aug":     # no teacher: the label on both views
+                if mode in ("msub", "mkd_msub"):   # masked branch <- the student's own full-view answer
+                    own = F.softmax(logits.detach() / args.tau, -1)
+                    self_kd = (own * (own.clamp_min(1e-12).log() - F.log_softmax(zs / args.tau, -1))).sum(1).mean()
+                    loss = loss + args.tau ** 2 * (self_kd + (kl_to(logits) if mode == "mkd_msub" else 0.0))
+                elif mode == "ce_aug":   # no teacher: the label on both views
                     loss = loss + F.cross_entropy(zs, y)
                 elif mode == "aug":      # MaskedKD's term on the full view + the label on the masked view
                     loss = loss + args.tau ** 2 * kl_to(logits) + F.cross_entropy(zs, y)
@@ -566,6 +577,9 @@ def summarise(results, t_acc):
                        ("sv25", "mkd25_aug", "A: matched target vs label on the masked view (same compute)"),
                        ("mkd25_aug", "mkd25", "what a masked student view with the label adds to MaskedKD"),
                        ("ce_aug25", "ce", "masked-view augmentation alone, no teacher"),
+                       ("sv25", "mkd25_msub", "A vs MaskedKD + MaskSub (the closest published design, same compute)"),
+                       ("mkd25_msub", "mkd25", "what MaskSub's masked branch adds to MaskedKD"),
+                       ("masksub25", "ce", "MaskSub alone, no teacher"), ("sv25", "masksub25", "A vs MaskSub without a teacher"),
                        ("sv25", "sv25_cross", "A: same tokens vs a different masked view for the student"),
                        ("sv35", "sv25", "A: more tokens"), ("sv50", "sv25", "A: half of the tokens"), ("mkd15", "mkd25", "MaskedKD: fewer tokens"), ("sv25_rand", "sv25", "A: random instead of student-chosen tokens"),
                        ("sv25_both", "sv25", "A: adding MaskedKD's full-view term"), ("sv15", "sv25", "A: fewer tokens"),
